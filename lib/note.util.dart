@@ -24,13 +24,13 @@ List<String> sortDrumpadSounds(List<String> sounds) {
     if (soundMap.containsKey(index)) {
       sortedList.add(soundMap[index]!);
     } else {
-      sortedList.add("Empty");
+      sortedList.add("");
     }
     index++;
 
     // Nếu hết số nhưng chưa đủ 12 ô → thêm "Empty"
     if (index > maxNumber && sortedList.length < 12) {
-      sortedList.add("Empty");
+      sortedList.add("");
     }
   }
 

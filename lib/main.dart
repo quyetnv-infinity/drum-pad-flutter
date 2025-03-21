@@ -34,8 +34,8 @@ class DrumpadScreen extends StatefulWidget {
 }
 
 class _DrumpadScreenState extends State<DrumpadScreen> {
-  final List<String> availableSounds = [];
-  final Map<String, AudioPlayer> audioPlayers = {};
+  List<String> availableSounds = [];
+  Map<String, AudioPlayer> audioPlayers = {};
   List<Map<String, dynamic>> events = [];
   int currentEventIndex = 0;
   Timer? sequenceTimer;
@@ -46,10 +46,14 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   DateTime? startTime;
   bool isLoading = true;
 
+  List<dynamic> lessons = [];
+  int currentLesson = 0;
+
   final Map<String, Color> soundColors = {
     'lead': Colors.red,
     'bass': Colors.green,
     'drums': Colors.blue,
+    'fx': Colors.yellow,
   };
 
   @override
@@ -74,7 +78,9 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     try {
       final String jsonString = await rootBundle.loadString('assets/sequence.json');
       final jsonData = json.decode(jsonString);
-      events = List<Map<String, dynamic>>.from(jsonData['events']);
+      lessons = List.from(jsonData);
+      currentLesson = lessons.length - 1;
+      events = List<Map<String, dynamic>>.from(lessons[currentLesson]['events']);
       final Set<String> uniqueSounds = {};
       for (var event in events) {
         final notes = List<String>.from(event['notes']);
@@ -91,6 +97,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   Future<void> _initializeAudioPlayers() async {
     _disposeAudioPlayers();
     for (String sound in availableSounds) {
+      if (sound.isEmpty) return;
       final player = AudioPlayer();
       try {
         await player.setAsset('assets/audio/$sound.mp3');
@@ -106,6 +113,9 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
       player.dispose();
     }
     audioPlayers.clear();
+    setState(() {
+      audioPlayers = {};
+    });
   }
 
   void _playSound(String sound) {
@@ -165,6 +175,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
       highlightedSounds.addAll(notes);
     });
     for (var note in notes) {
+      // print(note);
       _playSound(note);
     }
     currentEventIndex++;
@@ -189,37 +200,71 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     }
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Drumpad'),
+        title: const Text('Drumpad'),
         actions: [
           IconButton(onPressed: _startSequence, icon: Icon(Icons.play_arrow))
         ],
       ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(16.0),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          childAspectRatio: 1.0,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
-        ),
-        itemCount: 12,
-        itemBuilder: (context, index) {
-          final bool hasSound = index < availableSounds.length;
-          final String soundId = hasSound ? availableSounds[index] : '';
-          final bool isHighlighted = highlightedSounds.contains(soundId);
-          return Container(
-            decoration: BoxDecoration(
-              color: isHighlighted ? Colors.orange : (hasSound ? _getPadColor(soundId) : Colors.grey),
-              borderRadius: BorderRadius.circular(12.0),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: GridView.builder(
+                padding: const EdgeInsets.all(16.0),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 1.0,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                ),
+                itemCount: 12,
+                itemBuilder: (context, index) {
+                  final bool hasSound = index < availableSounds.length;
+                  final String soundId = hasSound ? availableSounds[index] : '';
+                  final bool isHighlighted = highlightedSounds.contains(soundId);
+                  return GestureDetector(
+                    onTap: () {
+                      _playSound(availableSounds[index]);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: isHighlighted ? Colors.orange : (hasSound ? _getPadColor(soundId) : Colors.grey),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      // child: Center(
+                      //   child: Text(
+                      //     hasSound ? soundId : 'Empty',
+                      //     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      //   ),
+                      // ),
+                    ),
+                  );
+                },
+              ),
             ),
-            // child: Center(
-            //   child: Text(
-            //     hasSound ? soundId : 'Empty',
-            //     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            //   ),
-            // ),
-          );
-        },
+            Wrap(
+              children: List.generate(lessons.length, (index) => TextButton(onPressed: () async {
+                setState(() {
+                  isLoading = true;
+                  currentLesson = index;
+                  events = List<Map<String, dynamic>>.from(lessons[currentLesson]['events']);
+                  final Set<String> uniqueSounds = {};
+                  for (var event in events) {
+                    final notes = List<String>.from(event['notes']);
+                    uniqueSounds.addAll(notes);
+                  }
+                  availableSounds.clear();
+                  availableSounds.addAll(sortDrumpadSounds(uniqueSounds.toList()));
+                });
+                await _initializeAudioPlayers();
+                setState(() {
+                  isLoading = false;
+                });
+                // Future.delayed(Duration(microseconds: 1000), _startSequence);
+              }, child: Text(index.toString(), style: TextStyle(color: index == currentLesson ? Colors.blue : Colors.black)))),
+            )
+          ],
+        ),
       ),
     );
   }
