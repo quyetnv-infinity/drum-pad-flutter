@@ -46,6 +46,9 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   double startTimeOffset = 0;
   DateTime? startTime;
   bool isLoading = true;
+  double progressValue = 0.0;
+  Timer? progressTimer;
+  Map<String, double> padProgress = {};
 
   List<dynamic> lessons = [];
   int currentLesson = 0;
@@ -75,6 +78,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   void dispose() {
     _disposeAudioPlayers();
     sequenceTimer?.cancel();
+    progressTimer?.cancel();
     super.dispose();
   }
 
@@ -177,6 +181,9 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
       startTimeOffset = 0;
       highlightedSounds.clear();
       notePressed = false;
+      progressValue = 0.0;
+      progressTimer = null;
+      padProgress = {};
     });
   }
 
@@ -201,17 +208,57 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   }
 
   void _processEvent(Map<String, dynamic> event) {
-    final notes = List<String>.from(event['notes']);
     setState(() {
       highlightedSounds.clear();
-      highlightedSounds.addAll(notes);
+      highlightedSounds.addAll(List<String>.from(event['notes']));
+      progressValue = 0.0;
+      padProgress.clear();
     });
-    for (var note in notes) {
-      // print(note);
-      _playSound(note);
+
+    // Nếu chưa có sự kiện tiếp theo thì không làm gì cả
+    if (currentEventIndex >= events.length - 1) return;
+
+    double currentTime = event['time'];
+    double nextTime = events[currentEventIndex + 1]['time'];
+    double delay = nextTime - currentTime;
+
+    // Nếu nốt đầu tiên có thời gian là 0, thì bỏ qua progress cho nốt này
+    if (currentEventIndex == 0 && currentTime == 0) return;
+
+    for (var note in event['notes']) {
+      padProgress[note] = 0.0;
     }
-    currentEventIndex++;
-    _scheduleNextEvent();
+
+    progressTimer?.cancel();
+    progressTimer = Timer.periodic(Duration(milliseconds: 10), (timer) {
+      setState(() {
+        for (var note in padProgress.keys) {
+          padProgress[note] = (padProgress[note]! + (10 / (delay * 1000))).clamp(0.0, 1.0);
+        }
+        if (padProgress.values.every((value) => value == 1.0)) {
+          timer.cancel();
+        }
+      });
+    });
+  }
+
+  void _onPadPressed(String sound) {
+    _playSound(sound);
+
+    if (highlightedSounds.contains(sound)) {
+      for (var remainingSound in highlightedSounds) {
+        if (remainingSound != sound) {
+          _playSound(remainingSound);
+        }
+      }
+      // Nếu tất cả các nốt của sự kiện hiện tại đã được phát, chuyển sang sự kiện tiếp theo
+      currentEventIndex++;
+      if (currentEventIndex < events.length) {
+        _processEvent(events[currentEventIndex]);
+      } else {
+        _resetSequence(); // Kết thúc nếu không còn sự kiện nào
+      }
+    }
   }
 
   Color _getPadColor(String sound) {
@@ -234,7 +281,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
       appBar: AppBar(
         title: const Text('Drumpad'),
         actions: [
-          IconButton(onPressed: _startSequence, icon: Icon(Icons.play_arrow))
+          IconButton(onPressed: isPlaying ? _resetSequence : _startSequence, icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow))
         ],
       ),
       body: SafeArea(
@@ -254,21 +301,40 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                   final bool hasSound = index < lessonSounds.length;
                   final String soundId = hasSound ? lessonSounds[index] : '';
                   final bool isHighlighted = highlightedSounds.contains(soundId);
+                  final sound = lessonSounds[index];
                   return GestureDetector(
                     onTap: () {
-                      _playSound(lessonSounds[index]);
+                      _onPadPressed(sound);
                     },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: isHighlighted ? Colors.orange : (hasSound ? _getPadColor(soundId) : Colors.grey),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      // child: Center(
-                      //   child: Text(
-                      //     hasSound ? soundId : 'Empty',
-                      //     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                      //   ),
-                      // ),
+                    child: Stack(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: isHighlighted ? Colors.orange : (hasSound ? _getPadColor(soundId) : Colors.grey),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          // child: Center(
+                          //   child: Text(
+                          //     hasSound ? soundId : 'Empty',
+                          //     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          //   ),
+                          // ),
+                        ),
+                        if (padProgress.containsKey(sound))
+                          Align(
+                            alignment: Alignment.center,
+                            child:  SizedBox(
+                              width: 36,
+                              height: 36,
+                              child: CircularProgressIndicator(
+                                value: padProgress[sound],
+                                strokeWidth: 5,
+                                backgroundColor: Colors.white24,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   );
                 },
@@ -291,6 +357,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                 });
                 // print(availableSounds);
                 await _initializeAudioPlayers();
+                _resetSequence();
                 setState(() {
                   isLoading = false;
                 });
