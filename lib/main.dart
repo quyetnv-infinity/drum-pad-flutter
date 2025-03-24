@@ -149,6 +149,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
 
   void _disposeAudioPlayers() {
     for (var player in audioPlayers.values) {
+      player.pause();
       player.dispose();
     }
     audioPlayers.clear();
@@ -167,18 +168,17 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
 
   void _startSequence() {
     if (isPlaying || events.isEmpty) return;
+    _resetSequence();
     setState(() {
       isPlaying = true;
-      currentEventIndex = 0;
-      startTimeOffset = 0;
-      startTime = DateTime.now();
-      highlightedSounds.clear();
-      notePressed = false;
     });
     _scheduleNextEvent();
   }
 
   void _resetSequence() {
+    for (var player in audioPlayers.values) {
+      player.pause();
+    }
     setState(() {
       isPlaying = false;
       currentEventIndex = 0;
@@ -189,6 +189,8 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
       progressTimer = null;
       padProgress = {};
     });
+    sequenceTimer?.cancel();
+    progressTimer?.cancel();
   }
 
   void _scheduleNextEvent() {
