@@ -187,7 +187,6 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
           _currentLeadSound = sound;
         });
       }
-      await Haptics.vibrate(HapticsType.heavy);
       audioPlayers[sound]?.seek(Duration.zero);
       audioPlayers[sound]?.play();
     }
@@ -315,11 +314,6 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     }
 
     if (highlightedSounds.contains(sound)) {
-      for (var remainingSound in highlightedSounds) {
-        if (remainingSound != sound) {
-          _playSound(remainingSound);
-        }
-      }
       // Nếu tất cả các nốt của sự kiện hiện tại đã được phát, chuyển sang sự kiện tiếp theo
       currentEventIndex++;
       if (currentEventIndex < events.length) {
