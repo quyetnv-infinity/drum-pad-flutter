@@ -245,7 +245,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
       padProgress.clear();
     });
     lastEventTime = DateTime.now();
-    if (currentEventIndex >= events.length - 1) return;
+    if (currentEventIndex > events.length - 1) return;
 
     double currentTime = event['time'];
     double prevTime = events[currentEventIndex == 0 ? 0 : currentEventIndex - 1]['time'];
