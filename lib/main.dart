@@ -216,11 +216,11 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     });
 
     // Nếu chưa có sự kiện tiếp theo thì không làm gì cả
-    if (currentEventIndex >= events.length - 1) return;
+    if (currentEventIndex > events.length - 1) return;
 
     double currentTime = event['time'];
-    double nextTime = events[currentEventIndex + 1]['time'];
-    double delay = nextTime - currentTime;
+    double prevTime = events[currentEventIndex == 0 ? 0 : currentEventIndex - 1]['time'];
+    double delay = currentTime - prevTime;
 
     // Nếu nốt đầu tiên có thời gian là 0, thì bỏ qua progress cho nốt này
     if (currentEventIndex == 0 && currentTime == 0) return;
