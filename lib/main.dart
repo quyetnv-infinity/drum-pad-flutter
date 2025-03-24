@@ -278,20 +278,22 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     if (_currentHoverIndex == index) return;
     _playSound(sound);
 
+    lastEventTime ??= DateTime.now();
+
     double currentTime = (DateTime.now().difference(lastEventTime!).inMilliseconds) / 1000.0;
     double requiredTime = events[currentEventIndex]['time'] - (currentEventIndex > 0 ? events[currentEventIndex - 1]['time'] : 0);
 
     String state = "";
     if(currentEventIndex != 0){
-    if (currentTime < requiredTime - 0.5) {
-      state = 'Early';
-    } else if (currentTime < requiredTime - 0.2) {
-      state = 'Gud';
-    } else if (currentTime > requiredTime + 0.2) {
-      state = 'Late';
-    } else {
-      state = 'Perfect';
-    }
+      if (currentTime < requiredTime - 0.5) {
+        state = 'Early';
+      } else if (currentTime < requiredTime - 0.2) {
+        state = 'Gud';
+      } else if (currentTime > requiredTime + 0.2) {
+        state = 'Late';
+      } else {
+        state = 'Perfect';
+      }
     }
 
     setState(() {
