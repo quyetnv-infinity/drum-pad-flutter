@@ -54,6 +54,8 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   int? _currentHoverIndex;
   final GlobalKey _widgetPadKey = GlobalKey();
 
+  DateTime? lastEventTime;
+  Map<String, String> padStates = {};
   List<dynamic> lessons = [];
   int currentLesson = 0;
 
@@ -158,7 +160,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   }
 
   void _playSound(String sound) {
-    print(sound);
+    // print(sound);
     if (audioPlayers.containsKey(sound)) {
       audioPlayers[sound]?.seek(Duration.zero);
       audioPlayers[sound]?.play();
@@ -218,8 +220,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
       progressValue = 0.0;
       padProgress.clear();
     });
-
-    // Nếu chưa có sự kiện tiếp theo thì không làm gì cả
+    lastEventTime = DateTime.now();
     if (currentEventIndex >= events.length - 1) return;
 
     double currentTime = event['time'];
@@ -250,6 +251,40 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     await Haptics.vibrate(HapticsType.heavy);
     if (_currentHoverIndex == index) return;
     _playSound(sound);
+
+    double currentTime = (DateTime.now().difference(lastEventTime!).inMilliseconds) / 1000.0;
+    double requiredTime = events[currentEventIndex]['time'] - (currentEventIndex > 0 ? events[currentEventIndex - 1]['time'] : 0);
+
+    String state = "";
+    if(currentEventIndex != 0){
+    if (currentTime < requiredTime - 0.5) {
+      state = 'Early';
+    } else if (currentTime < requiredTime - 0.2) {
+      state = 'Gud';
+    } else if (currentTime > requiredTime + 0.2) {
+      state = 'Late';
+    } else {
+      state = 'Perfect';
+    }
+    }
+
+    setState(() {
+      padStates[sound] = state;
+    });
+
+    // Ẩn sau 2 giây
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        padStates.remove(sound);
+      });
+    });
+
+    List<String> requiredNotes = List<String>.from(events[currentEventIndex]['notes']);
+    if(!requiredNotes.contains(sound) && currentEventIndex != 0){
+      setState(() {
+        padStates[sound] = 'Miss';
+      });
+    }
 
     if (highlightedSounds.contains(sound)) {
       for (var remainingSound in highlightedSounds) {
@@ -352,12 +387,12 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                               color: isHighlighted ? Colors.orange : (hasSound ? _getPadColor(soundId) : Colors.grey),
                               borderRadius: BorderRadius.circular(12.0),
                             ),
-                            // child: Center(
-                            //   child: Text(
-                            //     hasSound ? soundId : 'Empty',
-                            //     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                            //   ),
-                            // ),
+                            child: Center(
+                              child: Text(
+                                padStates[sound] ?? "",
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                              ),
+                            ),
                           ),
                           if (padProgress.containsKey(sound))
                             Align(
