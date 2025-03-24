@@ -178,7 +178,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     });
   }
 
-  void _playSound(String sound) {
+  Future<void> _playSound(String sound) async {
     print(sound);
     if (audioPlayers.containsKey(sound)) {
       if(_getSoundType(sound) == SoundType.lead){
@@ -187,6 +187,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
           _currentLeadSound = sound;
         });
       }
+      await Haptics.vibrate(HapticsType.heavy);
       audioPlayers[sound]?.seek(Duration.zero);
       audioPlayers[sound]?.play();
     }
@@ -201,9 +202,9 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     _scheduleNextEvent();
   }
 
-  void _resetSequence() {
+  void _resetSequence({bool isPlayingDrum = false}) {
     for (var player in audioPlayers.values) {
-      player.pause();
+      if(!isPlayingDrum) player.pause();
     }
     setState(() {
       isPlaying = false;
@@ -273,8 +274,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     });
   }
 
-  Future<void> _onPadPressed(String sound, int index) async {
-    await Haptics.vibrate(HapticsType.heavy);
+  void _onPadPressed(String sound, int index) {
     if (_currentHoverIndex == index) return;
     _playSound(sound);
 
@@ -323,7 +323,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
       if (currentEventIndex < events.length) {
         _processEvent(events[currentEventIndex]);
       } else {
-        _resetSequence(); // Kết thúc nếu không còn sự kiện nào
+        _resetSequence(isPlayingDrum: true); // Kết thúc nếu không còn sự kiện nào
       }
     }
   }
@@ -366,7 +366,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
         int index = row * 3 + col;
 
         if (index < 12) {
-          await _onPadPressed(lessonSounds[index], index);
+          _onPadPressed(lessonSounds[index], index);
           setState(() {
             _currentHoverIndex = index;
           });
