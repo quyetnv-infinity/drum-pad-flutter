@@ -35,6 +35,7 @@ class DrumpadScreen extends StatefulWidget {
 
 class _DrumpadScreenState extends State<DrumpadScreen> {
   List<String> availableSounds = [];
+  List<String> lessonSounds = [];
   Map<String, AudioPlayer> audioPlayers = {};
   List<Map<String, dynamic>> events = [];
   int currentEventIndex = 0;
@@ -48,6 +49,9 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
 
   List<dynamic> lessons = [];
   int currentLesson = 0;
+
+  List<String> _faceA = [];
+  List<String> _faceB = [];
 
   final Map<String, Color> soundColors = {
     'lead': Colors.red,
@@ -79,18 +83,28 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
       final String jsonString = await rootBundle.loadString('assets/sequence.json');
       final jsonData = json.decode(jsonString);
       lessons = List.from(jsonData);
-      currentLesson = lessons.length - 1;
+      currentLesson = 8;
       events = List<Map<String, dynamic>>.from(lessons[currentLesson]['events']);
-      final Set<String> uniqueSounds = {};
+      Set<String> uniqueSounds = {};
+      for (var lesson in lessons) {
+        for (var event in lesson["events"]) {
+          final notes = List<String>.from(event['notes']);
+          uniqueSounds.addAll(notes);
+        }
+      }
+      availableSounds.addAll(uniqueSounds.toList());
+      uniqueSounds = {};
       for (var event in events) {
         final notes = List<String>.from(event['notes']);
         uniqueSounds.addAll(notes);
       }
-      availableSounds.addAll(sortDrumpadSounds(uniqueSounds.toList()));
+      _splitSoundsByFace();
+      lessonSounds.addAll(sortDrumpadSounds(uniqueSounds.toList(), lessons[currentLesson]['events'][0]["notes"][0].contains("_face_b_") ? _faceB : _faceA));
     } catch (e) {
       print('Error loading sequence data from file: $e');
       events = [];
       availableSounds.clear();
+      lessonSounds.clear();
     }
   }
 
@@ -108,6 +122,23 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     }
   }
 
+  void _splitSoundsByFace() {
+    List<String> faceA = [];
+    List<String> faceB = [];
+
+    for (var sound in availableSounds) {
+      if (sound.contains("_face_a_")) {
+        faceA.add(sound);
+      } else if (sound.contains("_face_b_")) {
+        faceB.add(sound);
+      }
+    }
+    setState(() {
+      _faceA = faceA;
+      _faceB = faceB;
+    });
+  }
+
   void _disposeAudioPlayers() {
     for (var player in audioPlayers.values) {
       player.dispose();
@@ -119,6 +150,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   }
 
   void _playSound(String sound) {
+    print(sound);
     if (audioPlayers.containsKey(sound)) {
       audioPlayers[sound]?.seek(Duration.zero);
       audioPlayers[sound]?.play();
@@ -217,14 +249,14 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 8,
                 ),
-                itemCount: 12,
+                itemCount: lessonSounds.length,
                 itemBuilder: (context, index) {
-                  final bool hasSound = index < availableSounds.length;
-                  final String soundId = hasSound ? availableSounds[index] : '';
+                  final bool hasSound = index < lessonSounds.length;
+                  final String soundId = hasSound ? lessonSounds[index] : '';
                   final bool isHighlighted = highlightedSounds.contains(soundId);
                   return GestureDetector(
                     onTap: () {
-                      _playSound(availableSounds[index]);
+                      _playSound(lessonSounds[index]);
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -253,9 +285,11 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                     final notes = List<String>.from(event['notes']);
                     uniqueSounds.addAll(notes);
                   }
-                  availableSounds.clear();
-                  availableSounds.addAll(sortDrumpadSounds(uniqueSounds.toList()));
+                  lessonSounds.clear();
+                  lessonSounds.addAll(sortDrumpadSounds(uniqueSounds.toList(), lessons[index]['events'][0]["notes"][0].contains("_face_b_") ? _faceB : _faceA));
+                  // print(lessons[index]['events'][0]["notes"][0].contains("_face_b_") ? _faceB : _faceA);
                 });
+                // print(availableSounds);
                 await _initializeAudioPlayers();
                 setState(() {
                   isLoading = false;
