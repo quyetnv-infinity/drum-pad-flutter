@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:drumpad_flutter/sound_type_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
@@ -53,6 +54,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
 
   int? _currentHoverIndex;
   final GlobalKey _widgetPadKey = GlobalKey();
+  String? _currentLeadSound;
 
   List<dynamic> lessons = [];
   int currentLesson = 0;
@@ -66,6 +68,22 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     'drums': Colors.blue,
     'fx': Colors.yellow,
   };
+
+  final Map<String, SoundType> soundTypes = {
+    'lead': SoundType.lead,
+    'bass': SoundType.bass,
+    'drums': SoundType.drum,
+    'fx': SoundType.fx,
+  };
+
+  SoundType _getSoundType(String sound) {
+    for (var key in soundTypes.keys) {
+      if (sound.contains(key)) {
+        return soundTypes[key]!;
+      }
+    }
+    return SoundType.drum;
+  }
 
   @override
   void initState() {
@@ -160,6 +178,12 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   void _playSound(String sound) {
     print(sound);
     if (audioPlayers.containsKey(sound)) {
+      if(_getSoundType(sound) == SoundType.lead){
+        if(_currentLeadSound != null) audioPlayers[_currentLeadSound]?.pause();
+        setState(() {
+          _currentLeadSound = sound;
+        });
+      }
       audioPlayers[sound]?.seek(Duration.zero);
       audioPlayers[sound]?.play();
     }
