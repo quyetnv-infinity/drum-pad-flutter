@@ -55,6 +55,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   int? _currentHoverIndex;
   final GlobalKey _widgetPadKey = GlobalKey();
   String? _currentLeadSound;
+  int? _padPressedIndex;
 
   DateTime? lastEventTime;
   Map<String, String> padStates = {};
@@ -275,6 +276,14 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
 
   void _onPadPressed(String sound, int index) {
     if (_currentHoverIndex == index) return;
+    setState(() {
+      _padPressedIndex = index;
+    });
+    Future.delayed(Duration(milliseconds: 200), (){
+      setState(() {
+        _padPressedIndex = null;
+      });
+    },);
     _playSound(sound);
 
     lastEventTime ??= DateTime.now();
@@ -385,8 +394,8 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     childAspectRatio: 1.0,
-                    crossAxisSpacing: 8,
-                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 4,
+                    mainAxisSpacing: 4,
                   ),
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: lessonSounds.length,
@@ -395,42 +404,48 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                     final String soundId = hasSound ? lessonSounds[index] : '';
                     final bool isHighlighted = highlightedSounds.contains(soundId);
                     final sound = lessonSounds[index];
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _currentHoverIndex = null;
-                        });
-                        _onPadPressed(sound, index);
-                      },
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: isHighlighted ? Colors.orange : (hasSound ? _getPadColor(soundId) : Colors.grey),
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            child: Center(
-                              child: Text(
-                                padStates[sound] ?? "",
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    bool isActive = _padPressedIndex == index;
+                    return AnimatedContainer(
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeInOut,
+                      padding: EdgeInsets.all(isActive ? 12 : 0),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _currentHoverIndex = null;
+                          });
+                          _onPadPressed(sound, index);
+                        },
+                        child: Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: isHighlighted ? Colors.orange : (hasSound ? _getPadColor(soundId) : Colors.grey),
+                                borderRadius: BorderRadius.circular(12.0),
                               ),
-                            ),
-                          ),
-                          if (padProgress.containsKey(sound))
-                            Align(
-                              alignment: Alignment.center,
-                              child:  SizedBox(
-                                width: 36,
-                                height: 36,
-                                child: CircularProgressIndicator(
-                                  value: padProgress[sound],
-                                  strokeWidth: 5,
-                                  backgroundColor: Colors.white24,
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                              child: Center(
+                                child: Text(
+                                  padStates[sound] ?? "",
+                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ),
-                        ],
+                            if (padProgress.containsKey(sound))
+                              Align(
+                                alignment: Alignment.center,
+                                child:  SizedBox(
+                                  width: 36,
+                                  height: 36,
+                                  child: CircularProgressIndicator(
+                                    value: padProgress[sound],
+                                    strokeWidth: 5,
+                                    backgroundColor: Colors.white24,
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     );
                   },
