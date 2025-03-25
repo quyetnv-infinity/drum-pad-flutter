@@ -68,6 +68,12 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   List<String> _faceA = [];
   List<String> _faceB = [];
 
+  int goodPoint = 0;
+  int perfectPoint = 0;
+  int latePoint = 0;
+  int earlyPoint = 0;
+  int missPoint = 0;
+
   final Map<String, Color> soundColors = {
     'lead': Colors.red,
     'bass': Colors.green,
@@ -108,6 +114,49 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     sequenceTimer?.cancel();
     progressTimer?.cancel();
     super.dispose();
+  }
+
+  void increasePoint(String state){
+    switch(state){
+      case 'Perfect':
+        perfectPoint++;
+        break;
+      case 'Gud':
+        goodPoint++;
+        break;
+      case 'Late':
+        latePoint++;
+        break;
+      case 'Early':
+        earlyPoint++;
+        break;
+      case 'Miss':
+        missPoint++;
+        break;
+    }
+  }
+
+  void showDialogPoint(){
+    showDialog(context: context, builder: (context) {
+      return AlertDialog(
+        title: Text("Result"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("Perfect: $perfectPoint"),
+            Text("Good: $goodPoint"),
+            Text("Late: $latePoint"),
+            Text("Early: $earlyPoint"),
+            Text("Miss: $missPoint"),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: (){
+            Navigator.pop(context);
+          }, child: Text("OK"))
+        ],
+      );
+    },);
   }
 
   Future<void> _loadSequenceDataFromFile() async {
@@ -307,6 +356,8 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
       }
     }
 
+    increasePoint(state);
+
     setState(() {
       padStates[sound] = state;
       firstRemainState = state;
@@ -321,6 +372,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
 
     List<String> requiredNotes = List<String>.from(events[currentEventIndex]['notes']);
     if(!requiredNotes.contains(sound) && currentEventIndex != 0){
+      increasePoint("Miss");
       setState(() {
         padStates[sound] = 'Miss';
       });
@@ -340,6 +392,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
             setState(() {
               padStates[e] = 'Miss';
             });
+            increasePoint("Miss");
             Future.delayed(const Duration(seconds: 1), () {
               setState(() {
                 padStates.remove(e);
@@ -353,6 +406,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
         _processEvent(events[currentEventIndex]);
       } else {
         _resetSequence(isPlayingDrum: true);
+        showDialogPoint();
       }
     } else if (remainSounds.contains(sound)){
       double currentTime = (DateTime.now().difference(firstRemainSound!).inMilliseconds) / 1000.0;
@@ -368,6 +422,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
       setState(() {
         padStates[sound] = state;
       });
+      increasePoint(state);
       print(padStates[sound]);
     }
     //
