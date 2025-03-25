@@ -44,6 +44,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   Timer? sequenceTimer;
   bool isPlaying = false;
   Set<String> highlightedSounds = {};
+  Set<String> remainSounds = {};
   bool notePressed = false;
   double startTimeOffset = 0;
   DateTime? startTime;
@@ -58,6 +59,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   int? _padPressedIndex;
 
   DateTime? lastEventTime;
+  DateTime? firstRemainSound;
   Map<String, String> padStates = {};
   List<dynamic> lessons = [];
   int currentLesson = 0;
@@ -242,7 +244,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
 
   void _processEvent(Map<String, dynamic> event) {
     setState(() {
-      // highlightedSounds.clear();
+      highlightedSounds.clear();
       highlightedSounds.addAll(List<String>.from(event['notes']));
       progressValue = 0.0;
       padProgress.clear();
@@ -306,7 +308,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
 
     setState(() {
       padStates[sound] = state;
-      highlightedSounds.remove(sound);
+      // highlightedSounds.remove(sound);
     });
 
     // Ẩn sau 2 giây
@@ -322,14 +324,39 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
         padStates[sound] = 'Miss';
       });
     }
-
-    if (highlightedSounds.isEmpty) {
+    if (highlightedSounds.contains(sound) ) {
+      firstRemainSound = DateTime.now();
+      if(remainSounds.isNotEmpty){
+        remainSounds.map((e)=> setState(() {
+          padStates[e] = 'Miss';
+        }));
+        print(currentEventIndex);
+      }
+      remainSounds.clear();
+      for (var remainingSound in highlightedSounds) {
+        if (remainingSound != sound) {
+          remainSounds.add(remainingSound);
+        }
+      }
       currentEventIndex++;
       if (currentEventIndex < events.length) {
         _processEvent(events[currentEventIndex]);
       } else {
         _resetSequence(isPlayingDrum: true);
       }
+    } else if (remainSounds.contains(sound)){
+      double currentTime = (DateTime.now().difference(firstRemainSound!).inMilliseconds) / 1000.0;
+      String state = "";
+      if(currentEventIndex != 0){
+        if (currentTime > 0.2) {
+          state = 'Late';
+        } else{
+          state = 'Perfect';
+        }
+      }
+      setState(() {
+        padStates[sound] = state;
+      });
     }
     //
     // if (highlightedSounds.contains(sound)) {
@@ -348,7 +375,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     //   }
     // }
 
-    lastEventTime = DateTime.now();
+    // lastEventTime = DateTime.now();
   }
 
   Color _getPadColor(String sound) {
