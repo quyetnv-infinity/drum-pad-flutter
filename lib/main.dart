@@ -57,7 +57,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   int? _currentHoverIndex;
   final GlobalKey _widgetPadKey = GlobalKey();
   String? _currentLeadSound;
-  int? _padPressedIndex;
+  Set<int> _padPressedIndex = {};
 
   DateTime? lastEventTime;
   DateTime? firstRemainSound;
@@ -358,11 +358,11 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     if(_getPadColor(sound) == Colors.grey) return;
     if (_currentHoverIndex == index) return;
     setState(() {
-      _padPressedIndex = index;
+      _padPressedIndex.add(index);
     });
     Future.delayed(Duration(milliseconds: 100), (){
       setState(() {
-        _padPressedIndex = null;
+        _padPressedIndex.remove(index);
       });
     },);
     _playSound(sound);
@@ -556,7 +556,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                     final String soundId = hasSound ? lessonSounds[index] : '';
                     final bool isHighlighted = highlightedSounds.contains(soundId);
                     final sound = lessonSounds[index];
-                    bool isActive = _padPressedIndex == index;
+                    bool isActive = _padPressedIndex.isNotEmpty && _padPressedIndex.contains(index);
                     return GestureDetector(
                       onTap: () {
                         setState(() {
