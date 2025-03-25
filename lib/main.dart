@@ -655,7 +655,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                     isLoading = false;
                   });
                   // Future.delayed(Duration(microseconds: 1000), _startSequence);
-                }, child: Text(index.toString(), style: TextStyle(color: index == currentLesson ? Colors.blue : Colors.black)))),
+                }, child: Text(index.toString(), style: TextStyle(color: index == currentLesson ? Colors.orange : Colors.white)))),
               )
             ],
           ),
