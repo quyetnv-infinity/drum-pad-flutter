@@ -242,7 +242,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
 
   void _processEvent(Map<String, dynamic> event) {
     setState(() {
-      highlightedSounds.clear();
+      // highlightedSounds.clear();
       highlightedSounds.addAll(List<String>.from(event['notes']));
       progressValue = 0.0;
       padProgress.clear();
@@ -306,6 +306,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
 
     setState(() {
       padStates[sound] = state;
+      highlightedSounds.remove(sound);
     });
 
     // Ẩn sau 2 giây
@@ -322,15 +323,32 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
       });
     }
 
-    if (highlightedSounds.contains(sound)) {
-      // Nếu tất cả các nốt của sự kiện hiện tại đã được phát, chuyển sang sự kiện tiếp theo
+    if (highlightedSounds.isEmpty) {
       currentEventIndex++;
       if (currentEventIndex < events.length) {
         _processEvent(events[currentEventIndex]);
       } else {
-        _resetSequence(isPlayingDrum: true); // Kết thúc nếu không còn sự kiện nào
+        _resetSequence(isPlayingDrum: true);
       }
     }
+    //
+    // if (highlightedSounds.contains(sound)) {
+    //   // for (var remainingSound in highlightedSounds) {
+    //   //   if (remainingSound != sound) {
+    //   //     _playSound(remainingSound);
+    //   //   }
+    //   // }
+    //
+    //   highlightedSounds.remove(sound);
+    //   currentEventIndex++;
+    //   if (currentEventIndex < events.length) {
+    //     _processEvent(events[currentEventIndex]);
+    //   } else {
+    //     _resetSequence(); // Kết thúc nếu không còn sự kiện nào
+    //   }
+    // }
+
+    lastEventTime = DateTime.now();
   }
 
   Color _getPadColor(String sound) {
