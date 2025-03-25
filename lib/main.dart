@@ -360,7 +360,8 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
 
     setState(() {
       padStates[sound] = state;
-      firstRemainState = state;
+      // print(firstRemainState);
+
       // highlightedSounds.remove(sound);
     });
 
@@ -384,6 +385,9 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
       for (var remainingSound in highlightedSounds) {
         if (remainingSound != sound) {
           remainSounds.add(remainingSound);
+          setState(() {
+            firstRemainState = state;
+          });
         }
       }
       Future.delayed(Duration(milliseconds: 200),() {
