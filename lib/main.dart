@@ -93,9 +93,9 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   }
 
   final Map<String, Color> soundColors = {
-    'lead': Colors.red,
-    'bass': Colors.green,
-    'drums': Colors.blue,
+    'lead': Colors.redAccent,
+    'bass': Colors.lightGreen,
+    'drums': Colors.lightBlue,
     'fx': Colors.yellow,
   };
 
@@ -528,12 +528,13 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: Color(0xFF5A2CE4),
+        backgroundColor: Colors.black,
         appBar: AppBar(
-          title: const Text('Drumpad'),
+          title: const Text('Drumpad', style: TextStyle(color: Colors.white)),
           actions: [
-            IconButton(onPressed: isPlaying ? _resetSequence : _startSequence, icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow))
+            IconButton(onPressed: isPlaying ? _resetSequence : _startSequence, icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow, color: Colors.white,))
           ],
+          backgroundColor: Colors.black,
         ),
         body: SafeArea(
           child: Column(
@@ -591,12 +592,12 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                                     value: (currentEventIndex + 1) / (_futureNotes[0]["index"] + 1),
                                     strokeWidth: 5,
                                     backgroundColor: Colors.white24,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                   ),
                                 ),
                                 Align(
                                     alignment: Alignment.center,
-                                    child: Text("Wait", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black),))
+                                    child: Text("Wait", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: Colors.white)))
                               ],
                             ),
                           if (padProgress.containsKey(sound))
@@ -609,7 +610,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                                   value: padProgress[sound],
                                   strokeWidth: 5,
                                   backgroundColor: Colors.white24,
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                 ),
                               ),
                             ),
@@ -655,7 +656,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                     isLoading = false;
                   });
                   // Future.delayed(Duration(microseconds: 1000), _startSequence);
-                }, child: Text(index.toString(), style: TextStyle(color: index == currentLesson ? Colors.orange : Colors.white)))),
+                }, child: Text(index.toString(), style: TextStyle(color: index == currentLesson ? Colors.blue : Colors.white)))),
               )
             ],
           ),
