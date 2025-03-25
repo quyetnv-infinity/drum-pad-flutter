@@ -336,11 +336,12 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   }
 
   void _onPadPressed(String sound, int index) {
+    if(_getPadColor(sound) == Colors.grey) return;
     if (_currentHoverIndex == index) return;
     setState(() {
       _padPressedIndex = index;
     });
-    Future.delayed(Duration(milliseconds: 200), (){
+    Future.delayed(Duration(milliseconds: 100), (){
       setState(() {
         _padPressedIndex = null;
       });
@@ -503,6 +504,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
         }
       },
       child: Scaffold(
+        backgroundColor: Color(0xFF5A2CE4),
         appBar: AppBar(
           title: const Text('Drumpad'),
           actions: [
@@ -530,20 +532,20 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                     final bool isHighlighted = highlightedSounds.contains(soundId);
                     final sound = lessonSounds[index];
                     bool isActive = _padPressedIndex == index;
-                    return AnimatedContainer(
-                      duration: const Duration(milliseconds: 400),
-                      curve: Curves.easeInOut,
-                      padding: EdgeInsets.all(isActive ? 12 : 0),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _currentHoverIndex = null;
-                          });
-                          _onPadPressed(sound, index);
-                        },
-                        child: Stack(
-                          children: [
-                            Container(
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _currentHoverIndex = null;
+                        });
+                        _onPadPressed(sound, index);
+                      },
+                      child: Stack(
+                        children: [
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 150),
+                            curve: Curves.easeInOut,
+                            padding: EdgeInsets.all(isActive ? 8 : 0),
+                            child: Container(
                               decoration: BoxDecoration(
                                 color: isHighlighted ? Colors.orange : (hasSound ? _getPadColor(soundId) : Colors.grey),
                                 borderRadius: BorderRadius.circular(12.0),
@@ -555,22 +557,36 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                                 ),
                               ),
                             ),
-                            if (padProgress.containsKey(sound))
-                              Align(
-                                alignment: Alignment.center,
-                                child:  SizedBox(
-                                  width: 36,
-                                  height: 36,
-                                  child: CircularProgressIndicator(
-                                    value: padProgress[sound],
-                                    strokeWidth: 5,
-                                    backgroundColor: Colors.white24,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-                                  ),
+                          ),
+                          if (padProgress.containsKey(sound))
+                            Align(
+                              alignment: Alignment.center,
+                              child:  SizedBox(
+                                width: 36,
+                                height: 36,
+                                child: CircularProgressIndicator(
+                                  value: padProgress[sound],
+                                  strokeWidth: 5,
+                                  backgroundColor: Colors.white24,
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
                                 ),
                               ),
-                          ],
-                        ),
+                            ),
+                          if (isActive)
+                            TweenAnimationBuilder<double>(
+                              duration: Duration(milliseconds: 100),
+                              tween: Tween(begin: 0.0, end: 1.0),
+                              builder: (context, value, child) {
+                                return Container(
+                                  margin: EdgeInsets.all(40*(1 - value)),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.white, width: 2),
+                                    shape: BoxShape.circle
+                                  ),
+                                );
+                              },
+                            ),
+                        ],
                       ),
                     );
                   },
