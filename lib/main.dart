@@ -69,7 +69,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   List<String> _faceB = [];
 
   int goodPoint = 0;
-  int perfectPoint = 0;
+  int perfectPoint = 1;
   int latePoint = 0;
   int earlyPoint = 0;
   int missPoint = 0;
@@ -134,6 +134,13 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     super.dispose();
   }
 
+  void resetPoint(){
+    perfectPoint = 1;
+    goodPoint = 0;
+    latePoint = 0;
+    earlyPoint = 0;
+    missPoint = 0;
+  }
   void increasePoint(String state){
     switch(state){
       case 'Perfect':
@@ -264,6 +271,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   }
 
   void _startSequence() {
+    resetPoint();
     if (isPlaying || events.isEmpty) return;
     _resetSequence();
     setState(() {
@@ -277,6 +285,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     for (var player in audioPlayers.values) {
       if(!isPlayingDrum) player.pause();
     }
+
     setState(() {
       isPlaying = false;
       currentEventIndex = 0;
@@ -346,11 +355,12 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   }
 
   void _onPadPressed(String sound, int index) {
+    if(_getPadColor(sound) == Colors.grey) return;
     if (_currentHoverIndex == index) return;
     setState(() {
       _padPressedIndex = index;
     });
-    Future.delayed(Duration(milliseconds: 200), (){
+    Future.delayed(Duration(milliseconds: 100), (){
       setState(() {
         _padPressedIndex = null;
       });
@@ -398,10 +408,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
       });
     }
 
-
     if (highlightedSounds.contains(sound) ) {
-      print(sound);
-
       if (_futureNotes.isNotEmpty && (_futureNotes[0]["notes"] as List).contains(sound)) {
         _futureNotes.removeAt(0);
         setState(() {});
@@ -521,6 +528,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
         }
       },
       child: Scaffold(
+        backgroundColor: Color(0xFF5A2CE4),
         appBar: AppBar(
           title: const Text('Drumpad'),
           actions: [
@@ -548,20 +556,20 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                     final bool isHighlighted = highlightedSounds.contains(soundId);
                     final sound = lessonSounds[index];
                     bool isActive = _padPressedIndex == index;
-                    return AnimatedContainer(
-                      duration: const Duration(milliseconds: 400),
-                      curve: Curves.easeInOut,
-                      padding: EdgeInsets.all(isActive ? 12 : 0),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _currentHoverIndex = null;
-                          });
-                          _onPadPressed(sound, index);
-                        },
-                        child: Stack(
-                          children: [
-                            Container(
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _currentHoverIndex = null;
+                        });
+                        _onPadPressed(sound, index);
+                      },
+                      child: Stack(
+                        children: [
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 150),
+                            curve: Curves.easeInOut,
+                            padding: EdgeInsets.all(isActive ? 8 : 0),
+                            child: Container(
                               decoration: BoxDecoration(
                                 color: isHighlighted ? Colors.orange : (hasSound ? _getPadColor(soundId) : Colors.grey),
                                 borderRadius: BorderRadius.circular(12.0),
@@ -573,39 +581,53 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                                 ),
                               ),
                             ),
-                            if (_futureNotes.isNotEmpty && (_futureNotes[0]["notes"] as List).contains(sound) && currentEventIndex != 0 && !padProgress.containsKey(sound) && !sound.contains("drums"))
-                              Stack(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: CircularProgressIndicator(
-                                      value: (currentEventIndex + 1) / (_futureNotes[0]["index"] + 1),
-                                      strokeWidth: 5,
-                                      backgroundColor: Colors.white24,
-                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Text("Wait", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black),))
-                                ],
-                              ),
-                            if (padProgress.containsKey(sound))
-                              Align(
-                                alignment: Alignment.center,
-                                child: SizedBox(
-                                  width: 36,
-                                  height: 36,
+                          ),
+                          if (_futureNotes.isNotEmpty && (_futureNotes[0]["notes"] as List).contains(sound) && currentEventIndex != 0 && !padProgress.containsKey(sound) && !sound.contains("drums"))
+                            Stack(
+                              children: [
+                                Align(
+                                  alignment: Alignment.center,
                                   child: CircularProgressIndicator(
-                                    value: padProgress[sound],
+                                    value: (currentEventIndex + 1) / (_futureNotes[0]["index"] + 1),
                                     strokeWidth: 5,
                                     backgroundColor: Colors.white24,
                                     valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
                                   ),
                                 ),
+                                Align(
+                                    alignment: Alignment.center,
+                                    child: Text("Wait", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black),))
+                              ],
+                            ),
+                          if (padProgress.containsKey(sound))
+                            Align(
+                              alignment: Alignment.center,
+                              child:  SizedBox(
+                                width: 36,
+                                height: 36,
+                                child: CircularProgressIndicator(
+                                  value: padProgress[sound],
+                                  strokeWidth: 5,
+                                  backgroundColor: Colors.white24,
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                                ),
                               ),
-                          ],
-                        ),
+                            ),
+                          if (isActive)
+                            TweenAnimationBuilder<double>(
+                              duration: Duration(milliseconds: 100),
+                              tween: Tween(begin: 0.0, end: 1.0),
+                              builder: (context, value, child) {
+                                return Container(
+                                  margin: EdgeInsets.all(40*(1 - value)),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.white, width: 2),
+                                    shape: BoxShape.circle
+                                  ),
+                                );
+                              },
+                            ),
+                        ],
                       ),
                     );
                   },
