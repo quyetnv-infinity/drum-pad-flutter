@@ -45,6 +45,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   bool isPlaying = false;
   Set<String> highlightedSounds = {};
   Set<String> remainSounds = {};
+  String firstRemainState = '';
   bool notePressed = false;
   double startTimeOffset = 0;
   DateTime? startTime;
@@ -308,11 +309,11 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
 
     setState(() {
       padStates[sound] = state;
+      firstRemainState = state;
       // highlightedSounds.remove(sound);
     });
 
-    // Ẩn sau 2 giây
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         padStates.remove(sound);
       });
@@ -326,18 +327,27 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     }
     if (highlightedSounds.contains(sound) ) {
       firstRemainSound = DateTime.now();
-      if(remainSounds.isNotEmpty){
-        remainSounds.map((e)=> setState(() {
-          padStates[e] = 'Miss';
-        }));
-        print(currentEventIndex);
-      }
+
       remainSounds.clear();
       for (var remainingSound in highlightedSounds) {
         if (remainingSound != sound) {
           remainSounds.add(remainingSound);
         }
       }
+      Future.delayed(Duration(milliseconds: 200),() {
+        if(remainSounds.isNotEmpty){
+          for (var e in remainSounds) {
+            setState(() {
+              padStates[e] = 'Miss';
+            });
+            Future.delayed(const Duration(seconds: 1), () {
+              setState(() {
+                padStates.remove(e);
+              });
+            });
+          }
+        }
+      });
       currentEventIndex++;
       if (currentEventIndex < events.length) {
         _processEvent(events[currentEventIndex]);
@@ -349,14 +359,16 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
       String state = "";
       if(currentEventIndex != 0){
         if (currentTime > 0.2) {
-          state = 'Late';
+          state = 'Miss';
         } else{
-          state = 'Perfect';
+          state = firstRemainState;
         }
+        remainSounds.remove(sound);
       }
       setState(() {
         padStates[sound] = state;
       });
+      print(padStates[sound]);
     }
     //
     // if (highlightedSounds.contains(sound)) {
