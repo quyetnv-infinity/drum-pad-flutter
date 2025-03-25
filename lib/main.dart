@@ -69,7 +69,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   List<String> _faceB = [];
 
   int goodPoint = 0;
-  int perfectPoint = 0;
+  int perfectPoint = 1;
   int latePoint = 0;
   int earlyPoint = 0;
   int missPoint = 0;
@@ -116,6 +116,13 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     super.dispose();
   }
 
+  void resetPoint(){
+    perfectPoint = 1;
+    goodPoint = 0;
+    latePoint = 0;
+    earlyPoint = 0;
+    missPoint = 0;
+  }
   void increasePoint(String state){
     switch(state){
       case 'Perfect':
@@ -246,6 +253,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   }
 
   void _startSequence() {
+    resetPoint();
     if (isPlaying || events.isEmpty) return;
     _resetSequence();
     setState(() {
@@ -258,6 +266,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     for (var player in audioPlayers.values) {
       if(!isPlayingDrum) player.pause();
     }
+
     setState(() {
       isPlaying = false;
       currentEventIndex = 0;
