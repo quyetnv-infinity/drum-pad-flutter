@@ -2,7 +2,7 @@ name: drumpad_flutter
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
 
@@ -31,3 +31,30 @@ flutter:
     - assets/
     - assets/images/
 
+  fonts:
+    - family: SFProDisplay
+      fonts:
+        - asset: assets/fonts/sfprodisplayregular.otf
+          weight: 400
+        - asset: assets/fonts/sfprodisplaymedium.otf
+          weight: 500
+        - asset: assets/fonts/sfprodisplaybold.otf
+          weight: 700
+        - asset: assets/fonts/sfprodisplayblackitalic.otf
+          style: italic
+          weight: 900
+        - asset: assets/fonts/sfprodisplayheavyitalic.otf
+          style: italic
+          weight: 800
+        - asset: assets/fonts/sfprodisplaylightitalic.otf
+          style: italic
+          weight: 300
+        - asset: assets/fonts/sfprodisplaysemibolditalic.otf
+          style: italic
+          weight: 600
+        - asset: assets/fonts/sfprodisplaythinitalic.otf
+          style: italic
+          weight: 100
+        - asset: assets/fonts/sfprodisplayultralightitalic.otf
+          style: italic
+          weight: 200
