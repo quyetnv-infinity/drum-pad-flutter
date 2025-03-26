@@ -8,6 +8,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
 
 import 'note.util.dart';
+import 'src/mvvm/views/drum_learn/drum_learn_screen.dart';
 
 void main() {
   runApp(const MyApplication());
@@ -36,8 +37,7 @@ class DrumpadScreen extends StatefulWidget {
   State<DrumpadScreen> createState() => _DrumpadScreenState();
 }
 
-class _DrumpadScreenState extends State<DrumpadScreen>
-    with SingleTickerProviderStateMixin {
+class _DrumpadScreenState extends State<DrumpadScreen> with SingleTickerProviderStateMixin {
   List<String> availableSounds = [];
   List<String> lessonSounds = [];
   Map<String, AudioPlayer> audioPlayers = {};
@@ -59,7 +59,7 @@ class _DrumpadScreenState extends State<DrumpadScreen>
   int? _currentHoverIndex;
   Map<int, int> _pointerToPadIndex = {};
   Map<int, Offset> _lastPointerPositions = {};
-  final double _movementThreshold = 15.0; // Minimum movement
+  final double _movementThreshold = 15.0; // Minimum movement 
   Map<int, String> _pointerToSound = {};
 
   final GlobalKey _widgetPadKey = GlobalKey();
@@ -87,13 +87,15 @@ class _DrumpadScreenState extends State<DrumpadScreen>
 
   List<Map<String, dynamic>> getFutureNotes(Map<String, dynamic> data) {
     List<Map<String, dynamic>> futureNotes = [];
-    List<Map<String, dynamic>> events =
-        List<Map<String, dynamic>>.from(data["events"]);
+    List<Map<String, dynamic>> events = List<Map<String, dynamic>>.from(data["events"]);
 
     for (int i = 1; i < events.length; i++) {
       List<String> notes = List<String>.from(events[i]["notes"]);
       if (notes.length >= 2) {
-        futureNotes.add({"notes": notes, "index": i});
+        futureNotes.add({
+          "notes": notes,
+          "index": i
+        });
       }
     }
     return futureNotes;
@@ -146,16 +148,15 @@ class _DrumpadScreenState extends State<DrumpadScreen>
     super.dispose();
   }
 
-  void resetPoint() {
+  void resetPoint(){
     perfectPoint = 1;
     goodPoint = 0;
     latePoint = 0;
     earlyPoint = 0;
     missPoint = 0;
   }
-
-  void increasePoint(String state) {
-    switch (state) {
+  void increasePoint(String state){
+    switch(state){
       case 'Perfect':
         perfectPoint++;
         break;
@@ -174,43 +175,36 @@ class _DrumpadScreenState extends State<DrumpadScreen>
     }
   }
 
-  void showDialogPoint() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Result"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("Perfect: $perfectPoint"),
-              Text("Good: $goodPoint"),
-              Text("Late: $latePoint"),
-              Text("Early: $earlyPoint"),
-              Text("Miss: $missPoint"),
-            ],
-          ),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text("OK"))
+  void showDialogPoint(){
+    showDialog(context: context, builder: (context) {
+      return AlertDialog(
+        title: Text("Result"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("Perfect: $perfectPoint"),
+            Text("Good: $goodPoint"),
+            Text("Late: $latePoint"),
+            Text("Early: $earlyPoint"),
+            Text("Miss: $missPoint"),
           ],
-        );
-      },
-    );
+        ),
+        actions: [
+          TextButton(onPressed: (){
+            Navigator.pop(context);
+          }, child: Text("OK"))
+        ],
+      );
+    },);
   }
 
   Future<void> _loadSequenceDataFromFile() async {
     try {
-      final String jsonString =
-          await rootBundle.loadString('assets/sequence.json');
+      final String jsonString = await rootBundle.loadString('assets/sequence.json');
       final jsonData = json.decode(jsonString);
       lessons = List.from(jsonData);
       currentLesson = 8;
-      events =
-          List<Map<String, dynamic>>.from(lessons[currentLesson]['events']);
+      events = List<Map<String, dynamic>>.from(lessons[currentLesson]['events']);
       Set<String> uniqueSounds = {};
       for (var lesson in lessons) {
         for (var event in lesson["events"]) {
@@ -225,11 +219,7 @@ class _DrumpadScreenState extends State<DrumpadScreen>
         uniqueSounds.addAll(notes);
       }
       _splitSoundsByFace();
-      lessonSounds.addAll(sortDrumpadSounds(
-          uniqueSounds.toList(),
-          lessons[currentLesson]['events'][0]["notes"][0].contains("_face_b_")
-              ? _faceB
-              : _faceA));
+      lessonSounds.addAll(sortDrumpadSounds(uniqueSounds.toList(), lessons[currentLesson]['events'][0]["notes"][0].contains("_face_b_") ? _faceB : _faceA));
       _futureNotes = getFutureNotes(lessons[currentLesson]);
     } catch (e) {
       print('Error loading sequence data from file: $e');
@@ -283,8 +273,8 @@ class _DrumpadScreenState extends State<DrumpadScreen>
 
   Future<void> _playSound(String sound) async {
     if (audioPlayers.containsKey(sound)) {
-      if (_getSoundType(sound) == SoundType.lead) {
-        if (_currentLeadSound != null) audioPlayers[_currentLeadSound]?.pause();
+      if(_getSoundType(sound) == SoundType.lead){
+        if(_currentLeadSound != null) audioPlayers[_currentLeadSound]?.pause();
         setState(() {
           _currentLeadSound = sound;
         });
@@ -307,7 +297,7 @@ class _DrumpadScreenState extends State<DrumpadScreen>
   void _resetSequence({bool isPlayingDrum = false}) {
     _futureNotes = getFutureNotes(lessons[currentLesson]);
     for (var player in audioPlayers.values) {
-      if (!isPlayingDrum) player.pause();
+      if(!isPlayingDrum) player.pause();
     }
 
     setState(() {
@@ -339,8 +329,7 @@ class _DrumpadScreenState extends State<DrumpadScreen>
       startTimeOffset = prevEvent['time'] as double;
     }
     final timeUntilEvent = nextEventTime - startTimeOffset;
-    sequenceTimer =
-        Timer(Duration(milliseconds: (timeUntilEvent * 1000).round()), () {
+    sequenceTimer = Timer(Duration(milliseconds: (timeUntilEvent * 1000).round()), () {
       _processEvent(currentEvent);
     });
   }
@@ -356,8 +345,7 @@ class _DrumpadScreenState extends State<DrumpadScreen>
     if (currentEventIndex > events.length - 1) return;
 
     double currentTime = event['time'];
-    double prevTime =
-        events[currentEventIndex == 0 ? 0 : currentEventIndex - 1]['time'];
+    double prevTime = events[currentEventIndex == 0 ? 0 : currentEventIndex - 1]['time'];
     double delay = currentTime - prevTime;
 
     // Nếu nốt đầu tiên có thời gian là 0, thì bỏ qua progress cho nốt này
@@ -371,8 +359,7 @@ class _DrumpadScreenState extends State<DrumpadScreen>
     progressTimer = Timer.periodic(Duration(milliseconds: 10), (timer) {
       setState(() {
         for (var note in padProgress.keys) {
-          padProgress[note] =
-              (padProgress[note]! + (10 / (delay * 1000))).clamp(0.0, 1.0);
+          padProgress[note] = (padProgress[note]! + (10 / (delay * 1000))).clamp(0.0, 1.0);
         }
         if (padProgress.values.every((value) => value == 1.0)) {
           timer.cancel();
@@ -382,7 +369,7 @@ class _DrumpadScreenState extends State<DrumpadScreen>
   }
 
   void _onPadPressed(String sound, int index) {
-    if (_getPadColor(sound) == Colors.grey) return;
+    if(_getPadColor(sound) == Colors.grey) return;
 
     // Add this check to prevent duplicate activations
     if (_padPressedIndex.contains(index)) return;
@@ -390,27 +377,22 @@ class _DrumpadScreenState extends State<DrumpadScreen>
     setState(() {
       _padPressedIndex.add(index);
     });
-    Future.delayed(
-      Duration(milliseconds: 100),
-      () {
-        setState(() {
-          _padPressedIndex.remove(index);
-        });
-      },
-    );
+    Future.delayed(Duration(milliseconds: 100), (){
+      setState(() {
+        _padPressedIndex.remove(index);
+      });
+    },);
 
     // Rest of the method remains the same
     _playSound(sound);
 
     lastEventTime ??= DateTime.now();
 
-    double currentTime =
-        (DateTime.now().difference(lastEventTime!).inMilliseconds) / 1000.0;
-    double requiredTime = events[currentEventIndex]['time'] -
-        (currentEventIndex > 0 ? events[currentEventIndex - 1]['time'] : 0);
+    double currentTime = (DateTime.now().difference(lastEventTime!).inMilliseconds) / 1000.0;
+    double requiredTime = events[currentEventIndex]['time'] - (currentEventIndex > 0 ? events[currentEventIndex - 1]['time'] : 0);
 
     String state = "";
-    if (currentEventIndex != 0) {
+    if(currentEventIndex != 0){
       if (currentTime < requiredTime - 0.5) {
         state = 'Early';
       } else if (currentTime < requiredTime - 0.2) {
@@ -437,23 +419,20 @@ class _DrumpadScreenState extends State<DrumpadScreen>
       });
     });
 
-    List<String> requiredNotes =
-        List<String>.from(events[currentEventIndex]['notes']);
-    if (!requiredNotes.contains(sound) && currentEventIndex != 0) {
+    List<String> requiredNotes = List<String>.from(events[currentEventIndex]['notes']);
+    if(!requiredNotes.contains(sound) && currentEventIndex != 0){
       increasePoint("Miss");
       setState(() {
         padStates[sound] = 'Miss';
       });
     }
     if (remainSounds.contains(sound)) {
-      double currentTime =
-          (DateTime.now().difference(firstRemainSound!).inMilliseconds) /
-              1000.0;
+      double currentTime = (DateTime.now().difference(firstRemainSound!).inMilliseconds) / 1000.0;
       String state = "";
-      if (currentEventIndex != 0) {
+      if(currentEventIndex != 0){
         if (currentTime > 0.2) {
           state = 'Miss';
-        } else {
+        } else{
           state = firstRemainState;
         }
         remainSounds.remove(sound);
@@ -464,8 +443,7 @@ class _DrumpadScreenState extends State<DrumpadScreen>
       increasePoint(state);
       print(padStates[sound]);
     } else if (highlightedSounds.contains(sound)) {
-      if (_futureNotes.isNotEmpty &&
-          (_futureNotes[0]["notes"] as List).contains(sound)) {
+      if (_futureNotes.isNotEmpty && (_futureNotes[0]["notes"] as List).contains(sound)) {
         _futureNotes.removeAt(0);
         setState(() {});
       }
@@ -480,8 +458,8 @@ class _DrumpadScreenState extends State<DrumpadScreen>
           });
         }
       }
-      Future.delayed(Duration(milliseconds: 200), () {
-        if (remainSounds.isNotEmpty) {
+      Future.delayed(Duration(milliseconds: 200),() {
+        if(remainSounds.isNotEmpty){
           for (var e in remainSounds) {
             setState(() {
               padStates[e] = 'Miss';
@@ -504,6 +482,10 @@ class _DrumpadScreenState extends State<DrumpadScreen>
         showDialogPoint();
       }
     }
+
+    print(currentEventIndex);
+    print(_futureNotes);
+    print("_______");
   }
 
   Color _getPadColor(String sound) {
@@ -516,13 +498,27 @@ class _DrumpadScreenState extends State<DrumpadScreen>
   }
 
   double _getPositionTop() {
-    final RenderBox renderBox =
-        _widgetPadKey.currentContext?.findRenderObject() as RenderBox;
-    final Offset position =
-        renderBox.localToGlobal(Offset.zero); // Lấy vị trí tuyệt đối
+    final RenderBox renderBox = _widgetPadKey.currentContext?.findRenderObject() as RenderBox;
+    final Offset position = renderBox.localToGlobal(Offset.zero); // Lấy vị trí tuyệt đối
     final double top = position.dy;
     final double bottom = top + renderBox.size.height;
     return top;
+  }
+
+  double _calculateProgressValue(int currentIndex, int targetIndex) {
+    // Calculate how far we are between current and target index
+    int distance = targetIndex - currentIndex;
+
+    // Divide the distance into 4 equal steps
+    int stepSize = (distance / 4).ceil();
+    if (stepSize <= 0) stepSize = 1;
+
+    // Calculate which step we're on (0-3)
+    int currentStep = 4 - ((distance + stepSize - 1) ~/ stepSize);
+    currentStep = currentStep.clamp(0, 4);
+
+    // Return progress as a value between 0.0 and 1.0
+    return (currentStep / 4).clamp(0.0, 1.0);
   }
 
   @override
@@ -553,6 +549,7 @@ class _DrumpadScreenState extends State<DrumpadScreen>
           _pointerToSound[event.pointer] = lessonSounds[index];
         }
       },
+
       onPointerUp: (event) {
         // Clean up when pointer is released
         _pointerToPadIndex.remove(event.pointer);
@@ -565,8 +562,7 @@ class _DrumpadScreenState extends State<DrumpadScreen>
 
         // Check if this pointer has moved enough to trigger a new pad
         if (_lastPointerPositions.containsKey(event.pointer)) {
-          double distance =
-              (localPosition - _lastPointerPositions[event.pointer]!).distance;
+          double distance = (localPosition - _lastPointerPositions[event.pointer]!).distance;
           if (distance < _movementThreshold) {
             return; // Movement too small, ignore
           }
@@ -605,12 +601,7 @@ class _DrumpadScreenState extends State<DrumpadScreen>
         appBar: AppBar(
           title: const Text('Drumpad', style: TextStyle(color: Colors.white)),
           actions: [
-            IconButton(
-                onPressed: isPlaying ? _resetSequence : _startSequence,
-                icon: Icon(
-                  isPlaying ? Icons.pause : Icons.play_arrow,
-                  color: Colors.white,
-                ))
+            IconButton(onPressed: isPlaying ? _resetSequence : _startSequence, icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow, color: Colors.white,))
           ],
           backgroundColor: Colors.black,
         ),
@@ -632,11 +623,9 @@ class _DrumpadScreenState extends State<DrumpadScreen>
                   itemBuilder: (context, index) {
                     final bool hasSound = index < lessonSounds.length;
                     final String soundId = hasSound ? lessonSounds[index] : '';
-                    final bool isHighlighted =
-                        highlightedSounds.contains(soundId);
+                    final bool isHighlighted = highlightedSounds.contains(soundId);
                     final sound = lessonSounds[index];
-                    bool isActive = _padPressedIndex.isNotEmpty &&
-                        _padPressedIndex.contains(index);
+                    bool isActive = _padPressedIndex.isNotEmpty && _padPressedIndex.contains(index);
                     return GestureDetector(
                       onTapDown: (_) {
                         setState(() {
@@ -652,69 +641,57 @@ class _DrumpadScreenState extends State<DrumpadScreen>
                             padding: EdgeInsets.all(isActive ? 8 : 0),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: isHighlighted
-                                    ? Colors.orange
-                                    : (hasSound
-                                        ? _getPadColor(soundId)
-                                        : Colors.grey),
+                                color: isHighlighted ? Colors.orange : (hasSound ? _getPadColor(soundId) : Colors.grey),
                                 borderRadius: BorderRadius.circular(12.0),
                               ),
                               child: Center(
                                 child: Text(
                                   padStates[sound] ?? "",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ),
                           ),
-                          if (_futureNotes.isNotEmpty &&
-                              (_futureNotes[0]["notes"] as List)
-                                  .contains(sound) &&
-                              currentEventIndex != 0 &&
-                              !padProgress.containsKey(sound) &&
-                              !sound.contains("drums"))
+                          if (
+                          _futureNotes.isNotEmpty
+                            && (_futureNotes[0]["notes"] as List).contains(sound)
+                            && currentEventIndex != 0
+                            && !padProgress.containsKey(sound)
+                            && !sound.contains("drums")
+                            && _futureNotes[0]["index"] - currentEventIndex < 4
+                          )
                             Stack(
                               children: [
                                 Align(
                                   alignment: Alignment.center,
                                   child: CircularProgressIndicator(
-                                    value: (currentEventIndex + 1) /
-                                        (_futureNotes[0]["index"] + 1),
+                                    value: _calculateProgressValue(currentEventIndex, _futureNotes[0]["index"]),
                                     strokeWidth: 5,
                                     backgroundColor: Colors.white24,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                   ),
                                 ),
                                 Align(
                                     alignment: Alignment.center,
-                                    child: Text("Wait",
-                                        style: TextStyle(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white)))
+                                    child: Text("Wait", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: Colors.white)))
                               ],
                             ),
                           if (padProgress.containsKey(sound))
                             Align(
                               alignment: Alignment.center,
-                              child: SizedBox(
+                              child:  SizedBox(
                                 width: 36,
                                 height: 36,
                                 child: CircularProgressIndicator(
                                   value: padProgress[sound],
                                   strokeWidth: 5,
                                   backgroundColor: Colors.white24,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white),
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                 ),
                               ),
                             ),
                           if (isActive)
-                            Lottie.asset('assets/anim/lightning_button.json',
-                                fit: BoxFit.cover, controller: _controller)
+                            Lottie.asset('assets/anim/lightning_button.json', fit: BoxFit.cover, controller: _controller)
                         ],
                       ),
                     );
@@ -722,42 +699,28 @@ class _DrumpadScreenState extends State<DrumpadScreen>
                 ),
               ),
               Wrap(
-                children: List.generate(
-                    lessons.length,
-                    (index) => TextButton(
-                        onPressed: () async {
-                          setState(() {
-                            isLoading = true;
-                            currentLesson = index;
-                            events = List<Map<String, dynamic>>.from(
-                                lessons[currentLesson]['events']);
-                            final Set<String> uniqueSounds = {};
-                            for (var event in events) {
-                              final notes = List<String>.from(event['notes']);
-                              uniqueSounds.addAll(notes);
-                            }
-                            lessonSounds.clear();
-                            lessonSounds.addAll(sortDrumpadSounds(
-                                uniqueSounds.toList(),
-                                lessons[index]['events'][0]["notes"][0]
-                                        .contains("_face_b_")
-                                    ? _faceB
-                                    : _faceA));
-                            // print(lessons[index]['events'][0]["notes"][0].contains("_face_b_") ? _faceB : _faceA);
-                          });
-                          // print(availableSounds);
-                          await _initializeAudioPlayers();
-                          _resetSequence();
-                          setState(() {
-                            isLoading = false;
-                          });
-                          // Future.delayed(Duration(microseconds: 1000), _startSequence);
-                        },
-                        child: Text(index.toString(),
-                            style: TextStyle(
-                                color: index == currentLesson
-                                    ? Colors.blue
-                                    : Colors.white)))),
+                children: List.generate(lessons.length, (index) => TextButton(onPressed: () async {
+                  setState(() {
+                    isLoading = true;
+                    currentLesson = index;
+                    events = List<Map<String, dynamic>>.from(lessons[currentLesson]['events']);
+                    final Set<String> uniqueSounds = {};
+                    for (var event in events) {
+                      final notes = List<String>.from(event['notes']);
+                      uniqueSounds.addAll(notes);
+                    }
+                    lessonSounds.clear();
+                    lessonSounds.addAll(sortDrumpadSounds(uniqueSounds.toList(), lessons[index]['events'][0]["notes"][0].contains("_face_b_") ? _faceB : _faceA));
+                    // print(lessons[index]['events'][0]["notes"][0].contains("_face_b_") ? _faceB : _faceA);
+                  });
+                  // print(availableSounds);
+                  await _initializeAudioPlayers();
+                  _resetSequence();
+                  setState(() {
+                    isLoading = false;
+                  });
+                  // Future.delayed(Duration(microseconds: 1000), _startSequence);
+                }, child: Text(index.toString(), style: TextStyle(color: index == currentLesson ? Colors.blue : Colors.white)))),
               )
             ],
           ),
