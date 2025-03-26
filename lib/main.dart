@@ -14,22 +14,6 @@ void main() {
   runApp(const MyApplication());
 }
 
-class DrumpadApp extends StatelessWidget {
-  const DrumpadApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Drumpad',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: const DrumpadScreen(),
-    );
-  }
-}
-
 class DrumpadScreen extends StatefulWidget {
   const DrumpadScreen({Key? key}) : super(key: key);
 
@@ -482,10 +466,10 @@ class _DrumpadScreenState extends State<DrumpadScreen> with SingleTickerProvider
         showDialogPoint();
       }
     }
-
-    print(currentEventIndex);
-    print(_futureNotes);
-    print("_______");
+    //
+    // print(currentEventIndex);
+    // print(_futureNotes);
+    // print("_______");
   }
 
   Color _getPadColor(String sound) {
@@ -496,6 +480,37 @@ class _DrumpadScreenState extends State<DrumpadScreen> with SingleTickerProvider
     }
     return Colors.grey;
   }
+
+  List<Color> _getPadGradientColor(bool isActive, String sound){
+    if(isActive){
+      for (var key in soundGradientActiveColors.keys) {
+        if (sound.contains(key)) {
+          return soundGradientActiveColors[key]!;
+        }
+      }
+    } else {
+      for (var key in soundGradientDefaultColors.keys) {
+        if (sound.contains(key)) {
+          return soundGradientDefaultColors[key]!;
+        }
+      }
+    }
+    return [Color(0xFF919191), Color(0xFF5E5E5E)];
+  }
+
+  final Map<String, List<Color>> soundGradientDefaultColors = {
+    'lead': [Color(0xFFBC80D6), Color(0xFFAA46D6)],
+    'bass': [Color(0xFF82D6CB), Color(0xFF47D6C3)],
+    'drums': [Color(0xFF81C8D6), Color(0xFF47BED6)],
+    'fx': [Color(0xFFAED680), Color(0xFF93D647)],
+  };
+
+  final Map<String, List<Color>> soundGradientActiveColors = {
+    'lead': [Color(0xFFEFCCFF), Color(0xFFD880FF)],
+    'bass': [Color(0xFFCCFFF8), Color(0xFF80FFEE)],
+    'drums': [Color(0xFFCCF7FF), Color(0xFF80EAFF)],
+    'fx': [Color(0xFFE7FFCC), Color(0xFFC3FF80)],
+  };
 
   double _getPositionTop() {
     final RenderBox renderBox = _widgetPadKey.currentContext?.findRenderObject() as RenderBox;
@@ -641,8 +656,9 @@ class _DrumpadScreenState extends State<DrumpadScreen> with SingleTickerProvider
                             padding: EdgeInsets.all(isActive ? 8 : 0),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: isHighlighted ? Colors.orange : (hasSound ? _getPadColor(soundId) : Colors.grey),
+                                // color: isHighlighted ? Colors.orange : (hasSound ? _getPadColor(soundId) : Colors.grey),
                                 borderRadius: BorderRadius.circular(12.0),
+                                gradient: RadialGradient(colors: isHighlighted ? [Color(0xFFEDC78C), Colors.orange] : (hasSound ? _getPadGradientColor(isActive, soundId) : [Color(0xFF919191), Color(0xFF5E5E5E)]))
                               ),
                               child: Center(
                                 child: Text(
