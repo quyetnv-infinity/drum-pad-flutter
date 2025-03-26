@@ -55,6 +55,10 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   Map<String, double> padProgress = {};
 
   int? _currentHoverIndex;
+  Map<int, int> _pointerToPadIndex = {};
+  Map<int, Offset> _lastPointerPositions = {};
+  final double _movementThreshold = 15.0; // Minimum movement 
+
   final GlobalKey _widgetPadKey = GlobalKey();
   String? _currentLeadSound;
   Set<int> _padPressedIndex = {};
@@ -508,11 +512,30 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
       );
     }
     return Listener(
-      behavior: HitTestBehavior.translucent,
+behavior: HitTestBehavior.translucent,
+      onPointerDown: (event) {
+        // Track new pointer
+        RenderBox box = context.findRenderObject() as RenderBox;
+        Offset localPosition = box.globalToLocal(event.position);
+        _lastPointerPositions[event.pointer] = localPosition;
+      },
+      onPointerUp: (event) {
+        // Clean up when pointer is released
+        _pointerToPadIndex.remove(event.pointer);
+        _lastPointerPositions.remove(event.pointer);
+      },
       onPointerMove: (event) async {
         RenderBox box = context.findRenderObject() as RenderBox;
         Offset localPosition = box.globalToLocal(event.position);
-
+        
+        // Check if this pointer has moved enough to trigger a new pad
+        if (_lastPointerPositions.containsKey(event.pointer)) {
+          double distance = (localPosition - _lastPointerPositions[event.pointer]!).distance;
+          if (distance < _movementThreshold) {
+            return; // Movement too small, ignore
+          }
+        }
+        
         double itemWidth = box.size.width / 3;
         double itemHeight = itemWidth;
         int col = (localPosition.dx ~/ itemWidth).clamp(0, 2);
@@ -520,7 +543,10 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
             .clamp(0, (12 ~/ 3));
         int index = row * 3 + col;
 
-        if (index < 12) {
+        // Only trigger if this is a new pad for this pointer
+        if (index < 12 && _pointerToPadIndex[event.pointer] != index) {
+          _pointerToPadIndex[event.pointer] = index;
+          _lastPointerPositions[event.pointer] = localPosition;
           _onPadPressed(lessonSounds[index], index);
           setState(() {
             _currentHoverIndex = index;
@@ -558,7 +584,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                     final sound = lessonSounds[index];
                     bool isActive = _padPressedIndex.isNotEmpty && _padPressedIndex.contains(index);
                     return GestureDetector(
-                      onTap: () {
+                      onTapDown: (_) {
                         setState(() {
                           _currentHoverIndex = null;
                         });
