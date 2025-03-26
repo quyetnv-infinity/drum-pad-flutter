@@ -12,6 +12,12 @@ class MyApplication extends StatelessWidget {
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         fontFamily: AppFonts.sfProDisplay,
+        appBarTheme: AppBarTheme(
+          color: Colors.transparent,
+          elevation: 0,
+          centerTitle: true,
+          surfaceTintColor: Colors.transparent,
+        ),
       ),
       themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
