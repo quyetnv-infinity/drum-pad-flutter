@@ -58,6 +58,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   Map<int, int> _pointerToPadIndex = {};
   Map<int, Offset> _lastPointerPositions = {};
   final double _movementThreshold = 15.0; // Minimum movement 
+  Map<int, String> _pointerToSound = {};
 
   final GlobalKey _widgetPadKey = GlobalKey();
   String? _currentLeadSound;
@@ -360,7 +361,10 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
 
   void _onPadPressed(String sound, int index) {
     if(_getPadColor(sound) == Colors.grey) return;
-    if (_currentHoverIndex == index) return;
+    
+    // Add this check to prevent duplicate activations
+    if (_padPressedIndex.contains(index)) return;
+    
     setState(() {
       _padPressedIndex.add(index);
     });
@@ -369,6 +373,8 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
         _padPressedIndex.remove(index);
       });
     },);
+    
+    // Rest of the method remains the same
     _playSound(sound);
 
     lastEventTime ??= DateTime.now();
@@ -512,16 +518,31 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
       );
     }
     return Listener(
-behavior: HitTestBehavior.translucent,
+      behavior: HitTestBehavior.translucent,
       onPointerDown: (event) {
         // Track new pointer
         RenderBox box = context.findRenderObject() as RenderBox;
         Offset localPosition = box.globalToLocal(event.position);
         _lastPointerPositions[event.pointer] = localPosition;
+        
+        // Calculate which pad was touched
+        double itemWidth = box.size.width / 3;
+        double itemHeight = itemWidth;
+        int col = (localPosition.dx ~/ itemWidth).clamp(0, 2);
+        int row = ((localPosition.dy - _getPositionTop()) ~/ itemHeight)
+            .clamp(0, (12 ~/ 3));
+        int index = row * 3 + col;
+        
+        if (index < 12) {
+          _pointerToPadIndex[event.pointer] = index;
+          _pointerToSound[event.pointer] = lessonSounds[index];
+        }
       },
+      
       onPointerUp: (event) {
         // Clean up when pointer is released
         _pointerToPadIndex.remove(event.pointer);
+        _pointerToSound.remove(event.pointer);
         _lastPointerPositions.remove(event.pointer);
       },
       onPointerMove: (event) async {
@@ -543,14 +564,25 @@ behavior: HitTestBehavior.translucent,
             .clamp(0, (12 ~/ 3));
         int index = row * 3 + col;
 
-        // Only trigger if this is a new pad for this pointer
-        if (index < 12 && _pointerToPadIndex[event.pointer] != index) {
+        // Only process if index is valid
+        if (index < 12) {
+          String currentSound = lessonSounds[index];
+          
+          // Check if this pointer is already on this pad or has already played this sound
+          if (_pointerToPadIndex[event.pointer] == index || 
+              _pointerToSound[event.pointer] == currentSound) {
+            return; // Already on this pad or already played this sound
+          }
+          
           _pointerToPadIndex[event.pointer] = index;
+          _pointerToSound[event.pointer] = currentSound;
           _lastPointerPositions[event.pointer] = localPosition;
-          _onPadPressed(lessonSounds[index], index);
+          
           setState(() {
             _currentHoverIndex = index;
           });
+          
+          _onPadPressed(currentSound, index);
         }
       },
       child: Scaffold(
