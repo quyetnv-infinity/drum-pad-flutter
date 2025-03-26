@@ -55,6 +55,11 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   Map<String, double> padProgress = {};
 
   int? _currentHoverIndex;
+  Map<int, int> _pointerToPadIndex = {};
+  Map<int, Offset> _lastPointerPositions = {};
+  final double _movementThreshold = 15.0; // Minimum movement 
+  Map<int, String> _pointerToSound = {};
+
   final GlobalKey _widgetPadKey = GlobalKey();
   String? _currentLeadSound;
   Set<int> _padPressedIndex = {};
@@ -356,7 +361,10 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
 
   void _onPadPressed(String sound, int index) {
     if(_getPadColor(sound) == Colors.grey) return;
-    if (_currentHoverIndex == index) return;
+
+    // Add this check to prevent duplicate activations
+    if (_padPressedIndex.contains(index)) return;
+
     setState(() {
       _padPressedIndex.add(index);
     });
@@ -365,6 +373,8 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
         _padPressedIndex.remove(index);
       });
     },);
+
+    // Rest of the method remains the same
     _playSound(sound);
 
     lastEventTime ??= DateTime.now();
@@ -407,8 +417,23 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
         padStates[sound] = 'Miss';
       });
     }
-
-    if (highlightedSounds.contains(sound) ) {
+    if (remainSounds.contains(sound)) {
+      double currentTime = (DateTime.now().difference(firstRemainSound!).inMilliseconds) / 1000.0;
+      String state = "";
+      if(currentEventIndex != 0){
+        if (currentTime > 0.2) {
+          state = 'Miss';
+        } else{
+          state = firstRemainState;
+        }
+        remainSounds.remove(sound);
+      }
+      setState(() {
+        padStates[sound] = state;
+      });
+      increasePoint(state);
+      print(padStates[sound]);
+    } else if (highlightedSounds.contains(sound)) {
       if (_futureNotes.isNotEmpty && (_futureNotes[0]["notes"] as List).contains(sound)) {
         _futureNotes.removeAt(0);
         setState(() {});
@@ -437,6 +462,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
               });
             });
           }
+          remainSounds.clear();
         }
       });
       currentEventIndex++;
@@ -446,41 +472,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
         _resetSequence(isPlayingDrum: true);
         showDialogPoint();
       }
-    } else if (remainSounds.contains(sound)){
-      double currentTime = (DateTime.now().difference(firstRemainSound!).inMilliseconds) / 1000.0;
-      String state = "";
-      if(currentEventIndex != 0){
-        if (currentTime > 0.2) {
-          state = 'Miss';
-        } else{
-          state = firstRemainState;
-        }
-        remainSounds.remove(sound);
-      }
-      setState(() {
-        padStates[sound] = state;
-      });
-      increasePoint(state);
-      print(padStates[sound]);
     }
-    //
-    // if (highlightedSounds.contains(sound)) {
-    //   // for (var remainingSound in highlightedSounds) {
-    //   //   if (remainingSound != sound) {
-    //   //     _playSound(remainingSound);
-    //   //   }
-    //   // }
-    //
-    //   highlightedSounds.remove(sound);
-    //   currentEventIndex++;
-    //   if (currentEventIndex < events.length) {
-    //     _processEvent(events[currentEventIndex]);
-    //   } else {
-    //     _resetSequence(); // Kết thúc nếu không còn sự kiện nào
-    //   }
-    // }
-
-    // lastEventTime = DateTime.now();
   }
 
   Color _getPadColor(String sound) {
@@ -493,7 +485,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   }
 
   double _getPositionTop() {
-    final RenderBox renderBox = _widgetPadKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox renderBox = _widgetPadKey.currentContext?.findRenderObject() as RenderBox;
     final Offset position = renderBox.localToGlobal(Offset.zero); // Lấy vị trí tuyệt đối
     final double top = position.dy;
     final double bottom = top + renderBox.size.height;
@@ -509,10 +501,13 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     }
     return Listener(
       behavior: HitTestBehavior.translucent,
-      onPointerMove: (event) async {
+      onPointerDown: (event) {
+        // Track new pointer
         RenderBox box = context.findRenderObject() as RenderBox;
         Offset localPosition = box.globalToLocal(event.position);
+        _lastPointerPositions[event.pointer] = localPosition;
 
+        // Calculate which pad was touched
         double itemWidth = box.size.width / 3;
         double itemHeight = itemWidth;
         int col = (localPosition.dx ~/ itemWidth).clamp(0, 2);
@@ -521,10 +516,55 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
         int index = row * 3 + col;
 
         if (index < 12) {
-          _onPadPressed(lessonSounds[index], index);
+          _pointerToPadIndex[event.pointer] = index;
+          _pointerToSound[event.pointer] = lessonSounds[index];
+        }
+      },
+
+      onPointerUp: (event) {
+        // Clean up when pointer is released
+        _pointerToPadIndex.remove(event.pointer);
+        _pointerToSound.remove(event.pointer);
+        _lastPointerPositions.remove(event.pointer);
+      },
+      onPointerMove: (event) async {
+        RenderBox box = context.findRenderObject() as RenderBox;
+        Offset localPosition = box.globalToLocal(event.position);
+
+        // Check if this pointer has moved enough to trigger a new pad
+        if (_lastPointerPositions.containsKey(event.pointer)) {
+          double distance = (localPosition - _lastPointerPositions[event.pointer]!).distance;
+          if (distance < _movementThreshold) {
+            return; // Movement too small, ignore
+          }
+        }
+
+        double itemWidth = box.size.width / 3;
+        double itemHeight = itemWidth;
+        int col = (localPosition.dx ~/ itemWidth).clamp(0, 2);
+        int row = ((localPosition.dy - _getPositionTop()) ~/ itemHeight)
+            .clamp(0, (12 ~/ 3));
+        int index = row * 3 + col;
+
+        // Only process if index is valid
+        if (index < 12) {
+          String currentSound = lessonSounds[index];
+
+          // Check if this pointer is already on this pad or has already played this sound
+          if (_pointerToPadIndex[event.pointer] == index ||
+              _pointerToSound[event.pointer] == currentSound) {
+            return; // Already on this pad or already played this sound
+          }
+
+          _pointerToPadIndex[event.pointer] = index;
+          _pointerToSound[event.pointer] = currentSound;
+          _lastPointerPositions[event.pointer] = localPosition;
+
           setState(() {
             _currentHoverIndex = index;
           });
+
+          _onPadPressed(currentSound, index);
         }
       },
       child: Scaffold(
@@ -558,7 +598,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                     final sound = lessonSounds[index];
                     bool isActive = _padPressedIndex.isNotEmpty && _padPressedIndex.contains(index);
                     return GestureDetector(
-                      onTap: () {
+                      onTapDown: (_) {
                         setState(() {
                           _currentHoverIndex = null;
                         });
@@ -622,8 +662,8 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                                 return Container(
                                   margin: EdgeInsets.all(40*(1 - value)),
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.white, width: 2),
-                                    shape: BoxShape.circle
+                                      border: Border.all(color: Colors.white, width: 2),
+                                      shape: BoxShape.circle
                                   ),
                                 );
                               },
