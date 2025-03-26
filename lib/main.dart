@@ -7,6 +7,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
 
 import 'note.util.dart';
+import 'src/mvvm/views/drum_learn/drum_learn_screen.dart';
 
 void main() {
   runApp(const DrumpadApp());

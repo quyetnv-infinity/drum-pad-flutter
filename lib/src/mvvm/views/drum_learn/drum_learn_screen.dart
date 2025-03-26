@@ -15,12 +15,15 @@ class DrumLearnScreen extends StatelessWidget {
         leadingWidth: 100,
         toolbarHeight: 50,
         backgroundColor: Colors.transparent,
-        leading: Row(
-        children: [
-          Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 28),
-          Text('Back', style: TextStyle(color: Colors.white, fontSize: 17),)
-        ],
-      ),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 16),
+          child: Row(
+            children: [
+              Icon(Icons.arrow_back_ios, color: Colors.white, size: 28),
+              Text('Back', style: TextStyle(color: Colors.white, fontSize: 17),)
+            ],
+          ),
+        ),
         title: Text('Drum Learn', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700),)
       ),
       body: Container(
