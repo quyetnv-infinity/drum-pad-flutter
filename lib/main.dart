@@ -473,6 +473,10 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
         showDialogPoint();
       }
     }
+
+    print(currentEventIndex);
+    print(_futureNotes);
+    print("_______");
   }
 
   Color _getPadColor(String sound) {
@@ -490,6 +494,22 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     final double top = position.dy;
     final double bottom = top + renderBox.size.height;
     return top;
+  }
+
+  double _calculateProgressValue(int currentIndex, int targetIndex) {
+    // Calculate how far we are between current and target index
+    int distance = targetIndex - currentIndex;
+
+    // Divide the distance into 4 equal steps
+    int stepSize = (distance / 4).ceil();
+    if (stepSize <= 0) stepSize = 1;
+
+    // Calculate which step we're on (0-3)
+    int currentStep = 4 - ((distance + stepSize - 1) ~/ stepSize);
+    currentStep = currentStep.clamp(0, 4);
+
+    // Return progress as a value between 0.0 and 1.0
+    return (currentStep / 4).clamp(0.0, 1.0);
   }
 
   @override
@@ -623,13 +643,20 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                               ),
                             ),
                           ),
-                          if (_futureNotes.isNotEmpty && (_futureNotes[0]["notes"] as List).contains(sound) && currentEventIndex != 0 && !padProgress.containsKey(sound) && !sound.contains("drums"))
+                          if (
+                          _futureNotes.isNotEmpty
+                            && (_futureNotes[0]["notes"] as List).contains(sound)
+                            && currentEventIndex != 0
+                            && !padProgress.containsKey(sound)
+                            && !sound.contains("drums")
+                            && _futureNotes[0]["index"] - currentEventIndex < 4
+                          )
                             Stack(
                               children: [
                                 Align(
                                   alignment: Alignment.center,
                                   child: CircularProgressIndicator(
-                                    value: (currentEventIndex + 1) / (_futureNotes[0]["index"] + 1),
+                                    value: _calculateProgressValue(currentEventIndex, _futureNotes[0]["index"]),
                                     strokeWidth: 5,
                                     backgroundColor: Colors.white24,
                                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
