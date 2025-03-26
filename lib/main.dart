@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:drumpad_flutter/sound_type_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:lottie/lottie.dart';
 
 import 'note.util.dart';
 
@@ -35,7 +35,7 @@ class DrumpadScreen extends StatefulWidget {
   State<DrumpadScreen> createState() => _DrumpadScreenState();
 }
 
-class _DrumpadScreenState extends State<DrumpadScreen> {
+class _DrumpadScreenState extends State<DrumpadScreen> with SingleTickerProviderStateMixin {
   List<String> availableSounds = [];
   List<String> lessonSounds = [];
   Map<String, AudioPlayer> audioPlayers = {};
@@ -78,6 +78,8 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
   int latePoint = 0;
   int earlyPoint = 0;
   int missPoint = 0;
+
+  late AnimationController _controller;
 
   List<Map<String, dynamic>> _futureNotes = [];
 
@@ -129,6 +131,10 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
         isLoading = false;
       });
     });
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 150), // Thời gian chạy mặc định
+    )..repeat();
   }
 
   @override
@@ -136,6 +142,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
     _disposeAudioPlayers();
     sequenceTimer?.cancel();
     progressTimer?.cancel();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -655,19 +662,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> {
                               ),
                             ),
                           if (isActive)
-                            TweenAnimationBuilder<double>(
-                              duration: Duration(milliseconds: 100),
-                              tween: Tween(begin: 0.0, end: 1.0),
-                              builder: (context, value, child) {
-                                return Container(
-                                  margin: EdgeInsets.all(40*(1 - value)),
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.white, width: 2),
-                                      shape: BoxShape.circle
-                                  ),
-                                );
-                              },
-                            ),
+                            Lottie.asset('assets/anim/lightning_button.json', fit: BoxFit.cover, controller: _controller)
                         ],
                       ),
                     );
