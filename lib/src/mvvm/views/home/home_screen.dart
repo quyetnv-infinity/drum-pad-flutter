@@ -6,7 +6,9 @@ import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/res/style/text_style.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/views/setting/setting_screen.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -87,7 +89,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context, CupertinoPageRoute(builder: (context) => SettingScreen(),));
+            },
             icon: SvgPicture.asset(ResIcon.icSettingOutline),
           ),
           SizedBox(width: 8),
