@@ -1,0 +1,13 @@
+{
+  "@@locale": "en",
+  "english": "United States",
+  "german": "German",
+  "spanish": "Spanish",
+  "korean": "Korean",
+  "french": "French",
+  "portuguese": "Portuguese",
+  "hindi": "Hindi",
+  "russian": "Russian",
+  "unknown": "Unknown language",
+  "language": "Language"
+}
