@@ -17,6 +17,8 @@ dependencies:
   just_audio: ^0.9.46
   lottie: ^3.3.1
   flutter_svg: ^2.0.17
+  ads_tracking_plugin:
+    path: ../base-flutter-refactor
 
 dev_dependencies:
   flutter_test:
