@@ -56,5 +56,8 @@
   "drum_learn": "Drum Learn",
   "recommend": "Recommend",
   "sub_button_beat_runner": "Players select the glowing musical notes\non the screen according to the music.",
-  "sub_button_drum_learn": "Learn to play Drumpad on device\nthrough practice playing each part"
+  "sub_button_drum_learn": "Learn to play Drumpad on device\nthrough practice playing each part",
+  "tutorial": "Tutorial",
+  "score": "Score",
+  "choose_song": "Choose Song"
 }

@@ -7,7 +7,8 @@ import 'package:flutter/services.dart';
 
 class LearnCategoryDetails extends StatelessWidget {
   final String category;
-  const LearnCategoryDetails({super.key, required this.category});
+  final bool isChooseSong;
+  const LearnCategoryDetails({super.key, required this.category, required this.isChooseSong});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,7 @@ class LearnCategoryDetails extends StatelessWidget {
             children: [
               searchBar(),
               SizedBox(height: 24),
-              Expanded(child: ListCategorySongWidget())
+              Expanded(child: ListCategorySongWidget(isChooseSong: isChooseSong,))
             ],
           ),
         ),

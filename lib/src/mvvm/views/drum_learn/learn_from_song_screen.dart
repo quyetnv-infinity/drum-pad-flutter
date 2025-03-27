@@ -4,8 +4,16 @@ import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/list_song_widge
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/resume_widget.dart';
 import 'package:flutter/material.dart';
 
-class LearnFromSongScreen extends StatelessWidget {
-  const LearnFromSongScreen({super.key});
+class LearnFromSongScreen extends StatefulWidget {
+  final bool isChooseSong;
+  const LearnFromSongScreen({super.key, this.isChooseSong = false});
+
+  @override
+  State<LearnFromSongScreen> createState() => _LearnFromSongScreenState();
+}
+
+class _LearnFromSongScreenState extends State<LearnFromSongScreen> {
+  String? _currentSongSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +25,7 @@ class LearnFromSongScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         leading: GestureDetector(
           onTap: () {
-            Navigator.pop(context);
+            Navigator.pop(context, );
           },
           child: Padding(
             padding: const EdgeInsets.only(left: 16),
@@ -29,7 +37,7 @@ class LearnFromSongScreen extends StatelessWidget {
             ),
           ),
         ),
-        title: Text( context.locale.learn_from_song, style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700),)
+        title: Text(widget.isChooseSong ? context.locale.choose_song : context.locale.learn_from_song, style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700),)
       ),
       body: Container(
         height: double.infinity,
@@ -39,9 +47,9 @@ class LearnFromSongScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                ListSongWidget(title: 'Resume', isMore: false),
-                ListSongWidget(title: 'V-pop', isMore: true),
-                ListSongWidget(title: 'Rap', isMore: true),
+                ListSongWidget(title: 'Resume', isMore: false, isChooseSong: widget.isChooseSong,),
+                ListSongWidget(title: 'V-pop', isMore: true, isChooseSong: widget.isChooseSong,),
+                ListSongWidget(title: 'Rap', isMore: true, isChooseSong: widget.isChooseSong,),
               ],
             ),
           ),
