@@ -34,7 +34,8 @@ class _LessonsScreenState extends State<LessonsScreen> {
       isLoading = true;
     });
     try {
-      final String jsonString = await rootBundle.loadString('assets/sequence.json');
+      final String jsonString =
+          await rootBundle.loadString('assets/sequence.json');
       final List<dynamic> jsonData = json.decode(jsonString);
       print(jsonData);
       final songCollection = SongCollection.fromJson(jsonData);
@@ -44,16 +45,16 @@ class _LessonsScreenState extends State<LessonsScreen> {
 
       // Ví dụ: in ra số lượng events trong bài học đầu tiên
       if (songCollection.lessons.isNotEmpty) {
-        print("Số lượng events trong bài học đầu tiên: ${songCollection.lessons[0].events.length}");
+        print(
+            "Số lượng events trong bài học đầu tiên: ${songCollection.lessons[0].events.length}");
       }
 
       setState(() {
         _song = songCollection;
       });
-
     } catch (e) {
       print('Error loading sequence data from file: $e');
-    }finally{
+    } finally {
       setState(() {
         isLoading = false;
       });
@@ -107,6 +108,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
     final totalHeight = displayData.length * verticalSpacing + extraHeight;
 
     return CustomScaffold(
+      // backgroundType: BackgroundType.gradient,
       backgroundImage: ResImage.imgBackgoundScreen,
       backgroundFit: BoxFit.cover,
       appBar: AppBar(
@@ -142,109 +144,116 @@ class _LessonsScreenState extends State<LessonsScreen> {
           ),
         ),
       ),
-      body: isLoading ? CupertinoActivityIndicator() : SingleChildScrollView(
-        reverse: true,
-        padding: EdgeInsets.zero,
-        controller: _scrollController,
-        child: Center(
-          child: SizedBox(
-            width: contentWidth,
-            height: totalHeight,
-            child: Stack(
-              children: [
-                /// Đường nối giữa các level
-                ...List.generate(displayData.length - 1, (index) {
-                  final verticalPosition =
-                      lineVerticalOffset + index * verticalSpacing;
-                  final isEvenIndex = index % 2 == 0;
-                  final svgPath =
-                      isEvenIndex ? ResIcon.icLineLeft : ResIcon.icLineRight;
-                  final horizontalPosition = isEvenIndex
-                      ? leftLineHorizontalPosition
-                      : rightLineHorizontalPosition;
+      body: isLoading
+          ? CupertinoActivityIndicator()
+          : SingleChildScrollView(
+              reverse: true,
+              padding: EdgeInsets.zero,
+              controller: _scrollController,
+              child: Center(
+                child: SizedBox(
+                  width: contentWidth,
+                  height: totalHeight,
+                  child: Stack(
+                    children: [
+                      /// Đường nối giữa các level
+                      ...List.generate(displayData.length - 1, (index) {
+                        final verticalPosition =
+                            lineVerticalOffset + index * verticalSpacing;
+                        final isEvenIndex = index % 2 == 0;
+                        final svgPath = isEvenIndex
+                            ? ResIcon.icLineLeft
+                            : ResIcon.icLineRight;
+                        final horizontalPosition = isEvenIndex
+                            ? leftLineHorizontalPosition
+                            : rightLineHorizontalPosition;
 
-                  return Positioned(
-                    top: verticalPosition,
-                    left: horizontalPosition,
-                    child: SvgPicture.asset(
-                      svgPath,
-                      width: lineWidth,
-                      height: lineHeight,
-                      fit: BoxFit.fill,
-                    ),
-                  );
-                }),
-
-                /// Các nút level
-                ...List.generate(
-                  displayData.length,
-                  (index) {
-                    final item = displayData[index];
-                    final verticalPosition =
-                        initialTopOffset + index * verticalSpacing;
-                    final horizontalPosition =
-                        index % 2 == 0 ? leftSidePosition : rightSidePosition;
-
-                    return Positioned(
-                      top: verticalPosition,
-                      left: horizontalPosition,
-                      child: Container(
-                        width: itemSize,
-                        height: itemSize,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(ResImage.imgBgButtonStepLesson),
+                        return Positioned(
+                          top: verticalPosition,
+                          left: horizontalPosition,
+                          child: SvgPicture.asset(
+                            svgPath,
+                            width: lineWidth,
+                            height: lineHeight,
+                            fit: BoxFit.fill,
                           ),
-                          shape: BoxShape.circle,
-                        ),
-                        child: item.isCompleted == true
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Text(
-                                    "Level",
-                                    style: TextStyle(
-                                      fontWeight: AppFonts.semiBold,
-                                      fontSize: 14,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Text(
-                                    "${item.level}",
-                                    style: TextStyle(
-                                      fontWeight: AppFonts.semiBold,
-                                      fontSize: 36,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  SvgPicture.asset(
-                                    _getStarIcon(item.star),
-                                    width: 30,
-                                    height: 30,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ],
-                              )
-                            : Center(
-                                child: SizedBox(
-                                  width: 40,
-                                  height: 40,
-                                  child: SvgPicture.asset(
-                                    ResIcon.icLock,
-                                    fit: BoxFit.cover,
-                                  ),
+                        );
+                      }),
+
+                      /// Các nút level
+                      ...List.generate(
+                        displayData.length,
+                        (index) {
+                          final item = displayData[index];
+                          final verticalPosition =
+                              initialTopOffset + index * verticalSpacing;
+                          final horizontalPosition = index % 2 == 0
+                              ? leftSidePosition
+                              : rightSidePosition;
+
+                          return Positioned(
+                            top: verticalPosition,
+                            left: horizontalPosition,
+                            child: Container(
+                              width: itemSize,
+                              height: itemSize,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage(
+                                      ResImage.imgBgButtonStepLesson),
                                 ),
+                                shape: BoxShape.circle,
                               ),
+                              child: item.isCompleted == true
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const Text(
+                                          "Level",
+                                          style: TextStyle(
+                                            fontWeight: AppFonts.semiBold,
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          "${item.level}",
+                                          style: TextStyle(
+                                            fontWeight: AppFonts.semiBold,
+                                            fontSize: 36,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        SvgPicture.asset(
+                                          _getStarIcon(item.star),
+                                          width: 30,
+                                          height: 30,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ],
+                                    )
+                                  : Center(
+                                      child: SizedBox(
+                                        width: 40,
+                                        height: 40,
+                                        child: SvgPicture.asset(
+                                          ResIcon.icLock,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
+                    ],
+                  ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
