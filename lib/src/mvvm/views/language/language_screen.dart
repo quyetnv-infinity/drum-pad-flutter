@@ -6,7 +6,9 @@ import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_state_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/locale_view_model.dart';
+import 'package:drumpad_flutter/src/mvvm/views/onboarding/onboarding_screen.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -146,7 +148,7 @@ class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObse
                     if (widget.fromSetting) {
                       Navigator.pop(context);
                     } else {
-                      print('push onboarding');
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => OnboardingScreen(),));
                     }
                   },
                 ),

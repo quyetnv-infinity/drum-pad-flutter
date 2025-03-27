@@ -22,7 +22,7 @@ import 'src/mvvm/views/drum_learn/drum_learn_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
   // await RemoteConfig.initializeRemoteConfig(adConfigs: getAdConfigurations(false), devMode: AdUnitId.devMode);
 
   await ServiceLocator.instance.initialise();

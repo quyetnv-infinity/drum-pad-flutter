@@ -1,7 +1,11 @@
 import 'package:drumpad_flutter/core/constants/app_info.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/app_setting_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/app_state_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/views/drum_learn/drum_learn_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/language/language_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -46,14 +50,14 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
   Future<void> _navigateToHome() async {
     // AdController.shared.toggleResumeAdDisabled(false);
-    // final isFirstOpenApp = Provider.of<AppStateProvider>(context, listen: false).isFirstOpenApp;
+    final isFirstOpenApp = Provider.of<AppStateProvider>(context, listen: false).isFirstOpenApp;
 
-    // if (isFirstOpenApp) {
+    if (isFirstOpenApp) {
       Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => const LanguageScreen(fromSetting: false,)));
-    // } else {
-    //   Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => const HomeMainScreen()));
-    //   Provider.of<AppSettingsProvider>(context, listen: false).increaseTimeOpenApp();
-    // }
+    } else {
+      Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => const DrumLearnScreen()));
+      Provider.of<AppSettingsProvider>(context, listen: false).increaseTimeOpenApp();
+    }
   }
 
   @override

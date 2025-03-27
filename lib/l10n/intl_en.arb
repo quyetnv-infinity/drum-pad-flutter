@@ -9,5 +9,16 @@
   "hindi": "Hindi",
   "russian": "Russian",
   "unknown": "Unknown language",
-  "language": "Language"
+  "language": "Language",
+  "start": "Start",
+  "next": "Next",
+  "lets_go": "Let's go",
+  "title_onboarding_1": "Drum Pad",
+  "subtitle_onboarding_1": "Take Your First Step to be great at music",
+  "title_onboarding_2": "Beat Runner",
+  "subtitle_onboarding_2": "Play Drum pad with your favorite song",
+  "title_onboarding_3": "Drum Learn",
+  "subtitle_onboarding_3": "Play to learn Drum with your phone",
+  "title_onboarding_4": "Pick you Favorite",
+  "subtitle_onboarding_4": "Choose your song from our Music collection"
 }
