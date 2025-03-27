@@ -86,10 +86,10 @@ class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObse
                     color: Colors.white,
                     fontWeight: FontWeight.w500
                   ),
-                  // textStyleSelected: TextStyle(
-                  //   color: Colors.black,
-                  //   fontWeight: FontWeight.w500
-                  // ),
+                  textStyleSelected: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500
+                  ),
                   selectedItem: locateViewModel.selectedLanguage,
                   onSelectItem: (value) {
                     context.read<LocateViewModel>().selectLanguage(value);
