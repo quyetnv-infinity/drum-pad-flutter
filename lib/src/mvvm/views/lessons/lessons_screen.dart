@@ -112,18 +112,26 @@ class _LessonsScreenState extends State<LessonsScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leadingWidth: 100,
-        leading: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: const [
-            SizedBox(width: 12),
-            Icon(Icons.arrow_back_ios, size: 18),
-            SizedBox(width: 4.0),
-            Text(
-              "Back",
-              style: TextStyle(fontSize: 17, fontWeight: AppFonts.regular),
-            ),
-          ],
+        leading: InkWell(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          onTap: () {
+            Navigator.maybePop(context);
+          },
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const [
+              SizedBox(width: 12),
+              Icon(Icons.arrow_back_ios, size: 18),
+              SizedBox(width: 4.0),
+              Text(
+                "Back",
+                style: TextStyle(fontSize: 17, fontWeight: AppFonts.regular),
+              ),
+            ],
+          ),
         ),
         title: const Text(
           "Campaign",
@@ -134,12 +142,12 @@ class _LessonsScreenState extends State<LessonsScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
+      body: isLoading ? CupertinoActivityIndicator() : SingleChildScrollView(
         reverse: true,
         padding: EdgeInsets.zero,
         controller: _scrollController,
         child: Center(
-          child: isLoading ? CupertinoActivityIndicator() : SizedBox(
+          child: SizedBox(
             width: contentWidth,
             height: totalHeight,
             child: Stack(
