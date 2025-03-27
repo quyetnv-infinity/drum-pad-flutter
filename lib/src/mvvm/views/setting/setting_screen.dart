@@ -43,8 +43,8 @@ class _SettingScreenState extends State<SettingScreen> {
           _buildItemSetting('assets/icons/ic_language.svg', context.locale.language, () => Navigator.push(context, CupertinoPageRoute(builder: (context) => LanguageScreen(fromSetting: true),)),),
           _buildItemSetting('assets/icons/ic_rate.svg', context.locale.rate_us, () => SettingFuncs.rateUs(context),),
           _buildItemSetting('assets/icons/ic_share.svg', context.locale.share, () => SettingFuncs.share(),),
+          _buildItemSetting('assets/icons/ic_term.svg', context.locale.term_of_service, () => SettingFuncs.termsOfService(),),
           _buildItemSetting('assets/icons/ic_policy.svg', context.locale.policy, () => SettingFuncs.privacyPolicy(),),
-          _buildItemSetting('assets/icons/ic_policy.svg', context.locale.term, () => SettingFuncs.termsOfService(),),
         ],
       ),
     );
