@@ -55,9 +55,17 @@ class LessonSequence {
 
 class SongCollection {
   List<LessonSequence> lessons;
+  String? author;
+  String? name;
+  String difficulty;
+  String? image;
 
   SongCollection({
     required this.lessons,
+    this.author,
+    this.name,
+    this.difficulty = 'Easy',
+    this.image,
   });
 
   factory SongCollection.fromJson(List<dynamic> json) {
