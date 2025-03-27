@@ -1,0 +1,4 @@
+class KeySharedPreference {
+  KeySharedPreference._();
+
+}

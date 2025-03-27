@@ -1,4 +1,5 @@
 import 'package:drumpad_flutter/core/res/style/text_style.dart';
+import 'package:drumpad_flutter/src/mvvm/views/home/home_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,7 @@ class MyApplication extends StatelessWidget {
       ),
       themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
-      home: LessonsScreen(),
+      home: HomeScreen(),
     );
   }
 }
