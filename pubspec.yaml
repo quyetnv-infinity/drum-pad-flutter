@@ -32,6 +32,7 @@ dependencies:
   get_it: ^8.0.3
   in_app_purchase: ^3.2.1
   purchases_flutter: ^8.6.0
+  animated_flip_counter: ^0.3.4
 
 dev_dependencies:
   flutter_test:
@@ -81,3 +82,7 @@ flutter:
     - family: Ethnocentric
       fonts:
         - asset: assets/fonts/ethnocentric.ttf
+
+    - family: ShrikhandRegular
+      fonts:
+        - asset: assets/fonts/shrikhand_regular.ttf

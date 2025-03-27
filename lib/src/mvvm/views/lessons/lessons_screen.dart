@@ -4,6 +4,7 @@ import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/res/style/text_style.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/views/result/result_screen.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -194,57 +195,64 @@ class _LessonsScreenState extends State<LessonsScreen> {
                           return Positioned(
                             top: verticalPosition,
                             left: horizontalPosition,
-                            child: Container(
-                              width: itemSize,
-                              height: itemSize,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage(
-                                      ResImage.imgBgButtonStepLesson),
+                            child: InkWell(
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              onTap: () {
+                                Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: 20, goodScore: 30, earlyScore: 20, lateScore: 10, missScore: 1),));
+                              },
+                              child: Container(
+                                width: itemSize,
+                                height: itemSize,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                        ResImage.imgBgButtonStepLesson),
+                                  ),
+                                  shape: BoxShape.circle,
                                 ),
-                                shape: BoxShape.circle,
-                              ),
-                              child: item.isCompleted == true
-                                  ? Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        const Text(
-                                          "Level",
-                                          style: TextStyle(
-                                            fontWeight: AppFonts.semiBold,
-                                            fontSize: 14,
-                                            color: Colors.white,
+                                child: item.isCompleted == true
+                                    ? Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Text(
+                                            "Level",
+                                            style: TextStyle(
+                                              fontWeight: AppFonts.semiBold,
+                                              fontSize: 14,
+                                              color: Colors.white,
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          "${item.level}",
-                                          style: TextStyle(
-                                            fontWeight: AppFonts.semiBold,
-                                            fontSize: 36,
-                                            color: Colors.white,
+                                          Text(
+                                            "${item.level}",
+                                            style: TextStyle(
+                                              fontWeight: AppFonts.semiBold,
+                                              fontSize: 36,
+                                              color: Colors.white,
+                                            ),
                                           ),
-                                        ),
-                                        SvgPicture.asset(
-                                          _getStarIcon(item.star),
-                                          width: 30,
-                                          height: 30,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ],
-                                    )
-                                  : Center(
-                                      child: SizedBox(
-                                        width: 40,
-                                        height: 40,
-                                        child: SvgPicture.asset(
-                                          ResIcon.icLock,
-                                          fit: BoxFit.cover,
+                                          SvgPicture.asset(
+                                            _getStarIcon(item.star),
+                                            width: 30,
+                                            height: 30,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ],
+                                      )
+                                    : Center(
+                                        child: SizedBox(
+                                          width: 40,
+                                          height: 40,
+                                          child: SvgPicture.asset(
+                                            ResIcon.icLock,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
-                                    ),
+                              ),
                             ),
                           );
                         },

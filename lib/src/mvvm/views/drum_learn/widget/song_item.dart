@@ -46,7 +46,7 @@ class SongItem extends StatelessWidget {
                   left: 10,
                   child: Row(
                     children: [
-                      SvgPicture.asset(ResIcon.starFull)
+                      SvgPicture.asset(ResIcon.icStarFull)
                     ],
                   ),
                 )

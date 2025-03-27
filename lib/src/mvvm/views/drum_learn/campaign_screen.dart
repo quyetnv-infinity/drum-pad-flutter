@@ -14,56 +14,56 @@ class CampaignScreen extends StatelessWidget {
       if (percent < 15) {
         return Row(
           children: [
-            SvgPicture.asset(ResIcon.starNull),
-            SvgPicture.asset(ResIcon.starNull),
-            SvgPicture.asset(ResIcon.starNull),
+            SvgPicture.asset(ResIcon.icStarNull),
+            SvgPicture.asset(ResIcon.icStarNull),
+            SvgPicture.asset(ResIcon.icStarNull),
           ],
         );
       } else if (percent < 30) {
         return Row(
           children: [
-            SvgPicture.asset(ResIcon.starHalf),
-            SvgPicture.asset(ResIcon.starNull),
-            SvgPicture.asset(ResIcon.starNull),
+            SvgPicture.asset(ResIcon.icStarHalf),
+            SvgPicture.asset(ResIcon.icStarNull),
+            SvgPicture.asset(ResIcon.icStarNull),
           ],
         );
       } else if (percent < 45) {
         return Row(
           children: [
-            SvgPicture.asset(ResIcon.starFull),
-            SvgPicture.asset(ResIcon.starNull),
-            SvgPicture.asset(ResIcon.starNull),
+            SvgPicture.asset(ResIcon.icStarFull),
+            SvgPicture.asset(ResIcon.icStarNull),
+            SvgPicture.asset(ResIcon.icStarNull),
           ],
         );
       } else if (percent < 60) {
         return Row(
           children: [
-            SvgPicture.asset(ResIcon.starFull),
-            SvgPicture.asset(ResIcon.starHalf),
-            SvgPicture.asset(ResIcon.starNull),
+            SvgPicture.asset(ResIcon.icStarFull),
+            SvgPicture.asset(ResIcon.icStarHalf),
+            SvgPicture.asset(ResIcon.icStarNull),
           ],
         );
       } else if (percent < 75) {
         return Row(
           children: [
-            SvgPicture.asset(ResIcon.starFull),
-            SvgPicture.asset(ResIcon.starFull),
-            SvgPicture.asset(ResIcon.starNull),
+            SvgPicture.asset(ResIcon.icStarFull),
+            SvgPicture.asset(ResIcon.icStarFull),
+            SvgPicture.asset(ResIcon.icStarNull),
           ],
         );
       } else if (percent < 90) {
         return Row(
           children: [
-            SvgPicture.asset(ResIcon.starFull),
-            SvgPicture.asset(ResIcon.starFull),
-            SvgPicture.asset(ResIcon.starHalf),
+            SvgPicture.asset(ResIcon.icStarFull),
+            SvgPicture.asset(ResIcon.icStarFull),
+            SvgPicture.asset(ResIcon.icStarHalf),
           ],
         );
       } else {
         return Row(children: [
-          SvgPicture.asset(ResIcon.starFull),
-          SvgPicture.asset(ResIcon.starFull),
-          SvgPicture.asset(ResIcon.starFull)
+          SvgPicture.asset(ResIcon.icStarFull),
+          SvgPicture.asset(ResIcon.icStarFull),
+          SvgPicture.asset(ResIcon.icStarFull)
         ]);
       }
     }
