@@ -1,17 +1,55 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
+import 'package:drumpad_flutter/config/ads_config.dart';
+import 'package:drumpad_flutter/service_locator/service_locator.dart';
 import 'package:drumpad_flutter/sound_type_enum.dart';
 import 'package:drumpad_flutter/src/application/my_application.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/app_setting_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/app_state_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/locale_view_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/rate_app_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 import 'note.util.dart';
 import 'src/mvvm/views/drum_learn/drum_learn_screen.dart';
 
-void main() {
-  runApp(const MyApplication());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
+  // await RemoteConfig.initializeRemoteConfig(adConfigs: getAdConfigurations(false), devMode: AdUnitId.devMode);
+
+  await ServiceLocator.instance.initialise();
+  final adsProvider = AdsProvider();
+  final purchaseProvider = PurchaseProvider();
+  final AppSettingsProvider appSettingsProvider = AppSettingsProvider();
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => LocateViewModel()),
+        ChangeNotifierProvider(create: (_) => appSettingsProvider),
+        ChangeNotifierProvider(create: (_) => RateAppProvider()),
+        ChangeNotifierProvider(create: (_) => adsProvider),
+        ChangeNotifierProvider(create: (_) => purchaseProvider),
+        ChangeNotifierProxyProvider2<AdsProvider, PurchaseProvider, AppStateProvider>(
+          create: (_) => AppStateProvider(adsProvider, purchaseProvider),
+          update: (_, ads, purchase, appState) {
+            appState?.updateDependencies(ads, purchase);
+            return appState ?? AppStateProvider(ads, purchase);
+          },
+          lazy: false,
+        ),
+      ],
+      child: const MyApplication(),
+    ),
+  );
+  configLoading();
 }
 
 class DrumpadScreen extends StatefulWidget {

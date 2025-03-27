@@ -19,14 +19,30 @@ dependencies:
   flutter_svg: ^2.0.17
   ads_tracking_plugin:
     path: ../base-flutter-refactor
+  intl: any
+  flutter_localization: ^0.3.1
+  shared_preferences: ^2.3.4
+  provider: ^6.1.2
+  url_launcher: ^6.3.1
+  flutter_easyloading: ^3.0.5
+  in_app_review: ^2.0.10
+  hive_ce: ^2.10.1
+  hive_ce_flutter: ^2.1.0
+  path_provider: ^2.1.5
+  get_it: ^8.0.3
+  in_app_purchase: ^3.2.1
+  purchases_flutter: ^8.6.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^5.0.0
+  build_runner: ^2.4.13
+  hive_ce_generator: ^1.8.1
 flutter:
   uses-material-design: true
+  generate: true
 
   assets:
     - assets/audio/
