@@ -1,7 +1,9 @@
 class ResIcon {
   ResIcon._();
   static const String basePath = 'assets/icons/';
-  static String starFull = '$basePath/star_full.svg';
+  static String starFull = '${basePath}star_full.svg';
+  static String starNull = '${basePath}star_null.svg';
+  static String starHalf = '${basePath}star_half.svg';
 
   // flags
   static const String french = '${basePath}french.svg';

@@ -6,6 +6,7 @@ import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/res/style/text_style.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/views/drum_learn/drum_learn_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/setting/setting_screen.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:flutter/cupertino.dart';
@@ -222,7 +223,10 @@ class _HomeScreenState extends State<HomeScreen> {
               title: context.locale.drum_learn,
               content: context.locale.sub_button_drum_learn,
               imageBackground: ResImage.imgBgButtonBeatRunner,
-              onPress: () {},
+              onPress: () {
+                print('heheeh');
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => DrumLearnScreen(),));
+              },
             ),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -329,44 +333,47 @@ class _HomeScreenState extends State<HomeScreen> {
       required String content,
       required String imageBackground,
       required Function() onPress}) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        image: DecorationImage(
-          image: AssetImage(imageBackground),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 23,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                ResSpacing.h12,
-                Text(
-                  content,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            ),
+    return GestureDetector(
+      onTap: () => onPress(),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          image: DecorationImage(
+            image: AssetImage(imageBackground),
+            fit: BoxFit.cover,
           ),
-          SvgPicture.asset(ResIcon.icArrowLeftCircleSolid),
-        ],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 23,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  ResSpacing.h12,
+                  Text(
+                    content,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SvgPicture.asset(ResIcon.icArrowLeftCircleSolid),
+          ],
+        ),
       ),
     );
   }

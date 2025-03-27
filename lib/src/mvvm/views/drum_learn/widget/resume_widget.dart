@@ -1,23 +1,44 @@
+import 'dart:convert';
+
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
+import 'package:drumpad_flutter/core/utils/locator_support.dart';
+import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/views/drum_learn/campaign_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/drum_learn_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/options_widget.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/song_item.dart';
+import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
-class ResumeWidget extends StatelessWidget {
+class ResumeWidget extends StatefulWidget {
   const ResumeWidget({super.key});
+
+  @override
+  State<ResumeWidget> createState() => _ResumeWidgetState();
+}
+
+class _ResumeWidgetState extends State<ResumeWidget> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Align(
             alignment: Alignment.topLeft,
-            child: Text('Resume', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700),)
+            child: Text(context.locale.resume, style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700),)
           ),
         ),
         SizedBox(height: 12),
@@ -26,16 +47,21 @@ class ResumeWidget extends StatelessWidget {
           child: ListView.builder(
             shrinkWrap: true,
             padding: EdgeInsets.symmetric(horizontal: 16),
-            itemCount: 4,
+            itemCount: context.read<DrumLearnProvider>().data.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
-            return SongItem(height: MediaQuery.sizeOf(context).width * 0.55, isFromLearnFromSong: false,);
+              final song = context.read<DrumLearnProvider>().data[index];
+            return SongItem(
+              height: MediaQuery.sizeOf(context).width * 0.55,
+              isFromLearnFromSong: false,
+              model: song,
+             );
           },),
         ),
         SizedBox(height: 12),
-        OptionsWidget(title: 'Learn From Song', description: 'Learn too play Drumpad on device with a specific song that you love', asset: ResImage.imgLearnFromSong, func: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => LearnFromSongScreen()))),
+        OptionsWidget(title: context.locale.learn_from_song, description: context.locale.learn_from_song_des, asset: ResImage.imgLearnFromSong, func: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => LearnFromSongScreen()))),
         SizedBox(height: 12),
-        OptionsWidget(title: 'Campaign', description: 'Complete a roadmap as you learn to play and keep track of your progress', asset: ResImage.imgCampaign, func: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => DrumLearnScreen())))
+        OptionsWidget(title:  context.locale.campaign, description:  context.locale.campaign_des, asset: ResImage.imgCampaign, func: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => CampaignScreen())))
       ]
     );
   }

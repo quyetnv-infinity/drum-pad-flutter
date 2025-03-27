@@ -1,4 +1,5 @@
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
+import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -23,13 +24,13 @@ class DrumLearnScreen extends StatelessWidget {
             padding: const EdgeInsets.only(left: 16),
             child: Row(
               children: [
-                Icon(Icons.arrow_back_ios, color: Colors.white, size: 28),
-                Text('Back', style: TextStyle(color: Colors.white, fontSize: 17),)
+                Icon(Icons.arrow_back_ios, color: Colors.white, size: 22),
+                Text(context.locale.back, style: TextStyle(color: Colors.white, fontSize: 17),)
               ],
             ),
           ),
         ),
-        title: Text('Drum Learn', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700),)
+        title: Text(context.locale.drum_learn, style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700),)
       ),
       body: Container(
         height: double.infinity,
