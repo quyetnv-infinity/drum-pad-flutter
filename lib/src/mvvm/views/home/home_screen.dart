@@ -14,7 +14,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  List<SongCollection> _data = [
+  final List<SongCollection> _data = [
     SongCollection(lessons: [], image: "assets/images/lactroi.png", author: "Sơn Tùng M-TP", name: "Lạc Trôi"),
     SongCollection(lessons: [], image: "assets/images/lactroi.png", author: "Sơn Tùng M-TP", name: "Lạc Trôi"),
     SongCollection(lessons: [], image: "assets/images/lactroi.png", author: "Sơn Tùng M-TP", name: "Lạc Trôi"),
@@ -50,12 +50,44 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Recommend", style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text("Recommend", style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600)),
+            ),
             SizedBox(height: 12),
-
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: List.generate(_data.length, (index) {
+                  SongCollection item = _data[index];
+                  return Padding(
+                    padding: EdgeInsets.only(left: index == 0 ? 16 : 0, right: index == _data.length - 1 ? 16 : 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 120,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            image: DecorationImage(
+                              image: AssetImage(item.image!),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text("${item.name}", style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
+                        Text("${item.author}", style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w400)),
+                      ],
+                    ),
+                  );
+                },),
+              ),
+            )
           ],
         ),
       ),

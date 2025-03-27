@@ -6,6 +6,7 @@ import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/main.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_setting_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_state_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/views/home/home_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/onboarding/widgets/onboarding_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +55,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
     if (currentPage == 3) {
       final appStateProvider = Provider.of<AppStateProvider>(context, listen: false);
       appStateProvider.setFirstOpenApp();
-      Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => DrumpadScreen()));
+      Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => HomeScreen()));
       Provider.of<AppSettingsProvider>(context, listen: false).increaseTimeOpenApp();
     } else {
       pageController.nextPage(

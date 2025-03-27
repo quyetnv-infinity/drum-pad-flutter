@@ -2,6 +2,7 @@ import 'package:drumpad_flutter/core/constants/app_info.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_setting_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_state_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/drum_learn_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/home/home_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/language/language_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     if (isFirstOpenApp) {
       Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => const LanguageScreen(fromSetting: false,)));
     } else {
-      Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => const DrumLearnScreen()));
+      Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => const HomeScreen()));
       Provider.of<AppSettingsProvider>(context, listen: false).increaseTimeOpenApp();
     }
   }
