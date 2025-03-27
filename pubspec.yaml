@@ -78,3 +78,6 @@ flutter:
         - asset: assets/fonts/sfprodisplayultralightitalic.otf
           style: italic
           weight: 200
+    - family: Ethnocentric
+      fonts:
+        - asset: assets/fonts/ethnocentric.ttf
