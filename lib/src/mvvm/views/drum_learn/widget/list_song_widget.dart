@@ -1,4 +1,5 @@
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
+import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_category_details.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/song_item.dart';
@@ -6,10 +7,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ListSongWidget extends StatelessWidget {
+class ListSongWidget extends StatefulWidget {
   final String title;
   final bool isMore;
-  const ListSongWidget({super.key, required this.title, required this.isMore});
+  final bool isChooseSong;
+  const ListSongWidget({super.key, required this.title, required this.isMore, required this.isChooseSong});
+
+  @override
+  State<ListSongWidget> createState() => _ListSongWidgetState();
+}
+
+class _ListSongWidgetState extends State<ListSongWidget> {
+  SongCollection? _currentSongSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +29,16 @@ class ListSongWidget extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(title, style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600),),
-                if(isMore)InkWell(
-                  onTap: () {
-                    Navigator.push(context, CupertinoPageRoute(builder: (context) => LearnCategoryDetails(category: title,),));
+                Text(widget.title, style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600),),
+                if(widget.isMore)InkWell(
+                  onTap: () async {
+                    final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => LearnCategoryDetails(category: widget.title, isChooseSong: widget.isChooseSong,),));
+                    if(result != null && widget.isChooseSong){
+                      setState(() {
+                        _currentSongSelected = result;
+                      });
+                      Navigator.pop(context, _currentSongSelected);
+                    }
                   },
                   child: Row(
                     children: [
@@ -45,10 +60,17 @@ class ListSongWidget extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
                 final song = context.read<DrumLearnProvider>().data[index];
-                return SongItem(
-                height: MediaQuery.sizeOf(context).width * 0.55,
-                isFromLearnFromSong: false,
-                model: song);
+                return GestureDetector(
+                  onTap: (){
+                    if(widget.isChooseSong){
+                      Navigator.pop(context, song);
+                    }
+                  },
+                  child: SongItem(
+                  height: MediaQuery.sizeOf(context).width * 0.55,
+                  isFromLearnFromSong: false,
+                  model: song),
+                );
               })
           ),
         ]

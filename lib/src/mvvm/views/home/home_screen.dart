@@ -8,6 +8,7 @@ import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/button_action.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/horizontal_list.dart';
 import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/beat_runner/beat_runner_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/drum_learn_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/setting/setting_screen.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
@@ -135,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
               content: context.locale.sub_button_beat_runner,
               imageBackground: ResImage.imgBgButtonBeatRunner,
               onPressed: () {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) => LessonsScreen(),));
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => BeatRunnerScreen(),));
               },
             ),
             HorizontalList(
