@@ -1,7 +1,10 @@
+import 'package:drumpad_flutter/core/res/drawer/image.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_category_details.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/song_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ListSongWidget extends StatelessWidget {
   final String title;
@@ -41,8 +44,12 @@ class ListSongWidget extends StatelessWidget {
               itemCount: 4,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
-                return SongItem(height: MediaQuery.sizeOf(context).width * 0.55, isFromLearnFromSong: true,);
-              },),
+                final song = context.read<DrumLearnProvider>().data[index];
+                return SongItem(
+                height: MediaQuery.sizeOf(context).width * 0.55,
+                isFromLearnFromSong: false,
+                model: song);
+              })
           ),
         ]
     );

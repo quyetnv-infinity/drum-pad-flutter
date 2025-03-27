@@ -6,6 +6,9 @@ class ResImage {
   static const String imgLearnFromSong = '$basePath/learn_from_song.png';
   static const String imgCampaign = '$basePath/campaign.png';
   static const String imgBackgroundScreen = '$basePath/img_background_screen.png';
+  static String imgPad = '$basePath/pad_img.png';
+  static String imgCampaignBG = '$basePath/campaign_bg.png';
+  static String imgBackgoundScreen = '$basePath/img_background_screen.png';
   static const String imgBgButtonStepLesson = '$basePath/img_bg_button_step_lesson.png';
 
   static const String imgBgButtonDrumLearn = '$basePath/img_bg_button_drum_learn.png';

@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:drumpad_flutter/core/res/dimen/spacing.dart';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/res/style/text_style.dart';
@@ -9,6 +8,7 @@ import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/button_action.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/horizontal_list.dart';
 import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/drum_learn/drum_learn_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/setting/setting_screen.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:flutter/cupertino.dart';
@@ -148,7 +148,10 @@ class _HomeScreenState extends State<HomeScreen> {
               title: context.locale.drum_learn,
               content: context.locale.sub_button_drum_learn,
               imageBackground: ResImage.imgBgButtonBeatRunner,
-              onPressed: () {},
+              onPressed: () {
+                print('heheeh');
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => DrumLearnScreen(),));
+              },
             ),
             HorizontalList(
               width: 180,

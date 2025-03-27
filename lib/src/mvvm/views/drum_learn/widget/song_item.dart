@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
+import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/widgets/blur_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,7 +10,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 class SongItem extends StatelessWidget {
   final double height;
   final bool isFromLearnFromSong;
-  const SongItem({super.key, required this.height, required this.isFromLearnFromSong});
+  final SongCollection model;
+  const SongItem({super.key, required this.height, required this.isFromLearnFromSong,required this.model});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class SongItem extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.red,
               borderRadius: BorderRadius.circular(8),
-              image: DecorationImage(image: AssetImage(ResImage.imgRose), fit: BoxFit.cover)
+              image: DecorationImage(image: AssetImage(model.image ?? ResImage.imgRose), fit: BoxFit.cover)
             ),
             child: Stack(
               children: [
@@ -34,7 +36,7 @@ class SongItem extends StatelessWidget {
                   child: Row(
                     spacing: 8,
                     children: [
-                      BlurWidget(text: 'HARD',),
+                      BlurWidget(text: model.difficulty.toUpperCase(),),
                       if(isFromLearnFromSong)
                         BlurWidget(text: '5 STEPS',),
                     ],
@@ -51,8 +53,8 @@ class SongItem extends StatelessWidget {
               ],
             ),
           ),
-          Text('Jack', style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),),
-          Text('ViruSs', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w400),)
+          Text(model.name ?? "hihi", style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),),
+          Text(model.author ??" haha", style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w400),)
         ],
       ),
     );
