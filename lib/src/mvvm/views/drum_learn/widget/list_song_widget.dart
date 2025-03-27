@@ -1,6 +1,7 @@
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/views/beat_runner/beat_runner_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_category_details.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/song_item.dart';
 import 'package:flutter/cupertino.dart';
@@ -64,6 +65,8 @@ class _ListSongWidgetState extends State<ListSongWidget> {
                   onTap: (){
                     if(widget.isChooseSong){
                       Navigator.pop(context, song);
+                    } else {
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => BeatRunnerScreen(songCollection: song,),));
                     }
                   },
                   child: SongItem(

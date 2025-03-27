@@ -13,7 +13,8 @@ import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
 
 class BeatRunnerScreen extends StatefulWidget {
-  const BeatRunnerScreen({super.key});
+  final SongCollection? songCollection;
+  const BeatRunnerScreen({super.key, this.songCollection});
 
   @override
   State<BeatRunnerScreen> createState() => _BeatRunnerScreenState();
@@ -38,6 +39,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
       vsync: this,
       duration: Duration(milliseconds: 150), // Thời gian chạy mặc định
     )..repeat();
+    _currentSong = widget.songCollection;
   }
 
   @override
