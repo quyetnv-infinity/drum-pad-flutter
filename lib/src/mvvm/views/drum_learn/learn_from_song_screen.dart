@@ -1,11 +1,10 @@
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/list_song_widget.dart';
+import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/resume_widget.dart';
 import 'package:flutter/material.dart';
 
-import 'widget/resume_widget.dart';
-
-class DrumLearnScreen extends StatelessWidget {
-  const DrumLearnScreen({super.key});
+class LearnFromSongScreen extends StatelessWidget {
+  const LearnFromSongScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,17 +28,21 @@ class DrumLearnScreen extends StatelessWidget {
             ),
           ),
         ),
-        title: Text('Drum Learn', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700),)
+        title: Text('Learn From Song', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700),)
       ),
       body: Container(
         height: double.infinity,
         width: double.infinity,
         decoration: BoxDecoration(image: DecorationImage(image: AssetImage(ResImage.imgBG),fit: BoxFit.cover)),
         child: SafeArea(
-          child: Column(
-            children: [
-              ResumeWidget()
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                ListSongWidget(title: 'Resume', isMore: false),
+                ListSongWidget(title: 'V-pop', isMore: true),
+                ListSongWidget(title: 'Rap', isMore: true),
+              ],
+            ),
           ),
         ),
       ),

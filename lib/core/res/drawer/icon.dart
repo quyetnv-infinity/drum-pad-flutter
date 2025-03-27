@@ -17,6 +17,9 @@ class ResIcon {
   static const String icLock = '$basePath/ic_lock.svg';
   static const String icLineLeft = '$basePath/ic_line_left.svg';
   static const String icLineRight = '$basePath/ic_line_right.svg';
+  static const String icSettingOutline = '$basePath/ic_setting_outline.svg';
+
+  static const String icExpand = '$basePath/ic_expand.svg';
 
   //star
   static const String icStar0 = '$basePath/ic_star_0.svg';

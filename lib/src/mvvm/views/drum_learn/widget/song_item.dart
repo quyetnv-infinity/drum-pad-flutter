@@ -2,12 +2,14 @@ import 'dart:ui';
 
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
+import 'package:drumpad_flutter/src/widgets/blur_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SongItem extends StatelessWidget {
   final double height;
-  const SongItem({super.key, required this.height});
+  final bool isFromLearnFromSong;
+  const SongItem({super.key, required this.height, required this.isFromLearnFromSong});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,14 @@ class SongItem extends StatelessWidget {
                 Positioned(
                   top: 10,
                   left: 10,
-                  child: buildBlur(context, 'HARD')),
+                  child: Row(
+                    spacing: 8,
+                    children: [
+                      BlurWidget(text: 'HARD',),
+                      if(isFromLearnFromSong)
+                        BlurWidget(text: '5 STEPS',),
+                    ],
+                  )),
                 Positioned(
                   bottom: 10,
                   left: 10,
@@ -46,27 +55,6 @@ class SongItem extends StatelessWidget {
           Text('ViruSs', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w400),)
         ],
       ),
-    );
-  }
-  Widget buildBlur(BuildContext context, String text){
-    return Container(
-      alignment: Alignment.center,
-      clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(4),
-        ),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-          padding: const EdgeInsets.only(top: 3, bottom: 3, left: 8, right: 8),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Text(text, style: TextStyle(fontSize: 10),),
-        )
-      )
     );
   }
 }
