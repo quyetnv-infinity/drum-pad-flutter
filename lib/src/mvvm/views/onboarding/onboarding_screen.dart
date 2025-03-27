@@ -7,6 +7,7 @@ import 'package:drumpad_flutter/main.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_setting_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_state_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/home_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/drum_learn/drum_learn_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/onboarding/widgets/onboarding_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

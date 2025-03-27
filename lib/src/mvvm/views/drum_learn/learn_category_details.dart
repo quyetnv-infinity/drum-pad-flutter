@@ -25,7 +25,7 @@ class LearnCategoryDetails extends StatelessWidget {
             padding: const EdgeInsets.only(left: 16),
             child: Row(
               children: [
-                Icon(Icons.arrow_back_ios, color: Colors.white, size: 28),
+                Icon(Icons.arrow_back_ios, color: Colors.white, size: 22),
                 Text('Back', style: TextStyle(color: Colors.white, fontSize: 17),)
               ],
             ),
