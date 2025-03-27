@@ -20,6 +20,7 @@ class ResIcon {
   static const String icSettingOutline = '$basePath/ic_setting_outline.svg';
 
   static const String icExpand = '$basePath/ic_expand.svg';
+  static const String icArrowLeftCircleSolid = "$basePath/ic_arrow_left_circle_solid.svg";
 
   //star
   static const String icStar0 = '$basePath/ic_star_0.svg';

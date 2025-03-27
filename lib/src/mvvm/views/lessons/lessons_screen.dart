@@ -109,7 +109,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
 
     return CustomScaffold(
       // backgroundType: BackgroundType.gradient,
-      backgroundImage: ResImage.imgBackgoundScreen,
+      backgroundImage: ResImage.imgBackgroundScreen,
       backgroundFit: BoxFit.cover,
       appBar: AppBar(
         backgroundColor: Colors.transparent,

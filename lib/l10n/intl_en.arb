@@ -20,5 +20,11 @@
   "title_onboarding_3": "Drum Learn",
   "subtitle_onboarding_3": "Play to learn Drum with your phone",
   "title_onboarding_4": "Pick you Favorite",
-  "subtitle_onboarding_4": "Choose your song from our Music collection"
+  "subtitle_onboarding_4": "Choose your song from our Music collection",
+  "drum_pad": "DrumPad",
+  "beat_runner": "Beat Runner",
+  "drum_learn": "Drum Learn",
+  "recommend": "Recommend",
+  "sub_button_beat_runner": "Players select the glowing musical notes\non the screen according to the music.",
+  "sub_button_drum_learn": "Learn to play Drumpad on device\nthrough practice playing each part"
 }
