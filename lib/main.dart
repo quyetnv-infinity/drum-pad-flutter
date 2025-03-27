@@ -245,6 +245,7 @@ class _DrumpadScreenState extends State<DrumpadScreen> with SingleTickerProvider
       _splitSoundsByFace();
       lessonSounds.addAll(sortDrumpadSounds(uniqueSounds.toList(), lessons[currentLesson]['events'][0]["notes"][0].contains("_face_b_") ? _faceB : _faceA));
       _futureNotes = getFutureNotes(lessons[currentLesson]);
+      print("lessonssss $lessonSounds");
     } catch (e) {
       print('Error loading sequence data from file: $e');
       events = [];
