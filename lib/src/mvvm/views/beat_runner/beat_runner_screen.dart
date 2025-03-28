@@ -137,7 +137,11 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
             ),
             DrumPadScreen(
               key: _widgetPadKey,
-              currentSong: _currentSong,
+              currentSong: _currentSong, onChangeScore: (int score) {
+                setState(() {
+                  _currentScore = score;
+                });
+            },
             )
           ],
         ),
