@@ -33,6 +33,7 @@ dependencies:
   in_app_purchase: ^3.2.1
   purchases_flutter: ^8.6.0
   animated_flip_counter: ^0.3.4
+  tutorial_coach_mark: ^1.2.13
 
 dev_dependencies:
   flutter_test:
