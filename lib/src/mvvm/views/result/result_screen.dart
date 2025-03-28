@@ -1,7 +1,13 @@
+import 'package:drumpad_flutter/core/res/dimen/spacing.dart';
+import 'package:drumpad_flutter/core/res/drawer/icon.dart';
+import 'package:drumpad_flutter/src/mvvm/views/home/home_screen.dart';
+import 'package:drumpad_flutter/src/widgets/button/gradient_button.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
 import 'package:drumpad_flutter/src/widgets/text/judgement_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class ResultScreen extends StatefulWidget {
   final int perfectScore;
@@ -217,6 +223,49 @@ class _ResultScreenState extends State<ResultScreen>
                 ),
                 value: _missPercentAnimation.value,
                 count: widget.missScore,
+              ),
+              ResSpacing.h48,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GradientButton(
+                    onPressed: () {},
+                    shape: BoxShape.circle,
+                    padding: EdgeInsets.all(14),
+                    child: SvgPicture.asset(ResIcon.icMusic),
+                  ),
+                  GradientButton(
+                    onPressed: () {},
+                    padding: EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+                    borderRadius: BorderRadius.circular(32),
+                    child: Text(
+                      "Play Again",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  GradientButton(
+                    onPressed: () {
+                      /*
+                        có thẻ sử dụng cách sau
+                        Navigator.pushAndRemoveUntil(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => HomeScreen(),
+                        ),
+                        (route) => false,
+                      )
+                      */
+                      Navigator.popUntil(context, (route) => route.isFirst);
+                    },
+                    shape: BoxShape.circle,
+                    padding: EdgeInsets.all(14),
+                    child: SvgPicture.asset(ResIcon.icHome),
+                  ),
+                ],
               ),
             ],
           );
