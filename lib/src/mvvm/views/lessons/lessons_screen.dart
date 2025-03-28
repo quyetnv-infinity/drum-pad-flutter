@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/res/style/text_style.dart';
+import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/views/result/result_screen.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
@@ -125,19 +126,19 @@ class _LessonsScreenState extends State<LessonsScreen> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
+            children: [
               SizedBox(width: 12),
               Icon(Icons.arrow_back_ios, size: 18),
               SizedBox(width: 4.0),
               Text(
-                "Back",
+                context.locale.back,
                 style: TextStyle(fontSize: 17, fontWeight: AppFonts.regular),
               ),
             ],
           ),
         ),
-        title: const Text(
-          "Campaign",
+        title: Text(
+          context.locale.campaign,
           style: TextStyle(
             fontSize: 20,
             fontWeight: AppFonts.bold,
@@ -218,8 +219,8 @@ class _LessonsScreenState extends State<LessonsScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          const Text(
-                                            "Level",
+                                           Text(
+                                            context.locale.level,
                                             style: TextStyle(
                                               fontWeight: AppFonts.semiBold,
                                               fontSize: 14,
