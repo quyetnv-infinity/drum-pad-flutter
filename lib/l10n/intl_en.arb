@@ -59,5 +59,6 @@
   "sub_button_drum_learn": "Learn to play Drumpad on device\nthrough practice playing each part",
   "tutorial": "Tutorial",
   "score": "Score",
-  "choose_song": "Choose Song"
+  "choose_song": "Choose Song",
+  "select_your_song": "Select your song"
 }

@@ -5,12 +5,15 @@ import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/pad_color.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class BeatRunnerScreen extends StatefulWidget {
   final SongCollection? songCollection;
@@ -31,6 +34,8 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
   Set<String> highlightedSounds = {};
   SongCollection? _currentSong;
   int _currentScore = 0;
+  late TutorialCoachMark tutorialCoachMark;
+  final GlobalKey _chooseSongKey = GlobalKey();
 
   @override
   void initState() {
@@ -40,12 +45,94 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
       duration: Duration(milliseconds: 150), // Thời gian chạy mặc định
     )..repeat();
     _currentSong = widget.songCollection;
+
+    // Initialize tutorial
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initTutorial();
+      final tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
+      final isFirstTimeShowTutorial = tutorialProvider.isFirstTimeShowTutorial;
+      if(isFirstTimeShowTutorial && _currentSong == null){
+        Future.delayed(Duration(milliseconds: 500), () {
+          showTutorial();
+          tutorialProvider.setFirstShowTutorial();
+        },);
+      }
+    });
   }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  void _initTutorial() {
+    tutorialCoachMark = TutorialCoachMark(
+      targets: _createTargets(),
+      colorShadow: Colors.black,
+      opacityShadow: 0.8,
+      hideSkip: true,
+      onClickTarget: (_) {
+        print('target');
+        tutorialCoachMark.next();
+      },
+      onClickOverlay: (_) {
+        print('overlay');
+        tutorialCoachMark.next();
+      },
+    );
+  }
+
+  List<TargetFocus> _createTargets() {
+    return [
+      TargetFocus(
+        identify: "choose_song_button",
+        keyTarget: _chooseSongKey,
+        alignSkip: Alignment.bottomRight,
+        shape: ShapeLightFocus.RRect,
+        radius: 8,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return InkWell(
+                onTap: () {
+                  tutorialCoachMark.next();
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.4),
+                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 48.0),
+                        child: Icon(Icons.arrow_upward, color: Colors.white, size: 28,),
+                      ),
+                      SizedBox(height: 12),
+                      Text(
+                        context.locale.select_your_song,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    ];
+  }
+
+  void showTutorial() {
+    tutorialCoachMark.show(context: context);
   }
 
   double _getPositionTop() {
@@ -128,7 +215,8 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                       ],
                     ),
                   ),
-                  InkWell(
+
+                  if(_currentSong == null) InkWell(
                     onTap: (){
                       showTutorial();
                     },
@@ -141,6 +229,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Flexible(
+                      key: _chooseSongKey,
                       child: GestureDetector(
                         onTap: (){
                           onTapChooseSong();
@@ -195,11 +284,6 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
       });
       print(_currentSong?.name);
     }
-  }
-
-  void showTutorial(){
-    print('onTap Tutorial');
-
   }
 
   Widget drumPadView(){
