@@ -23,7 +23,7 @@ class BlurWidget extends StatelessWidget {
             color: Colors.white.withValues(alpha: 0.4),
             borderRadius: BorderRadius.circular(4),
           ),
-          child: Text(text, style: TextStyle(fontSize: 10, color: Colors.black),),
+          child: Text(text, style: TextStyle(fontSize: 10, color: Colors.black, fontWeight: FontWeight.w700),),
         )
       )
     );
