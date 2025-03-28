@@ -7,7 +7,10 @@ import 'package:drumpad_flutter/core/utils/pad_color.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/tutorial_blur_widget.dart';
+import 'package:drumpad_flutter/src/widgets/blur_widget.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
+import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
@@ -15,18 +18,19 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
-class BeatRunnerScreen extends StatefulWidget {
+class GamePlayScreen extends StatefulWidget {
   final SongCollection? songCollection;
-  const BeatRunnerScreen({super.key, this.songCollection});
+  const GamePlayScreen({super.key, this.songCollection});
 
   @override
-  State<BeatRunnerScreen> createState() => _BeatRunnerScreenState();
+  State<GamePlayScreen> createState() => _GamePlayScreenState();
 }
 
-class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerProviderStateMixin {
+class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProviderStateMixin {
   final GlobalKey _widgetPadKey = GlobalKey();
   late AnimationController _controller;
   bool isPlaying = false;
+  bool isShowTutorial = false;
 
   Set<int> _padPressedIndex = {};
 
@@ -36,6 +40,8 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
   int _currentScore = 0;
   late TutorialCoachMark tutorialCoachMark;
   final GlobalKey _chooseSongKey = GlobalKey();
+  final GlobalKey _changeMode = GlobalKey();
+  double padHeight = 100.0;
 
   @override
   void initState() {
@@ -48,6 +54,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
 
     // Initialize tutorial
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getWidgetPadSize();
       _initTutorial();
       final tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
       final isFirstTimeShowTutorial = tutorialProvider.isFirstTimeShowTutorial;
@@ -59,7 +66,14 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
       }
     });
   }
-
+  void _getWidgetPadSize() {
+    final RenderBox? renderBox = _widgetPadKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox != null && mounted) {
+      setState(() {
+        padHeight = renderBox.size.height;
+      });
+    }
+  }
   @override
   void dispose() {
     _controller.dispose();
@@ -72,13 +86,14 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
       colorShadow: Colors.black,
       opacityShadow: 0.8,
       hideSkip: true,
-      onClickTarget: (_) {
-        print('target');
-        tutorialCoachMark.next();
-      },
-      onClickOverlay: (_) {
-        print('overlay');
-        tutorialCoachMark.next();
+      onClickTarget: (target) {
+        if (target.identify == "change_mode") {
+          Future.delayed(Duration(milliseconds: 500), () {
+            setState(() {
+              isShowTutorial = true;
+            });
+          },);
+        }
       },
     );
   }
@@ -128,6 +143,57 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
           ),
         ],
       ),
+      TargetFocus(
+        identify: "change_mode",
+        keyTarget: _changeMode,
+        alignSkip: Alignment.bottomRight,
+        shape: ShapeLightFocus.RRect,
+        radius: 8,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return InkWell(
+                onTap: () {
+                 tutorialCoachMark.next();
+                 Future.delayed(Duration(milliseconds: 500), () {
+                   setState(() {
+                     isShowTutorial = true;
+                   });
+                 },);
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.4),
+                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(Icons.arrow_upward, color: Colors.white, size: 28,),
+                          SizedBox(height: 12),
+                          Text(
+                            context.locale.change_mode,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     ];
   }
 
@@ -162,16 +228,29 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              child: topView()
+      body: Stack(
+        children: [
+          SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: topView()
+                ),
+                drumPadView()
+              ],
             ),
-            drumPadView()
-          ],
-        ),
+          ),
+          if(isShowTutorial)
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                isShowTutorial = false;
+              });
+            },
+            child: TutorialBlurWidget(padHeight:  padHeight,)
+          ),
+        ],
       ),
     );
   }
@@ -215,12 +294,17 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                       ],
                     ),
                   ),
-
-                  if(_currentSong == null) InkWell(
+                  InkWell(
                     onTap: (){
                       showTutorial();
                     },
-                    child: Text(context.locale.tutorial, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 14, decoration: TextDecoration.underline),)
+                    child: Row(
+                      spacing: 6,
+                      children: [
+                        Text(context.locale.instruction, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 14, decoration: TextDecoration.underline),),
+                        Icon(CupertinoIcons.refresh_bold, size: 18)
+                      ],
+                    )
                   )
                 ],
               ),
@@ -254,15 +338,29 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                           :
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: Image.asset(_currentSong!.image!, fit: BoxFit.cover, width: double.infinity, height: double.infinity,)
+                            child: Stack(
+                              children: [
+                                Image.asset(_currentSong!.image!, fit: BoxFit.cover, width: double.infinity, height: double.infinity,),
+                                Positioned(
+                                  top: 10,
+                                  left: 10,
+                                  child: BlurWidget(text: _currentSong!.difficulty))
+                              ],
+                            )
                           ),
                         ),
                       ),
                     ),
                     Column(
+                      // spacing: 8,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
+                        Text(context.locale.progress, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
+                        RatingStars.custom(value: 15,isFlatStar: true, smallStarWidth: 18, smallStarHeight: 18, bigStarWidth: 18, bigStarHeight: 18,),
                         Text(context.locale.score, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
-                        Text(_currentScore.toString(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 32, color: Colors.white),)
+                        Text(_currentScore.toString(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 32, color: Colors.white),),
+                        buildModeButton()
                       ],
                     )
                   ],
@@ -284,6 +382,46 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
       });
       print(_currentSong?.name);
     }
+  }
+
+  Widget buildModeButton(){
+    return Padding(
+      key: _changeMode,
+      padding: const EdgeInsets.only(left: 10),
+      child: Row(
+        spacing: 6,
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 4),
+            height: 28,
+            width: 52,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                image: DecorationImage(image: AssetImage(ResImage.imgBGMode))),
+            child: Text(context.locale.mode,overflow: TextOverflow.ellipsis, maxLines: 1, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 4),
+            height: 28,
+            width: 52,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                image: DecorationImage(image: AssetImage(ResImage.imgBGMode))),
+            child: Text(context.locale.practice,overflow: TextOverflow.ellipsis, maxLines: 1, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 4),
+            height: 28,
+            width: 52,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                image: DecorationImage(image: AssetImage(ResImage.imgBGMode))),
+            child: Text(context.locale.rec,overflow: TextOverflow.ellipsis, maxLines: 1, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
+          ),
+
+        ],
+      ),
+    );
   }
 
   Widget drumPadView(){

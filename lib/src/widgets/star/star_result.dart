@@ -8,6 +8,7 @@ class RatingStars extends StatelessWidget {
   final double smallStarHeight;
   final double bigStarWidth;
   final double bigStarHeight;
+  final bool? isFlatStar;
 
   /// Widget hiển thị đánh giá bằng hệ thống 3 sao
   /// [value]: Giá trị đánh giá (0-100)
@@ -15,6 +16,7 @@ class RatingStars extends StatelessWidget {
   const RatingStars({
     Key? key,
     required this.value,
+    this.isFlatStar = false,
   }) :
         smallStarWidth = 55.25,
         smallStarHeight = 52,
@@ -30,6 +32,7 @@ class RatingStars extends StatelessWidget {
     required this.smallStarHeight,
     required this.bigStarWidth,
     required this.bigStarHeight,
+  this.isFlatStar,
   }) : super(key: key);
 
   @override
@@ -67,13 +70,54 @@ class RatingStars extends StatelessWidget {
       ),
     );
 
-    return Row(
+    final StarConfig flatLeftStar = StarConfig.small(
+      width: smallStarWidth,
+      height: smallStarHeight,
+      state: StarState.fromValue(
+        value: value,
+        nullThreshold: 15,
+        halfThreshold: 30,
+        fullThreshold: 45,
+      ),
+    );
+
+    final StarConfig flatMiddleStar = StarConfig.big(
+      width: smallStarWidth,
+      height: smallStarWidth,
+      state: StarState.fromValue(
+        value: value,
+        nullThreshold: 45,
+        halfThreshold: 60,
+        fullThreshold: 75,
+      ),
+    );
+
+    final StarConfig flatRightStar = StarConfig.small(
+      width: smallStarWidth,
+      height: smallStarHeight,
+      state: StarState.fromValue(
+        value: value,
+        nullThreshold: 75,
+        halfThreshold: 90,
+        fullThreshold: 100,
+      ),
+    );
+
+    return isFlatStar! ? Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         leftStar.build(),
         middleStar.build(),
         rightStar.build(),
+      ],
+    ): Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        flatLeftStar.build(),
+        flatMiddleStar.build(),
+        flatRightStar.build(),
       ],
     );
   }
