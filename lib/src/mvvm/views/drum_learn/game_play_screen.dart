@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
-import 'package:drumpad_flutter/core/utils/pad_color.dart';
+import 'package:drumpad_flutter/core/utils/pad_util.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
@@ -210,7 +210,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   }
 
   void _onPadPressed(String sound, int index) {
-    if(!PadColor.getPadEnable(sound)) return;
+    if(!PadUtil.getPadEnable(sound)) return;
 
     // Add this check to prevent duplicate activations
     if (_padPressedIndex.contains(index)) return;
@@ -257,7 +257,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
 
   List<Color> getPadColor(bool isHighlighted, bool hasSound, bool isActive, String soundId){
     if(_currentSong == null) return [Color(0xFF919191), Color(0xFF5E5E5E)];
-    return isHighlighted ? [Color(0xFFEDC78C), Colors.orange] : (hasSound ? PadColor.getPadGradientColor(isActive, soundId) : [Color(0xFF919191), Color(0xFF5E5E5E)]);
+    return isHighlighted ? [Color(0xFFEDC78C), Colors.orange] : (hasSound ? PadUtil.getPadGradientColor(isActive, soundId) : [Color(0xFF919191), Color(0xFF5E5E5E)]);
   }
 
   Widget topView(){
