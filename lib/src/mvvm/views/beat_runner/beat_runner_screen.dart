@@ -3,10 +3,11 @@ import 'dart:ui';
 
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
-import 'package:drumpad_flutter/core/utils/pad_color.dart';
+import 'package:drumpad_flutter/core/utils/pad_util.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
+import 'package:drumpad_flutter/src/widgets/drum_pad/drum_pad_widget.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,13 +26,7 @@ class BeatRunnerScreen extends StatefulWidget {
 
 class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerProviderStateMixin {
   final GlobalKey _widgetPadKey = GlobalKey();
-  late AnimationController _controller;
-  bool isPlaying = false;
 
-  Set<int> _padPressedIndex = {};
-
-  List<String> lessonSounds = ['unity_mid36_face_a_lead_lead1_a', 'unity_mid37_face_a_lead_lead2_a', 'unity_mid38_face_a_lead_lead3_a', 'unity_mid39_face_a_bass_bass3_a', 'unity_mid40_face_a_bass_bass4_a', 'unity_mid41_face_a_lead_lead4_a', 'unity_mid42_face_a_bass_bass1_a', 'unity_mid43_face_a_bass_bass2_a', 'unity_mid44_face_a_fx_drop_a', 'unity_mid45_face_a_drums_kick', 'unity_mid46_face_a_drums_hihat', 'unity_mid47_face_a_drums_snare'];
-  Set<String> highlightedSounds = {};
   SongCollection? _currentSong;
   int _currentScore = 0;
   late TutorialCoachMark tutorialCoachMark;
@@ -40,10 +35,6 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 150), // Thời gian chạy mặc định
-    )..repeat();
     _currentSong = widget.songCollection;
 
     // Initialize tutorial
@@ -62,7 +53,6 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
   }
 
@@ -135,30 +125,6 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
     tutorialCoachMark.show(context: context);
   }
 
-  double _getPositionTop() {
-    final RenderBox renderBox = _widgetPadKey.currentContext?.findRenderObject() as RenderBox;
-    final Offset position = renderBox.localToGlobal(Offset.zero); // Lấy vị trí tuyệt đối
-    final double top = position.dy;
-    final double bottom = top + renderBox.size.height;
-    return top;
-  }
-
-  void _onPadPressed(String sound, int index) {
-    if(!PadColor.getPadEnable(sound)) return;
-
-    // Add this check to prevent duplicate activations
-    if (_padPressedIndex.contains(index)) return;
-
-    setState(() {
-      _padPressedIndex.add(index);
-    });
-    Future.delayed(Duration(milliseconds: 100), (){
-      setState(() {
-        _padPressedIndex.remove(index);
-      });
-    },);
-  }
-
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -169,7 +135,10 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
             Expanded(
               child: topView()
             ),
-            drumPadView()
+            DrumPadScreen(
+              key: _widgetPadKey,
+              currentSong: _currentSong,
+            )
           ],
         ),
       ),
@@ -178,7 +147,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
 
   List<Color> getPadColor(bool isHighlighted, bool hasSound, bool isActive, String soundId){
     if(_currentSong == null) return [Color(0xFF919191), Color(0xFF5E5E5E)];
-    return isHighlighted ? [Color(0xFFEDC78C), Colors.orange] : (hasSound ? PadColor.getPadGradientColor(isActive, soundId) : [Color(0xFF919191), Color(0xFF5E5E5E)]);
+    return isHighlighted ? [Color(0xFFEDC78C), Colors.orange] : (hasSound ? PadUtil.getPadGradientColor(isActive, soundId) : [Color(0xFF919191), Color(0xFF5E5E5E)]);
   }
 
   Widget topView(){
@@ -284,50 +253,5 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
       });
       print(_currentSong?.name);
     }
-  }
-
-  Widget drumPadView(){
-    return GridView.builder(
-      key: _widgetPadKey,
-      padding: const EdgeInsets.all(8.0),
-      shrinkWrap: true,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 1.0,
-        crossAxisSpacing: 4,
-        mainAxisSpacing: 4,
-      ),
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: 12,
-      itemBuilder: (context, index) {
-        final bool hasSound = index < lessonSounds.length;
-        final String soundId = hasSound ? lessonSounds[index] : '';
-        final bool isHighlighted = highlightedSounds.contains(soundId);
-        final sound = lessonSounds[index];
-        bool isActive = _padPressedIndex.isNotEmpty && _padPressedIndex.contains(index) && _currentSong != null;
-        return GestureDetector(
-          onTapDown: (_) {
-            _onPadPressed(sound, index);
-          },
-          child: Stack(
-            children: [
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 150),
-                curve: Curves.easeInOut,
-                padding: EdgeInsets.all(isActive ? 8 : 0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.0),
-                    gradient: RadialGradient(colors: getPadColor(isHighlighted, hasSound, isActive, soundId))
-                  ),
-                ),
-              ),
-              if (isActive)
-                Lottie.asset('assets/anim/lightning_button.json', fit: BoxFit.cover, controller: _controller)
-            ],
-          ),
-        );
-      },
-    );
   }
 }

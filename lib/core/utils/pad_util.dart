@@ -1,6 +1,7 @@
+import 'package:drumpad_flutter/sound_type_enum.dart';
 import 'package:flutter/material.dart';
 
-class PadColor {
+class PadUtil {
   static bool getPadEnable(String sound) {
     for (var key in soundEnable.keys) {
       if (sound.contains(key)) {
@@ -8,6 +9,15 @@ class PadColor {
       }
     }
     return false;
+  }
+
+  static SoundType getSoundType(String sound) {
+    for (var key in soundTypes.keys) {
+      if (sound.contains(key)) {
+        return soundTypes[key]!;
+      }
+    }
+    return SoundType.drum;
   }
 
   static List<Color> getPadGradientColor(bool isActive, String sound){
@@ -46,5 +56,12 @@ class PadColor {
     'bass': true,
     'drums': true,
     'fx': true,
+  };
+
+  static final Map<String, SoundType> soundTypes = {
+    'lead': SoundType.lead,
+    'bass': SoundType.bass,
+    'drums': SoundType.drum,
+    'fx': SoundType.fx,
   };
 }
