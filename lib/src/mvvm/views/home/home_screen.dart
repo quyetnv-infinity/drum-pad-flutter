@@ -7,6 +7,7 @@ import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/button_action.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/horizontal_list.dart';
+import 'package:drumpad_flutter/src/mvvm/views/iap/iap_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/beat_runner/beat_runner_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/drum_learn_screen.dart';
@@ -92,6 +93,17 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => IapScreen(),
+                ),
+              );
+            },
+            icon: SvgPicture.asset(ResIcon.icIAP),
+          ),
           IconButton(
             onPressed: () {
               Navigator.push(

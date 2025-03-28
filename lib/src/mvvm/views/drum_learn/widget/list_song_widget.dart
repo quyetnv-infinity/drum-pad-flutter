@@ -2,6 +2,7 @@ import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/beat_runner/beat_runner_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_category_details.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/song_item.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,7 +13,8 @@ class ListSongWidget extends StatefulWidget {
   final String title;
   final bool isMore;
   final bool isChooseSong;
-  const ListSongWidget({super.key, required this.title, required this.isMore, required this.isChooseSong});
+  final List<SongCollection> listSongData;
+  const ListSongWidget({super.key, required this.title, required this.isMore, required this.isChooseSong, required this.listSongData});
 
   @override
   State<ListSongWidget> createState() => _ListSongWidgetState();
@@ -60,13 +62,13 @@ class _ListSongWidgetState extends State<ListSongWidget> {
               itemCount: 4,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
-                final song = context.read<DrumLearnProvider>().data[index];
+                final song = widget.listSongData[index];
                 return GestureDetector(
                   onTap: (){
                     if(widget.isChooseSong){
                       Navigator.pop(context, song);
                     } else {
-                      Navigator.push(context, CupertinoPageRoute(builder: (context) => BeatRunnerScreen(songCollection: song,),));
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => GamePlayScreen(songCollection: song,),));
                     }
                   },
                   child: SongItem(

@@ -1,11 +1,10 @@
 import 'package:drumpad_flutter/core/res/dimen/spacing.dart';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
-import 'package:drumpad_flutter/src/mvvm/views/home/home_screen.dart';
+import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/widgets/button/gradient_button.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
 import 'package:drumpad_flutter/src/widgets/text/judgement_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -158,7 +157,7 @@ class _ResultScreenState extends State<ResultScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Congratulation!",
+                context.locale.congratulation,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 27,
@@ -168,7 +167,7 @@ class _ResultScreenState extends State<ResultScreen>
               // Sử dụng giá trị animation cho RatingStars
               RatingStars(value: _starAnimation.value),
               Text(
-                "Final score",
+                context.locale.final_score,
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -186,7 +185,7 @@ class _ResultScreenState extends State<ResultScreen>
               SizedBox(height: 18),
               _rowScore(
                 title: JudgementText.perfect(
-                  'Perfect',
+                  context.locale.perfect,
                   textAlign: TextAlign.center,
                 ),
                 value: _perfectPercentAnimation.value,
@@ -194,7 +193,7 @@ class _ResultScreenState extends State<ResultScreen>
               ),
               _rowScore(
                 title: JudgementText.good(
-                  'Good',
+                  context.locale.good,
                   textAlign: TextAlign.center,
                 ),
                 value: _goodPercentAnimation.value,
@@ -202,7 +201,7 @@ class _ResultScreenState extends State<ResultScreen>
               ),
               _rowScore(
                 title: JudgementText.early(
-                  'Early',
+                  context.locale.early,
                   textAlign: TextAlign.center,
                 ),
                 value: _earlyPercentAnimation.value,
@@ -210,7 +209,7 @@ class _ResultScreenState extends State<ResultScreen>
               ),
               _rowScore(
                 title: JudgementText.late(
-                  'Late',
+                  context.locale.late,
                   textAlign: TextAlign.center,
                 ),
                 value: _latePercentAnimation.value,
@@ -218,7 +217,7 @@ class _ResultScreenState extends State<ResultScreen>
               ),
               _rowScore(
                 title: JudgementText.miss(
-                  'Miss',
+                  context.locale.miss,
                   textAlign: TextAlign.center,
                 ),
                 value: _missPercentAnimation.value,
@@ -239,7 +238,7 @@ class _ResultScreenState extends State<ResultScreen>
                     padding: EdgeInsets.symmetric(horizontal: 28, vertical: 16),
                     borderRadius: BorderRadius.circular(32),
                     child: Text(
-                      "Play Again",
+                      context.locale.play_again,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
