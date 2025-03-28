@@ -68,7 +68,7 @@ class _ListSongWidgetState extends State<ListSongWidget> {
                     if(widget.isChooseSong){
                       Navigator.pop(context, song);
                     } else {
-                      Navigator.push(context, CupertinoPageRoute(builder: (context) => GamePlayScreen(songCollection: song,),));
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) =>  GamePlayScreen(songCollection: song,),));
                     }
                   },
                   child: SongItem(

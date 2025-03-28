@@ -57,11 +57,11 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
       _getWidgetPadSize();
       _initTutorial();
       final tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
-      final isFirstTimeShowTutorial = tutorialProvider.isFirstTimeShowTutorial;
-      if(isFirstTimeShowTutorial && _currentSong == null){
+      final isFirstTimeShowTutorial = tutorialProvider.isFirstTimeShowTutorialLearn;
+      if(isFirstTimeShowTutorial){
         Future.delayed(Duration(milliseconds: 500), () {
           showTutorial();
-          tutorialProvider.setFirstShowTutorial();
+          tutorialProvider.setFirstShowTutorialLearn();
         },);
       }
     });
