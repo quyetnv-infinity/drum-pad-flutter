@@ -1,8 +1,10 @@
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/list_song_widget.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/resume_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LearnFromSongScreen extends StatefulWidget {
   final bool isChooseSong;
@@ -17,6 +19,7 @@ class _LearnFromSongScreenState extends State<LearnFromSongScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final listSong = context.read<DrumLearnProvider>().data;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -47,9 +50,9 @@ class _LearnFromSongScreenState extends State<LearnFromSongScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                ListSongWidget(title: 'Resume', isMore: false, isChooseSong: widget.isChooseSong,),
-                ListSongWidget(title: 'V-pop', isMore: true, isChooseSong: widget.isChooseSong,),
-                ListSongWidget(title: 'Rap', isMore: true, isChooseSong: widget.isChooseSong,),
+                ListSongWidget(title: 'Resume', isMore: false, isChooseSong: widget.isChooseSong, listSongData: listSong),
+                ListSongWidget(title: 'V-pop', isMore: true, isChooseSong: widget.isChooseSong, listSongData: listSong,),
+                ListSongWidget(title: 'Rap', isMore: true, isChooseSong: widget.isChooseSong, listSongData: listSong,),
               ],
             ),
           ),

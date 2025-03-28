@@ -17,6 +17,11 @@ class ResIcon {
   static const String icLineLeft = '$basePath/ic_line_left.svg';
   static const String icLineRight = '$basePath/ic_line_right.svg';
   static const String icSettingOutline = '$basePath/ic_setting_outline.svg';
+  static const String icX = '$basePath/ic_x.svg';
+  static const String icDoneIAP = '$basePath/ic_done_iap.svg';
+  static const String icRadioSelected = '$basePath/ic_radio_selected.svg';
+  static const String icRadio = '$basePath/ic_radio.svg';
+  static const String icIAP = '$basePath/ic_iap.svg';
 
   static const String icExpand = '$basePath/ic_expand.svg';
   static const String icArrowLeftCircleSolid = "$basePath/ic_arrow_left_circle_solid.svg";

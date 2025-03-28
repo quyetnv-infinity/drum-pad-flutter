@@ -12,7 +12,8 @@ class ListSongWidget extends StatefulWidget {
   final String title;
   final bool isMore;
   final bool isChooseSong;
-  const ListSongWidget({super.key, required this.title, required this.isMore, required this.isChooseSong});
+  final List<SongCollection> listSongData;
+  const ListSongWidget({super.key, required this.title, required this.isMore, required this.isChooseSong, required this.listSongData});
 
   @override
   State<ListSongWidget> createState() => _ListSongWidgetState();
@@ -60,7 +61,7 @@ class _ListSongWidgetState extends State<ListSongWidget> {
               itemCount: 4,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
-                final song = context.read<DrumLearnProvider>().data[index];
+                final song = widget.listSongData[index];
                 return GestureDetector(
                   onTap: (){
                     if(widget.isChooseSong){
