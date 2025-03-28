@@ -21,6 +21,9 @@ class ResIcon {
   static const String icExpand = '$basePath/ic_expand.svg';
   static const String icArrowLeftCircleSolid = "$basePath/ic_arrow_left_circle_solid.svg";
 
+  static const String icHome = '$basePath/ic_home.svg';
+  static const String icMusic = '$basePath/ic_music.svg';
+
   //star
   static const String icStar0 = '$basePath/ic_star_0.svg';
   static const String icStar05 = '$basePath/ic_star_0_5.svg';
