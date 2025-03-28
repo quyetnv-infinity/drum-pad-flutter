@@ -9,8 +9,8 @@ class DrumLearnProvider extends ChangeNotifier {
     SongCollection(
         lessons: [],
         image: "assets/images/music_99%.png",
-        author: "Sơn Tùng M-TP",
-        name: "Lạc Trôi"),
+        author: "MCK",
+        name: "99%"),
     SongCollection(
         lessons: [],
         image: "assets/images/lactroi.png",
@@ -57,6 +57,4 @@ class DrumLearnProvider extends ChangeNotifier {
         author: "Sơn Tùng M-TP",
         name: "Lạc Trôi"),
   ];
-
-
 }
