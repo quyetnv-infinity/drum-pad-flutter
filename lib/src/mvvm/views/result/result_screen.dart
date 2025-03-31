@@ -47,11 +47,6 @@ class _ResultScreenState extends State<ResultScreen>
   @override
   void initState() {
     super.initState();
-    print(widget.perfectScore);
-    print(widget.goodScore);
-    print(widget.earlyScore);
-    print(widget.lateScore);
-    print(widget.missScore);
     _calculateTotalNotes();
     _animationController = AnimationController(
       duration: Duration(milliseconds: 1500),

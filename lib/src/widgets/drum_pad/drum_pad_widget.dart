@@ -161,7 +161,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         break;
       case 'Late':
         latePoint++;
-        print('anijsefhbasijf');
         break;
       case 'Early':
         earlyPoint++;
@@ -414,7 +413,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         padStates[sound] = state;
       });
       increasePoint(state);
-      print(padStates[sound]);
     } else if (highlightedSounds.contains(sound)) {
       if (_futureNotes.isNotEmpty && (_futureNotes[0]["notes"] as List).contains(sound)) {
         _futureNotes.removeAt(0);
@@ -526,7 +524,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         int row = ((localPosition.dy) ~/ itemHeight)
             .clamp(0, (12 ~/ 3));
         int index = row * 3 + col;
-        print(index);
+        // print(index);
 
         if (index < 12) {
           _pointerToPadIndex[event.pointer] = index;

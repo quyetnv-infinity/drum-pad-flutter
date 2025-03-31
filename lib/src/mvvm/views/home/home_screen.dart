@@ -5,6 +5,7 @@ import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/res/style/text_style.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/button_action.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/horizontal_list.dart';
 import 'package:drumpad_flutter/src/mvvm/views/iap/iap_screen.dart';
@@ -16,6 +17,7 @@ import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,59 +27,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<SongCollection> _data = [
-    SongCollection(
-        lessons: [],
-        image: "assets/images/music_99%.png",
-        author: "MCK",
-        name: "99%"),
-    SongCollection(
-        lessons: [],
-        image: "assets/images/lactroi.png",
-        author: "Sơn Tùng M-TP",
-        name: "Lạc Trôi"),
-    SongCollection(
-        lessons: [],
-        image: "assets/images/lactroi.png",
-        author: "Sơn Tùng M-TP",
-        name: "Lạc Trôi"),
-    SongCollection(
-        lessons: [],
-        image: "assets/images/lactroi.png",
-        author: "Sơn Tùng M-TP",
-        name: "Lạc Trôi"),
-    SongCollection(
-        lessons: [],
-        image: "assets/images/lactroi.png",
-        author: "Sơn Tùng M-TP",
-        name: "Lạc Trôi"),
-    SongCollection(
-        lessons: [],
-        image: "assets/images/lactroi.png",
-        author: "Sơn Tùng M-TP",
-        name: "Lạc Trôi"),
-    SongCollection(
-        lessons: [],
-        image: "assets/images/lactroi.png",
-        author: "Sơn Tùng M-TP",
-        name: "Lạc Trôi"),
-    SongCollection(
-        lessons: [],
-        image: "assets/images/lactroi.png",
-        author: "Sơn Tùng M-TP",
-        name: "Lạc Trôi"),
-    SongCollection(
-        lessons: [],
-        image: "assets/images/lactroi.png",
-        author: "Sơn Tùng M-TP",
-        name: "Lạc Trôi"),
-    SongCollection(
-        lessons: [],
-        image: "assets/images/lactroi.png",
-        author: "Sơn Tùng M-TP",
-        name: "Lạc Trôi"),
-  ];
 
+  late List<SongCollection> _data;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _data = context.read<DrumLearnProvider>().data;
+  }
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -172,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
               data: _data,
               isShowDifficult: true,
               onTap: (item, index) {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) => LessonsScreen(),));
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: item,),));
               },
             ),
           ],
