@@ -613,14 +613,27 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
                         borderRadius: BorderRadius.circular(12.0),
                         gradient: RadialGradient(colors: getPadColor(isHighlighted, hasSound, isActive, soundId))
                     ),
-                    child: Center(
-                      child: Text(
-                        (padStates[sound] ?? PadStateEnum.none).getDisplayText(context),
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    ),
                   ),
                 ),
+                Center(
+                  child: TweenAnimationBuilder(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    tween: Tween<double>(begin: 1.0, end: isActive ? 2.5 : 1.0),
+                    builder: (context, scale, child) {
+                      return Transform.scale(
+                        scale: scale,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 100),
+                          curve: Curves.easeInOut,
+                          transform: Matrix4.translationValues(0, padStates[sound] != null ? -100 : 0, 0),
+                          child: (padStates[sound] ?? PadStateEnum.none).getDisplayWidget(context),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                // (padStates[sound] ?? PadStateEnum.none).getDisplayWidget(context),
                 if (_futureNotes.isNotEmpty
                     && (_futureNotes[0]["notes"] as List).contains(sound)
                     && currentEventIndex != 0

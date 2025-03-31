@@ -1,4 +1,5 @@
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
+import 'package:drumpad_flutter/src/widgets/text/judgement_text.dart';
 import 'package:flutter/material.dart';
 
 enum PadStateEnum {
@@ -6,20 +7,20 @@ enum PadStateEnum {
 }
 
 extension PadStateExtension on PadStateEnum {
-  String getDisplayText(BuildContext context) {
+  Widget getDisplayWidget(BuildContext context) {
     switch (this) {
       case PadStateEnum.perfect:
-        return context.locale.perfect;
+        return JudgementText.perfect(context.locale.perfect, fontSize: 20,);
       case PadStateEnum.good:
-        return context.locale.good;
+        return JudgementText.good(context.locale.good, fontSize: 20);
       case PadStateEnum.early:
-        return context.locale.early;
+        return JudgementText.early(context.locale.early, fontSize: 20);
       case PadStateEnum.late:
-        return context.locale.late;
+        return JudgementText.late(context.locale.late, fontSize: 20);
       case PadStateEnum.miss:
-        return context.locale.miss;
+        return JudgementText.miss(context.locale.miss,fontSize: 20);
       default:
-        return '';
+        return const SizedBox.shrink(); // Trả về widget trống nếu không có trạng thái
     }
   }
 }
