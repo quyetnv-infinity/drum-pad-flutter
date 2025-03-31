@@ -40,7 +40,6 @@ class _LessonsScreenState extends State<LessonsScreen> {
       final String jsonString =
           await rootBundle.loadString('assets/sequence.json');
       final List<dynamic> jsonData = json.decode(jsonString);
-      print(jsonData);
       final songCollection = SongCollection.fromJson(jsonData);
 
       // Bây giờ bạn có thể sử dụng songCollection.lessons để truy cập vào các bài học

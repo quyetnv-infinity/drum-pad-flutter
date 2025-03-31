@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:drumpad_flutter/core/enum/pad_state_enum.dart';
 import 'package:drumpad_flutter/core/utils/pad_util.dart';
 import 'package:drumpad_flutter/note.util.dart';
 import 'package:drumpad_flutter/sound_type_enum.dart';
@@ -32,7 +33,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   bool isPlaying = false;
   Set<String> highlightedSounds = {};
   Set<String> remainSounds = {};
-  String firstRemainState = '';
+  PadStateEnum firstRemainState = PadStateEnum.none;
   bool notePressed = false;
   double startTimeOffset = 0;
   DateTime? startTime;
@@ -51,7 +52,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
 
   DateTime? lastEventTime;
   DateTime? firstRemainSound;
-  Map<String, String> padStates = {};
+  Map<String, PadStateEnum> padStates = {};
   List<LessonSequence> lessons = [];
   int currentLesson = 0;
 
@@ -59,7 +60,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   List<String> _faceB = [];
 
   int goodPoint = 0;
-  int perfectPoint = 1;
+  int perfectPoint = 0;
   int latePoint = 0;
   int earlyPoint = 0;
   int missPoint = 0;
@@ -135,7 +136,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
 
   void resetPoint(){
     print('reset');
-    perfectPoint = 1;
+    perfectPoint = 0;
     goodPoint = 0;
     latePoint = 0;
     earlyPoint = 0;
@@ -151,23 +152,24 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       missPoint * 0;
   }
 
-  void increasePoint(String state){
+  void increasePoint(PadStateEnum state){
     switch(state){
-      case 'Perfect':
+      case PadStateEnum.perfect:
         perfectPoint++;
         break;
-      case 'Gud':
+      case PadStateEnum.good:
         goodPoint++;
         break;
-      case 'Late':
+      case PadStateEnum.late:
         latePoint++;
-        print('anijsefhbasijf');
         break;
-      case 'Early':
+      case PadStateEnum.early:
         earlyPoint++;
         break;
-      case 'Miss':
+      case PadStateEnum.miss:
         missPoint++;
+        break;
+      default:
         break;
     }
     widget.onChangeScore(calculateScore());
@@ -366,19 +368,21 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     double currentTime = (DateTime.now().difference(lastEventTime!).inMilliseconds) / 1000.0;
     double requiredTime = events[currentEventIndex].time - (currentEventIndex > 0 ? events[currentEventIndex - 1].time : 0);
 
-    String state = "";
+    PadStateEnum state = PadStateEnum.none;
     if(currentEventIndex != 0){
       if (currentTime < requiredTime - 0.5) {
-        state = 'Early';
+        state = PadStateEnum.early;
       } else if (currentTime < requiredTime - 0.2) {
-        state = 'Gud';
+        state = PadStateEnum.good;
       } else if (currentTime > requiredTime + 0.2 && requiredNotes.contains(sound)) {
-        state = 'Late';
+        state = PadStateEnum.late;
       } else if( !requiredNotes.contains(sound) && currentEventIndex != 0){
-        state = 'Miss';
+        state = PadStateEnum.miss;
       } else{
-        state = 'Perfect';
+        state = PadStateEnum.perfect;
       }
+    } else {
+      increasePoint(PadStateEnum.perfect);
     }
     increasePoint(state);
 
@@ -401,10 +405,10 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     // }
     if (remainSounds.contains(sound)) {
       double currentTime = (DateTime.now().difference(firstRemainSound!).inMilliseconds) / 1000.0;
-      String state = "";
+      PadStateEnum state = PadStateEnum.none;
       if(currentEventIndex != 0){
         if (currentTime > 0.2) {
-          state = 'Miss';
+          state = PadStateEnum.miss;
         } else{
           state = firstRemainState;
         }
@@ -435,9 +439,9 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         if(remainSounds.isNotEmpty){
           for (var e in remainSounds) {
             setState(() {
-              padStates[e] = 'Miss';
+              padStates[e] = PadStateEnum.miss;
             });
-            increasePoint("Miss");
+            increasePoint(PadStateEnum.miss);
             Future.delayed(const Duration(seconds: 1), () {
               setState(() {
                 padStates.remove(e);
@@ -612,7 +616,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
                     ),
                     child: Center(
                       child: Text(
-                        padStates[sound] ?? "",
+                        (padStates[sound] ?? PadStateEnum.none).getDisplayText(context),
                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -669,4 +673,5 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       )
     );
   }
+
 }
