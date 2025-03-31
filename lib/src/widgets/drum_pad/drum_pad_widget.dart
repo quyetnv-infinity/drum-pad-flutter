@@ -14,8 +14,9 @@ import 'package:lottie/lottie.dart';
 
 class DrumPadScreen extends StatefulWidget {
   final SongCollection? currentSong;
+  final Function(int score) onChangeScore;
   final int lessonIndex;
-  const DrumPadScreen({super.key, required this.currentSong, this.lessonIndex = 0});
+  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0});
 
   @override
   State<DrumPadScreen> createState() => _DrumPadScreenState();
@@ -139,6 +140,15 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     earlyPoint = 0;
     missPoint = 0;
   }
+
+  int calculateScore() {
+    return perfectPoint * 100 +
+      goodPoint * 90 +
+      earlyPoint * 60 +
+      latePoint * 40 +
+      missPoint * 0;
+  }
+
   void increasePoint(String state){
     switch(state){
       case 'Perfect':
@@ -149,6 +159,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         break;
       case 'Late':
         latePoint++;
+        print('anijsefhbasijf');
         break;
       case 'Early':
         earlyPoint++;
@@ -157,6 +168,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         missPoint++;
         break;
     }
+    widget.onChangeScore(calculateScore());
   }
 
   Future<void> _loadSequenceDataFromFile() async {
@@ -330,6 +342,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     if(!(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty)) return;
     if(!PadUtil.getPadEnable(sound)) return;
 
+    List<String> requiredNotes = events[currentEventIndex].notes;
+
     // Add this check to prevent duplicate activations
     if (_padPressedIndex.contains(index)) return;
 
@@ -356,20 +370,19 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         state = 'Early';
       } else if (currentTime < requiredTime - 0.2) {
         state = 'Gud';
-      } else if (currentTime > requiredTime + 0.2) {
+      } else if (currentTime > requiredTime + 0.2 && requiredNotes.contains(sound)) {
         state = 'Late';
-      } else {
+      } else if( !requiredNotes.contains(sound) && currentEventIndex != 0){
+        state = 'Miss';
+      } else{
         state = 'Perfect';
       }
     }
-
     increasePoint(state);
 
     setState(() {
       padStates[sound] = state;
       // print(firstRemainState);
-
-      // highlightedSounds.remove(sound);
     });
 
     Future.delayed(const Duration(seconds: 1), () {
@@ -377,14 +390,13 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         padStates.remove(sound);
       });
     });
-
-    List<String> requiredNotes = List<String>.from(events[currentEventIndex].notes);
-    if(!requiredNotes.contains(sound) && currentEventIndex != 0){
-      increasePoint("Miss");
-      setState(() {
-        padStates[sound] = 'Miss';
-      });
-    }
+    //
+    // if(!requiredNotes.contains(sound) && currentEventIndex != 0){
+    //   increasePoint("Miss");
+    //   setState(() {
+    //     padStates[sound] = 'Miss';
+    //   });
+    // }
     if (remainSounds.contains(sound)) {
       double currentTime = (DateTime.now().difference(firstRemainSound!).inMilliseconds) / 1000.0;
       String state = "";
@@ -620,7 +632,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
                       ),
                       Align(
                           alignment: Alignment.center,
-                          child: Text("Wait", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: Colors.white)))
+                          child: Text("Wait", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: Colors.white))),
+
                     ],
                   ),
                 if (padProgress.containsKey(sound))
@@ -638,7 +651,11 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
                     ),
                   ),
                 if (isActive)
-                  Lottie.asset('assets/anim/lightning_button.json', fit: BoxFit.cover, controller: _controller)
+                  Lottie.asset('assets/anim/lightning_button.json', fit: BoxFit.cover, controller: _controller),
+                if(!padProgress.containsKey(sound) && isHighlighted)
+                  Align(
+                      alignment: Alignment.center,
+                      child: Lottie.asset('assets/anim/click_here.json', height: MediaQuery.sizeOf(context).width /3 - 50))
               ],
             ),
           );

@@ -5,7 +5,7 @@ import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/res/style/text_style.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
-import 'package:drumpad_flutter/src/mvvm/views/result/result_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 class LessonsScreen extends StatefulWidget {
-  const LessonsScreen({super.key});
+  final SongCollection? songCollection;
+  const LessonsScreen({super.key, this.songCollection});
 
   @override
   State<LessonsScreen> createState() => _LessonsScreenState();
@@ -47,8 +48,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
 
       // Ví dụ: in ra số lượng events trong bài học đầu tiên
       if (songCollection.lessons.isNotEmpty) {
-        print(
-            "Số lượng events trong bài học đầu tiên: ${songCollection.lessons[0].events.length}");
+        print("Số lượng events trong bài học đầu tiên: ${songCollection.lessons[0].events.length}");
       }
 
       setState(() {
@@ -147,122 +147,123 @@ class _LessonsScreenState extends State<LessonsScreen> {
         ),
       ),
       body: isLoading
-          ? CupertinoActivityIndicator()
-          : SingleChildScrollView(
-              reverse: true,
-              padding: EdgeInsets.zero,
-              controller: _scrollController,
-              child: Center(
-                child: SizedBox(
-                  width: contentWidth,
-                  height: totalHeight,
-                  child: Stack(
-                    children: [
-                      /// Đường nối giữa các level
-                      ...List.generate(displayData.length - 1, (index) {
-                        final verticalPosition =
-                            lineVerticalOffset + index * verticalSpacing;
-                        final isEvenIndex = index % 2 == 0;
-                        final svgPath = isEvenIndex
-                            ? ResIcon.icLineLeft
-                            : ResIcon.icLineRight;
-                        final horizontalPosition = isEvenIndex
-                            ? leftLineHorizontalPosition
-                            : rightLineHorizontalPosition;
+        ? CupertinoActivityIndicator()
+        : SingleChildScrollView(
+          reverse: true,
+          padding: EdgeInsets.zero,
+          controller: _scrollController,
+          child: Center(
+            child: SizedBox(
+              width: contentWidth,
+              height: totalHeight,
+              child: Stack(
+                children: [
+                  /// Đường nối giữa các level
+                  ...List.generate(displayData.length - 1, (index) {
+                    final verticalPosition =
+                        lineVerticalOffset + index * verticalSpacing;
+                    final isEvenIndex = index % 2 == 0;
+                    final svgPath = isEvenIndex
+                        ? ResIcon.icLineLeft
+                        : ResIcon.icLineRight;
+                    final horizontalPosition = isEvenIndex
+                        ? leftLineHorizontalPosition
+                        : rightLineHorizontalPosition;
 
-                        return Positioned(
-                          top: verticalPosition,
-                          left: horizontalPosition,
-                          child: SvgPicture.asset(
-                            svgPath,
-                            width: lineWidth,
-                            height: lineHeight,
-                            fit: BoxFit.fill,
-                          ),
-                        );
-                      }),
+                    return Positioned(
+                      top: verticalPosition,
+                      left: horizontalPosition,
+                      child: SvgPicture.asset(
+                        svgPath,
+                        width: lineWidth,
+                        height: lineHeight,
+                        fit: BoxFit.fill,
+                      ),
+                    );
+                  }),
 
-                      /// Các nút level
-                      ...List.generate(
-                        displayData.length,
-                        (index) {
-                          final item = displayData[index];
-                          final verticalPosition =
-                              initialTopOffset + index * verticalSpacing;
-                          final horizontalPosition = index % 2 == 0
-                              ? leftSidePosition
-                              : rightSidePosition;
+                  /// Các nút level
+                  ...List.generate(
+                    displayData.length,
+                    (index) {
+                      final item = displayData[index];
+                      final verticalPosition =
+                          initialTopOffset + index * verticalSpacing;
+                      final horizontalPosition = index % 2 == 0
+                          ? leftSidePosition
+                          : rightSidePosition;
 
-                          return Positioned(
-                            top: verticalPosition,
-                            left: horizontalPosition,
-                            child: InkWell(
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () {
-                                Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: 20, goodScore: 30, earlyScore: 20, lateScore: 10, missScore: 1),));
-                              },
-                              child: Container(
-                                width: itemSize,
-                                height: itemSize,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                        ResImage.imgBgButtonStepLesson),
-                                  ),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: item.isCompleted == true
-                                    ? Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                           Text(
-                                            context.locale.level,
-                                            style: TextStyle(
-                                              fontWeight: AppFonts.semiBold,
-                                              fontSize: 14,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Text(
-                                            "${item.level}",
-                                            style: TextStyle(
-                                              fontWeight: AppFonts.semiBold,
-                                              fontSize: 36,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          SvgPicture.asset(
-                                            _getStarIcon(item.star),
-                                            width: 30,
-                                            height: 30,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ],
-                                      )
-                                    : Center(
-                                        child: SizedBox(
-                                          width: 40,
-                                          height: 40,
-                                          child: SvgPicture.asset(
-                                            ResIcon.icLock,
-                                            fit: BoxFit.cover,
-                                          ),
+                      return Positioned(
+                        top: verticalPosition,
+                        left: horizontalPosition,
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () {
+                            // Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: 20, goodScore: 30, earlyScore: 20, lateScore: 10, missScore: 1),));
+                            if(item.isCompleted == true) Navigator.push(context, CupertinoPageRoute(builder: (context) => GamePlayScreen(songCollection: widget.songCollection, index: displayData.length - (index + 1),),));
+                          },
+                          child: Container(
+                            width: itemSize,
+                            height: itemSize,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage( item.isCompleted == true ?ResImage.imgBgButtonStepLessonUnlock
+                                    : ResImage.imgBgButtonStepLesson),
+                              ),
+                              shape: BoxShape.circle,
+                            ),
+                            child: item.isCompleted == true
+                                ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                    children: [
+                                       Text(
+                                        context.locale.level,
+                                        style: TextStyle(
+                                          fontWeight: AppFonts.semiBold,
+                                          fontSize: 14,
+                                          color: Colors.white,
                                         ),
                                       ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                                      Text(
+                                        "${item.level}",
+                                        style: TextStyle(
+                                          fontWeight: AppFonts.semiBold,
+                                          fontSize: 36,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      SvgPicture.asset(
+                                        _getStarIcon(item.star),
+                                        width: 30,
+                                        height: 30,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ],
+                                  )
+                                : Center(
+                                    child: SizedBox(
+                                      width: 40,
+                                      height: 40,
+                                      child: SvgPicture.asset(
+                                        ResIcon.icLock,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                ),
+                ],
               ),
             ),
+          ),
+          ),
     );
   }
 

@@ -33,11 +33,11 @@ class HoldAndSlide extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Text(context.locale.hold_and_slide, style: TextStyle(
-          color: Colors.white, fontSize: 24, fontWeight: FontWeight.w500
+          color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600
         ),),
         Image.asset(ResImage.imgTutoStick),
         Text(context.locale.tap_to_exit, style: TextStyle(
-            color: Colors.white, fontSize: 24, fontWeight: FontWeight.w500
+            color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600
         ),),
       ],
     );

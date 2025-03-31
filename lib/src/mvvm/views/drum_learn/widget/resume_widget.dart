@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
-import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/campaign_screen.dart';
-import 'package:drumpad_flutter/src/mvvm/views/drum_learn/drum_learn_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/options_widget.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/song_item.dart';
@@ -51,11 +48,19 @@ class _ResumeWidgetState extends State<ResumeWidget> {
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               final song = context.read<DrumLearnProvider>().data[index];
-            return SongItem(
-              height: MediaQuery.sizeOf(context).width * 0.55,
-              isFromLearnFromSong: false,
-              model: song,
-             );
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(context, CupertinoPageRoute(builder: (context) =>
+                  // GamePlayScreen(songCollection: song)'
+                  LessonsScreen(songCollection: song,)
+                  ));
+              },
+              child: SongItem(
+                height: MediaQuery.sizeOf(context).width * 0.55,
+                isFromLearnFromSong: false,
+                model: song,
+               ),
+            );
           },),
         ),
         SizedBox(height: 12),

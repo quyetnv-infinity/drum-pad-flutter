@@ -1,5 +1,4 @@
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
-import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
