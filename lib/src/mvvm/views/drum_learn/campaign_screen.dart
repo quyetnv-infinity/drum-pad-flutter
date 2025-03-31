@@ -37,13 +37,10 @@ class CampaignScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CampaignItem(percent: 5,),
-              CampaignItem(percent: 29,),
-              CampaignItem(percent: 44),
-              CampaignItem(percent: 55,),
-              CampaignItem(percent: 74,),
-              CampaignItem(percent: 89,),
-              CampaignItem(percent: 90,),
+              CampaignItem(percent: 5, difficult: context.locale.easy,),
+              CampaignItem(percent: 29, difficult: context.locale.medium),
+              CampaignItem(percent: 44, difficult: context.locale.hard),
+              CampaignItem(percent: 55, difficult: context.locale.demonic),
             ],
           ),
         )

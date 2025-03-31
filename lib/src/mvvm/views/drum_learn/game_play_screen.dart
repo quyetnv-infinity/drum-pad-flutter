@@ -207,6 +207,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                 ),
                 DrumPadScreen(
                   key: _widgetPadKey,
+                  lessonIndex: widget.index ?? 0,
                   currentSong: _currentSong, onChangeScore: (int score) {
                   setState(() {
                     _currentScore = score;

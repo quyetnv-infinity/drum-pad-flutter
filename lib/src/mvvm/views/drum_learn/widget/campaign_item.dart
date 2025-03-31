@@ -1,14 +1,15 @@
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
+import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
 import 'package:drumpad_flutter/src/widgets/blur_widget.dart';
 import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class CampaignItem extends StatelessWidget {
   final double percent;
-  const CampaignItem({super.key, required this.percent});
+  final String difficult;
+  const CampaignItem({super.key, required this.percent, required this.difficult});
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +35,9 @@ class CampaignItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                BlurWidget(text: 'Hard'.toUpperCase(),),
+                BlurWidget(text: difficult.toUpperCase(),),
                 Text('Fundamental 1', style: TextStyle(fontSize: 23, fontWeight: FontWeight.w600, color:  Colors.white)),
-                Text('Progress', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color:  Colors.white)),
+                Text('${context.locale.progress}: ${percent.floor()}%', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color:  Colors.white)),
                 RatingStars.custom(value: percent, smallStarWidth: 20, smallStarHeight: 20, bigStarWidth: 20, bigStarHeight: 20, isFlatStar: true,)
               ],
             )
