@@ -374,7 +374,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     setState(() {
       padStates[sound] = state;
       // print(firstRemainState);
-
     });
 
     Future.delayed(const Duration(seconds: 1), () {

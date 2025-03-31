@@ -5,10 +5,6 @@ import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 class DrumLearnProvider extends ChangeNotifier {
-
-
-
-
   final List<SongCollection> data = [
     SongCollection(
         lessons: [],

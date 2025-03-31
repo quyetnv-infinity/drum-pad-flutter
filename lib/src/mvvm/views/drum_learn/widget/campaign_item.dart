@@ -1,13 +1,14 @@
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
 import 'package:drumpad_flutter/src/widgets/blur_widget.dart';
+import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CampaignItem extends StatelessWidget {
-  final Widget star;
-  const CampaignItem({super.key, required this.star});
+  final double percent;
+  const CampaignItem({super.key, required this.percent});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class CampaignItem extends StatelessWidget {
                 BlurWidget(text: 'Hard'.toUpperCase(),),
                 Text('Fundamental 1', style: TextStyle(fontSize: 23, fontWeight: FontWeight.w600, color:  Colors.white)),
                 Text('Progress', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color:  Colors.white)),
-                star,
+                RatingStars.custom(value: percent, smallStarWidth: 20, smallStarHeight: 20, bigStarWidth: 20, bigStarHeight: 20, isFlatStar: true,)
               ],
             )
           ],

@@ -10,64 +10,6 @@ class CampaignScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget _getStarIcon(double percent) {
-      if (percent < 15) {
-        return Row(
-          children: [
-            SvgPicture.asset(ResIcon.icStarNull),
-            SvgPicture.asset(ResIcon.icStarNull),
-            SvgPicture.asset(ResIcon.icStarNull),
-          ],
-        );
-      } else if (percent < 30) {
-        return Row(
-          children: [
-            SvgPicture.asset(ResIcon.icStarHalf),
-            SvgPicture.asset(ResIcon.icStarNull),
-            SvgPicture.asset(ResIcon.icStarNull),
-          ],
-        );
-      } else if (percent < 45) {
-        return Row(
-          children: [
-            SvgPicture.asset(ResIcon.icStarFull),
-            SvgPicture.asset(ResIcon.icStarNull),
-            SvgPicture.asset(ResIcon.icStarNull),
-          ],
-        );
-      } else if (percent < 60) {
-        return Row(
-          children: [
-            SvgPicture.asset(ResIcon.icStarFull),
-            SvgPicture.asset(ResIcon.icStarHalf),
-            SvgPicture.asset(ResIcon.icStarNull),
-          ],
-        );
-      } else if (percent < 75) {
-        return Row(
-          children: [
-            SvgPicture.asset(ResIcon.icStarFull),
-            SvgPicture.asset(ResIcon.icStarFull),
-            SvgPicture.asset(ResIcon.icStarNull),
-          ],
-        );
-      } else if (percent < 90) {
-        return Row(
-          children: [
-            SvgPicture.asset(ResIcon.icStarFull),
-            SvgPicture.asset(ResIcon.icStarFull),
-            SvgPicture.asset(ResIcon.icStarHalf),
-          ],
-        );
-      } else {
-        return Row(children: [
-          SvgPicture.asset(ResIcon.icStarFull),
-          SvgPicture.asset(ResIcon.icStarFull),
-          SvgPicture.asset(ResIcon.icStarFull)
-        ]);
-      }
-    }
-
     return Scaffold(
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
@@ -95,13 +37,13 @@ class CampaignScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CampaignItem(star: _getStarIcon(5),),
-              CampaignItem(star: _getStarIcon(29),),
-              CampaignItem(star: _getStarIcon(44),),
-              CampaignItem(star: _getStarIcon(55),),
-              CampaignItem(star: _getStarIcon(74),),
-              CampaignItem(star: _getStarIcon(89),),
-              CampaignItem(star: _getStarIcon(90),),
+              CampaignItem(percent: 5,),
+              CampaignItem(percent: 29,),
+              CampaignItem(percent: 44),
+              CampaignItem(percent: 55,),
+              CampaignItem(percent: 74,),
+              CampaignItem(percent: 89,),
+              CampaignItem(percent: 90,),
             ],
           ),
         )

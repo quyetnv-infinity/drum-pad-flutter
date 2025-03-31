@@ -203,7 +203,9 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                 Expanded(
                   child: topView()
                 ),
-                DrumPadScreen(currentSong: _currentSong, onChangeScore: (int score) {
+                DrumPadScreen(
+                  key: _widgetPadKey,
+                  currentSong: _currentSong, onChangeScore: (int score) {
                   setState(() {
                     _currentScore = score;
                   });
@@ -211,19 +213,23 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
               ],
             ),
           ),
-          if(isShowTutorial)
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                isShowTutorial = false;
-              });
-            },
-            child: TutorialBlurWidget(padHeight:  padHeight,)
-          ),
-        ],
-      ),
-    );
-  }
+          if (isShowTutorial)
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  isShowTutorial = false;
+                });
+              },
+              child: AnimatedOpacity(
+                duration: Duration(milliseconds: 2000),
+                opacity: isShowTutorial ? 1.0 : 0.0,
+                child: TutorialBlurWidget(padHeight: padHeight),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
 
   List<Color> getPadColor(bool isHighlighted, bool hasSound, bool isActive, String soundId){
     if(_currentSong == null) return [Color(0xFF919191), Color(0xFF5E5E5E)];
