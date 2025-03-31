@@ -199,6 +199,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         uniqueSounds.addAll(notes);
       }
       _splitSoundsByFace();
+      lessonSounds.clear();
       lessonSounds.addAll(sortDrumpadSounds(uniqueSounds.toList(), lessons[currentLesson].events[0].notes[0].contains("_face_b_") ? _faceB : _faceA));
       _futureNotes = getFutureNotes(lessons[currentLesson]);
       print("lessonssss $lessonSounds");
@@ -491,7 +492,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   }
 
   List<Color> getPadColor(bool isHighlighted, bool hasSound, bool isActive, String soundId){
-    if(widget.currentSong == null) return [Color(0xFF919191), Color(0xFF5E5E5E)];
+    if(widget.currentSong == null || widget.currentSong!.lessons.isEmpty) return [Color(0xFF919191), Color(0xFF5E5E5E)];
     return isHighlighted ? [Color(0xFFEDC78C), Colors.orange] : (hasSound ? PadUtil.getPadGradientColor(isActive, soundId) : [Color(0xFF919191), Color(0xFF5E5E5E)]);
   }
 
@@ -599,11 +600,11 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         physics: NeverScrollableScrollPhysics(),
         itemCount: 12,
         itemBuilder: (context, index) {
-          final bool hasSound = index < lessonSounds.length;
+          final bool hasSound = index < lessonSounds.length && !(widget.currentSong == null || widget.currentSong!.lessons.isEmpty);
           final String soundId = hasSound && lessonSounds.length == 12 ? lessonSounds[index] : '';
           final bool isHighlighted = highlightedSounds.contains(soundId);
           final sound = lessonSounds.length == 12 ? lessonSounds[index] : '';
-          bool isActive = _padPressedIndex.isNotEmpty && _padPressedIndex.contains(index) && widget.currentSong != null;
+          bool isActive = _padPressedIndex.isNotEmpty && _padPressedIndex.contains(index) && widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty;
           return GestureDetector(
             onTapDown: (_) {
               _onPadPressed(sound, index);
@@ -664,7 +665,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
 
                     ],
                   ),
-                if (padProgress.containsKey(sound))
+                if (padProgress.containsKey(sound) && hasSound)
                   Align(
                     alignment: Alignment.center,
                     child:  SizedBox(
