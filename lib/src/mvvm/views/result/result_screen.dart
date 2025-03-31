@@ -47,7 +47,11 @@ class _ResultScreenState extends State<ResultScreen>
   @override
   void initState() {
     super.initState();
-
+    print(widget.perfectScore);
+    print(widget.goodScore);
+    print(widget.earlyScore);
+    print(widget.lateScore);
+    print(widget.missScore);
     _calculateTotalNotes();
     _animationController = AnimationController(
       duration: Duration(milliseconds: 1500),
@@ -229,7 +233,7 @@ class _ResultScreenState extends State<ResultScreen>
                     ),
                     GradientButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pop(context, 'play_again');
                       },
                       padding: EdgeInsets.symmetric(horizontal: 28, vertical: 16),
                       borderRadius: BorderRadius.circular(32),

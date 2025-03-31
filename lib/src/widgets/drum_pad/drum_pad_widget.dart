@@ -134,6 +134,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   }
 
   void resetPoint(){
+    print('reset');
     perfectPoint = 1;
     goodPoint = 0;
     latePoint = 0;
@@ -170,7 +171,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         break;
     }
     widget.onChangeScore(calculateScore());
-    print(calculateScore());
   }
 
   Future<void> _loadSequenceDataFromFile() async {
@@ -340,7 +340,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     });
   }
 
-  void _onPadPressed(String sound, int index) {
+  Future<void> _onPadPressed(String sound, int index) async {
     if(!(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty)) return;
     if(!PadUtil.getPadEnable(sound)) return;
 
@@ -451,12 +451,12 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       if (currentEventIndex < events.length) {
         _processEvent(events[currentEventIndex]);
       } else {
-        _resetSequence(isPlayingDrum: true);
-
         int totalScore = calculateScore();
-        Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalScore,),));
-        _startSequence();
-
+        final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalScore,),));
+        if(result != null && result == 'play_again'){
+          _resetSequence(isPlayingDrum: true);
+          _startSequence();
+        }
       }
     }
     //
