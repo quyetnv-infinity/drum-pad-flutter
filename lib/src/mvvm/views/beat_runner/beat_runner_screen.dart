@@ -17,8 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class BeatRunnerScreen extends StatefulWidget {
-  final SongCollection? songCollection;
-  const BeatRunnerScreen({super.key, this.songCollection});
+  const BeatRunnerScreen({super.key,});
 
   @override
   State<BeatRunnerScreen> createState() => _BeatRunnerScreenState();
@@ -35,7 +34,6 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
   @override
   void initState() {
     super.initState();
-    _currentSong = widget.songCollection;
 
     // Initialize tutorial
     WidgetsBinding.instance.addPostFrameCallback((_) {

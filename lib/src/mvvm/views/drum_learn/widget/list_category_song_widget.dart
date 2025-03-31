@@ -22,7 +22,7 @@ class ListCategorySongWidget extends StatelessWidget {
             if (isChooseSong) {
               Navigator.pop(context, song);
             } else {
-              Navigator.push(context, CupertinoPageRoute(builder: (context) => BeatRunnerScreen(songCollection: song)));
+              Navigator.push(context, CupertinoPageRoute(builder: (context) => BeatRunnerScreen()));
             }
           },
           child: ItemCategorySong(model: song),

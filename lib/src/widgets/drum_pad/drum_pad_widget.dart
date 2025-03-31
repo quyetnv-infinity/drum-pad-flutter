@@ -14,7 +14,8 @@ import 'package:lottie/lottie.dart';
 
 class DrumPadScreen extends StatefulWidget {
   final SongCollection? currentSong;
-  const DrumPadScreen({super.key, required this.currentSong});
+  final int lessonIndex;
+  const DrumPadScreen({super.key, required this.currentSong, this.lessonIndex = 0});
 
   @override
   State<DrumPadScreen> createState() => _DrumPadScreenState();
@@ -24,7 +25,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   List<String> availableSounds = [];
   List<String> lessonSounds = [];
   Map<String, AudioPlayer> audioPlayers = {};
-  List<Map<String, dynamic>> events = [];
+  List<NoteEvent> events = [];
   int currentEventIndex = 0;
   Timer? sequenceTimer;
   bool isPlaying = false;
@@ -50,7 +51,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   DateTime? lastEventTime;
   DateTime? firstRemainSound;
   Map<String, String> padStates = {};
-  List<dynamic> lessons = [];
+  List<LessonSequence> lessons = [];
   int currentLesson = 0;
 
   List<String> _faceA = [];
@@ -66,12 +67,12 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
 
   List<Map<String, dynamic>> _futureNotes = [];
 
-  List<Map<String, dynamic>> getFutureNotes(Map<String, dynamic> data) {
+  List<Map<String, dynamic>> getFutureNotes(LessonSequence data) {
     List<Map<String, dynamic>> futureNotes = [];
-    List<Map<String, dynamic>> events = List<Map<String, dynamic>>.from(data["events"]);
+    List<NoteEvent> events = widget.currentSong?.lessons[widget.lessonIndex].events ?? [];
 
     for (int i = 1; i < events.length; i++) {
-      List<String> notes = List<String>.from(events[i]["notes"]);
+      List<String> notes = events[i].notes;
       if (notes.length >= 2) {
         futureNotes.add({
           "notes": notes,
@@ -85,16 +86,18 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   @override
   void initState() {
     super.initState();
-    _loadSequenceDataFromFile().then((_) {
-      _initializeAudioPlayers();
-      setState(() {
-        isLoading = false;
+    if(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty) {
+      _loadSequenceDataFromFile().then((_) {
+        _initializeAudioPlayers();
+        setState(() {
+          isLoading = false;
+        });
+        // Start sequence if song exists
+        if (widget.currentSong != null) {
+          _startSequence();
+        }
       });
-      // Start sequence if song exists
-      if (widget.currentSong != null) {
-        _startSequence();
-      }
-    });
+    }
     _controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 150), // Thời gian chạy mặc định
@@ -105,10 +108,17 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   void didUpdateWidget(DrumPadScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Start sequence when song changes from null to non-null
-    if (oldWidget.currentSong != widget.currentSong && widget.currentSong != null) {
+    if (oldWidget.currentSong != widget.currentSong && widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty) {
       print('start');
-      _resetSequence();
-      _startSequence();
+      _loadSequenceDataFromFile().then((_) {
+        _initializeAudioPlayers();
+        setState(() {
+          isLoading = false;
+        });
+        // Start sequence if song exists
+        _resetSequence();
+        _startSequence();
+      });
     }
   }
 
@@ -151,26 +161,24 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
 
   Future<void> _loadSequenceDataFromFile() async {
     try {
-      final String jsonString = await rootBundle.loadString('assets/sequence.json');
-      final jsonData = json.decode(jsonString);
-      lessons = List.from(jsonData);
-      currentLesson = 8;
-      events = List<Map<String, dynamic>>.from(lessons[currentLesson]['events']);
+      lessons = widget.currentSong?.lessons ?? [];
+      currentLesson = widget.lessonIndex;
+      events = lessons[currentLesson].events;
       Set<String> uniqueSounds = {};
       for (var lesson in lessons) {
-        for (var event in lesson["events"]) {
-          final notes = List<String>.from(event['notes']);
+        for (var event in lesson.events) {
+          final notes = event.notes;
           uniqueSounds.addAll(notes);
         }
       }
       availableSounds.addAll(uniqueSounds.toList());
       uniqueSounds = {};
       for (var event in events) {
-        final notes = List<String>.from(event['notes']);
+        final notes = event.notes;
         uniqueSounds.addAll(notes);
       }
       _splitSoundsByFace();
-      lessonSounds.addAll(sortDrumpadSounds(uniqueSounds.toList(), lessons[currentLesson]['events'][0]["notes"][0].contains("_face_b_") ? _faceB : _faceA));
+      lessonSounds.addAll(sortDrumpadSounds(uniqueSounds.toList(), lessons[currentLesson].events[0].notes[0].contains("_face_b_") ? _faceB : _faceA));
       _futureNotes = getFutureNotes(lessons[currentLesson]);
       print("lessonssss $lessonSounds");
     } catch (e) {
@@ -271,12 +279,12 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       return;
     }
     final currentEvent = events[currentEventIndex];
-    final nextEventTime = currentEvent['time'] as double;
+    final nextEventTime = currentEvent.time;
     if (currentEventIndex == 0) {
       startTimeOffset = 0.0;
     } else {
       final prevEvent = events[currentEventIndex - 1];
-      startTimeOffset = prevEvent['time'] as double;
+      startTimeOffset = prevEvent.time;
     }
     final timeUntilEvent = nextEventTime - startTimeOffset;
     sequenceTimer = Timer(Duration(milliseconds: (timeUntilEvent * 1000).round()), () {
@@ -284,24 +292,24 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     });
   }
 
-  void _processEvent(Map<String, dynamic> event) {
+  void _processEvent(NoteEvent event) {
     setState(() {
       highlightedSounds.clear();
-      highlightedSounds.addAll(List<String>.from(event['notes']));
+      highlightedSounds.addAll(event.notes);
       progressValue = 0.0;
       padProgress.clear();
     });
     lastEventTime = DateTime.now();
     if (currentEventIndex > events.length - 1) return;
 
-    double currentTime = event['time'];
-    double prevTime = events[currentEventIndex == 0 ? 0 : currentEventIndex - 1]['time'];
+    double currentTime = event.time;
+    double prevTime = events[currentEventIndex == 0 ? 0 : currentEventIndex - 1].time;
     double delay = currentTime - prevTime;
 
     // Nếu nốt đầu tiên có thời gian là 0, thì bỏ qua progress cho nốt này
     if (currentEventIndex == 0 && currentTime == 0) return;
 
-    for (var note in event['notes']) {
+    for (var note in event.notes) {
       padProgress[note] = 0.0;
     }
 
@@ -319,6 +327,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   }
 
   void _onPadPressed(String sound, int index) {
+    if(!(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty)) return;
     if(!PadUtil.getPadEnable(sound)) return;
 
     // Add this check to prevent duplicate activations
@@ -339,7 +348,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     lastEventTime ??= DateTime.now();
 
     double currentTime = (DateTime.now().difference(lastEventTime!).inMilliseconds) / 1000.0;
-    double requiredTime = events[currentEventIndex]['time'] - (currentEventIndex > 0 ? events[currentEventIndex - 1]['time'] : 0);
+    double requiredTime = events[currentEventIndex].time - (currentEventIndex > 0 ? events[currentEventIndex - 1].time : 0);
 
     String state = "";
     if(currentEventIndex != 0){
@@ -369,7 +378,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       });
     });
 
-    List<String> requiredNotes = List<String>.from(events[currentEventIndex]['notes']);
+    List<String> requiredNotes = List<String>.from(events[currentEventIndex].notes);
     if(!requiredNotes.contains(sound) && currentEventIndex != 0){
       increasePoint("Miss");
       setState(() {
@@ -463,14 +472,14 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     setState(() {
       isLoading = true;
       currentLesson = index;
-      events = List<Map<String, dynamic>>.from(lessons[currentLesson]['events']);
+      events = lessons[currentLesson].events;
       final Set<String> uniqueSounds = {};
       for (var event in events) {
-        final notes = List<String>.from(event['notes']);
+        final notes = event.notes;
         uniqueSounds.addAll(notes);
       }
       lessonSounds.clear();
-      lessonSounds.addAll(sortDrumpadSounds(uniqueSounds.toList(), lessons[index]['events'][0]["notes"][0].contains("_face_b_") ? _faceB : _faceA));
+      lessonSounds.addAll(sortDrumpadSounds(uniqueSounds.toList(), lessons[index].events[0].notes[0].contains("_face_b_") ? _faceB : _faceA));
       // print(lessons[index]['events'][0]["notes"][0].contains("_face_b_") ? _faceB : _faceA);
     });
     // print(availableSounds);
@@ -486,6 +495,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     return Listener(
       behavior: HitTestBehavior.translucent,
       onPointerDown: (event) {
+        if(!(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty)) return;
         // Track new pointer
         RenderBox box = context.findRenderObject() as RenderBox;
         Offset localPosition = box.globalToLocal(event.position);
@@ -507,12 +517,14 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       },
 
       onPointerUp: (event) {
+        if(!(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty)) return;
         // Clean up when pointer is released
         _pointerToPadIndex.remove(event.pointer);
         _pointerToSound.remove(event.pointer);
         _lastPointerPositions.remove(event.pointer);
       },
       onPointerMove: (event) async {
+        if(!(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty)) return;
         RenderBox box = context.findRenderObject() as RenderBox;
         Offset localPosition = box.globalToLocal(event.position);
 
