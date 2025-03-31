@@ -125,23 +125,26 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              child: topView()
-            ),
-            DrumPadScreen(
-              key: _widgetPadKey,
-              currentSong: _currentSong, onChangeScore: (int score) {
-                setState(() {
-                  _currentScore = score;
-                });
-            },
-            )
-          ],
+    return PopScope(
+      canPop: false,
+      child: CustomScaffold(
+        body: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: topView()
+              ),
+              DrumPadScreen(
+                key: _widgetPadKey,
+                currentSong: _currentSong, onChangeScore: (int score) {
+                  setState(() {
+                    _currentScore = score;
+                  });
+              },
+              )
+            ],
+          ),
         ),
       ),
     );

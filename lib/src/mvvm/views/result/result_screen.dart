@@ -14,6 +14,7 @@ class ResultScreen extends StatefulWidget {
   final int earlyScore;
   final int lateScore;
   final int missScore;
+  final int totalScore;
 
   const ResultScreen({
     super.key,
@@ -21,7 +22,7 @@ class ResultScreen extends StatefulWidget {
     required this.goodScore,
     required this.earlyScore,
     required this.lateScore,
-    required this.missScore,
+    required this.missScore, required this.totalScore,
   });
 
   @override
@@ -47,10 +48,7 @@ class _ResultScreenState extends State<ResultScreen>
   void initState() {
     super.initState();
 
-    // Tính toán các giá trị cần thiết
     _calculateTotalNotes();
-
-    // Khởi tạo animation controller
     _animationController = AnimationController(
       duration: Duration(milliseconds: 1500),
       vsync: this,
@@ -75,14 +73,11 @@ class _ResultScreenState extends State<ResultScreen>
       return;
     }
 
-    int totalScore = widget.perfectScore * 100 +
-        widget.goodScore * 90 +
-        widget.earlyScore * 60 +
-        widget.lateScore * 40 +
-        widget.missScore * 0;
+    int totalScore = widget.totalScore;
 
     // Star Score (%) = [(Perfect×100 + Good×90 + Early×60 + Late×40 + Miss×0) / (Tổng số note × 100)] × 100%
     _percentStar = (totalScore / (_totalNotes * 100)) * 100;
+    print('totalScore $totalScore');
   }
 
   void _setupAnimations() {
@@ -123,12 +118,9 @@ class _ResultScreenState extends State<ResultScreen>
   }
 
   int get _totalScoreDisplay {
-    return widget.perfectScore * 100 +
-        widget.goodScore * 90 +
-        widget.earlyScore * 60 +
-        widget.lateScore * 40 +
-        widget.missScore * 0;
+    return widget.totalScore;
   }
+
 
   @override
   void dispose() {
@@ -138,137 +130,142 @@ class _ResultScreenState extends State<ResultScreen>
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      backgroundType: BackgroundType.gradient,
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          Color(0xFF5A2CE4),
-          Color(0xFF141414),
-        ],
-        stops: [0.4, 0.9],
-      ),
-      body: AnimatedBuilder(
-        animation: _animationController,
-        builder: (context, child) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                context.locale.congratulation,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 27,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              // Sử dụng giá trị animation cho RatingStars
-              RatingStars(value: _starAnimation.value),
-              Text(
-                context.locale.final_score,
-                style: TextStyle(
+    return PopScope(
+      canPop: false,
+      child: CustomScaffold(
+        backgroundType: BackgroundType.gradient,
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFF5A2CE4),
+            Color(0xFF141414),
+          ],
+          stops: [0.4, 0.9],
+        ),
+        body: AnimatedBuilder(
+          animation: _animationController,
+          builder: (context, child) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  context.locale.congratulation,
+                  style: TextStyle(
                     color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 27),
-              ),
-              // Sử dụng giá trị animation cho điểm
-              Text(
-                "${_scoreAnimation.value.toInt()}",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 60,
-                ),
-              ),
-              SizedBox(height: 18),
-              _rowScore(
-                title: JudgementText.perfect(
-                  context.locale.perfect,
-                  textAlign: TextAlign.center,
-                ),
-                value: _perfectPercentAnimation.value,
-                count: widget.perfectScore,
-              ),
-              _rowScore(
-                title: JudgementText.good(
-                  context.locale.good,
-                  textAlign: TextAlign.center,
-                ),
-                value: _goodPercentAnimation.value,
-                count: widget.goodScore,
-              ),
-              _rowScore(
-                title: JudgementText.early(
-                  context.locale.early,
-                  textAlign: TextAlign.center,
-                ),
-                value: _earlyPercentAnimation.value,
-                count: widget.earlyScore,
-              ),
-              _rowScore(
-                title: JudgementText.late(
-                  context.locale.late,
-                  textAlign: TextAlign.center,
-                ),
-                value: _latePercentAnimation.value,
-                count: widget.lateScore,
-              ),
-              _rowScore(
-                title: JudgementText.miss(
-                  context.locale.miss,
-                  textAlign: TextAlign.center,
-                ),
-                value: _missPercentAnimation.value,
-                count: widget.missScore,
-              ),
-              ResSpacing.h48,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GradientButton(
-                    onPressed: () {},
-                    shape: BoxShape.circle,
-                    padding: EdgeInsets.all(14),
-                    child: SvgPicture.asset(ResIcon.icMusic),
+                    fontSize: 27,
+                    fontWeight: FontWeight.w600,
                   ),
-                  GradientButton(
-                    onPressed: () {},
-                    padding: EdgeInsets.symmetric(horizontal: 28, vertical: 16),
-                    borderRadius: BorderRadius.circular(32),
-                    child: Text(
-                      context.locale.play_again,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
+                ),
+                // Sử dụng giá trị animation cho RatingStars
+                RatingStars(value: _starAnimation.value),
+                Text(
+                  context.locale.final_score,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 27),
+                ),
+                // Sử dụng giá trị animation cho điểm
+                Text(
+                  "${_scoreAnimation.value.toInt()}",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 60,
+                  ),
+                ),
+                SizedBox(height: 18),
+                _rowScore(
+                  title: JudgementText.perfect(
+                    context.locale.perfect,
+                    textAlign: TextAlign.center,
+                  ),
+                  value: _perfectPercentAnimation.value,
+                  count: widget.perfectScore,
+                ),
+                _rowScore(
+                  title: JudgementText.good(
+                    context.locale.good,
+                    textAlign: TextAlign.center,
+                  ),
+                  value: _goodPercentAnimation.value,
+                  count: widget.goodScore,
+                ),
+                _rowScore(
+                  title: JudgementText.early(
+                    context.locale.early,
+                    textAlign: TextAlign.center,
+                  ),
+                  value: _earlyPercentAnimation.value,
+                  count: widget.earlyScore,
+                ),
+                _rowScore(
+                  title: JudgementText.late(
+                    context.locale.late,
+                    textAlign: TextAlign.center,
+                  ),
+                  value: _latePercentAnimation.value,
+                  count: widget.lateScore,
+                ),
+                _rowScore(
+                  title: JudgementText.miss(
+                    context.locale.miss,
+                    textAlign: TextAlign.center,
+                  ),
+                  value: _missPercentAnimation.value,
+                  count: widget.missScore,
+                ),
+                ResSpacing.h48,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GradientButton(
+                      onPressed: () {},
+                      shape: BoxShape.circle,
+                      padding: EdgeInsets.all(14),
+                      child: SvgPicture.asset(ResIcon.icMusic),
+                    ),
+                    GradientButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      padding: EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+                      borderRadius: BorderRadius.circular(32),
+                      child: Text(
+                        context.locale.play_again,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
-                  ),
-                  GradientButton(
-                    onPressed: () {
-                      /*
-                        có thẻ sử dụng cách sau
-                        Navigator.pushAndRemoveUntil(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (context) => HomeScreen(),
-                        ),
-                        (route) => false,
-                      )
-                      */
-                      Navigator.popUntil(context, (route) => route.isFirst);
-                    },
-                    shape: BoxShape.circle,
-                    padding: EdgeInsets.all(14),
-                    child: SvgPicture.asset(ResIcon.icHome),
-                  ),
-                ],
-              ),
-            ],
-          );
-        },
+                    GradientButton(
+                      onPressed: () {
+                        /*
+                          có thẻ sử dụng cách sau
+                          Navigator.pushAndRemoveUntil(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => HomeScreen(),
+                          ),
+                          (route) => false,
+                        )
+                        */
+                        Navigator.popUntil(context, (route) => route.isFirst);
+                      },
+                      shape: BoxShape.circle,
+                      padding: EdgeInsets.all(14),
+                      child: SvgPicture.asset(ResIcon.icHome),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

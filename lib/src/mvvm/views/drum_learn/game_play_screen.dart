@@ -195,43 +195,46 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   }
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      body: Stack(
-        children: [
-          SafeArea(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(
-                  child: topView()
-                ),
-                DrumPadScreen(
-                  key: _widgetPadKey,
-                  lessonIndex: widget.index ?? 0,
-                  currentSong: _currentSong, onChangeScore: (int score) {
-                  setState(() {
-                    _currentScore = score;
-                  });
-                },)
-              ],
-            ),
-          ),
-          if (isShowTutorial)
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  isShowTutorial = false;
-                });
-              },
-              child: AnimatedOpacity(
-                duration: Duration(milliseconds: 2000),
-                opacity: isShowTutorial ? 1.0 : 0.0,
-                child: TutorialBlurWidget(padHeight: padHeight),
+    return PopScope(
+      canPop: false,
+      child: CustomScaffold(
+        body: Stack(
+          children: [
+            SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    child: topView()
+                  ),
+                  DrumPadScreen(
+                    key: _widgetPadKey,
+                    lessonIndex: widget.index ?? 0,
+                    currentSong: _currentSong, onChangeScore: (int score) {
+                    setState(() {
+                      _currentScore = score;
+                    });
+                  },)
+                ],
               ),
             ),
-          ],
+            if (isShowTutorial)
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isShowTutorial = false;
+                  });
+                },
+                child: AnimatedOpacity(
+                  duration: Duration(milliseconds: 2000),
+                  opacity: isShowTutorial ? 1.0 : 0.0,
+                  child: TutorialBlurWidget(padHeight: padHeight),
+                ),
+              ),
+            ],
+          ),
         ),
-      );
+    );
     }
 
   List<Color> getPadColor(bool isHighlighted, bool hasSound, bool isActive, String soundId){
