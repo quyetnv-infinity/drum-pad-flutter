@@ -1,4 +1,6 @@
-class NoteEvent {
+import 'package:hive_ce/hive.dart';
+
+class NoteEvent extends HiveObject{
   List<String> notes;
   double time;
 
@@ -19,7 +21,7 @@ class NoteEvent {
   }
 }
 
-class LessonSequence {
+class LessonSequence extends HiveObject{
   int? level;
   List<NoteEvent> events;
   double? perfectScore;
@@ -53,7 +55,7 @@ class LessonSequence {
   }
 }
 
-class SongCollection {
+class SongCollection extends HiveObject{
   List<LessonSequence> lessons;
   String? author;
   String? name;
