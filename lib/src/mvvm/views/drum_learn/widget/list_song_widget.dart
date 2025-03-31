@@ -5,6 +5,7 @@ import 'package:drumpad_flutter/src/mvvm/views/beat_runner/beat_runner_screen.da
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_category_details.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/song_item.dart';
+import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -68,7 +69,7 @@ class _ListSongWidgetState extends State<ListSongWidget> {
                     if(widget.isChooseSong){
                       Navigator.pop(context, song);
                     } else {
-                      Navigator.push(context, CupertinoPageRoute(builder: (context) =>  GamePlayScreen(songCollection: song,),));
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) =>  LessonsScreen(songCollection: song,),));
                     }
                   },
                   child: SongItem(

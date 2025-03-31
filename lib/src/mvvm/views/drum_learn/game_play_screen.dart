@@ -22,7 +22,8 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class GamePlayScreen extends StatefulWidget {
   final SongCollection? songCollection;
-  const GamePlayScreen({super.key, this.songCollection});
+  final int? index;
+  const GamePlayScreen({super.key, this.songCollection, this.index});
 
   @override
   State<GamePlayScreen> createState() => _GamePlayScreenState();
@@ -42,6 +43,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
+    print('index ${widget.index}');
     _currentSong = widget.songCollection;
 
     // Initialize tutorial

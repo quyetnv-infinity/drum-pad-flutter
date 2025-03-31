@@ -6,6 +6,7 @@ import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart'
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/options_widget.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/song_item.dart';
+import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -49,7 +50,10 @@ class _ResumeWidgetState extends State<ResumeWidget> {
               final song = context.read<DrumLearnProvider>().data[index];
             return GestureDetector(
               onTap: () {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) => GamePlayScreen(songCollection: song),));
+                Navigator.push(context, CupertinoPageRoute(builder: (context) =>
+                  // GamePlayScreen(songCollection: song)'
+                  LessonsScreen(songCollection: song,)
+                  ));
               },
               child: SongItem(
                 height: MediaQuery.sizeOf(context).width * 0.55,
