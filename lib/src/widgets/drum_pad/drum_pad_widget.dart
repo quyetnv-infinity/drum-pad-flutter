@@ -6,12 +6,14 @@ import 'package:drumpad_flutter/core/utils/pad_util.dart';
 import 'package:drumpad_flutter/note.util.dart';
 import 'package:drumpad_flutter/sound_type_enum.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/result/result_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class DrumPadScreen extends StatefulWidget {
   final SongCollection? currentSong;
@@ -152,26 +154,29 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       missPoint * 0;
   }
 
-  void increasePoint(PadStateEnum state){
-    switch(state){
+  void increasePoint(PadStateEnum state) {
+    final provider = context.read<DrumLearnProvider>();
+
+    switch (state) {
       case PadStateEnum.perfect:
         perfectPoint++;
+        provider.increasePerfectPoint();
         break;
       case PadStateEnum.good:
-        goodPoint++;
-        break;
       case PadStateEnum.late:
-        latePoint++;
-        break;
       case PadStateEnum.early:
-        earlyPoint++;
-        break;
       case PadStateEnum.miss:
-        missPoint++;
+        if (state == PadStateEnum.good) goodPoint++;
+        if (state == PadStateEnum.late) latePoint++;
+        if (state == PadStateEnum.early) earlyPoint++;
+        if (state == PadStateEnum.miss) missPoint++;
+
+        provider.resetPerfectPoint();
         break;
       default:
         break;
     }
+
     widget.onChangeScore(calculateScore());
   }
 
@@ -378,17 +383,17 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         state = PadStateEnum.late;
       } else if( !requiredNotes.contains(sound) && currentEventIndex != 0){
         state = PadStateEnum.miss;
-      } else{
+      } else if(requiredNotes.contains(sound) ) {
         state = PadStateEnum.perfect;
       }
-    } else {
+    } else if(requiredNotes.contains(sound) ) {
       increasePoint(PadStateEnum.perfect);
+      print('asdasdasd');
     }
     increasePoint(state);
 
     setState(() {
       padStates[sound] = state;
-      // print(firstRemainState);
     });
 
     Future.delayed(const Duration(seconds: 1), () {
@@ -456,6 +461,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       } else {
         int totalScore = calculateScore();
         final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalScore,),));
+        context.read<DrumLearnProvider>().resetPerfectPoint();
         if(result != null && result == 'play_again'){
           _resetSequence(isPlayingDrum: true);
           _startSequence();
@@ -626,7 +632,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 100),
                           curve: Curves.easeInOut,
-                          transform: Matrix4.translationValues(0, padStates[sound] != null ? -100 : 0, 0),
+                          transform: Matrix4.translationValues(0, padStates[sound] != null ? -80 : 0, 0),
                           child: (padStates[sound] ?? PadStateEnum.none).getDisplayWidget(context),
                         ),
                       );

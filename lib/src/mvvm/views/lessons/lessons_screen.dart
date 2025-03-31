@@ -200,7 +200,8 @@ class _LessonsScreenState extends State<LessonsScreen> {
                           highlightColor: Colors.transparent,
                           onTap: () {
                             // Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: 20, goodScore: 30, earlyScore: 20, lateScore: 10, missScore: 1),));
-                            if(item.isCompleted == true) Navigator.push(context, CupertinoPageRoute(builder: (context) => GamePlayScreen(songCollection: widget.songCollection, index: displayData.length - (index + 1),),));
+                            // if(item.isCompleted == true)
+                              Navigator.push(context, CupertinoPageRoute(builder: (context) => GamePlayScreen(songCollection: widget.songCollection, index: displayData.length - (index + 1),),));
                           },
                           child: Container(
                             width: itemSize,

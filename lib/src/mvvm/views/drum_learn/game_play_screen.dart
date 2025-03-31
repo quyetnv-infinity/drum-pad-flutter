@@ -6,15 +6,19 @@ import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/pad_util.dart';
 import 'package:drumpad_flutter/main.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/tutorial_blur_widget.dart';
+import 'package:drumpad_flutter/src/widgets/anim/text_animation.dart';
 import 'package:drumpad_flutter/src/widgets/blur_widget.dart';
 import 'package:drumpad_flutter/src/widgets/drum_pad/drum_pad_widget.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
+import 'package:drumpad_flutter/src/widgets/text/judgement_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -268,6 +272,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                   GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
+                      context.read<DrumLearnProvider>().resetPerfectPoint();
                     },
                     child: Row(
                       children: [
@@ -326,7 +331,8 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                                 Positioned(
                                   top: 10,
                                   left: 10,
-                                  child: BlurWidget(text: _currentSong!.difficulty))
+                                  child: BlurWidget(text: _currentSong!.difficulty)),
+                                ComboWidget()
                               ],
                             )
                           ),
@@ -365,7 +371,6 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
       print(_currentSong?.name);
     }
   }
-
   Widget buildModeButton(){
     return Padding(
       key: _changeMode,

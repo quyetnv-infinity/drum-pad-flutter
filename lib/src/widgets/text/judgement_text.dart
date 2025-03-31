@@ -10,6 +10,7 @@ class JudgementText {
     double fontSize = 37,
     FontWeight fontWeight = FontWeight.w400,
     bool italic = true,
+    bool underline = false,
     TextAlign? textAlign,
   }) {
     return ShaderMask(
@@ -26,8 +27,11 @@ class JudgementText {
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Text(
           text,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontSize: fontSize,
+            decoration: underline ? TextDecoration.underline : TextDecoration.none,
             fontWeight: fontWeight,
             fontFamily: AppFonts.shrikhandRegular,
             fontStyle: italic ? FontStyle.italic : FontStyle.normal,
