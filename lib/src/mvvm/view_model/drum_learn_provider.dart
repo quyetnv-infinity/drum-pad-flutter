@@ -12,6 +12,7 @@ class DrumLearnProvider extends ChangeNotifier {
   int _perfectPoint = 0;
   bool _isCombo = false;
   int _increaseScoreByCombo = 0;
+  int _lastPointCombo = 0;
   bool _canNavigate = false;
 
 
@@ -19,12 +20,16 @@ class DrumLearnProvider extends ChangeNotifier {
   bool get isCombo => _isCombo;
   bool get canNavigate => _canNavigate;
   int get increaseScoreByCombo => _increaseScoreByCombo;
+  int get lastPointCombo => _lastPointCombo;
 
   Future<void> updateNavigate() async{
     _canNavigate = !_canNavigate;
     notifyListeners();
   }
-
+  void updateLastPointCombo(int value){
+    _lastPointCombo = value;
+    notifyListeners();
+  }
   void increasePerfectPoint() {
     _perfectPoint ++;
     if (_perfectPoint >= 3) {
@@ -33,9 +38,12 @@ class DrumLearnProvider extends ChangeNotifier {
       notifyListeners();
       print(_increaseScoreByCombo);
 
+      Future.delayed(const Duration(milliseconds: 500), () {
+        _increaseScoreByCombo = 0;
+        notifyListeners();
+      });
       Future.delayed(const Duration(seconds: 3), () {
         _isCombo = false;
-        _increaseScoreByCombo = 0;
         notifyListeners();
       });
     }
