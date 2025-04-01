@@ -349,7 +349,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   }
 
   Future<void> _onPadPressed(String sound, int index) async {
-    if(!(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty)) return;
+    if(widget.currentSong == null || widget.currentSong!.lessons.isEmpty) return;
     if(!PadUtil.getPadEnable(sound)) return;
 
     List<String> requiredNotes = events[currentEventIndex].notes;
@@ -389,7 +389,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       }
     } else if(requiredNotes.contains(sound) ) {
       increasePoint(PadStateEnum.perfect);
-      print('asdasdasd');
     }
     increasePoint(state);
 
@@ -425,7 +424,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       });
       increasePoint(state);
     } else if (highlightedSounds.contains(sound)) {
-      if (_futureNotes.isNotEmpty && (_futureNotes[0]["notes"] as List).contains(sound)) {
+      if (_futureNotes.isNotEmpty && (_futureNotes[0]["notes"] as List).contains(sound) && currentEventIndex != 0) {
         _futureNotes.removeAt(0);
         setState(() {});
       }
@@ -600,7 +599,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         physics: NeverScrollableScrollPhysics(),
         itemCount: 12,
         itemBuilder: (context, index) {
-          final bool hasSound = index < lessonSounds.length && !(widget.currentSong == null || widget.currentSong!.lessons.isEmpty);
+          final bool hasSound = index < lessonSounds.length && widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty;
           final String soundId = hasSound && lessonSounds.length == 12 ? lessonSounds[index] : '';
           final bool isHighlighted = highlightedSounds.contains(soundId);
           final sound = lessonSounds.length == 12 ? lessonSounds[index] : '';
