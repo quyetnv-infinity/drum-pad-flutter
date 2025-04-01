@@ -8,24 +8,34 @@ import 'package:flutter/services.dart';
 class DrumLearnProvider extends ChangeNotifier {
   List<SongCollection> data = dataSongCollections;
 
+
   int _perfectPoint = 0;
   bool _isCombo = false;
   int _increaseScoreByCombo = 0;
+  bool _canNavigate = false;
+
 
   int get perfectPoint => _perfectPoint;
   bool get isCombo => _isCombo;
+  bool get canNavigate => _canNavigate;
   int get increaseScoreByCombo => _increaseScoreByCombo;
+
+  Future<void> updateNavigate() async{
+    _canNavigate = !_canNavigate;
+    notifyListeners();
+  }
 
   void increasePerfectPoint() {
     _perfectPoint ++;
     if (_perfectPoint >= 3) {
-      _increaseScoreByCombo = 100 * _perfectPoint;
+      _increaseScoreByCombo = 50 * _perfectPoint;
       _isCombo = true;
       notifyListeners();
       print(_increaseScoreByCombo);
 
       Future.delayed(const Duration(seconds: 3), () {
         _isCombo = false;
+        _increaseScoreByCombo = 0;
         notifyListeners();
       });
     }
@@ -35,6 +45,7 @@ class DrumLearnProvider extends ChangeNotifier {
 
   void resetPerfectPoint() {
     _perfectPoint = 0;
+    _increaseScoreByCombo = 0;
     notifyListeners();
   }
   void resetIsCombo(){

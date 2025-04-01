@@ -10,6 +10,7 @@ import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/tutorial_blur_widget.dart';
+import 'package:drumpad_flutter/src/widgets/anim/combo_text.dart';
 import 'package:drumpad_flutter/src/widgets/anim/text_animation.dart';
 import 'package:drumpad_flutter/src/widgets/blur_widget.dart';
 import 'package:drumpad_flutter/src/widgets/drum_pad/drum_pad_widget.dart';
@@ -44,13 +45,12 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   final GlobalKey _changeMode = GlobalKey();
   double padHeight = 100.0;
 
+
   @override
   void initState() {
     super.initState();
-    print('index ${widget.index}');
-    _currentSong = widget.songCollection;
-
     // Initialize tutorial
+    _currentSong = widget.songCollection;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getWidgetPadSize();
       _initTutorial();
@@ -247,133 +247,145 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   }
 
   Widget topView(){
-    return Container(
-      clipBehavior: Clip.antiAlias,
-      margin: EdgeInsets.only(right: 16, left: 16, bottom: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaY: 4, sigmaX: 4),
-        child: Container(
-          padding: EdgeInsets.all(16),
+    return Stack(
+      children: [
+        Container(
+          clipBehavior: Clip.antiAlias,
+          margin: EdgeInsets.only(right: 16, left: 16, bottom: 16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            color: Color(0xFF382B5E),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.1))
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            spacing: 16,
-            children: [
-              Row(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaY: 4, sigmaX: 4),
+            child: Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Color(0xFF382B5E),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.1))
+              ),
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                spacing: 16,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                      context.read<DrumLearnProvider>().resetPerfectPoint();
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                          context.read<DrumLearnProvider>().resetPerfectPoint();
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+                            Text(context.locale.back, style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w500),)
+                          ],
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          showTutorial();
+                        },
+                        child: Row(
+                          spacing: 6,
+                          children: [
+                            Text(context.locale.instruction, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 14, decoration: TextDecoration.underline),),
+                            Icon(CupertinoIcons.refresh_bold, size: 18)
+                          ],
+                        )
+                      )
+                    ],
+                  ),
+                  Expanded(
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
-                        Text(context.locale.back, style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w500),)
+                        Flexible(
+                          key: _chooseSongKey,
+                          child: GestureDetector(
+                            onTap: (){
+                              onTapChooseSong();
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.45,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Color(0xFF4E4371)
+                              ),
+                              alignment: Alignment.center,
+                              child: _currentSong == null ?
+                              Container(
+                                width: 52,
+                                height: 52,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white.withValues(alpha: 0.15)
+                                ),
+                                child: Icon(Icons.add, color: Colors.white, size: 40,),
+                              )
+                              :
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Stack(
+                                  children: [
+                                    Image.asset(_currentSong!.image!, fit: BoxFit.cover, width: double.infinity, height: double.infinity,),
+                                    Positioned(
+                                      top: 10,
+                                      left: 10,
+                                      child: BlurWidget(text: _currentSong!.difficulty)),
+                                    ComboWidget()
+                                  ],
+                                )
+                              ),
+                            ),
+                          ),
+                        ),
+                        Column(
+                          // spacing: 8,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(context.locale.progress, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
+                            RatingStars.custom(value: 15,isFlatStar: true, smallStarWidth: 18, smallStarHeight: 18, bigStarWidth: 18, bigStarHeight: 18,),
+                            Text(context.locale.score, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
+                            // Text(_currentScore.toString(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 32, color: Colors.white),),
+                            AnimatedSwitcher(
+                              switchInCurve: Curves.fastEaseInToSlowEaseOut,
+                              duration: const Duration(milliseconds: 100),
+                              transitionBuilder: (Widget child, Animation<double> animation) {
+                                return ScaleTransition(scale: animation, child: child);
+                              },
+                              child: Text(
+                                _currentScore.toString(),
+                                key: ValueKey<int>(_currentScore),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 32,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            buildModeButton()
+                          ],
+                        )
                       ],
                     ),
-                  ),
-                  InkWell(
-                    onTap: (){
-                      showTutorial();
-                    },
-                    child: Row(
-                      spacing: 6,
-                      children: [
-                        Text(context.locale.instruction, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 14, decoration: TextDecoration.underline),),
-                        Icon(CupertinoIcons.refresh_bold, size: 18)
-                      ],
-                    )
                   )
                 ],
               ),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      key: _chooseSongKey,
-                      child: GestureDetector(
-                        onTap: (){
-                          onTapChooseSong();
-                        },
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.45,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Color(0xFF4E4371)
-                          ),
-                          alignment: Alignment.center,
-                          child: _currentSong == null ?
-                          Container(
-                            width: 52,
-                            height: 52,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white.withValues(alpha: 0.15)
-                            ),
-                            child: Icon(Icons.add, color: Colors.white, size: 40,),
-                          )
-                          :
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Stack(
-                              children: [
-                                Image.asset(_currentSong!.image!, fit: BoxFit.cover, width: double.infinity, height: double.infinity,),
-                                Positioned(
-                                  top: 10,
-                                  left: 10,
-                                  child: BlurWidget(text: _currentSong!.difficulty)),
-                                ComboWidget()
-                              ],
-                            )
-                          ),
-                        ),
-                      ),
-                    ),
-                    Column(
-                      // spacing: 8,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(context.locale.progress, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
-                        RatingStars.custom(value: 15,isFlatStar: true, smallStarWidth: 18, smallStarHeight: 18, bigStarWidth: 18, bigStarHeight: 18,),
-                        Text(context.locale.score, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
-                        // Text(_currentScore.toString(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 32, color: Colors.white),),
-                        AnimatedSwitcher(
-                          switchInCurve: Curves.fastEaseInToSlowEaseOut,
-                          duration: const Duration(milliseconds: 100),
-                          transitionBuilder: (Widget child, Animation<double> animation) {
-                            return ScaleTransition(scale: animation, child: child);
-                          },
-                          child: Text(
-                            _currentScore.toString(),
-                            key: ValueKey<int>(_currentScore),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 32,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        buildModeButton()
-                      ],
-                    )
-                  ],
-                ),
-              )
-            ],
+            ),
           ),
         ),
-      ),
+        Center(
+          child: ComboText(onChangeScore: (score) {
+            print(score);
+            setState(() {
+              _currentScore += score;
+            });
+            print('current score $_currentScore');
+          },))
+      ],
     );
   }
 

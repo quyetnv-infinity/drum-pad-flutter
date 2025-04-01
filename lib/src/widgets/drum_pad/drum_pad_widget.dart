@@ -467,6 +467,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
           _resetSequence(isPlayingDrum: true);
           _startSequence();
         }
+        // context.read<DrumLearnProvider>().updateNavigate();
       }
     }
     //
