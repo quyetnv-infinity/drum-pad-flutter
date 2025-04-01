@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
+import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/campaign_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart';
@@ -20,12 +23,41 @@ class ResumeWidget extends StatefulWidget {
 }
 
 class _ResumeWidgetState extends State<ResumeWidget> {
+  SongCollection? _song;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      fetchLessonData();
+    },);
   }
 
+  void fetchLessonData() async {
+    try {
+      final String jsonString =
+      await rootBundle.loadString('assets/havana_lessons.json');
+      final List<dynamic> jsonData = json.decode(jsonString);
+      final songCollection = SongCollection.fromJson(jsonData);
+
+      // Bây giờ bạn có thể sử dụng songCollection.lessons để truy cập vào các bài học
+      print("Số lượng bài học: ${songCollection.lessons.length}");
+
+      // Ví dụ: in ra số lượng events trong bài học đầu tiên
+      if (songCollection.lessons.isNotEmpty) {
+        print("Số lượng events trong bài học đầu tiên: ${songCollection.lessons[0].events.length}");
+      }
+
+      setState(() {
+        _song = SongCollection(lessons: songCollection.lessons, image: "assets/images/lactroi.png",
+            author: "Sơn Tùng M-TP",
+            name: "Lạc Trôi");
+      });
+    } catch (e) {
+      print('Error loading sequence data from file: $e');
+    } finally {
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -47,7 +79,9 @@ class _ResumeWidgetState extends State<ResumeWidget> {
             itemCount: context.read<DrumLearnProvider>().data.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
-              final song = context.read<DrumLearnProvider>().data[index];
+
+              final song = index == 2 ? _song: context.read<DrumLearnProvider>().data[index];
+  
             return GestureDetector(
               onTap: () {
                 Navigator.push(context, CupertinoPageRoute(builder: (context) =>
@@ -58,7 +92,7 @@ class _ResumeWidgetState extends State<ResumeWidget> {
               child: SongItem(
                 height: MediaQuery.sizeOf(context).width * 0.55,
                 isFromLearnFromSong: false,
-                model: song,
+                model: song ?? context.read<DrumLearnProvider>().data[index],
                ),
             );
           },),

@@ -216,7 +216,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                     lessonIndex: widget.index ?? 0,
                     currentSong: _currentSong, onChangeScore: (int score) {
                     setState(() {
-                      _currentScore = score;
+                      _currentScore = score ;
                     });
                   },)
                 ],
@@ -378,13 +378,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
           ),
         ),
         Center(
-          child: ComboText(onChangeScore: (score) {
-            print(score);
-            setState(() {
-              _currentScore += score;
-            });
-            print('current score $_currentScore');
-          },))
+            child: ComboText())
       ],
     );
   }

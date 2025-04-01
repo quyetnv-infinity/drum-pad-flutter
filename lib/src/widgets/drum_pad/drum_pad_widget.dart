@@ -157,6 +157,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   void increasePoint(PadStateEnum state) {
     final provider = context.read<DrumLearnProvider>();
 
+    print("=========================$state");
     switch (state) {
       case PadStateEnum.perfect:
         perfectPoint++;
@@ -172,6 +173,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         if (state == PadStateEnum.miss) missPoint++;
 
         provider.resetPerfectPoint();
+        print('reset perfect');
         break;
       default:
         break;
@@ -376,11 +378,11 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
 
     PadStateEnum state = PadStateEnum.none;
     if(currentEventIndex != 0){
-      if (currentTime < requiredTime - 0.5) {
+      if (requiredNotes.contains(sound) && currentTime < requiredTime - 0.5) {
         state = PadStateEnum.early;
-      } else if (currentTime < requiredTime - 0.2) {
+      } else if (requiredNotes.contains(sound) && currentTime < requiredTime - 0.2) {
         state = PadStateEnum.good;
-      } else if (currentTime > requiredTime + 0.2 && requiredNotes.contains(sound)) {
+      } else if (requiredNotes.contains(sound) && currentTime > requiredTime + 0.2 && requiredNotes.contains(sound)) {
         state = PadStateEnum.late;
       } else if( !requiredNotes.contains(sound) && currentEventIndex != 0){
         state = PadStateEnum.miss;
@@ -390,7 +392,9 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     } else if(requiredNotes.contains(sound) ) {
       increasePoint(PadStateEnum.perfect);
     }
-    increasePoint(state);
+    if(currentEventIndex != 0){
+      increasePoint(state);
+    }
 
     setState(() {
       padStates[sound] = state;
@@ -419,10 +423,10 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         }
         remainSounds.remove(sound);
       }
+      increasePoint(state);
       setState(() {
         padStates[sound] = state;
       });
-      increasePoint(state);
     } else if (highlightedSounds.contains(sound)) {
       if (_futureNotes.isNotEmpty && (_futureNotes[0]["notes"] as List).contains(sound) && currentEventIndex != 0) {
         _futureNotes.removeAt(0);
@@ -436,6 +440,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
           remainSounds.add(remainingSound);
           setState(() {
             firstRemainState = state;
+            print('&&&&&&&&&&&&& $firstRemainState');
           });
         }
       }
@@ -444,6 +449,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
           for (var e in remainSounds) {
             setState(() {
               padStates[e] = PadStateEnum.miss;
+              print("************ ${padStates[e]} ");
             });
             increasePoint(PadStateEnum.miss);
             Future.delayed(const Duration(seconds: 1), () {
@@ -464,8 +470,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         int totalScore = calculateScore();
         await Future.delayed(Duration(seconds: 1));
         final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalScore,),));
-        context.read<DrumLearnProvider>().resetPerfectPoint();
-        context.read<DrumLearnProvider>().resetIsCombo();
+
         if(result != null && result == 'play_again'){
           _resetSequence(isPlayingDrum: true);
           _startSequence();

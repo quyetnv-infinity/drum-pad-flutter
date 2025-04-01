@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ComboText extends StatefulWidget {
-  final Function(int score) onChangeScore;
-  const ComboText({super.key, required this.onChangeScore});
+  const ComboText({super.key, });
 
   @override
   State<ComboText> createState() => _ComboTextState();
@@ -61,8 +60,6 @@ class _ComboTextState extends State<ComboText> with TickerProviderStateMixin {
           if(newScore == 0){
             WidgetsBinding.instance.addPostFrameCallback((_) async {
               print('_previousScore $comboPoint');
-              await widget.onChangeScore(comboPoint.toInt());
-              await provider.updateNavigate();
             });
           }
         }
