@@ -66,6 +66,9 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   int latePoint = 0;
   int earlyPoint = 0;
   int missPoint = 0;
+  int totalPoint = 0;
+  int _previousTotalPoint = 0;
+
 
   late AnimationController _controller;
 
@@ -178,8 +181,17 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       default:
         break;
     }
-
-    widget.onChangeScore(calculateScore());
+    if (provider.totalPoint > 0 && provider.totalPoint != _previousTotalPoint) {
+      setState(() {
+        totalPoint = calculateScore() + provider.totalPoint;
+        _previousTotalPoint = provider.totalPoint;
+      });
+    } else {
+      setState(() {
+        totalPoint = calculateScore() + _previousTotalPoint;
+      });
+    }
+    widget.onChangeScore(totalPoint);
   }
 
   Future<void> _loadSequenceDataFromFile() async {
@@ -467,9 +479,9 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       } else {
         highlightedSounds.clear();
         padProgress.clear();
-        int totalScore = calculateScore();
+
         await Future.delayed(Duration(seconds: 1));
-        final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalScore,),));
+        final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint,),));
 
         if(result != null && result == 'play_again'){
           _resetSequence(isPlayingDrum: true);
