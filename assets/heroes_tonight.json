@@ -1,0 +1,104 @@
+[
+  {
+  "events": [
+    {
+      "notes": [
+        "heroestonight_mid01_face_a_chord_chord1_a",
+        "heroestonight_mid05_face_a_bass_bass2_a"
+      ],
+      "time": 0.00
+    },
+    {
+      "notes": [
+        "heroestonight_mid02_face_a_chord_chord2_a",
+        "heroestonight_mid06_face_a_bass_bass2_a"
+      ],
+      "time": 1.87
+    },
+    {
+      "notes": [
+        "heroestonight_mid03_face_a_chord_chord3_a",
+        "heroestonight_mid07_face_a_bass_bass3_a"
+      ],
+      "time": 3.75
+    },
+    {
+      "notes": [
+        "heroestonight_mid06_face_a_chord_chord4_a",
+        "heroestonight_mid08_face_a_bass_bass4_a"
+      ],
+      "time": 5.62
+    },
+    {
+      "notes": [
+        "heroestonight_mid10_face_a_drum_kick_a",
+        "heroestonight_mid11_face_a_drum_ride_a"
+      ],
+      "time": 7.50
+    },
+    {
+      "notes": [
+        "heroestonight_mid12_face_a_drum_tom_a"
+      ],
+      "time": 10.54
+    },
+    {
+      "notes": [
+        "heroestonight_mid09_face_a_fx_crash_a"
+      ],
+      "time": 15.00
+    }
+  ]
+},
+  {
+    "events": [
+      {
+        "notes": [
+          "heroestonight_mid01_face_b_lead_lead1_b",
+          "heroestonight_mid04_face_b_chord_chord1_b"
+        ],
+        "time": 0.46
+      },
+      {
+        "notes": [
+          "heroestonight_mid02_face_b_lead_lead2_b",
+          "heroestonight_mid05_face_b_chord_chord2_b"
+        ],
+        "time": 1.87
+      },
+      {
+        "notes": [
+          "heroestonight_mid03_face_b_lead_lead3_b",
+          "heroestonight_mid07_face_b_chord_chord3_b"
+        ],
+        "time": 3.75
+      },
+      {
+        "notes": [
+          "heroestonight_mid06_face_b_lead_lead4_b",
+          "heroestonight_mid08_face_b_chord_chord4_b"
+        ],
+        "time": 5.85
+      },
+      {
+        "notes": [
+          "heroestonight_mid09_face_b_fx_fill_b"
+        ],
+        "time": 14.29
+      },
+      {
+        "notes": [
+          "heroestonight_mid10_face_b_drum_kick_b",
+          "heroestonight_mid11_face_b_drum_ride_b"
+        ],
+        "time": 15.00
+      },
+      {
+        "notes": [
+          "heroestonight_mid12_face_b_drum_snap_b"
+        ],
+        "time": 15.46
+      }
+    ]
+  }
+]

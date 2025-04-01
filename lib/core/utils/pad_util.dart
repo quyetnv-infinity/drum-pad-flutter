@@ -39,29 +39,33 @@ class PadUtil {
 
   static final Map<String, List<Color>> soundGradientDefaultColors = {
     'lead': [Color(0xFFBC80D6), Color(0xFFAA46D6)],
+    'chord': [Color(0xFFBC80D6), Color(0xFFAA46D6)],
     'bass': [Color(0xFF82D6CB), Color(0xFF47D6C3)],
-    'drums': [Color(0xFF81C8D6), Color(0xFF47BED6)],
+    'drum': [Color(0xFF81C8D6), Color(0xFF47BED6)],
     'fx': [Color(0xFFAED680), Color(0xFF93D647)],
   };
 
   static final Map<String, List<Color>> soundGradientActiveColors = {
     'lead': [Color(0xFFEFCCFF), Color(0xFFD880FF)],
+    'chord': [Color(0xFFEFCCFF), Color(0xFFD880FF)],
     'bass': [Color(0xFFCCFFF8), Color(0xFF80FFEE)],
-    'drums': [Color(0xFFCCF7FF), Color(0xFF80EAFF)],
+    'drum': [Color(0xFFCCF7FF), Color(0xFF80EAFF)],
     'fx': [Color(0xFFE7FFCC), Color(0xFFC3FF80)],
   };
 
   static final Map<String, bool> soundEnable = {
     'lead': true,
+    'chord': true,
     'bass': true,
-    'drums': true,
+    'drum': true,
     'fx': true,
   };
 
   static final Map<String, SoundType> soundTypes = {
     'lead': SoundType.lead,
+    'chord': SoundType.lead,
     'bass': SoundType.bass,
-    'drums': SoundType.drum,
+    'drum': SoundType.drum,
     'fx': SoundType.fx,
   };
 }
