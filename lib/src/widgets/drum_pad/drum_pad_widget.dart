@@ -19,7 +19,8 @@ class DrumPadScreen extends StatefulWidget {
   final SongCollection? currentSong;
   final Function(int score) onChangeScore;
   final int lessonIndex;
-  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0});
+  final void Function()? onChangeUnlockedModeCampaign;
+  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign});
 
   @override
   State<DrumPadScreen> createState() => _DrumPadScreenState();
@@ -460,6 +461,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         _processEvent(events[currentEventIndex]);
       } else {
         int totalScore = calculateScore();
+        widget.onChangeUnlockedModeCampaign?.call();
         final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalScore,),));
         context.read<DrumLearnProvider>().resetPerfectPoint();
         if(result != null && result == 'play_again'){

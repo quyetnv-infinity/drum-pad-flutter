@@ -1,4 +1,7 @@
+import 'package:drumpad_flutter/core/utils/locator_support.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:uuid/uuid.dart';
 
 class NoteEvent extends HiveObject{
   List<String> notes;
@@ -56,18 +59,21 @@ class LessonSequence extends HiveObject{
 }
 
 class SongCollection extends HiveObject{
+  String id = const Uuid().v4();
   List<LessonSequence> lessons;
   String? author;
   String? name;
   String difficulty;
+  double campaignStar;
   String? image;
 
   SongCollection({
     required this.lessons,
     this.author,
     this.name,
-    this.difficulty = 'Easy',
+    this.difficulty = DifficultyMode.unknown,
     this.image,
+    this.campaignStar = 0
   });
 
   factory SongCollection.fromJson(List<dynamic> json) {
@@ -90,5 +96,29 @@ class SongCollection extends HiveObject{
     return SongCollection(
       lessons: lessons,
     );
+  }
+}
+
+
+class DifficultyMode {
+  static const String easy = 'easy';
+  static const String medium = 'medium';
+  static const String hard = 'hard';
+  static const String demonic = 'demonic';
+  static const String unknown = 'unknown';
+
+  static String getString(BuildContext context, String mode){
+    switch(mode){
+      case DifficultyMode.easy:
+        return context.locale.easy;
+      case DifficultyMode.medium:
+        return context.locale.medium;
+      case DifficultyMode.hard:
+        return context.locale.hard;
+      case DifficultyMode.demonic:
+        return context.locale.demonic;
+      default:
+        return context.locale.unknown;
+    }
   }
 }

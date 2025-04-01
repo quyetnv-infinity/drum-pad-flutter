@@ -1,12 +1,20 @@
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
+import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/campaign_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class CampaignScreen extends StatelessWidget {
+class CampaignScreen extends StatefulWidget {
   const CampaignScreen({super.key});
+
+  @override
+  State<CampaignScreen> createState() => _CampaignScreenState();
+}
+
+class _CampaignScreenState extends State<CampaignScreen> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +45,10 @@ class CampaignScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CampaignItem(percent: 5, difficult: context.locale.easy,),
-              CampaignItem(percent: 29, difficult: context.locale.medium),
-              CampaignItem(percent: 44, difficult: context.locale.hard),
-              CampaignItem(percent: 55, difficult: context.locale.demonic),
+              CampaignItem(difficult: DifficultyMode.easy,),
+              CampaignItem(difficult: DifficultyMode.medium),
+              CampaignItem(difficult: DifficultyMode.hard),
+              CampaignItem(difficult: DifficultyMode.demonic),
             ],
           ),
         )
