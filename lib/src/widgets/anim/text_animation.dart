@@ -13,6 +13,8 @@ class ComboWidget extends StatefulWidget {
 class _ComboWidgetState extends State<ComboWidget> {
   final ValueNotifier<double> _scaleNotifier = ValueNotifier(1.0);
   int _lastPerfectPoint = 0;
+  int perfectPoint = 0;
+
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +24,12 @@ class _ComboWidgetState extends State<ComboWidget> {
           if (!provider.isCombo) return const SizedBox.shrink();
 
           // Khi perfectPoint thay đổi, kích hoạt animation scale
-          if (provider.perfectPoint != _lastPerfectPoint) {
+          if (provider.perfectPoint != _lastPerfectPoint && provider.perfectPoint >=3) {
             _lastPerfectPoint = provider.perfectPoint;
             _scaleNotifier.value = 2.0;
-
+            if(provider.perfectPoint >= 3 && provider.perfectPoint != perfectPoint) {
+              perfectPoint = provider.perfectPoint;
+            }
             Future.delayed(const Duration(milliseconds: 150), () {
               _scaleNotifier.value = 1.0;
             });
@@ -34,7 +38,7 @@ class _ComboWidgetState extends State<ComboWidget> {
           return Container(
             height: double.infinity,
             width: double.infinity,
-            color: Colors.black.withOpacity(0.6),
+            color: Colors.black.withValues(alpha: 0.6),
             child: ValueListenableBuilder<double>(
               valueListenable: _scaleNotifier,
               builder: (context, scale, child) {
@@ -70,7 +74,7 @@ class _ComboWidgetState extends State<ComboWidget> {
                                 ),
                               ),
                               Text(
-                                provider.perfectPoint.toString(),
+                                perfectPoint.toString(),
                                 style: GoogleFonts.shrikhand(
                                   textStyle: const TextStyle(fontSize: 28, color: Colors.white),
                                 ),

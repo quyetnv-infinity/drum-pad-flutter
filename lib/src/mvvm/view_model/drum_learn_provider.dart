@@ -10,26 +10,35 @@ class DrumLearnProvider extends ChangeNotifier {
 
   int _perfectPoint = 0;
   bool _isCombo = false;
+  int _increaseScoreByCombo = 0;
 
   int get perfectPoint => _perfectPoint;
   bool get isCombo => _isCombo;
+  int get increaseScoreByCombo => _increaseScoreByCombo;
 
   void increasePerfectPoint() {
-    _perfectPoint++;
+    _perfectPoint ++;
     if (_perfectPoint >= 3) {
+      _increaseScoreByCombo = 100 * _perfectPoint;
       _isCombo = true;
       notifyListeners();
+      print(_increaseScoreByCombo);
 
       Future.delayed(const Duration(seconds: 3), () {
         _isCombo = false;
         notifyListeners();
       });
     }
+    notifyListeners();
     print(_perfectPoint);
   }
 
   void resetPerfectPoint() {
     _perfectPoint = 0;
+    notifyListeners();
+  }
+  void resetIsCombo(){
+    _isCombo = false;
     notifyListeners();
   }
 }

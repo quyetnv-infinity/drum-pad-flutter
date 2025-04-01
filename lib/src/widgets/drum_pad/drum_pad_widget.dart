@@ -462,6 +462,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         int totalScore = calculateScore();
         final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalScore,),));
         context.read<DrumLearnProvider>().resetPerfectPoint();
+        context.read<DrumLearnProvider>().resetIsCombo();
         if(result != null && result == 'play_again'){
           _resetSequence(isPlayingDrum: true);
           _startSequence();
@@ -469,6 +470,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       }
     }
     //
+    // print(currentEventIndex);
     // print(currentEventIndex);
     // print(_futureNotes);
     // print("_______");

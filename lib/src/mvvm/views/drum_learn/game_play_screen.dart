@@ -347,7 +347,23 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                         Text(context.locale.progress, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
                         RatingStars.custom(value: 15,isFlatStar: true, smallStarWidth: 18, smallStarHeight: 18, bigStarWidth: 18, bigStarHeight: 18,),
                         Text(context.locale.score, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
-                        Text(_currentScore.toString(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 32, color: Colors.white),),
+                        // Text(_currentScore.toString(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 32, color: Colors.white),),
+                        AnimatedSwitcher(
+                          switchInCurve: Curves.fastEaseInToSlowEaseOut,
+                          duration: const Duration(milliseconds: 100),
+                          transitionBuilder: (Widget child, Animation<double> animation) {
+                            return ScaleTransition(scale: animation, child: child);
+                          },
+                          child: Text(
+                            _currentScore.toString(),
+                            key: ValueKey<int>(_currentScore),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 32,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                         buildModeButton()
                       ],
                     )
@@ -405,7 +421,6 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                 image: DecorationImage(image: AssetImage(ResImage.imgBGMode))),
             child: Text(context.locale.rec,overflow: TextOverflow.ellipsis, maxLines: 1, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
           ),
-
         ],
       ),
     );
