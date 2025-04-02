@@ -25,6 +25,14 @@ class SongCollectionService {
     }
   }
 
+  static Future<List<SongCollection>> getListSongByDifficultyMode(String difficult) async {
+    if (!_box.isOpen) {
+      await Hive.openBox<SongCollection>(HiveTable.songCollectionTable);
+    }
+    final list = _box.values.toList();
+    return list.where((element) => element.difficulty == difficult,).toList();
+  }
+
   static Future<void> updateSong(String id, SongCollection newSong) async {
     if (!_box.isOpen) {
       await Hive.openBox<SongCollection>(HiveTable.songCollectionTable);

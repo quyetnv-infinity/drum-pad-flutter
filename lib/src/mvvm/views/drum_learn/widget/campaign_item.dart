@@ -31,37 +31,40 @@ class _CampaignItemState extends State<CampaignItem> {
     },);
   }
 
-  void setPercent(CampaignProvider campaignProvider){
+  Future<void> setPercent(CampaignProvider campaignProvider) async {
     switch(widget.difficult){
       case DifficultyMode.easy:
-        campaignProvider.fetchCampaignSong(isEasy: true);
+        await campaignProvider.fetchCampaignSong(isEasy: true);
         setState(() {
           _listCampaign = campaignProvider.easyCampaign;
           _percent = campaignProvider.easyCampaign.isNotEmpty ? ((campaignProvider.easyUnlocked / campaignProvider.easyCampaign.length) * 100).floor() : 0;
         });
         break;
       case DifficultyMode.medium:
-        campaignProvider.fetchCampaignSong(isMedium: true);
+        await campaignProvider.fetchCampaignSong(isMedium: true);
         setState(() {
           _listCampaign = campaignProvider.mediumCampaign;
           _percent = campaignProvider.mediumCampaign.isNotEmpty ?  ((campaignProvider.mediumUnlocked / campaignProvider.mediumCampaign.length) * 100).floor() : 0;
         });
         break;
       case DifficultyMode.hard:
-        campaignProvider.fetchCampaignSong(isHard: true);
+        await campaignProvider.fetchCampaignSong(isHard: true);
         setState(() {
           _listCampaign = campaignProvider.hardCampaign;
           _percent = campaignProvider.hardCampaign.isNotEmpty ? ((campaignProvider.hardUnlocked / campaignProvider.hardCampaign.length) * 100).floor() : 0;
         });
         break;
       case DifficultyMode.demonic:
-        campaignProvider.fetchCampaignSong(isDemonic: true);
+        await campaignProvider.fetchCampaignSong(isDemonic: true);
         setState(() {
           _listCampaign = campaignProvider.demonicCampaign;
           _percent = campaignProvider.demonicCampaign.isNotEmpty ? ((campaignProvider.demonicUnlocked / campaignProvider.demonicCampaign.length) * 100).floor() : 0;
         });
         break;
     }
+    setState(() {
+      _percent = _percent > 100 ? 100 : _percent;
+    });
   }
 
   int getUnlockedIndex(CampaignProvider campaignProvider){
@@ -88,7 +91,7 @@ class _CampaignItemState extends State<CampaignItem> {
             await Navigator.push(context, CupertinoPageRoute(builder: (context) => ModeCampaignScreen(difficult: widget.difficult, listCampaignSong: _listCampaign, onChangeUnlockedModeCampaign: () {
               Provider.of<CampaignProvider>(context, listen: false).setUnlocked(difficult: widget.difficult ,value: getUnlockedIndex(provider) + 1);
             },),));
-            setPercent(provider);
+            await setPercent(provider);
           },
           child: Container(
             height: size * 0.4,

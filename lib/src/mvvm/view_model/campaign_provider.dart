@@ -1,5 +1,6 @@
 import 'package:drumpad_flutter/core/constants/mock_up_data.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/service/song_collection_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,12 +37,22 @@ class CampaignProvider with ChangeNotifier {
     _demonicUnlocked = prefs.getInt('demonicUnlocked') ?? 0;
   }
 
-  void fetchCampaignSong({bool isEasy = false, bool isMedium = false, bool isHard = false, bool isDemonic = false}){
-    if(isEasy) _easyCampaign = dataSongCollections.where((song) => song.difficulty == DifficultyMode.easy,).toList();
-    if(isMedium) _mediumCampaign = dataSongCollections.where((song) => song.difficulty == DifficultyMode.medium,).toList();
-    if(isHard) _hardCampaign = dataSongCollections.where((song) => song.difficulty == DifficultyMode.hard,).toList();
-    if(isEasy) _demonicCampaign = dataSongCollections.where((song) => song.difficulty == DifficultyMode.demonic,).toList();
+  Future<void> fetchCampaignSong({bool isEasy = false, bool isMedium = false, bool isHard = false, bool isDemonic = false}) async {
+    if(isEasy) _easyCampaign = mergeLists(dataSongCollections.where((song) => song.difficulty == DifficultyMode.easy,).toList(), await getListSongByDifficulty(DifficultyMode.easy));
+    if(isMedium) _mediumCampaign = mergeLists(dataSongCollections.where((song) => song.difficulty == DifficultyMode.medium,).toList(), await getListSongByDifficulty(DifficultyMode.medium));
+    if(isHard) _hardCampaign = mergeLists(dataSongCollections.where((song) => song.difficulty == DifficultyMode.hard,).toList(), await getListSongByDifficulty(DifficultyMode.hard));
+    if(isEasy) _demonicCampaign = mergeLists(dataSongCollections.where((song) => song.difficulty == DifficultyMode.demonic,).toList(), await getListSongByDifficulty(DifficultyMode.demonic));
     notifyListeners();
+  }
+
+  Future<List<SongCollection>> getListSongByDifficulty(String difficulty) async {
+    return await SongCollectionService.getListSongByDifficultyMode(difficulty);
+  }
+
+  List<SongCollection> mergeLists(List<SongCollection> listFromServer, List<SongCollection> listFromDB) {
+    Map<String, SongCollection> mapB = {for (var item in listFromDB) item.id: item};
+
+    return listFromServer.map((item) => mapB.containsKey(item.id) ? mapB[item.id]! : item).toList();
   }
 
   Future<void> setUnlocked({required String difficult, required int value}) async {

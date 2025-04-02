@@ -94,7 +94,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
     const double extraHeight = 200.0;
 
     final screenWidth = MediaQuery.of(context).size.width;
-    final contentWidth = screenWidth / 1.5;
+    final contentWidth = screenWidth / 1.6;
     final leftSidePosition = 0.0;
     final rightSidePosition = contentWidth - itemSize;
 
