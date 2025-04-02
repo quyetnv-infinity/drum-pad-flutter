@@ -70,6 +70,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   int totalPoint = 0;
   int _previousTotalPoint = 0;
 
+  int _totalNotes = 0;
+  Timer? _pauseTimer;
 
   late AnimationController _controller;
 
@@ -137,6 +139,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     sequenceTimer?.cancel();
     progressTimer?.cancel();
     _controller.dispose();
+    _pauseTimer?.cancel();
     super.dispose();
   }
 
@@ -156,6 +159,33 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       earlyPoint * 60 +
       latePoint * 40 +
       missPoint * 0;
+  }
+
+  void _startTimer() {
+    _pauseTimer?.cancel();
+    _pauseTimer = Timer(Duration(seconds: 5), () {
+      if (mounted) {
+        _navigateToNextScreen();
+      }
+    });
+  }
+
+
+  void _navigateToNextScreen() async {
+    _pauseTimer?.cancel();
+    context.read<DrumLearnProvider>().resetPerfectPoint();
+    final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes,),));
+    if(result != null && result == 'play_again'){
+      _resetSequence(isPlayingDrum: true);
+      _startSequence();
+      setState(() {
+        _previousTotalPoint = 0;
+        totalPoint = 0;
+      });
+    }
+  }
+  void checkMiss(){
+    if (missPoint > 5) _navigateToNextScreen();
   }
 
   void increasePoint(PadStateEnum state) {
@@ -193,6 +223,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         totalPoint = calculateScore() + _previousTotalPoint;
       });
     }
+    checkMiss();
     widget.onChangeScore(totalPoint);
   }
 
@@ -213,7 +244,9 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       for (var event in events) {
         final notes = event.notes;
         uniqueSounds.addAll(notes);
+        _totalNotes += notes.length;
       }
+
       _splitSoundsByFace();
       lessonSounds.clear();
       lessonSounds.addAll(sortDrumpadSounds(uniqueSounds.toList(), lessons[currentLesson].events[0].notes[0].contains("_face_b_") ? _faceB : _faceA));
@@ -365,6 +398,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   }
 
   Future<void> _onPadPressed(String sound, int index) async {
+    if(currentEventIndex > 0) _startTimer();
+    if(currentEventIndex >= events.length) return;
     if(widget.currentSong == null || widget.currentSong!.lessons.isEmpty) return;
     if(!PadUtil.getPadEnable(sound)) return;
 
@@ -405,6 +440,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       }
     } else if(requiredNotes.contains(sound) ) {
       state = PadStateEnum.perfect;
+      _startTimer();
     }
 
     setState(() {
@@ -477,19 +513,10 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         highlightedSounds.clear();
         padProgress.clear();
         context.read<DrumLearnProvider>().resetPerfectPoint();
-
+        _pauseTimer?.cancel();
         await Future.delayed(Duration(seconds: 1));
         widget.onChangeUnlockedModeCampaign?.call();
-        final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint,),));
-
-        if(result != null && result == 'play_again'){
-          _resetSequence(isPlayingDrum: true);
-          _startSequence();
-          setState(() {
-            _previousTotalPoint = 0;
-            totalPoint = 0;
-          });
-        }
+        _navigateToNextScreen();
       }
     }
     //

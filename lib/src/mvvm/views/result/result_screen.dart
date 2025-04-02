@@ -17,6 +17,7 @@ class ResultScreen extends StatefulWidget {
   final int lateScore;
   final int missScore;
   final int totalScore;
+  final int totalNotes;
 
   const ResultScreen({
     super.key,
@@ -24,7 +25,7 @@ class ResultScreen extends StatefulWidget {
     required this.goodScore,
     required this.earlyScore,
     required this.lateScore,
-    required this.missScore, required this.totalScore,
+    required this.missScore, required this.totalScore, required this.totalNotes,
   });
 
   @override
@@ -34,7 +35,6 @@ class ResultScreen extends StatefulWidget {
 class _ResultScreenState extends State<ResultScreen>
     with SingleTickerProviderStateMixin {
   double _percentStar = 0;
-  int _totalNotes = 0;
 
   // Khởi tạo các biến cho animation
   late AnimationController _animationController;
@@ -49,6 +49,7 @@ class _ResultScreenState extends State<ResultScreen>
   @override
   void initState() {
     super.initState();
+    print('total notes ${widget.totalNotes}');
     _calculateTotalNotes();
     _animationController = AnimationController(
       duration: Duration(milliseconds: 1500),
@@ -63,26 +64,10 @@ class _ResultScreenState extends State<ResultScreen>
   }
 
   void _calculateTotalNotes() {
-    _totalNotes = widget.perfectScore +
-        widget.goodScore +
-        widget.earlyScore +
-        widget.lateScore +
-        widget.missScore;
-
-    if (_totalNotes == 0) {
-      _percentStar = 0;
-      return;
-    }
-
-    int totalScore = widget.totalScore;
-
-    // Star Score (%) = [(Perfect×100 + Good×90 + Early×60 + Late×40 + Miss×0) / (Tổng số note × 100)] × 100%
-    _percentStar = (totalScore / (_totalNotes * 100)) * 100;
-    print('totalScore $totalScore');
+    _percentStar = (widget.totalScore / (widget.totalNotes * 100)) * 100;
   }
 
   void _setupAnimations() {
-    // Animation cho điểm tổng
     _scoreAnimation = Tween<double>(
       begin: 0,
       end: _totalScoreDisplay.toDouble(),
@@ -91,7 +76,6 @@ class _ResultScreenState extends State<ResultScreen>
       curve: Interval(0.0, 0.8, curve: Curves.easeOutCubic),
     ));
 
-    // Animation cho phần trăm sao
     _starAnimation = Tween<double>(
       begin: 0,
       end: _percentStar,
@@ -101,17 +85,21 @@ class _ResultScreenState extends State<ResultScreen>
     ));
 
     // Animation cho phần trăm các thành phần
-    _perfectPercentAnimation = _createPercentAnimation(widget.perfectScore);
-    _goodPercentAnimation = _createPercentAnimation(widget.goodScore);
-    _earlyPercentAnimation = _createPercentAnimation(widget.earlyScore);
-    _latePercentAnimation = _createPercentAnimation(widget.lateScore);
-    _missPercentAnimation = _createPercentAnimation(widget.missScore);
+    final perfectPercent = (widget.perfectScore / widget.totalNotes * 100).floor();
+    final goodPercent = (widget.goodScore / widget.totalNotes * 100).floor();
+    final latePercent = (widget.lateScore / widget.totalNotes * 100).floor();
+    final earlyPercent = (widget.earlyScore / widget.totalNotes * 100).floor();
+    _perfectPercentAnimation = _createPercentAnimation(perfectPercent);
+    _goodPercentAnimation = _createPercentAnimation(goodPercent);
+    _earlyPercentAnimation = _createPercentAnimation(earlyPercent);
+    _latePercentAnimation = _createPercentAnimation(latePercent);
+    _missPercentAnimation = _createPercentAnimation(100 - perfectPercent - goodPercent - latePercent - earlyPercent);
   }
 
   Animation<double> _createPercentAnimation(int value) {
     return Tween<double>(
       begin: 0,
-      end: _totalNotes > 0 ? (value / _totalNotes * 100) : 0,
+      end: value.toDouble(),
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Interval(0.3, 1.0, curve: Curves.easeOutCubic),

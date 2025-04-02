@@ -239,7 +239,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
           ),
         ),
     );
-    }
+  }
 
   List<Color> getPadColor(bool isHighlighted, bool hasSound, bool isActive, String soundId){
     if(_currentSong == null) return [Color(0xFF919191), Color(0xFF5E5E5E)];
@@ -333,7 +333,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                                     Positioned(
                                       top: 10,
                                       left: 10,
-                                      child: BlurWidget(text: _currentSong!.difficulty)),
+                                      child: BlurWidget(text: _currentSong!.difficulty.toUpperCase())),
                                     ComboWidget()
                                   ],
                                 )
