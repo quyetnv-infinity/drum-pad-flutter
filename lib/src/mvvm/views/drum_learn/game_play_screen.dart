@@ -17,6 +17,7 @@ import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screen_recording/flutter_screen_recording.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +43,8 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   double padHeight = 100.0;
   String selectedMode = "";
   bool _isRecording = false;
-  String? _recordingPath;
+  static const platform = MethodChannel('screen_recorder');
+  String? _filePath;
 
 
   @override
@@ -418,92 +420,34 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
     );
   }
   Future<void> _startRecording() async {
-    // --- Add Permission Checks ---
-    var micStatus = await Permission.microphone.status;
-    var photosStatus = await Permission.photos.status; // Or Permission.storage on older Android
-
-    print("[Permissions] Microphone status: $micStatus");
-    print("[Permissions] Photos status: $photosStatus");
-
-    bool permissionsGranted = true;
-    if (!micStatus.isGranted) {
-      print("Microphone permission not granted. Requesting...");
-      micStatus = await Permission.microphone.request();
-      if (!micStatus.isGranted) permissionsGranted = false;
-    }
-    // Photos permission is often needed for saving, check if needed before starting
-    if (!photosStatus.isGranted && !photosStatus.isLimited) { // isLimited is iOS specific
-      print("Photos permission not granted. Requesting...");
-      photosStatus = await Permission.photos.request();
-      if (!photosStatus.isGranted && !photosStatus.isLimited) permissionsGranted = false;
-    }
-
-    if (!permissionsGranted) {
-      print("Required permissions were not granted. Cannot start recording.");
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Please grant Microphone and Photos permissions in Settings.'))
-      );
-      setState(() { _isRecording = false; }); // Ensure state reflects failure
-      return; // Exit the function
-    }
-    // --- End of Permission Checks ---
-
-
-    // --- Original Start Logic ---
     try {
-      print("Attempting to start recording via native plugin...");
-      bool started = await FlutterScreenRecording.startRecordScreenAndAudio(
-        "my_recordinggh", // Consider making filename dynamic
-        titleNotification: "Screen Recording Title", // Android specific? Check docs
-        messageNotification: "Recording in progress...", // Android specific? Check docs
-      );
-      print("Native plugin startRecordScreenAndAudio returned: $started");
-
-      if (started) {
+      final Map result = await platform.invokeMethod('stopRecording');
+      if (result['success']) {
         setState(() {
-          _isRecording = true;
-          _recordingPath = null; // Clear path from previous recordings
+          _isRecording = false;
+          _filePath = result['path'];
         });
-        print("Screen recording started successfully (plugin returned true).");
-      } else {
-        // This is the case you are hitting
-        print("Screen recording failed to start (plugin returned false). Check native logs/permissions.");
-        // Ensure state reflects failure
-        setState(() { _isRecording = false; });
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to start recording. Did you allow it in the system prompt?'))
-        );
+        print("Recording saved at: ${result['path']}");
+        _showSuccessDialog(_filePath ?? "hehe");
       }
     } catch (e) {
-      print("Error starting screen recording: $e");
-      setState(() { _isRecording = false; }); // Ensure state reflects failure
+      print("Error stopping recording: $e");
     }
   }
 
 
   Future<void> _stopRecording() async {
-    if (!_isRecording) return; // Don't try to stop if not recording
-
     try {
-      // Stop recording and get the file path
-      String? path = await FlutterScreenRecording.stopRecordScreen;
-
-      setState(() {
-        _isRecording = false;
-        _recordingPath = path;
-      });
-
-      if (path != null) {
-        print("Screen recording stopped successfully. File saved at: $path");
-        // You can now use the path, e.g., display the video, upload it, etc.
-        _showSuccessDialog(path);
-      } else {
-        print("Screen recording stopped but path is null.");
-        // Handle cases where stopping might not return a path as expected
+      final Map result = await platform.invokeMethod('stopRecording');
+      if (result['success']) {
+        setState(() {
+          _isRecording = false;
+          _filePath = result['path'];
+        });
+        print("Recording saved at: ${result['path']}");
       }
     } catch (e) {
-      print("Error stopping screen recording: $e");
-      // Handle potential errors
+      print("Error stopping recording: $e");
     }
   }
   void _showSuccessDialog(String path) {
