@@ -176,6 +176,9 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   void _navigateToNextScreen() async {
     _pauseTimer?.cancel();
     context.read<DrumLearnProvider>().resetPerfectPoint();
+    /// 📌 check condition of result to save unlocked lesson or campaign
+    widget.onChangeUnlockedModeCampaign?.call();
+
     final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes,),));
     if(result != null && result == 'play_again'){
       _resetSequence(isPlayingDrum: true);
@@ -521,7 +524,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         context.read<DrumLearnProvider>().resetPerfectPoint();
         _pauseTimer?.cancel();
         await Future.delayed(Duration(seconds: 1));
-        widget.onChangeUnlockedModeCampaign?.call();
         _navigateToNextScreen();
       }
     }
