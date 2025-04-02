@@ -42,9 +42,9 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   final GlobalKey _changeMode = GlobalKey();
   double padHeight = 100.0;
   String selectedMode = "";
-  bool _isRecording = false;
-  static const platform = MethodChannel('screen_recorder');
-  String? _filePath;
+  static const platform = MethodChannel('screen_audio_recorder');
+
+  bool isRecording = false;
 
 
   @override
@@ -387,8 +387,8 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
             ),
           ),
         ),
-        Center(
-            child: ComboText())
+        // Center(
+        //     child: ComboText())
       ],
     );
   }
@@ -421,33 +421,27 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   }
   Future<void> _startRecording() async {
     try {
-      final Map result = await platform.invokeMethod('stopRecording');
-      if (result['success']) {
+      final bool success = await platform.invokeMethod('startRecording');
+      if (success) {
         setState(() {
-          _isRecording = false;
-          _filePath = result['path'];
+          isRecording = true;
         });
-        print("Recording saved at: ${result['path']}");
-        _showSuccessDialog(_filePath ?? "hehe");
       }
-    } catch (e) {
-      print("Error stopping recording: $e");
+    } on PlatformException catch (e) {
+      print("❌ Lỗi khi bắt đầu ghi: ${e.message}");
     }
   }
 
-
   Future<void> _stopRecording() async {
     try {
-      final Map result = await platform.invokeMethod('stopRecording');
-      if (result['success']) {
+      final bool success = await platform.invokeMethod('stopRecording');
+      if (success) {
         setState(() {
-          _isRecording = false;
-          _filePath = result['path'];
+          isRecording = false;
         });
-        print("Recording saved at: ${result['path']}");
       }
-    } catch (e) {
-      print("Error stopping recording: $e");
+    } on PlatformException catch (e) {
+      print("❌ Lỗi khi dừng ghi: ${e.message}");
     }
   }
   void _showSuccessDialog(String path) {

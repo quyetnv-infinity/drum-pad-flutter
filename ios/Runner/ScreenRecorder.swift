@@ -1,67 +1,56 @@
-import Flutter
-import UIKit
 import ReplayKit
-import Photos
+import AVFoundation
 
-class ScreenRecorder: NSObject, RPScreenRecorderDelegate, RPPreviewViewControllerDelegate {
-    static let shared = ScreenRecorder()
-    var isRecording = false
+class ScreenRecordHandler: RPBroadcastSampleHandler {
+    var audioWriter: AVAssetWriter?
+    var audioWriterInput: AVAssetWriterInput?
     var outputURL: URL?
 
-    func startRecording(result: @escaping (Bool) -> Void) {
-        let recorder = RPScreenRecorder.shared()
-        guard !recorder.isRecording else {
-            result(false)
-            return
+    override func broadcastStarted(withSetupInfo setupInfo: [String : NSObject]?) {
+        print("✅ Bắt đầu ghi âm thanh hệ thống")
+
+        // Tạo đường dẫn file .m4a
+        let fileName = "system_audio_\(UUID().uuidString).m4a"
+        let outputPath = NSTemporaryDirectory().appending(fileName)
+        outputURL = URL(fileURLWithPath: outputPath)
+
+        do {
+            audioWriter = try AVAssetWriter(outputURL: outputURL!, fileType: .m4a)
+            let settings: [String: Any] = [
+                AVFormatIDKey: kAudioFormatMPEG4AAC,
+                AVNumberOfChannelsKey: 2,
+                AVSampleRateKey: 44100,
+                AVEncoderBitRateKey: 128000
+            ]
+            audioWriterInput = AVAssetWriterInput(mediaType: .audio, outputSettings: settings)
+            audioWriterInput?.expectsMediaDataInRealTime = true
+
+            if let writer = audioWriter, let input = audioWriterInput, writer.canAdd(input) {
+                writer.add(input)
+                writer.startWriting()
+                writer.startSession(atSourceTime: .zero)
+                print("✅ Ghi âm thanh hệ thống...")
+            }
+        } catch {
+            print("❌ Lỗi khi tạo AVAssetWriter: \(error.localizedDescription)")
         }
+    }
 
-        let fileName = "screen_recording_\(UUID().uuidString).mov"
-        let tempPath = NSTemporaryDirectory().appending(fileName)
-        outputURL = URL(fileURLWithPath: tempPath)
+    override func broadcastFinished() {
+        print("✅ Dừng ghi âm thanh hệ thống")
 
-        recorder.startRecording { error in
-            if let error = error {
-                print("Error starting recording: \(error.localizedDescription)")
-                result(false)
-            } else {
-                self.isRecording = true
-                result(true)
+        audioWriterInput?.markAsFinished()
+        audioWriter?.finishWriting {
+            if let savedURL = self.outputURL {
+                print("✅ File âm thanh đã lưu tại: \(savedURL.path)")
             }
         }
     }
 
-    func stopRecording(result: @escaping (Bool, String?) -> Void) {
-        let recorder = RPScreenRecorder.shared()
-        guard recorder.isRecording else {
-            result(false, nil)
-            return
-        }
-
-        recorder.stopRecording { previewController, error in
-            if let error = error {
-                print("Error stopping recording: \(error.localizedDescription)")
-                result(false, nil)
-                return
-            }
-
-            self.isRecording = false
-
-            if let outputPath = self.outputURL?.path {
-                print("Recording finished. Saving to Photos Library...")
-
-                // Yêu cầu quyền lưu vào thư viện ảnh
-                PHPhotoLibrary.requestAuthorization { status in
-                    if status == .authorized {
-                        UISaveVideoAtPathToSavedPhotosAlbum(outputPath, nil, nil, nil)
-                        print("✅ Video saved to Photos Library: \(outputPath)")
-                        result(true, outputPath)
-                    } else {
-                        print("❌ Permission denied to save video to Photos Library.")
-                        result(false, nil)
-                    }
-                }
-            } else {
-                result(false, nil)
+    override func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, with sampleBufferType: RPSampleBufferType) {
+        if sampleBufferType == .audioApp {
+            if audioWriterInput?.isReadyForMoreMediaData == true {
+                audioWriterInput?.append(sampleBuffer)
             }
         }
     }
