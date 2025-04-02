@@ -199,7 +199,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
                           highlightColor: Colors.transparent,
                           onTap: () async {
                             // Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: 20, goodScore: 30, earlyScore: 20, lateScore: 10, missScore: 1),));
-                            if(item.isCompleted == true|| index == displayData.length - 1) {
+                            if(item.isCompleted || index == displayData.length - 1) {
                               await Navigator.push(context, CupertinoPageRoute(
                                 builder: (context) =>
                                     GamePlayScreen(songCollection: _song,
@@ -213,12 +213,12 @@ class _LessonsScreenState extends State<LessonsScreen> {
                             height: itemSize,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image: AssetImage( item.isCompleted == true ?ResImage.imgBgButtonStepLessonUnlock
+                                image: AssetImage( item.isCompleted || index == displayData.length - 1 ? ResImage.imgBgButtonStepLessonUnlock
                                     : ResImage.imgBgButtonStepLesson),
                               ),
                               shape: BoxShape.circle,
                             ),
-                            child: item.isCompleted == true || index == displayData.length - 1
+                            child: item.isCompleted || index == displayData.length - 1
                                 ? Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
