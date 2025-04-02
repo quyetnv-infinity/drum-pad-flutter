@@ -64,6 +64,6 @@ class DrumLearnProvider extends ChangeNotifier {
 
   Future<SongCollection> getSongFromServer(String id) async {
     /// call api get song by id
-    return dataSongCollections.first;
+    return dataSongCollections.firstWhere((element) => element.id == id, orElse: () => dataSongCollections.last,);
   }
 }

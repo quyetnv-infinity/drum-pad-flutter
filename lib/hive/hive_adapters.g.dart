@@ -17,18 +17,21 @@ class SongCollectionAdapter extends TypeAdapter<SongCollection> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return SongCollection(
+      id: fields[5] as String?,
       lessons: (fields[0] as List).cast<LessonSequence>(),
       author: fields[1] as String?,
       name: fields[2] as String?,
-      difficulty: fields[3] == null ? 'Easy' : fields[3] as String,
+      difficulty:
+          fields[3] == null ? DifficultyMode.unknown : fields[3] as String,
       image: fields[4] as String?,
+      campaignStar: fields[6] == null ? 0 : (fields[6] as num).toDouble(),
     );
   }
 
   @override
   void write(BinaryWriter writer, SongCollection obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.lessons)
       ..writeByte(1)
@@ -38,7 +41,11 @@ class SongCollectionAdapter extends TypeAdapter<SongCollection> {
       ..writeByte(3)
       ..write(obj.difficulty)
       ..writeByte(4)
-      ..write(obj.image);
+      ..write(obj.image)
+      ..writeByte(5)
+      ..write(obj.id)
+      ..writeByte(6)
+      ..write(obj.campaignStar);
   }
 
   @override

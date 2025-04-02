@@ -16,7 +16,13 @@ class SongCollectionService {
     if (!_box.isOpen) {
       await Hive.openBox<SongCollection>(HiveTable.songCollectionTable);
     }
-    return _box.get(id);
+    final list = _box.values.toList();
+    final index = list.indexWhere((element) => element.id == id);
+    if(index != -1) {
+      return _box.getAt(index);
+    } else {
+      return null;
+    }
   }
 
   static Future<void> updateSong(String id, SongCollection newSong) async {
@@ -29,8 +35,10 @@ class SongCollectionService {
     if (index != -1) {
       SongCollection updatedSong = list[index];
       updatedSong = newSong;
+      print('updated');
       await _box.putAt(index, updatedSong);
     } else {
+      print('added');
       await addSong(newSong);
     }
   }

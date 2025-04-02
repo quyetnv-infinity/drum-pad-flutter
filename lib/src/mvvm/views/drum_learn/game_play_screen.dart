@@ -198,7 +198,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
 
   Future<void> updateUnlockedLesson() async {
     final drumLearnProvider = Provider.of<DrumLearnProvider>(context, listen: false);
-    List<LessonSequence> updatedLessons = List.from(widget.songCollection.lessons);
+    List<LessonSequence> updatedLessons = (await drumLearnProvider.getSong(widget.songCollection.id)).lessons;
 
     final indexUpdated = widget.index + 1;
     if (indexUpdated > 0 && indexUpdated < updatedLessons.length) {

@@ -5,7 +5,7 @@ nextTypeId: 3
 types:
   SongCollection:
     typeId: 0
-    nextIndex: 5
+    nextIndex: 7
     fields:
       lessons:
         index: 0
@@ -17,6 +17,10 @@ types:
         index: 3
       image:
         index: 4
+      id:
+        index: 5
+      campaignStar:
+        index: 6
   LessonSequence:
     typeId: 1
     nextIndex: 9
