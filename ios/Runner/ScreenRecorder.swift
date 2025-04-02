@@ -1,6 +1,7 @@
 import Flutter
 import UIKit
 import ReplayKit
+import Photos
 
 class ScreenRecorder: NSObject, RPScreenRecorderDelegate, RPPreviewViewControllerDelegate {
     static let shared = ScreenRecorder()
@@ -40,9 +41,27 @@ class ScreenRecorder: NSObject, RPScreenRecorderDelegate, RPPreviewViewControlle
             if let error = error {
                 print("Error stopping recording: \(error.localizedDescription)")
                 result(false, nil)
+                return
+            }
+
+            self.isRecording = false
+
+            if let outputPath = self.outputURL?.path {
+                print("Recording finished. Saving to Photos Library...")
+
+                // Yêu cầu quyền lưu vào thư viện ảnh
+                PHPhotoLibrary.requestAuthorization { status in
+                    if status == .authorized {
+                        UISaveVideoAtPathToSavedPhotosAlbum(outputPath, nil, nil, nil)
+                        print("✅ Video saved to Photos Library: \(outputPath)")
+                        result(true, outputPath)
+                    } else {
+                        print("❌ Permission denied to save video to Photos Library.")
+                        result(false, nil)
+                    }
+                }
             } else {
-                self.isRecording = false
-                result(true, self.outputURL?.path)
+                result(false, nil)
             }
         }
     }
