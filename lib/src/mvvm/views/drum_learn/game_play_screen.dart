@@ -256,7 +256,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
           ),
         ),
     );
-    }
+  }
 
   List<Color> getPadColor(bool isHighlighted, bool hasSound, bool isActive, String soundId){
     return isHighlighted ? [Color(0xFFEDC78C), Colors.orange] : (hasSound ? PadUtil.getPadGradientColor(isActive, soundId) : [Color(0xFF919191), Color(0xFF5E5E5E)]);
