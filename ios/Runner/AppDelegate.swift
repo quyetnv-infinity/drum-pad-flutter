@@ -1,25 +1,33 @@
 import Flutter
 import UIKit
 
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate {
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        GeneratedPluginRegistrant.register(with: self)
         let controller = window?.rootViewController as! FlutterViewController
         let channel = FlutterMethodChannel(name: "screen_recorder", binaryMessenger: controller.binaryMessenger)
         
         channel.setMethodCallHandler { (call, result) in
-            if call.method == "startRecording" {
+            switch call.method {
+            case "startRecording":
                 ScreenRecorder.shared.startRecording { success in
-                    result(success)
+                    DispatchQueue.main.async {
+                        result(success)
+                    }
                 }
-            } else if call.method == "stopRecording" {
+
+            case "stopRecording":
                 ScreenRecorder.shared.stopRecording { success, path in
-                    result(["success": success, "path": path ?? ""])
+                    DispatchQueue.main.async {
+                        result(["success": success, "path": path ?? ""])
+                    }
                 }
-            } else {
+
+            default:
                 result(FlutterMethodNotImplemented)
             }
         }
