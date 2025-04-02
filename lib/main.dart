@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
 import 'package:drumpad_flutter/config/ads_config.dart';
+import 'package:drumpad_flutter/core/constants/hive_table.dart';
 import 'package:drumpad_flutter/hive/hive_registrar.g.dart';
 import 'package:drumpad_flutter/service_locator/service_locator.dart';
 import 'package:drumpad_flutter/sound_type_enum.dart';
@@ -70,7 +71,7 @@ Future<void> _initHive() async {
   Hive
     ..init(dbPath)
     ..registerAdapters();
-  await Hive.openBox<SongCollection>('songCollectionBox');
+  await Hive.openBox<SongCollection>(HiveTable.songCollectionTable);
 }
 //
 // class DrumpadScreen extends StatefulWidget {

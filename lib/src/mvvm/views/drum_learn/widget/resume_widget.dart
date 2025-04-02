@@ -80,13 +80,13 @@ class _ResumeWidgetState extends State<ResumeWidget> {
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
 
-              final song = index == 2 ? _song: context.read<DrumLearnProvider>().data[index];
+              final song = index == 2 ? _song : context.read<DrumLearnProvider>().data[index];
   
             return GestureDetector(
               onTap: () {
                 Navigator.push(context, CupertinoPageRoute(builder: (context) =>
                   // GamePlayScreen(songCollection: song)'
-                  LessonsScreen(songCollection: song,)
+                  LessonsScreen(songCollection: song!,)
                   ));
               },
               child: SongItem(

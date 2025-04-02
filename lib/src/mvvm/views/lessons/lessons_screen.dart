@@ -5,16 +5,18 @@ import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/res/style/text_style.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class LessonsScreen extends StatefulWidget {
-  final SongCollection? songCollection;
-  const LessonsScreen({super.key, this.songCollection});
+  final SongCollection songCollection;
+  const LessonsScreen({super.key, required this.songCollection});
 
   @override
   State<LessonsScreen> createState() => _LessonsScreenState();
@@ -22,25 +24,24 @@ class LessonsScreen extends StatefulWidget {
 
 class _LessonsScreenState extends State<LessonsScreen> {
   final ScrollController _scrollController = ScrollController();
-  SongCollection? _song;
+  late SongCollection _song;
   bool isLoading = false;
+
+  List<LessonSequence> displayData = [];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchLessonData();
   }
 
-  void fetchLessonData() async {
+  Future<void> fetchLessonData() async {
     setState(() {
       isLoading = true;
     });
     try {
-      final String jsonString =
-          await rootBundle.loadString('assets/limbo_lessons.json');
-      final List<dynamic> jsonData = json.decode(jsonString);
-      final songCollection = SongCollection.fromJson(jsonData);
+      final drumLearnProvider = Provider.of<DrumLearnProvider>(context, listen: false);
+      final songCollection = await drumLearnProvider.getSong(widget.songCollection.id);
 
       // Bây giờ bạn có thể sử dụng songCollection.lessons để truy cập vào các bài học
       print("Số lượng bài học: ${songCollection.lessons.length}");
@@ -52,6 +53,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
 
       setState(() {
         _song = songCollection;
+        displayData = _song.lessons.reversed.toList();
       });
     } catch (e) {
       print('Error loading sequence data from file: $e');
@@ -102,11 +104,8 @@ class _LessonsScreenState extends State<LessonsScreen> {
     final lineWidth = screenWidth - (screenWidth / 7) * 2;
     const lineHeight = 70.0;
 
-    // Tạo danh sách items theo thứ tự ngược
-    final displayData = _song != null ? _song!.lessons.reversed.toList() : [];
-
     // Tính toán tổng chiều cao cần thiết cho tất cả các mục
-    final totalHeight = displayData.length * verticalSpacing + extraHeight;
+    double totalHeight = displayData.length * verticalSpacing + extraHeight;
 
     return CustomScaffold(
       // backgroundType: BackgroundType.gradient,
@@ -158,7 +157,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
               child: Stack(
                 children: [
                   /// Đường nối giữa các level
-                  ...List.generate(displayData.length - 1, (index) {
+                  ...List.generate(displayData.isNotEmpty ? displayData.length - 1 : 0, (index) {
                     final verticalPosition =
                         lineVerticalOffset + index * verticalSpacing;
                     final isEvenIndex = index % 2 == 0;
@@ -198,10 +197,16 @@ class _LessonsScreenState extends State<LessonsScreen> {
                         child: InkWell(
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
-                          onTap: () {
+                          onTap: () async {
                             // Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: 20, goodScore: 30, earlyScore: 20, lateScore: 10, missScore: 1),));
-                            // if(item.isCompleted == true)
-                              Navigator.push(context, CupertinoPageRoute(builder: (context) => GamePlayScreen(songCollection: widget.songCollection, index: displayData.length - (index + 1),),));
+                            if(item.isCompleted == true|| index == displayData.length - 1) {
+                              await Navigator.push(context, CupertinoPageRoute(
+                                builder: (context) =>
+                                    GamePlayScreen(songCollection: _song,
+                                      index: displayData.length -
+                                          (index + 1),),));
+                              await fetchLessonData();
+                            }
                           },
                           child: Container(
                             width: itemSize,
@@ -213,7 +218,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
                               ),
                               shape: BoxShape.circle,
                             ),
-                            child: item.isCompleted == true
+                            child: item.isCompleted == true || index == displayData.length - 1
                                 ? Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
@@ -229,7 +234,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
                                         ),
                                       ),
                                       Text(
-                                        "${item.level}",
+                                        "${displayData.length - index}",
                                         style: TextStyle(
                                           fontWeight: AppFonts.semiBold,
                                           fontSize: 36,

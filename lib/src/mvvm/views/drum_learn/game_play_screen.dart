@@ -26,9 +26,9 @@ import 'package:provider/provider.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class GamePlayScreen extends StatefulWidget {
-  final SongCollection? songCollection;
-  final int? index;
-  const GamePlayScreen({super.key, this.songCollection, this.index});
+  final SongCollection songCollection;
+  final int index;
+  const GamePlayScreen({super.key, required this.songCollection, required this.index});
 
   @override
   State<GamePlayScreen> createState() => _GamePlayScreenState();
@@ -38,7 +38,6 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   final GlobalKey _widgetPadKey = GlobalKey();
   bool isShowTutorial = false;
 
-  SongCollection? _currentSong;
   int _currentScore = 0;
   late TutorialCoachMark tutorialCoachMark;
   final GlobalKey _chooseSongKey = GlobalKey();
@@ -50,7 +49,6 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   void initState() {
     super.initState();
     // Initialize tutorial
-    _currentSong = widget.songCollection;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getWidgetPadSize();
       _initTutorial();
@@ -197,6 +195,20 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   void showTutorial() {
     tutorialCoachMark.show(context: context);
   }
+
+  Future<void> updateUnlockedLesson() async {
+    final drumLearnProvider = Provider.of<DrumLearnProvider>(context, listen: false);
+    List<LessonSequence> updatedLessons = List.from(widget.songCollection.lessons);
+
+    final indexUpdated = widget.index + 1;
+    if (indexUpdated > 0 && indexUpdated < updatedLessons.length) {
+      updatedLessons[indexUpdated].isCompleted = true;
+    }
+
+    final newSong = widget.songCollection.copyWith(lessons: updatedLessons);
+    await drumLearnProvider.updateSong(widget.songCollection.id, newSong);
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -213,12 +225,17 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                   ),
                   DrumPadScreen(
                     key: _widgetPadKey,
-                    lessonIndex: widget.index ?? 0,
-                    currentSong: _currentSong, onChangeScore: (int score) {
-                    setState(() {
-                      _currentScore = score ;
-                    });
-                  },)
+                    lessonIndex: widget.index,
+                    currentSong: widget.songCollection,
+                    onChangeScore: (int score) {
+                      setState(() {
+                        _currentScore = score ;
+                      });
+                    },
+                    onChangeUnlockedModeCampaign: () async {
+                      await updateUnlockedLesson();
+                    },
+                  )
                 ],
               ),
             ),
@@ -242,7 +259,6 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
     }
 
   List<Color> getPadColor(bool isHighlighted, bool hasSound, bool isActive, String soundId){
-    if(_currentSong == null) return [Color(0xFF919191), Color(0xFF5E5E5E)];
     return isHighlighted ? [Color(0xFFEDC78C), Colors.orange] : (hasSound ? PadUtil.getPadGradientColor(isActive, soundId) : [Color(0xFF919191), Color(0xFF5E5E5E)]);
   }
 
@@ -303,41 +319,25 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                       children: [
                         Flexible(
                           key: _chooseSongKey,
-                          child: GestureDetector(
-                            onTap: (){
-                              onTapChooseSong();
-                            },
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.45,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Color(0xFF4E4371)
-                              ),
-                              alignment: Alignment.center,
-                              child: _currentSong == null ?
-                              Container(
-                                width: 52,
-                                height: 52,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.white.withValues(alpha: 0.15)
-                                ),
-                                child: Icon(Icons.add, color: Colors.white, size: 40,),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Color(0xFF4E4371)
+                            ),
+                            alignment: Alignment.center,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Stack(
+                                children: [
+                                  Image.asset(widget.songCollection.image!, fit: BoxFit.cover, width: double.infinity, height: double.infinity,),
+                                  Positioned(
+                                    top: 10,
+                                    left: 10,
+                                    child: BlurWidget(text: widget.songCollection.difficulty)),
+                                  ComboWidget()
+                                ],
                               )
-                              :
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Stack(
-                                  children: [
-                                    Image.asset(_currentSong!.image!, fit: BoxFit.cover, width: double.infinity, height: double.infinity,),
-                                    Positioned(
-                                      top: 10,
-                                      left: 10,
-                                      child: BlurWidget(text: _currentSong!.difficulty)),
-                                    ComboWidget()
-                                  ],
-                                )
-                              ),
                             ),
                           ),
                         ),
@@ -383,16 +383,6 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
     );
   }
 
-  Future<void> onTapChooseSong() async {
-    print('onTap chooseSound');
-    final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => LearnFromSongScreen(isChooseSong: true,),));
-    if(result != null) {
-      setState(() {
-        _currentSong = result;
-      });
-      print(_currentSong?.name);
-    }
-  }
   Widget buildModeButton(){
     return Padding(
       key: _changeMode,

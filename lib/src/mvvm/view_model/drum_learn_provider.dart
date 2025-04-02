@@ -3,17 +3,16 @@ import 'dart:convert';
 import 'package:drumpad_flutter/core/constants/mock_up_data.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/service/song_collection_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 class DrumLearnProvider extends ChangeNotifier {
   List<SongCollection> data = dataSongCollections;
 
-
   int _perfectPoint = 0;
   bool _isCombo = false;
   int _increaseScoreByCombo = 0;
   int _totalPoint = 0;
-
 
   int get perfectPoint => _perfectPoint;
   bool get isCombo => _isCombo;
@@ -52,5 +51,19 @@ class DrumLearnProvider extends ChangeNotifier {
   void resetIsCombo(){
     _isCombo = false;
     notifyListeners();
+  }
+
+  /// Function for drum learn song
+  Future<SongCollection> getSong(String id) async {
+    return await SongCollectionService.getSongById(id) ?? await getSongFromServer(id);
+  }
+
+  Future<void> updateSong(String id, SongCollection songCollection) async {
+    await SongCollectionService.updateSong(id, songCollection);
+  }
+
+  Future<SongCollection> getSongFromServer(String id) async {
+    /// call api get song by id
+    return dataSongCollections.first;
   }
 }

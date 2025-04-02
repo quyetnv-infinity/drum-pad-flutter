@@ -2,6 +2,7 @@ import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 
 final List<SongCollection> dataSongCollections = [
   SongCollection(
+      id: '1231',
       lessons: [
         LessonSequence(
             events: [
@@ -360,6 +361,7 @@ final List<SongCollection> dataSongCollections = [
       author: "MCK",
       name: "99%"),
   SongCollection(
+      id: '1232',
       lessons: [
             LessonSequence(
                 events: [
@@ -718,6 +720,7 @@ final List<SongCollection> dataSongCollections = [
       author: "Sơn Tùng M-TP 1",
       name: "Lạc Trôi 1"),
   SongCollection(
+      id: '1233',
       lessons: [
             LessonSequence(
                 events: [
@@ -1076,6 +1079,7 @@ final List<SongCollection> dataSongCollections = [
       author: "Sơn Tùng M-TP 2",
       name: "Lạc Trôi 2"),
   SongCollection(
+      id: '1234',
       lessons: [
             LessonSequence(
                 events: [
@@ -1434,6 +1438,7 @@ final List<SongCollection> dataSongCollections = [
       author: "Sơn Tùng M-TP 3",
       name: "Lạc Trôi 3"),
   SongCollection(
+      id: '1235',
       lessons: [
             LessonSequence(
                 events: [

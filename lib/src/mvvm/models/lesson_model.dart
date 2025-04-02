@@ -59,7 +59,7 @@ class LessonSequence extends HiveObject{
 }
 
 class SongCollection extends HiveObject{
-  String id = const Uuid().v4();
+  String id;
   List<LessonSequence> lessons;
   String? author;
   String? name;
@@ -68,13 +68,14 @@ class SongCollection extends HiveObject{
   String? image;
 
   SongCollection({
+    String? id,
     required this.lessons,
     this.author,
     this.name,
     this.difficulty = DifficultyMode.unknown,
     this.image,
     this.campaignStar = 0
-  });
+  }) : id = id ?? const Uuid().v4();
 
   factory SongCollection.fromJson(List<dynamic> json) {
     final List<LessonSequence> lessons = [];
@@ -97,6 +98,27 @@ class SongCollection extends HiveObject{
       lessons: lessons,
     );
   }
+
+  SongCollection copyWith({
+    String? id,
+    List<LessonSequence>? lessons,
+    String? author,
+    String? name,
+    String? difficulty,
+    double? campaignStar,
+    String? image,
+  }) {
+    return SongCollection(
+      id: id ?? this.id,
+      lessons: lessons ?? this.lessons,
+      author: author ?? this.author,
+      name: name ?? this.name,
+      difficulty: difficulty ?? this.difficulty,
+      campaignStar: campaignStar ?? this.campaignStar,
+      image: image ?? this.image,
+    );
+  }
+
 }
 
 
