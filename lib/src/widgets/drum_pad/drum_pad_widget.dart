@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:drumpad_flutter/core/enum/pad_state_enum.dart';
+import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/pad_util.dart';
 import 'package:drumpad_flutter/note.util.dart';
 import 'package:drumpad_flutter/sound_type_enum.dart';
@@ -20,7 +21,8 @@ class DrumPadScreen extends StatefulWidget {
   final Function(int score) onChangeScore;
   final int lessonIndex;
   final void Function()? onChangeUnlockedModeCampaign;
-  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign});
+  final String? practiceMode;
+  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode});
 
   @override
   State<DrumPadScreen> createState() => _DrumPadScreenState();
@@ -164,7 +166,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   void _startTimer() {
     _pauseTimer?.cancel();
     _pauseTimer = Timer(Duration(seconds: 5), () {
-      if (mounted) {
+      if (mounted && widget.practiceMode != 'practice') {
         _navigateToNextScreen();
       }
     });
@@ -403,6 +405,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     if(widget.currentSong == null || widget.currentSong!.lessons.isEmpty) return;
     if(!PadUtil.getPadEnable(sound)) return;
 
+
+
     List<String> requiredNotes = events[currentEventIndex].notes;
 
     // Add this check to prevent duplicate activations
@@ -419,7 +423,9 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
 
     // Rest of the method remains the same
     _playSound(sound);
-
+    if(widget.practiceMode == 'practice'){
+      return;
+    }
     lastEventTime ??= DateTime.now();
 
     double currentTime = (DateTime.now().difference(lastEventTime!).inMilliseconds) / 1000.0;
@@ -543,7 +549,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
 
   List<Color> getPadColor(bool isHighlighted, bool hasSound, bool isActive, String soundId){
     if(widget.currentSong == null || widget.currentSong!.lessons.isEmpty) return [Color(0xFF919191), Color(0xFF5E5E5E)];
-    return isHighlighted ? [Color(0xFFEDC78C), Colors.orange] : (hasSound ? PadUtil.getPadGradientColor(isActive, soundId) : [Color(0xFF919191), Color(0xFF5E5E5E)]);
+    return isHighlighted && widget.practiceMode != 'practice' ? [Color(0xFFEDC78C), Colors.orange] : (hasSound ? PadUtil.getPadGradientColor(isActive, soundId) : [Color(0xFF919191), Color(0xFF5E5E5E)]);
   }
 
   Future<void> setLessonToPlay(int index) async {
@@ -700,6 +706,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
                       && !sound.contains("drums")
                       && _futureNotes[0]["index"] - currentEventIndex < 4
                   )
+                    if(widget.practiceMode !='practice')
                     Stack(
                       children: [
                         Align(
@@ -713,11 +720,10 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
                         ),
                         Align(
                             alignment: Alignment.center,
-                            child: Text("Wait", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: Colors.white))),
-
+                            child: Text(context.locale.wait, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: Colors.white))),
                       ],
                     ),
-                  if (padProgress.containsKey(sound) && hasSound)
+                  if (padProgress.containsKey(sound) && hasSound && widget.practiceMode != 'practice')
                     Align(
                       alignment: Alignment.center,
                       child:  SizedBox(
@@ -733,7 +739,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
                     ),
                   if (isActive)
                     Lottie.asset('assets/anim/lightning_button.json', fit: BoxFit.cover, controller: _controller),
-                  if(!padProgress.containsKey(sound) && isHighlighted)
+                  if(!padProgress.containsKey(sound) && isHighlighted && widget.practiceMode != 'practice')
                     Align(
                         alignment: Alignment.center,
                         child: Lottie.asset('assets/anim/click_here.json', height: MediaQuery.sizeOf(context).width /3 - 50))
