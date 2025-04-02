@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/pad_util.dart';
-import 'package:drumpad_flutter/main.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/mode_btn/mode_button.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/tutorial_blur_widget.dart';
 import 'package:drumpad_flutter/src/widgets/anim/combo_text.dart';
 import 'package:drumpad_flutter/src/widgets/anim/text_animation.dart';
@@ -16,12 +15,8 @@ import 'package:drumpad_flutter/src/widgets/blur_widget.dart';
 import 'package:drumpad_flutter/src/widgets/drum_pad/drum_pad_widget.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
-import 'package:drumpad_flutter/src/widgets/text/judgement_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
@@ -43,6 +38,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   final GlobalKey _chooseSongKey = GlobalKey();
   final GlobalKey _changeMode = GlobalKey();
   double padHeight = 100.0;
+  String selectedMode = "";
 
 
   @override
@@ -73,6 +69,13 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void _updateSelectedMode(String mode) {
+    setState(() {
+      selectedMode = mode;
+    });
+    print('asdasd $selectedMode');
   }
 
   void _initTutorial() {
@@ -227,6 +230,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                     key: _widgetPadKey,
                     lessonIndex: widget.index,
                     currentSong: widget.songCollection,
+                    practiceMode: selectedMode,
                     onChangeScore: (int score) {
                       setState(() {
                         _currentScore = score ;
@@ -390,33 +394,11 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
       child: Row(
         spacing: 6,
         children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 4),
-            height: 28,
-            width: 52,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                image: DecorationImage(image: AssetImage(ResImage.imgBGMode))),
-            child: Text(context.locale.mode,overflow: TextOverflow.ellipsis, maxLines: 1, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 4),
-            height: 28,
-            width: 52,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                image: DecorationImage(image: AssetImage(ResImage.imgBGMode))),
-            child: Text(context.locale.practice,overflow: TextOverflow.ellipsis, maxLines: 1, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 4),
-            height: 28,
-            width: 52,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                image: DecorationImage(image: AssetImage(ResImage.imgBGMode))),
-            child: Text(context.locale.rec,overflow: TextOverflow.ellipsis, maxLines: 1, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
-          ),
+          ModeButton(title: context.locale.mode, initialSelected: false, onSelected: (bool selected) {},),
+          ModeButton(title: context.locale.practice, initialSelected: false, onSelected: (bool selected) {
+            selected ? _updateSelectedMode("practice") : _updateSelectedMode("null");
+          },),
+          ModeButton(title: context.locale.rec, initialSelected: false, onSelected: (bool selected) {},),
         ],
       ),
     );
