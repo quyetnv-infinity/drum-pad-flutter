@@ -43,9 +43,10 @@ class DrumLearnProvider extends ChangeNotifier {
   }
 
   void resetPerfectPoint() {
+    print('resetALLllll');
     _perfectPoint = 0;
     _increaseScoreByCombo = 0;
-    _totalPoint= 0;
+    _totalPoint = 0;
     notifyListeners();
   }
   void resetIsCombo(){

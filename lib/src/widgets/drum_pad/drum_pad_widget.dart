@@ -159,8 +159,10 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   }
 
   void increasePoint(PadStateEnum state) {
+    if(state == PadStateEnum.none) return;
     final provider = context.read<DrumLearnProvider>();
 
+    print("=========================$state");
     switch (state) {
       case PadStateEnum.perfect:
         perfectPoint++;
@@ -176,6 +178,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         if (state == PadStateEnum.miss) missPoint++;
 
         provider.resetPerfectPoint();
+        print('reset perfect');
         break;
       default:
         break;
@@ -393,21 +396,19 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         state = PadStateEnum.early;
       } else if (requiredNotes.contains(sound) && currentTime < requiredTime - 0.2) {
         state = PadStateEnum.good;
-      } else if (requiredNotes.contains(sound) && currentTime > requiredTime + 0.2 && requiredNotes.contains(sound)) {
+      } else if (requiredNotes.contains(sound) && currentTime > requiredTime + 0.2) {
         state = PadStateEnum.late;
-      } else if( !requiredNotes.contains(sound) && currentEventIndex != 0){
+      } else if (!requiredNotes.contains(sound) && currentEventIndex != 0 && remainSounds.isEmpty){
         state = PadStateEnum.miss;
-      } else if(requiredNotes.contains(sound) ) {
+      } else if (requiredNotes.contains(sound) ) {
         state = PadStateEnum.perfect;
       }
     } else if(requiredNotes.contains(sound) ) {
-      increasePoint(PadStateEnum.perfect);
-    }
-    if(currentEventIndex != 0){
-      increasePoint(state);
+      state = PadStateEnum.perfect;
     }
 
     setState(() {
+      increasePoint(state);
       padStates[sound] = state;
     });
 
@@ -424,7 +425,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     //   });
     // }
     if (remainSounds.contains(sound)) {
-      double currentTime = (DateTime.now().difference(firstRemainSound!).inMilliseconds) / 1000.0;
       PadStateEnum state = PadStateEnum.none;
       if(currentEventIndex != 0){
         if (currentTime > 0.2) {
@@ -476,6 +476,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       } else {
         highlightedSounds.clear();
         padProgress.clear();
+        context.read<DrumLearnProvider>().resetPerfectPoint();
 
         await Future.delayed(Duration(seconds: 1));
         widget.onChangeUnlockedModeCampaign?.call();
@@ -484,8 +485,11 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         if(result != null && result == 'play_again'){
           _resetSequence(isPlayingDrum: true);
           _startSequence();
+          setState(() {
+            _previousTotalPoint = 0;
+            totalPoint = 0;
+          });
         }
-        // context.read<DrumLearnProvider>().updateNavigate();
       }
     }
     //

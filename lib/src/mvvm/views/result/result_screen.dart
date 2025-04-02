@@ -1,10 +1,12 @@
 import 'package:drumpad_flutter/core/res/dimen/spacing.dart';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
+import 'package:drumpad_flutter/src/mvvm/views/home/home_screen.dart';
 import 'package:drumpad_flutter/src/widgets/button/gradient_button.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
 import 'package:drumpad_flutter/src/widgets/text/judgement_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -243,17 +245,8 @@ class _ResultScreenState extends State<ResultScreen>
                     ),
                     GradientButton(
                       onPressed: () {
-                        /*
-                          có thẻ sử dụng cách sau
-                          Navigator.pushAndRemoveUntil(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => HomeScreen(),
-                          ),
-                          (route) => false,
-                        )
-                        */
-                        Navigator.popUntil(context, (route) => route.isFirst);
+                        Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
+                        // Navigator.popUntil(context, (route) => route.isFirst);
                       },
                       shape: BoxShape.circle,
                       padding: EdgeInsets.all(14),

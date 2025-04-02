@@ -38,7 +38,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
     });
     try {
       final String jsonString =
-          await rootBundle.loadString('assets/sequence.json');
+          await rootBundle.loadString('assets/limbo_lessons.json');
       final List<dynamic> jsonData = json.decode(jsonString);
       final songCollection = SongCollection.fromJson(jsonData);
 
