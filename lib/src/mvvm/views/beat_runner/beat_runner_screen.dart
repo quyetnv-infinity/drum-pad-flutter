@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/pad_util.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
@@ -12,8 +11,6 @@ import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
@@ -157,7 +154,13 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                   setState(() {
                     _percentStar = star;
                   });
-                },
+                }, isFromLearnScreen: false,
+                onTapChooseSong:(song) {
+                  setState(() {
+                    _currentSong = song;
+                    print(song.name);
+                  });
+                } ,
               )
             ],
           ),

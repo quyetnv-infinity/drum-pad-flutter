@@ -257,7 +257,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                     },
                     onChangeCampaignStar: (star) async {
                       await updateLessonStar(star);
-                    },
+                    }, isFromLearnScreen: true,
                   )
                 ],
               ),
