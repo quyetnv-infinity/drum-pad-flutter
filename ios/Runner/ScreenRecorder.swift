@@ -1,6 +1,7 @@
 import SwiftUI
 import ReplayKit
 import AVFoundation
+import Photos
 
 class ViewRecorder: ObservableObject {
     private let recorder = RPScreenRecorder.shared()
@@ -162,7 +163,16 @@ class ViewRecorder: ObservableObject {
                     } else {
                         // Trả về URL thành phẩm
                         let finalURL = assetWriter.outputURL
-                        self.finishWritingAndCleanup(url: finalURL, err: nil, completion: completion)
+                        self.saveToPhotos(url: finalURL) { error in
+                            if let error = error {
+                                print("Lỗi khi lưu video vào Photos: \(error.localizedDescription)")
+                            } else {
+                                print("✅ Video đã được lưu vào thư viện ảnh!")
+                            }
+                            
+                            self.finishWritingAndCleanup(url: finalURL, err: nil, completion: completion)
+                        }
+
                     }
                 }
             }
@@ -207,6 +217,25 @@ class ViewRecorder: ObservableObject {
         
         DispatchQueue.main.async {
             completion(url, err)
+        }
+    }
+    func saveToPhotos(url: URL, completion: @escaping (Error?) -> Void) {
+        PHPhotoLibrary.requestAuthorization { status in
+            guard status == .authorized || status == .limited else {
+                completion(NSError(domain: "ViewRecorder",
+                                   code: -1,
+                                   userInfo: [NSLocalizedDescriptionKey: "Không có quyền truy cập thư viện ảnh"]))
+                return
+            }
+            
+            PHPhotoLibrary.shared().performChanges({
+                let creationRequest = PHAssetCreationRequest.forAsset()
+                creationRequest.addResource(with: .video, fileURL: url, options: nil)
+            }) { success, error in
+                DispatchQueue.main.async {
+                    completion(error)
+                }
+            }
         }
     }
 }
