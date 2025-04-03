@@ -10,6 +10,7 @@ import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/mode_btn/mode_button.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/tutorial_blur_widget.dart';
+import 'package:drumpad_flutter/src/service/screen_record_service.dart';
 import 'package:drumpad_flutter/src/widgets/anim/combo_text.dart';
 import 'package:drumpad_flutter/src/widgets/anim/text_animation.dart';
 import 'package:drumpad_flutter/src/widgets/blur_widget.dart';
@@ -18,6 +19,9 @@ import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screen_recording/flutter_screen_recording.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
@@ -40,6 +44,9 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   final GlobalKey _changeMode = GlobalKey();
   double padHeight = 100.0;
   String selectedMode = "";
+  static const platform = MethodChannel('screen_audio_recorder');
+
+  bool isRecording = false;
 
 
   @override
@@ -393,8 +400,8 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
             ),
           ),
         ),
-        Center(
-            child: ComboText())
+        // Center(
+        //     child: ComboText())
       ],
     );
   }
@@ -410,7 +417,17 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
           ModeButton(title: context.locale.practice, initialSelected: false, onSelected: (bool selected) {
             selected ? _updateSelectedMode("practice") : _updateSelectedMode("null");
           },),
-          ModeButton(title: context.locale.rec, initialSelected: false, onSelected: (bool selected) {},),
+          ModeButton(title: context.locale.rec, initialSelected: false, onSelected: (bool selected) async{
+            if (selected) {
+              // If button is selected (toggled ON), start recording
+              print("ModeButton selected: true - Attempting to start recording...");
+              await ScreenRecorderService().startRecording();
+            } else {
+              // If button is deselected (toggled OFF), stop recording
+              print("ModeButton selected: false - Attempting to stop recording...");
+              await ScreenRecorderService().stopRecording();
+            }
+          },),
         ],
       ),
     );
