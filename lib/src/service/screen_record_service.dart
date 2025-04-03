@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 
 class ScreenRecorderService {
-  static const MethodChannel _channel = MethodChannel('com.yourcompany/screen_recorder');
+  static const MethodChannel _channel = MethodChannel('screen_recording');
 
   Future<String?> startRecording() async {
     try {
