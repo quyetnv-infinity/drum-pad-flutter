@@ -9,6 +9,7 @@ import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
 import 'package:drumpad_flutter/src/widgets/drum_pad/drum_pad_widget.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
+import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
@@ -33,6 +34,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
   int _currentScore = 0;
   late TutorialCoachMark tutorialCoachMark;
   final GlobalKey _chooseSongKey = GlobalKey();
+  double _percentStar = 0;
 
   @override
   void initState() {
@@ -151,6 +153,11 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                 onChangeCampaignStar: (star) {
                   widget.onChangeCampaignStar?.call(star);
                 },
+                onChangeStarLearn: (star) {
+                  setState(() {
+                    _percentStar = star;
+                  });
+                },
               )
             ],
           ),
@@ -244,6 +251,15 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                     ),
                     Column(
                       children: [
+                        Text(context.locale.progress, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
+                        RatingStars.custom(
+                          value: _percentStar,
+                          isFlatStar: true,
+                          smallStarWidth: 18,
+                          smallStarHeight: 18,
+                          bigStarWidth: 18,
+                          bigStarHeight: 18,
+                        ),
                         Text(context.locale.score, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
                         Text(_currentScore.toString(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 32, color: Colors.white),)
                       ],
