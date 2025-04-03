@@ -1,61 +1,59 @@
 import Flutter
 import UIKit
 import ReplayKit
+import AVFoundation
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
+    private var screenRecorder = ScreenRecorder()
+    
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         GeneratedPluginRegistrant.register(with: self)
         
-        let controller = window?.rootViewController as! FlutterViewController
-                let methodChannel = FlutterMethodChannel(name: "screen_audio_recorder",
-                                                         binaryMessenger: controller.binaryMessenger)
-
-                methodChannel.setMethodCallHandler { [weak self] (call, result) in
-                    if call.method == "startRecording" {
-                        self?.startBroadcastRecording(result: result)
-                    } else if call.method == "stopRecording" {
-                        self?.stopBroadcastRecording(result: result)
-                    } else {
-                        result(FlutterMethodNotImplemented)
-                    }
-                }
-
-                return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-            }
-
-            func startBroadcastRecording(result: @escaping FlutterResult) {
-                RPBroadcastActivityViewController.load { broadcastActivityViewController, error in
+        guard let controller = window?.rootViewController as? FlutterViewController else {
+            fatalError("rootViewController is not type FlutterViewController")
+        }
+        
+        let recorderChannel = FlutterMethodChannel(name: "com.yourcompany/screen_recorder",
+                                                   binaryMessenger: controller.binaryMessenger)
+        
+        recorderChannel.setMethodCallHandler({
+            [weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
+            guard let self = self else { return }
+            
+            switch call.method {
+            case "startRecording":
+                self.screenRecorder.startRecording { error in
                     if let error = error {
-                        print("❌ Lỗi khi tải BroadcastActivityViewController: \(error.localizedDescription)")
-                        result(false)
-                        return
-                    }
-                    
-                    if let broadcastVC = broadcastActivityViewController {
-                        broadcastVC.delegate = self
-                        DispatchQueue.main.async {
-                            self.window?.rootViewController?.present(broadcastVC, animated: true, completion: nil)
-                        }
-                        result(true)
+                        // Có lỗi khi bắt đầu
+                        print("Lỗi khi bắt đầu ghi: \(error.localizedDescription)")
+                        result("Lỗi: \(error.localizedDescription)") // Trả lỗi về Flutter
                     } else {
-                        result(false)
+                        // Bắt đầu thành công
+                        print("Native: Bắt đầu ghi thành công")
+                        result(nil) // Trả nil về Flutter để báo thành công
                     }
                 }
-            }
-
-            func stopBroadcastRecording(result: @escaping FlutterResult) {
-                RPScreenRecorder.shared().stopCapture { error in
+            case "stopRecording":
+                self.screenRecorder.stopRecording { fileURL, error in
                     if let error = error {
-                        print("❌ Lỗi dừng ghi âm: \(error.localizedDescription)")
-                        result(false)
+                        print("Lỗi khi dừng ghi: \(error.localizedDescription)")
+                        result(FlutterError(code: "STOP_FAILED", message: error.localizedDescription, details: nil))
+                    } else if let url = fileURL {
+                        print("Native: Dừng ghi thành công. File: \(url.path)")
+                        result(url.path) // Trả đường dẫn file về Flutter
                     } else {
-                        print("✅ Ghi âm đã dừng")
-                        result(true)
+                        print("Native: Dừng ghi nhưng không có URL.")
+                        result(nil) // Không có lỗi nhưng cũng không có file
                     }
                 }
+            default:
+                result(FlutterMethodNotImplemented)
             }
+        })
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
 }

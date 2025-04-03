@@ -9,6 +9,7 @@ import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/mode_btn/mode_button.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/tutorial_blur_widget.dart';
+import 'package:drumpad_flutter/src/service/screen_record_service.dart';
 import 'package:drumpad_flutter/src/widgets/anim/combo_text.dart';
 import 'package:drumpad_flutter/src/widgets/anim/text_animation.dart';
 import 'package:drumpad_flutter/src/widgets/blur_widget.dart';
@@ -408,53 +409,13 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
             if (selected) {
               // If button is selected (toggled ON), start recording
               print("ModeButton selected: true - Attempting to start recording...");
-              await _startRecording();
+              await ScreenRecorderService().startRecording();
             } else {
               // If button is deselected (toggled OFF), stop recording
               print("ModeButton selected: false - Attempting to stop recording...");
-              await _stopRecording();
+              await ScreenRecorderService().stopRecording();
             }
           },),
-        ],
-      ),
-    );
-  }
-  Future<void> _startRecording() async {
-    try {
-      final bool success = await platform.invokeMethod('startRecording');
-      if (success) {
-        setState(() {
-          isRecording = true;
-        });
-      }
-    } on PlatformException catch (e) {
-      print("❌ Lỗi khi bắt đầu ghi: ${e.message}");
-    }
-  }
-
-  Future<void> _stopRecording() async {
-    try {
-      final bool success = await platform.invokeMethod('stopRecording');
-      if (success) {
-        setState(() {
-          isRecording = false;
-        });
-      }
-    } on PlatformException catch (e) {
-      print("❌ Lỗi khi dừng ghi: ${e.message}");
-    }
-  }
-  void _showSuccessDialog(String path) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Recording Saved"),
-        content: Text("Video saved successfully!\nPath: $path"),
-        actions: <Widget>[
-          TextButton(
-            child: Text("OK"),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
         ],
       ),
     );
