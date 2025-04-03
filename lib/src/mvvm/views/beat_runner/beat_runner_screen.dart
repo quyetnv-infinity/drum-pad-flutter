@@ -19,7 +19,8 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 class BeatRunnerScreen extends StatefulWidget {
   final SongCollection? songCollection;
   final void Function()? onChangeUnlockedModeCampaign;
-  const BeatRunnerScreen({super.key, this.songCollection, this.onChangeUnlockedModeCampaign,});
+  final void Function(double star)? onChangeCampaignStar;
+  const BeatRunnerScreen({super.key, this.songCollection, this.onChangeUnlockedModeCampaign, this.onChangeCampaignStar,});
 
   @override
   State<BeatRunnerScreen> createState() => _BeatRunnerScreenState();
@@ -146,6 +147,9 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                },
                 onChangeUnlockedModeCampaign: (){
                   widget.onChangeUnlockedModeCampaign?.call();
+                },
+                onChangeCampaignStar: (star) {
+                  widget.onChangeCampaignStar?.call(star);
                 },
               )
             ],

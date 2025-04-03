@@ -112,7 +112,9 @@ class _HomeScreenState extends State<HomeScreen> {
               width: 180,
               height: 240,
               data: _data,
-              onTap: (item, index) {},
+              onTap: (item, index) {
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => BeatRunnerScreen(songCollection: item,),));
+              },
             ),
             ButtonAction(
               title: context.locale.drum_learn,

@@ -45,16 +45,19 @@ class CampaignProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// get list in database
   Future<List<SongCollection>> getListSongByDifficulty(String difficulty) async {
     return await SongCollectionService.getListSongByDifficultyMode(difficulty);
   }
 
+  /// merge list from server and database
   List<SongCollection> mergeLists(List<SongCollection> listFromServer, List<SongCollection> listFromDB) {
     Map<String, SongCollection> mapB = {for (var item in listFromDB) item.id: item};
 
     return listFromServer.map((item) => mapB.containsKey(item.id) ? mapB[item.id]! : item).toList();
   }
 
+  /// set indexUnlocked of difficulty list at campaign
   Future<void> setUnlocked({required String difficult, required int value}) async {
     final isEasy = difficult == DifficultyMode.easy;
     final isMedium = difficult == DifficultyMode.medium;
@@ -64,6 +67,19 @@ class CampaignProvider with ChangeNotifier {
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('${isEasy? 'easy' : (isMedium ? 'medium' : (isHard ? 'hard' : 'demonic'))}Unlocked', value);
+  }
+
+  Future<SongCollection> getSong(String id) async {
+    return await SongCollectionService.getSongById(id) ?? await getSongFromServer(id);
+  }
+
+  Future<void> updateSong(String id, SongCollection songCollection) async {
+    await SongCollectionService.updateSong(id, songCollection);
+  }
+
+  Future<SongCollection> getSongFromServer(String id) async {
+    /// call api get song by id
+    return dataSongCollections.firstWhere((element) => element.id == id, orElse: () => dataSongCollections.last,);
   }
 
 }

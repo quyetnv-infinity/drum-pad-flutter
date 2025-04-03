@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/pad_util.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
@@ -212,6 +213,14 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
     await drumLearnProvider.updateSong(widget.songCollection.id, newSong);
   }
 
+  Future<void> updateLessonStar(double star) async {
+    final provider = Provider.of<DrumLearnProvider>(context, listen: false);
+    List<LessonSequence> updatedLessons = (await provider.getSong(widget.songCollection.id)).lessons;
+    updatedLessons[widget.index].star = star;
+    final newSong = widget.songCollection.copyWith(lessons: updatedLessons);
+    await provider.updateSong(widget.songCollection.id, newSong);
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -238,6 +247,9 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                     },
                     onChangeUnlockedModeCampaign: () async {
                       await updateUnlockedLesson();
+                    },
+                    onChangeCampaignStar: (star) async {
+                      await updateLessonStar(star);
                     },
                   )
                 ],

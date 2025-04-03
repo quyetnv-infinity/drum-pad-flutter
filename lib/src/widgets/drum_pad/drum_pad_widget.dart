@@ -21,8 +21,9 @@ class DrumPadScreen extends StatefulWidget {
   final Function(int score) onChangeScore;
   final int lessonIndex;
   final void Function()? onChangeUnlockedModeCampaign;
+  final void Function(double star)? onChangeCampaignStar;
   final String? practiceMode;
-  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode});
+  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar});
 
   @override
   State<DrumPadScreen> createState() => _DrumPadScreenState();
@@ -176,9 +177,9 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   void _navigateToNextScreen() async {
     _pauseTimer?.cancel();
     context.read<DrumLearnProvider>().resetPerfectPoint();
-    /// 📌 check condition of result to save unlocked lesson or campaign
+    /// 📌 check condition of result to save unlocked lesson or campaign and save star
     widget.onChangeUnlockedModeCampaign?.call();
-
+    widget.onChangeCampaignStar?.call(getStar());
     final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes,),));
     if(result != null && result == 'play_again'){
       _resetSequence(isPlayingDrum: true);
@@ -189,6 +190,27 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       });
     }
   }
+
+  double getStar(){
+    final percent = (totalPoint / (_totalNotes * 100))*100;
+    switch(percent){
+      case < 15:
+        return 0;
+      case < 30:
+        return 0.5;
+      case < 45:
+        return 1;
+      case < 60:
+        return 1.5;
+      case < 75:
+        return 2;
+      case < 90:
+        return 2.5;
+      default:
+        return 3;
+    }
+  }
+
   void checkMiss(){
     if (missPoint > 5) _navigateToNextScreen();
   }

@@ -15,8 +15,7 @@ import 'package:provider/provider.dart';
 class ModeCampaignScreen extends StatefulWidget {
   final List<SongCollection> listCampaignSong;
   final String difficult;
-  final void Function()? onChangeUnlockedModeCampaign;
-  const ModeCampaignScreen({super.key, required this.listCampaignSong, this.onChangeUnlockedModeCampaign, required this.difficult});
+  const ModeCampaignScreen({super.key, required this.listCampaignSong, required this.difficult});
 
   @override
   State<ModeCampaignScreen> createState() => _ModeCampaignScreenState();
@@ -25,10 +24,25 @@ class ModeCampaignScreen extends StatefulWidget {
 class _ModeCampaignScreenState extends State<ModeCampaignScreen> {
   final ScrollController _scrollController = ScrollController();
   bool isLoading = false;
+  List<SongCollection> _campaignSongs = [];
+
+  bool get isEasy => widget.difficult == DifficultyMode.easy;
+  bool get isMedium => widget.difficult == DifficultyMode.medium;
+  bool get isHard => widget.difficult == DifficultyMode.hard;
+  bool get isDemonic => widget.difficult == DifficultyMode.demonic;
 
   @override
   void initState() {
     super.initState();
+    _campaignSongs = widget.listCampaignSong;
+  }
+
+  Future<void> fetchData() async {
+    final provider = Provider.of<CampaignProvider>(context, listen: false);
+    await provider.fetchCampaignSong(isEasy: isEasy, isMedium: isMedium, isHard: isHard, isDemonic: isDemonic);
+    setState(() {
+      _campaignSongs = isEasy ? provider.easyCampaign : (isMedium ? provider.mediumCampaign : (isHard ? provider.hardCampaign : provider.demonicCampaign));
+    });
   }
 
   int getUnlockedIndex(CampaignProvider campaignProvider){
@@ -86,7 +100,7 @@ class _ModeCampaignScreenState extends State<ModeCampaignScreen> {
     const lineHeight = 70.0;
 
     // Tạo danh sách items theo thứ tự ngược
-    final List<SongCollection> displayData = widget.listCampaignSong.isNotEmpty ? widget.listCampaignSong.reversed.toList() : [];
+    final List<SongCollection> displayData = _campaignSongs.isNotEmpty ? _campaignSongs.reversed.toList() : [];
 
     // Tính toán tổng chiều cao cần thiết cho tất cả các mục
     final totalHeight = displayData.length * verticalSpacing + extraHeight;
@@ -182,17 +196,23 @@ class _ModeCampaignScreenState extends State<ModeCampaignScreen> {
                       child: InkWell(
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,
-                        onTap: () {
+                        onTap: () async {
+                          final actualIndex = displayData.length - (index + 1);
+                          print('actualIndex: $actualIndex');
                           // Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: 20, goodScore: 30, earlyScore: 20, lateScore: 10, missScore: 1),));
                           if(isUnlocked(provider, displayData.length, index)) {
-                            Navigator.push(
+                            await Navigator.push(
                               context,
                               CupertinoPageRoute(builder: (context) => BeatRunnerScreen(songCollection: item, onChangeUnlockedModeCampaign: () {
-                                    widget.onChangeUnlockedModeCampaign?.call();
+                                    provider.setUnlocked(difficult: widget.difficult ,value: actualIndex >= getUnlockedIndex(provider) ? actualIndex + 1 : getUnlockedIndex(provider));
+                                  },
+                                  onChangeCampaignStar: (star) async {
+                                    await updateStar(provider, item, star);
                                   },
                                 ),
                               )
                             );
+                            await fetchData();
                           }
                         },
                         child: Container(
@@ -261,6 +281,11 @@ class _ModeCampaignScreenState extends State<ModeCampaignScreen> {
 
   bool isUnlocked(CampaignProvider provider, int dataLength, int index){
     return getUnlockedIndex(provider) >= dataLength - (index + 1);
+  }
+
+  Future<void> updateStar(CampaignProvider provider, SongCollection song, double star) async {
+    SongCollection updatedSong = (await provider.getSong(song.id)).copyWith(campaignStar: star);
+    await provider.updateSong(song.id, updatedSong);
   }
 
   @override

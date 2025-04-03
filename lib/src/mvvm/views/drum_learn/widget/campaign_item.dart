@@ -20,6 +20,7 @@ class CampaignItem extends StatefulWidget {
 
 class _CampaignItemState extends State<CampaignItem> {
   int _percent = 0;
+  double _star = 0;
   List<SongCollection> _listCampaign = [];
 
   @override
@@ -65,6 +66,27 @@ class _CampaignItemState extends State<CampaignItem> {
     setState(() {
       _percent = _percent > 100 ? 100 : _percent;
     });
+    fetchStarAverage();
+  }
+
+  void fetchStarAverage(){
+    int count = 0;
+    double starSum = 0;
+    if(_listCampaign.isEmpty){
+      setState(() {
+        _star = 0;
+      });
+      return;
+    }
+    for(var i = 0; i < _listCampaign.length; i++){
+      if(i == 0 || _listCampaign[i].campaignStar != 0) {
+        count++;
+        starSum += _listCampaign[i].campaignStar;
+      }
+    }
+    setState(() {
+      _star = (starSum/count) * (100/3);
+    });
   }
 
   int getUnlockedIndex(CampaignProvider campaignProvider){
@@ -88,9 +110,7 @@ class _CampaignItemState extends State<CampaignItem> {
       builder: (context, provider, _) {
         return GestureDetector(
           onTap: () async {
-            await Navigator.push(context, CupertinoPageRoute(builder: (context) => ModeCampaignScreen(difficult: widget.difficult, listCampaignSong: _listCampaign, onChangeUnlockedModeCampaign: () {
-              Provider.of<CampaignProvider>(context, listen: false).setUnlocked(difficult: widget.difficult ,value: getUnlockedIndex(provider) + 1);
-            },),));
+            await Navigator.push(context, CupertinoPageRoute(builder: (context) => ModeCampaignScreen(difficult: widget.difficult, listCampaignSong: _listCampaign,),));
             await setPercent(provider);
           },
           child: Container(
@@ -113,7 +133,7 @@ class _CampaignItemState extends State<CampaignItem> {
                     BlurWidget(text: DifficultyMode.getString(context, widget.difficult).toUpperCase(),),
                     Text('Fundamental 1', style: TextStyle(fontSize: 23, fontWeight: FontWeight.w600, color:  Colors.white)),
                     Text('${context.locale.progress}: $_percent%', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color:  Colors.white)),
-                    RatingStars.custom(value: _percent.toDouble(), smallStarWidth: 20, smallStarHeight: 20, bigStarWidth: 20, bigStarHeight: 20, isFlatStar: true,)
+                    RatingStars.custom(value: _star, smallStarWidth: 20, smallStarHeight: 20, bigStarWidth: 20, bigStarHeight: 20, isFlatStar: true,)
                   ],
                 )
               ],
