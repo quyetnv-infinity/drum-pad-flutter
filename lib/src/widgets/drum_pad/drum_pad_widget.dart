@@ -136,6 +136,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         _startSequence();
       });
     }
+    checkModeChange(oldWidget);
   }
 
   @override
@@ -176,6 +177,39 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     });
   }
 
+  void checkModeChange(DrumPadScreen oldWidget){
+
+    if (oldWidget.practiceMode != widget.practiceMode && widget.practiceMode == "practice") {
+      setState(() {
+        _totalNotes = 0;
+      });
+      _loadSequenceDataFromFile(lessons.length - 1).then((_) {
+        setState(() {
+          _pauseTimer?.cancel();
+          isLoading = false;
+        });
+        // Start sequence if song exists
+        _resetSequence();
+        _startSequence();
+        widget.onChangeStarLearn?.call(0);
+        context.read<DrumLearnProvider>().resetPerfectPoint();
+      });
+    } else if(oldWidget.practiceMode != widget.practiceMode && widget.practiceMode != "practice"){
+      setState(() {
+        _totalNotes = 0;
+      });
+      _loadSequenceDataFromFile(widget.lessonIndex).then((_) {
+        setState(() {
+          isLoading = false;
+        });
+        // Start sequence if song exists
+        _resetSequence();
+        _startSequence();
+        widget.onChangeStarLearn?.call(0);
+        context.read<DrumLearnProvider>().resetPerfectPoint();
+      });
+    }
+  }
 
   void _navigateToNextScreen() async {
     _pauseTimer?.cancel();

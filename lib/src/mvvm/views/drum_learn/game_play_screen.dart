@@ -250,6 +250,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                     onChangeStarLearn: (star) {
                       setState(() {
                         _percentStar = star ;
+                        print(star);
                       });
                     },
                     onChangeUnlockedModeCampaign: () async {
