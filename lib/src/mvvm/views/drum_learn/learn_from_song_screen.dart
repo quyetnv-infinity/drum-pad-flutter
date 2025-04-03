@@ -19,7 +19,7 @@ class _LearnFromSongScreenState extends State<LearnFromSongScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final listSong = context.read<DrumLearnProvider>().data;
+    final provider = Provider.of<DrumLearnProvider>(context, listen: true);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -50,9 +50,9 @@ class _LearnFromSongScreenState extends State<LearnFromSongScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                ListSongWidget(title: 'Resume', isMore: false, isChooseSong: widget.isChooseSong, listSongData: listSong),
-                ListSongWidget(title: 'V-pop', isMore: true, isChooseSong: widget.isChooseSong, listSongData: listSong,),
-                ListSongWidget(title: 'Rap', isMore: true, isChooseSong: widget.isChooseSong, listSongData: listSong,),
+                if(provider.listSongResume.isNotEmpty) ListSongWidget(title: 'Resume', isMore: false, isChooseSong: widget.isChooseSong, listSongData: provider.listSongResume),
+                ListSongWidget(title: 'V-pop', isMore: true, isChooseSong: widget.isChooseSong, listSongData: provider.data,),
+                ListSongWidget(title: 'Rap', isMore: true, isChooseSong: widget.isChooseSong, listSongData: provider.data,),
               ],
             ),
           ),

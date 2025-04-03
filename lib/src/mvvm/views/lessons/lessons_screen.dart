@@ -200,6 +200,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
                           onTap: () async {
                             // Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: 20, goodScore: 30, earlyScore: 20, lateScore: 10, missScore: 1),));
                             if(item.isCompleted || index == displayData.length - 1) {
+                              context.read<DrumLearnProvider>().addToResume(widget.songCollection.id);
                               await Navigator.push(context, CupertinoPageRoute(
                                 builder: (context) =>
                                     GamePlayScreen(songCollection: _song,

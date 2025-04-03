@@ -23,47 +23,20 @@ class ResumeWidget extends StatefulWidget {
 }
 
 class _ResumeWidgetState extends State<ResumeWidget> {
-  SongCollection? _song;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      fetchLessonData();
-    },);
   }
 
-  void fetchLessonData() async {
-    try {
-      final String jsonString =
-      await rootBundle.loadString('assets/havana_lessons.json');
-      final List<dynamic> jsonData = json.decode(jsonString);
-      final songCollection = SongCollection.fromJson(jsonData);
 
-      // Bây giờ bạn có thể sử dụng songCollection.lessons để truy cập vào các bài học
-      print("Số lượng bài học: ${songCollection.lessons.length}");
-
-      // Ví dụ: in ra số lượng events trong bài học đầu tiên
-      if (songCollection.lessons.isNotEmpty) {
-        print("Số lượng events trong bài học đầu tiên: ${songCollection.lessons[0].events.length}");
-      }
-
-      setState(() {
-        _song = SongCollection(lessons: songCollection.lessons, image: "assets/images/lactroi.png",
-            author: "Sơn Tùng M-TP",
-            name: "Lạc Trôi");
-      });
-    } catch (e) {
-      print('Error loading sequence data from file: $e');
-    } finally {
-    }
-  }
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<DrumLearnProvider>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
+        if(provider.listSongResume.isNotEmpty) Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Align(
             alignment: Alignment.topLeft,
@@ -71,31 +44,30 @@ class _ResumeWidgetState extends State<ResumeWidget> {
           ),
         ),
         SizedBox(height: 12),
-        SizedBox(
+        if(provider.listSongResume.isNotEmpty) SizedBox(
           height: MediaQuery.sizeOf(context).width * 0.67,
           child: ListView.builder(
             shrinkWrap: true,
             padding: EdgeInsets.symmetric(horizontal: 16),
-            itemCount: context.read<DrumLearnProvider>().data.length,
+            itemCount: provider.listSongResume.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
-
-              final song = index == 2 ? _song : context.read<DrumLearnProvider>().data[index];
-  
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) =>
-                  // GamePlayScreen(songCollection: song)'
-                  LessonsScreen(songCollection: song!,)
-                  ));
-              },
-              child: SongItem(
-                height: MediaQuery.sizeOf(context).width * 0.55,
-                isFromLearnFromSong: false,
-                model: song ?? context.read<DrumLearnProvider>().data[index],
-               ),
-            );
-          },),
+              final song = provider.listSongResume[index];
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(context, CupertinoPageRoute(builder: (context) =>
+                    // GamePlayScreen(songCollection: song)'
+                    LessonsScreen(songCollection: song,)
+                    ));
+                },
+                child: SongItem(
+                  height: MediaQuery.sizeOf(context).width * 0.55,
+                  isFromLearnFromSong: false,
+                  model: song
+                 ),
+              );
+            },
+          ),
         ),
         SizedBox(height: 12),
         OptionsWidget(title: context.locale.learn_from_song, description: context.locale.learn_from_song_des, asset: ResImage.imgLearnFromSong, func: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => LearnFromSongScreen()))),

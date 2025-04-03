@@ -44,7 +44,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => LocateViewModel()),
         ChangeNotifierProvider(create: (_) => appSettingsProvider),
         ChangeNotifierProvider(create: (_) => RateAppProvider()),
-        ChangeNotifierProvider(create: (_) => DrumLearnProvider()),
+        ChangeNotifierProvider(create: (_) => DrumLearnProvider(), lazy: false,),
         ChangeNotifierProvider(create: (_) => TutorialProvider(), lazy: false,),
         ChangeNotifierProvider(create: (_) => CampaignProvider(), lazy: false,),
         ChangeNotifierProvider(create: (_) => adsProvider),

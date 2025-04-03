@@ -27,6 +27,7 @@ class _ListSongWidgetState extends State<ListSongWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -60,7 +61,7 @@ class _ListSongWidgetState extends State<ListSongWidget> {
             child: ListView.builder(
               shrinkWrap: true,
               padding: EdgeInsets.symmetric(horizontal: 16),
-              itemCount: 4,
+              itemCount: widget.listSongData.length,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
                 final song = widget.listSongData[index];
