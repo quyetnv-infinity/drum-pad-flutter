@@ -1,6 +1,7 @@
 import 'package:drumpad_flutter/core/res/dimen/spacing.dart';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
+import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/home_screen.dart';
 import 'package:drumpad_flutter/src/widgets/button/gradient_button.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
@@ -18,6 +19,9 @@ class ResultScreen extends StatefulWidget {
   final int missScore;
   final int totalScore;
   final int totalNotes;
+  final bool isFromLearn;
+  final int currentLesson;
+  final int maxLesson;
 
   const ResultScreen({
     super.key,
@@ -25,7 +29,7 @@ class ResultScreen extends StatefulWidget {
     required this.goodScore,
     required this.earlyScore,
     required this.lateScore,
-    required this.missScore, required this.totalScore, required this.totalNotes,
+    required this.missScore, required this.totalScore, required this.totalNotes, required this.isFromLearn, required this.currentLesson, required this.maxLesson,
   });
 
   @override
@@ -49,7 +53,8 @@ class _ResultScreenState extends State<ResultScreen>
   @override
   void initState() {
     super.initState();
-    print('total notes ${widget.totalNotes}');
+    print('total notes ${widget.maxLesson}');
+    print('total notes ${widget.currentLesson}');
     _calculateTotalNotes();
     _animationController = AnimationController(
       duration: Duration(milliseconds: 1500),
@@ -211,10 +216,20 @@ class _ResultScreenState extends State<ResultScreen>
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     GradientButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        if(widget.isFromLearn){
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        }else{
+                          final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => LearnFromSongScreen(isChooseSong: true),));
+                          if(result != null){
+                            Navigator.pop(context, result);
+                          }
+                        }
+                      },
                       shape: BoxShape.circle,
                       padding: EdgeInsets.all(14),
-                      child: SvgPicture.asset(ResIcon.icMusic),
+                      child: widget.isFromLearn ? SvgPicture.asset(ResIcon.icList) :SvgPicture.asset(ResIcon.icMusic),
                     ),
                     GradientButton(
                       onPressed: () {
@@ -233,12 +248,16 @@ class _ResultScreenState extends State<ResultScreen>
                     ),
                     GradientButton(
                       onPressed: () {
+                        if(widget.isFromLearn && widget.currentLesson < widget.maxLesson -1){
+                          Navigator.pop(context, widget.currentLesson + 1);
+                        }else{
                         Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
+                        }
                         // Navigator.popUntil(context, (route) => route.isFirst);
                       },
                       shape: BoxShape.circle,
                       padding: EdgeInsets.all(14),
-                      child: SvgPicture.asset(ResIcon.icHome),
+                      child: widget.isFromLearn && widget.currentLesson < widget.maxLesson -1 ? SvgPicture.asset(ResIcon.icNext) : SvgPicture.asset(ResIcon.icHome),
                     ),
                   ],
                 ),

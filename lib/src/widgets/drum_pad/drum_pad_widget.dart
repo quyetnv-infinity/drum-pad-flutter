@@ -24,7 +24,9 @@ class DrumPadScreen extends StatefulWidget {
   final void Function()? onChangeUnlockedModeCampaign;
   final void Function(double star)? onChangeCampaignStar;
   final String? practiceMode;
-  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn});
+  final bool isFromLearnScreen;
+  final Function(SongCollection song)? onTapChooseSong;
+  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong});
 
   @override
   State<DrumPadScreen> createState() => _DrumPadScreenState();
@@ -101,7 +103,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   void initState() {
     super.initState();
     if(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty) {
-      _loadSequenceDataFromFile().then((_) {
+      _loadSequenceDataFromFile(widget.lessonIndex).then((_) {
         _initializeAudioPlayers();
         setState(() {
           isLoading = false;
@@ -124,7 +126,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     // Start sequence when song changes from null to non-null
     if (oldWidget.currentSong != widget.currentSong && widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty) {
       print('start');
-      _loadSequenceDataFromFile().then((_) {
+      _loadSequenceDataFromFile(widget.lessonIndex).then((_) {
         _initializeAudioPlayers();
         setState(() {
           isLoading = false;
@@ -182,7 +184,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     widget.onChangeUnlockedModeCampaign?.call();
     widget.onChangeCampaignStar?.call(getStar());
     if(context.read<DrumLearnProvider>().isRecording) await ScreenRecorderService().stopRecording();
-    final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes,),));
+    print('bf push$currentLesson');
+    final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, currentLesson: currentLesson, maxLesson: lessons.length,),));
     if(result != null && result == 'play_again'){
       widget.onChangeStarLearn?.call(0);
       _resetSequence(isPlayingDrum: true);
@@ -190,6 +193,36 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       setState(() {
         _previousTotalPoint = 0;
         totalPoint = 0;
+      });
+    } else if(result != null && result is SongCollection){
+      widget.onTapChooseSong?.call(result);
+      widget.onChangeStarLearn?.call(0);
+      _resetSequence(isPlayingDrum: true);
+      _startSequence();
+      setState(() {
+        _previousTotalPoint = 0;
+        totalPoint = 0;
+      });
+    } else if(result != null && result is int){
+      setState(() {
+        currentLesson = result;
+        print(' result pop $result');
+      });
+      widget.onChangeStarLearn?.call(0);
+      _resetSequence(isPlayingDrum: true);
+      setState(() {
+        _previousTotalPoint = 0;
+        totalPoint = 0;
+      });
+      _loadSequenceDataFromFile(currentLesson).then((_) {
+        _initializeAudioPlayers();
+        setState(() {
+          isLoading = false;
+        });
+        // Start sequence if song exists
+        if (widget.currentSong != null) {
+          _startSequence();
+        }
       });
     }
   }
@@ -257,10 +290,10 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     widget.onChangeScore(totalPoint);
   }
 
-  Future<void> _loadSequenceDataFromFile() async {
+  Future<void> _loadSequenceDataFromFile(int lesson) async {
     try {
       lessons = widget.currentSong?.lessons ?? [];
-      currentLesson = widget.lessonIndex;
+      currentLesson = lesson;
       events = lessons[currentLesson].events;
       Set<String> uniqueSounds = {};
       for (var lesson in lessons) {
@@ -577,27 +610,27 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     return isHighlighted && widget.practiceMode != 'practice' ? [Color(0xFFEDC78C), Colors.orange] : (hasSound ? PadUtil.getPadGradientColor(isActive, soundId) : [Color(0xFF919191), Color(0xFF5E5E5E)]);
   }
 
-  Future<void> setLessonToPlay(int index) async {
-    setState(() {
-      isLoading = true;
-      currentLesson = index;
-      events = lessons[currentLesson].events;
-      final Set<String> uniqueSounds = {};
-      for (var event in events) {
-        final notes = event.notes;
-        uniqueSounds.addAll(notes);
-      }
-      lessonSounds.clear();
-      lessonSounds.addAll(sortDrumpadSounds(uniqueSounds.toList(), lessons[index].events[0].notes[0].contains("_face_b_") ? _faceB : _faceA));
-      // print(lessons[index]['events'][0]["notes"][0].contains("_face_b_") ? _faceB : _faceA);
-    });
-    // print(availableSounds);
-    await _initializeAudioPlayers();
-    _resetSequence();
-    setState(() {
-      isLoading = false;
-    });
-  }
+  // Future<void> setLessonToPlay(int index) async {
+  //   setState(() {
+  //     isLoading = true;
+  //     currentLesson = index;
+  //     events = lessons[currentLesson].events;
+  //     final Set<String> uniqueSounds = {};
+  //     for (var event in events) {
+  //       final notes = event.notes;
+  //       uniqueSounds.addAll(notes);
+  //     }
+  //     lessonSounds.clear();
+  //     lessonSounds.addAll(sortDrumpadSounds(uniqueSounds.toList(), lessons[index].events[0].notes[0].contains("_face_b_") ? _faceB : _faceA));
+  //     // print(lessons[index]['events'][0]["notes"][0].contains("_face_b_") ? _faceB : _faceA);
+  //   });
+  //   // print(availableSounds);
+  //   await _initializeAudioPlayers();
+  //   _resetSequence();
+  //   setState(() {
+  //     isLoading = false;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/pad_util.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
-import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/mode_btn/mode_button.dart';
@@ -40,29 +39,14 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   final GlobalKey _changeMode = GlobalKey();
   double padHeight = 100.0;
   String selectedMode = "";
-  late AnimationController _animationController;
-  late Animation<double> _starAnimation;
   bool isRecording = false;
   double _percentStar = 0;
-  double _prePercentStar = 0;
 
 
   @override
   void initState() {
     super.initState();
     // Initialize tutorial
-    _animationController = AnimationController(
-      duration: Duration(milliseconds: 500),
-      vsync: this,
-    );
-    _starAnimation = Tween<double>(
-      begin: 0,
-      end: 0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Interval(0.0, 0.8, curve: Curves.easeOutCubic),
-    ));
-    // _animationController.forward(from: 0.0);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getWidgetPadSize();
       _initTutorial();
@@ -75,18 +59,6 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
         },);
       }
     });
-  }
-
-  void _calculateTotalNotes(int? totalNotes) {
-    _prePercentStar = _percentStar;
-    _percentStar = 0;
-    print(totalNotes);
-    print(_currentScore);
-
-    int safeTotalNotes = totalNotes ?? 0;
-    _percentStar = (_currentScore / (safeTotalNotes * 100)) * 100;
-
-    print("ajksdashjkd$_percentStar");
   }
 
   void _getWidgetPadSize() {
@@ -285,7 +257,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                     },
                     onChangeCampaignStar: (star) async {
                       await updateLessonStar(star);
-                    },
+                    }, isFromLearnScreen: true,
                   )
                 ],
               ),
