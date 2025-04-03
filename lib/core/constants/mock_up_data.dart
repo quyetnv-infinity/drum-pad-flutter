@@ -717,7 +717,7 @@ final List<SongCollection> dataSongCollections = [
       ],
       difficulty: DifficultyMode.easy,
       image: "assets/images/lactroi.png",
-      author: "Sơn Tùng M-TP 1",
+      author: "Anh Tùng Lúi",
       name: "Lạc Trôi 1"),
   SongCollection(
       id: '1233',

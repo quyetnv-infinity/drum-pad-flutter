@@ -11,13 +11,13 @@ class DrumLearnProvider extends ChangeNotifier {
 
   int _perfectPoint = 0;
   bool _isCombo = false;
-  bool _isPracticeMode = false;
+  bool _isRecording = false;
   int _increaseScoreByCombo = 0;
   int _totalPoint = 0;
 
   int get perfectPoint => _perfectPoint;
   bool get isCombo => _isCombo;
-  bool get isPracticeMode => _isPracticeMode;
+  bool get isRecording => _isRecording;
   int get increaseScoreByCombo => _increaseScoreByCombo;
   int get totalPoint => _totalPoint;
 
@@ -54,8 +54,8 @@ class DrumLearnProvider extends ChangeNotifier {
     _isCombo = false;
     notifyListeners();
   }
-  void updatePracticeMode(){
-    _isPracticeMode = !_isPracticeMode;
+  void updateRecording(){
+    _isRecording = !_isRecording;
     notifyListeners();
   }
 

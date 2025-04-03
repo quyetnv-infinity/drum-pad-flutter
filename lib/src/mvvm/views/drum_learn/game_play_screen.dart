@@ -7,11 +7,9 @@ import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
-import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/mode_btn/mode_button.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/tutorial_blur_widget.dart';
 import 'package:drumpad_flutter/src/service/screen_record_service.dart';
-import 'package:drumpad_flutter/src/widgets/anim/combo_text.dart';
 import 'package:drumpad_flutter/src/widgets/anim/text_animation.dart';
 import 'package:drumpad_flutter/src/widgets/blur_widget.dart';
 import 'package:drumpad_flutter/src/widgets/drum_pad/drum_pad_widget.dart';
@@ -20,8 +18,6 @@ import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screen_recording/flutter_screen_recording.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
@@ -44,15 +40,29 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   final GlobalKey _changeMode = GlobalKey();
   double padHeight = 100.0;
   String selectedMode = "";
-  static const platform = MethodChannel('screen_audio_recorder');
-
+  late AnimationController _animationController;
+  late Animation<double> _starAnimation;
   bool isRecording = false;
+  double _percentStar = 0;
+  double _prePercentStar = 0;
 
 
   @override
   void initState() {
     super.initState();
     // Initialize tutorial
+    _animationController = AnimationController(
+      duration: Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _starAnimation = Tween<double>(
+      begin: 0,
+      end: 0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Interval(0.0, 0.8, curve: Curves.easeOutCubic),
+    ));
+    // _animationController.forward(from: 0.0);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getWidgetPadSize();
       _initTutorial();
@@ -66,6 +76,19 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
       }
     });
   }
+
+  void _calculateTotalNotes(int? totalNotes) {
+    _prePercentStar = _percentStar;
+    _percentStar = 0;
+    print(totalNotes);
+    print(_currentScore);
+
+    int safeTotalNotes = totalNotes ?? 0;
+    _percentStar = (_currentScore / (safeTotalNotes * 100)) * 100;
+
+    print("ajksdashjkd$_percentStar");
+  }
+
   void _getWidgetPadSize() {
     final RenderBox? renderBox = _widgetPadKey.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox != null && mounted) {
@@ -247,9 +270,14 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                     lessonIndex: widget.index,
                     currentSong: widget.songCollection,
                     practiceMode: selectedMode,
-                    onChangeScore: (int score) {
+                    onChangeScore: (int score, ) {
                       setState(() {
-                        _currentScore = score ;
+                        _currentScore = score;
+                      });
+                    },
+                    onChangeStarLearn: (star) {
+                      setState(() {
+                        _percentStar = star ;
                       });
                     },
                     onChangeUnlockedModeCampaign: () async {
@@ -357,7 +385,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                                   Positioned(
                                     top: 10,
                                     left: 10,
-                                    child: BlurWidget(text: widget.songCollection.difficulty)),
+                                    child: BlurWidget(text: widget.songCollection.difficulty.toUpperCase())),
                                   ComboWidget()
                                 ],
                               )
@@ -370,7 +398,15 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(context.locale.progress, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
-                            RatingStars.custom(value: 15,isFlatStar: true, smallStarWidth: 18, smallStarHeight: 18, bigStarWidth: 18, bigStarHeight: 18,),
+                            // RatingStars.custom(value: _starAnimation.value ,isFlatStar: true, smallStarWidth: 18, smallStarHeight: 18, bigStarWidth: 18, bigStarHeight: 18,),
+                            RatingStars.custom(
+                              value: _percentStar,
+                              isFlatStar: true,
+                              smallStarWidth: 18,
+                              smallStarHeight: 18,
+                              bigStarWidth: 18,
+                              bigStarHeight: 18,
+                            ),
                             Text(context.locale.score, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
                             // Text(_currentScore.toString(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 32, color: Colors.white),),
                             AnimatedSwitcher(
@@ -422,10 +458,12 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
               // If button is selected (toggled ON), start recording
               print("ModeButton selected: true - Attempting to start recording...");
               await ScreenRecorderService().startRecording();
+              context.read<DrumLearnProvider>().updateRecording();
             } else {
               // If button is deselected (toggled OFF), stop recording
               print("ModeButton selected: false - Attempting to stop recording...");
               await ScreenRecorderService().stopRecording();
+              context.read<DrumLearnProvider>().updateRecording();
             }
           },),
         ],

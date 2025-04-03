@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:drumpad_flutter/core/enum/pad_state_enum.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
@@ -9,6 +8,7 @@ import 'package:drumpad_flutter/sound_type_enum.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/result/result_screen.dart';
+import 'package:drumpad_flutter/src/service/screen_record_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,11 +19,12 @@ import 'package:provider/provider.dart';
 class DrumPadScreen extends StatefulWidget {
   final SongCollection? currentSong;
   final Function(int score) onChangeScore;
+  final Function(double star)? onChangeStarLearn;
   final int lessonIndex;
   final void Function()? onChangeUnlockedModeCampaign;
   final void Function(double star)? onChangeCampaignStar;
   final String? practiceMode;
-  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar});
+  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn});
 
   @override
   State<DrumPadScreen> createState() => _DrumPadScreenState();
@@ -180,8 +181,10 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     /// 📌 check condition of result to save unlocked lesson or campaign and save star
     widget.onChangeUnlockedModeCampaign?.call();
     widget.onChangeCampaignStar?.call(getStar());
+    if(context.read<DrumLearnProvider>().isRecording) await ScreenRecorderService().stopRecording();
     final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes,),));
     if(result != null && result == 'play_again'){
+      widget.onChangeStarLearn?.call(0);
       _resetSequence(isPlayingDrum: true);
       _startSequence();
       setState(() {
@@ -430,10 +433,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     if(widget.currentSong == null || widget.currentSong!.lessons.isEmpty) return;
     if(!PadUtil.getPadEnable(sound)) return;
 
-
-
     List<String> requiredNotes = events[currentEventIndex].notes;
-
     // Add this check to prevent duplicate activations
     if (_padPressedIndex.contains(index)) return;
 
@@ -537,6 +537,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
           remainSounds.clear();
         }
       });
+      widget.onChangeStarLearn?.call((totalPoint / (_totalNotes * 100))*100);
       currentEventIndex++;
       if (currentEventIndex < events.length) {
         _processEvent(events[currentEventIndex]);
