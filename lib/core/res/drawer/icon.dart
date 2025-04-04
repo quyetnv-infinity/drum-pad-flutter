@@ -30,6 +30,7 @@ class ResIcon {
   static const String icList = '$basePath/ic_list.svg';
   static const String icNext = '$basePath/ic_next.svg';
   static const String icMusic = '$basePath/ic_music.svg';
+  static const String icProfile = '$basePath/ic_profile.svg';
 
   //star
   static const String icStar0 = '$basePath/ic_star_0.svg';

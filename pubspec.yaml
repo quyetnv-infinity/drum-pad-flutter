@@ -31,6 +31,7 @@ dependencies:
   path_provider: ^2.1.5
   get_it: ^8.0.3
   google_fonts: ^6.2.1
+  carousel_slider: ^5.0.0
   in_app_purchase: ^3.2.1
   purchases_flutter: ^8.6.0
   animated_flip_counter: ^0.3.4
