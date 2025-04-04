@@ -103,6 +103,11 @@ class _CampaignItemState extends State<CampaignItem> {
     }
   }
 
+  bool get isEasy => widget.difficult == DifficultyMode.easy;
+  bool get isMedium => widget.difficult == DifficultyMode.medium;
+  bool get isHard => widget.difficult == DifficultyMode.hard;
+  bool get isDemonic => widget.difficult == DifficultyMode.demonic;
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context).width;
@@ -110,6 +115,7 @@ class _CampaignItemState extends State<CampaignItem> {
       builder: (context, provider, _) {
         return GestureDetector(
           onTap: () async {
+            provider.setCurrentCampaign(isEasy: isEasy, isMedium: isMedium, isHard: isHard, isDemonic: isDemonic);
             await Navigator.push(context, CupertinoPageRoute(builder: (context) => ModeCampaignScreen(difficult: widget.difficult, listCampaignSong: _listCampaign,),));
             await setPercent(provider);
           },

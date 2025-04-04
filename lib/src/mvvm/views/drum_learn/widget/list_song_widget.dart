@@ -1,4 +1,5 @@
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
+import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/beat_runner/beat_runner_screen.dart';
@@ -47,7 +48,7 @@ class _ListSongWidgetState extends State<ListSongWidget> {
                   },
                   child: Row(
                     children: [
-                      Text('More', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),),
+                      Text(context.locale.more, style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),),
                       Icon(Icons.chevron_right_rounded, size: 22)
                     ],
                   ),
@@ -75,7 +76,7 @@ class _ListSongWidgetState extends State<ListSongWidget> {
                   },
                   child: SongItem(
                   height: MediaQuery.sizeOf(context).width * 0.55,
-                  isFromLearnFromSong: false,
+                  isFromLearnFromSong: !widget.isChooseSong,
                   model: song),
                 );
               })

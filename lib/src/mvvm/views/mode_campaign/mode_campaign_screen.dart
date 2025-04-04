@@ -201,14 +201,16 @@ class _ModeCampaignScreenState extends State<ModeCampaignScreen> {
                           print('actualIndex: $actualIndex');
                           // Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: 20, goodScore: 30, earlyScore: 20, lateScore: 10, missScore: 1),));
                           if(isUnlocked(provider, displayData.length, index)) {
+                            provider.setCurrentSongCampaign(actualIndex);
                             await Navigator.push(
                               context,
                               CupertinoPageRoute(builder: (context) => BeatRunnerScreen(songCollection: item, onChangeUnlockedModeCampaign: () {
-                                    provider.setUnlocked(difficult: widget.difficult ,value: actualIndex >= getUnlockedIndex(provider) ? actualIndex + 1 : getUnlockedIndex(provider));
+                                    provider.setUnlocked(difficult: widget.difficult ,value: provider.currentSongCampaign >= getUnlockedIndex(provider) ? provider.currentSongCampaign + 1 : getUnlockedIndex(provider));
                                   },
                                   onChangeCampaignStar: (star) async {
                                     await updateStar(provider, item, star);
                                   },
+                                  isFromCampaign: true,
                                 ),
                               )
                             );

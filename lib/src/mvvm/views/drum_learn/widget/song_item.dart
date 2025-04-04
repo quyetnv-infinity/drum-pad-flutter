@@ -2,8 +2,10 @@ import 'dart:ui';
 
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
+import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/widgets/blur_widget.dart';
+import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -38,17 +40,13 @@ class SongItem extends StatelessWidget {
                     children: [
                       BlurWidget(text: model.difficulty.toUpperCase(),),
                       if(isFromLearnFromSong)
-                        BlurWidget(text: '5 STEPS',),
+                        BlurWidget(text: '${model.lessons.length} ${context.locale.step.toUpperCase()}',),
                     ],
                   )),
-                Positioned(
+                if(model.lessons.isNotEmpty && getStarAverage() != 0) Positioned(
                   bottom: 10,
                   left: 10,
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(ResIcon.icStarFull)
-                    ],
-                  ),
+                  child: RatingStars.custom(value: getStarAverage() * 100/3, smallStarWidth: 20, smallStarHeight: 20, bigStarWidth: 20, bigStarHeight: 20, isFlatStar: true,),
                 )
               ],
             ),
@@ -58,5 +56,25 @@ class SongItem extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  double getStarAverage(){
+    if(!isFromLearnFromSong){
+      return model.lessons[0].star;
+    } else {
+      final list = model.lessons;
+      int count = 0;
+      double starSum = 0;
+      for(var i = 0; i < list.length; i++){
+        if(list[i].star != 0){
+          count++;
+          starSum += list[i].star;
+        }
+      }
+      if(count != 0){
+        return starSum/count;
+      }
+      return 0;
+    }
   }
 }

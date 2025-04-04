@@ -15,7 +15,6 @@ class LearnFromSongScreen extends StatefulWidget {
 }
 
 class _LearnFromSongScreenState extends State<LearnFromSongScreen> {
-  String? _currentSongSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +49,7 @@ class _LearnFromSongScreenState extends State<LearnFromSongScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                if(provider.listSongResume.isNotEmpty) ListSongWidget(title: 'Resume', isMore: false, isChooseSong: widget.isChooseSong, listSongData: provider.listSongResume),
+                if(provider.listSongResume.isNotEmpty) ListSongWidget(title: context.locale.resume, isMore: false, isChooseSong: widget.isChooseSong, listSongData: provider.listSongResume),
                 ListSongWidget(title: 'V-pop', isMore: true, isChooseSong: widget.isChooseSong, listSongData: provider.data,),
                 ListSongWidget(title: 'Rap', isMore: true, isChooseSong: widget.isChooseSong, listSongData: provider.data,),
               ],

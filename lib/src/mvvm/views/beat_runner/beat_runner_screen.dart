@@ -18,7 +18,8 @@ class BeatRunnerScreen extends StatefulWidget {
   final SongCollection? songCollection;
   final void Function()? onChangeUnlockedModeCampaign;
   final void Function(double star)? onChangeCampaignStar;
-  const BeatRunnerScreen({super.key, this.songCollection, this.onChangeUnlockedModeCampaign, this.onChangeCampaignStar,});
+  final bool isFromCampaign;
+  const BeatRunnerScreen({super.key, this.songCollection, this.onChangeUnlockedModeCampaign, this.onChangeCampaignStar, this.isFromCampaign = false});
 
   @override
   State<BeatRunnerScreen> createState() => _BeatRunnerScreenState();
@@ -154,7 +155,14 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                   setState(() {
                     _percentStar = star;
                   });
-                }, isFromLearnScreen: false,
+                },
+                onNextSongAtCampaign: (song) {
+                  setState(() {
+                    _currentSong = song;
+                  });
+                },
+                isFromLearnScreen: false,
+                isFromCampaign: widget.isFromCampaign,
                 onTapChooseSong:(song) {
                   setState(() {
                     _currentSong = song;
@@ -225,7 +233,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                       key: _chooseSongKey,
                       child: GestureDetector(
                         onTap: (){
-                          onTapChooseSong();
+                          if(!widget.isFromCampaign) onTapChooseSong();
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.45,
