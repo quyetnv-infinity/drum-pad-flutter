@@ -217,8 +217,12 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     /// 📌 check condition of result to save unlocked lesson or campaign and save star
     widget.onChangeUnlockedModeCampaign?.call();
     widget.onChangeCampaignStar?.call(getStar());
+    /// 👀 check stop record
     if(context.read<DrumLearnProvider>().isRecording) await ScreenRecorderService().stopRecording();
-    print('bf push$currentLesson');
+    /// 📖 save learn from song and beat runner count for information at profile screen
+    if(!widget.isFromLearnScreen) context.read<DrumLearnProvider>().addBeatRunnerSongComplete(widget.currentSong!.id ?? '');
+    if(currentLesson >= lessons.length - 1 && widget.isFromLearnScreen)context.read<DrumLearnProvider>().addLearnSongComplete(widget.currentSong!.id ?? '');
+    /// push navigation and check cases
     final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, currentLesson: currentLesson, maxLesson: lessons.length,),));
     if(result != null && result == 'play_again'){
       widget.onChangeStarLearn?.call(0);
@@ -228,7 +232,9 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         _previousTotalPoint = 0;
         totalPoint = 0;
       });
-    } else if(result != null && result is SongCollection){
+    }
+    /// that case which check for back to Beat Runner screen and choose another song
+    else if(result != null && result is SongCollection){
       widget.onTapChooseSong?.call(result);
       widget.onChangeStarLearn?.call(0);
       _resetSequence(isPlayingDrum: true);
@@ -237,7 +243,9 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         _previousTotalPoint = 0;
         totalPoint = 0;
       });
-    } else if(result != null && result is int){
+    }
+    /// check to user wanna play next song at Learn Drum Screen
+    else if(result != null && result is int){
       setState(() {
         currentLesson = result;
         print(' result pop $result');

@@ -1,11 +1,8 @@
-import 'dart:convert';
 
 import 'package:drumpad_flutter/core/constants/mock_up_data.dart';
-import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/service/song_collection_service.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class DrumLearnProvider extends ChangeNotifier {
   List<SongCollection> data = dataSongCollections;
@@ -20,6 +17,8 @@ class DrumLearnProvider extends ChangeNotifier {
   bool _isCombo = false;
   bool _isRecording = false;
   int _increaseScoreByCombo = 0;
+  int _beatRunnerSongComplete = 0;
+  int _learnSongComplete = 0;
   int _totalPoint = 0;
 
   int get perfectPoint => _perfectPoint;
@@ -27,9 +26,13 @@ class DrumLearnProvider extends ChangeNotifier {
   bool get isRecording => _isRecording;
   int get increaseScoreByCombo => _increaseScoreByCombo;
   int get totalPoint => _totalPoint;
+  int get beatRunnerSongComplete => _beatRunnerSongComplete;
+  int get learnSongComplete => _learnSongComplete;
 
   DrumLearnProvider(){
     fetchListResume();
+    getBeatRunnerSongComplete();
+    getLearnSongComplete();
   }
 
   void increasePerfectPoint() {
@@ -75,6 +78,11 @@ class DrumLearnProvider extends ChangeNotifier {
     return await SongCollectionService.getSongById(id) ?? await getSongFromServer(id);
   }
 
+  Future<List<SongCollection>> getRandomSongs() async {
+    List<SongCollection> shuffledList = List.from(dataSongCollections)..shuffle();
+    return shuffledList.take(5).toList();
+  }
+
   Future<void> updateSong(String id, SongCollection songCollection) async {
     await SongCollectionService.updateSong(id, songCollection);
   }
@@ -83,6 +91,7 @@ class DrumLearnProvider extends ChangeNotifier {
     /// call api get song by id
     return dataSongCollections.firstWhere((element) => element.id == id, orElse: () => dataSongCollections.last,);
   }
+
 
   Future<void> fetchListResume() async {
     final prefs = await SharedPreferences.getInstance();
@@ -125,8 +134,59 @@ class DrumLearnProvider extends ChangeNotifier {
         print('Error fetching song with id $id: $e');
       }
     }
-
     _listSongResume =  listSong;
     notifyListeners();
   }
+
+  ///runner
+  Future<void> getBeatRunnerSongComplete() async {
+    final prefs = await SharedPreferences.getInstance();
+    int? savedValue = prefs.getInt('runnerComplete');
+    print('get count $savedValue');
+    _beatRunnerSongComplete = savedValue ?? 0;
+    notifyListeners();
+  }
+
+
+  Future<void> addBeatRunnerSongComplete(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    List<String> completedIds = prefs.getStringList('runnerCompleteIds') ?? [];
+
+    if (completedIds.contains(id)) return;
+
+    completedIds.add(id);
+    await prefs.setStringList('runnerCompleteIds', completedIds);
+
+    _beatRunnerSongComplete++;
+    await prefs.setInt('runnerComplete', _beatRunnerSongComplete);
+    print('add count $_beatRunnerSongComplete');
+    notifyListeners();
+  }
+  ///learn
+  Future<void> getLearnSongComplete() async {
+    final prefs = await SharedPreferences.getInstance();
+    int? savedValue = prefs.getInt('learnComplete');
+    print('learn song count $savedValue');
+    _learnSongComplete = savedValue ?? 0;
+    notifyListeners();
+  }
+
+  Future<void> addLearnSongComplete(String id) async {
+    print('lele');
+    final prefs = await SharedPreferences.getInstance();
+
+    List<String> completedIds = prefs.getStringList('learnSongCompleteIds') ?? [];
+
+    if (completedIds.contains(id)) return;
+
+    completedIds.add(id);
+    await prefs.setStringList('learnSongCompleteIds', completedIds);
+
+    _learnSongComplete++;
+    await prefs.setInt('learnSongComplete', _learnSongComplete);
+    print('add count $_learnSongComplete');
+    notifyListeners();
+  }
+
 }
