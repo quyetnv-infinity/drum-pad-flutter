@@ -20,6 +20,9 @@ class DrumLearnProvider extends ChangeNotifier {
   int _beatRunnerSongComplete = 0;
   int _learnSongComplete = 0;
   int _totalPoint = 0;
+  double _totalStar = 0;
+  double _beatRunnerStar = 0;
+
 
   int get perfectPoint => _perfectPoint;
   bool get isCombo => _isCombo;
@@ -28,11 +31,15 @@ class DrumLearnProvider extends ChangeNotifier {
   int get totalPoint => _totalPoint;
   int get beatRunnerSongComplete => _beatRunnerSongComplete;
   int get learnSongComplete => _learnSongComplete;
+  double get totalStar => _totalStar;
+  double get beatRunnerStar => _beatRunnerStar;
 
   DrumLearnProvider(){
     fetchListResume();
     getBeatRunnerSongComplete();
     getLearnSongComplete();
+    getTotalStars();
+    getBeatRunnerStars();
   }
 
   void increasePerfectPoint() {
@@ -186,6 +193,17 @@ class DrumLearnProvider extends ChangeNotifier {
     _learnSongComplete++;
     await prefs.setInt('learnSongComplete', _learnSongComplete);
     print('add count $_learnSongComplete');
+    notifyListeners();
+  }
+
+  Future<void> getTotalStars() async{
+     _totalStar = await SongCollectionService.getTotalStarsOfAllSongCollections();
+    print(totalStar);
+    notifyListeners();
+  }
+  Future<void> getBeatRunnerStars() async{
+    _beatRunnerStar = await SongCollectionService.getLessonStarsByIndexFromAllSongCollections(0);
+    print(_beatRunnerStar);
     notifyListeners();
   }
 

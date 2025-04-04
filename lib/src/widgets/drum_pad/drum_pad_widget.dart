@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:drumpad_flutter/core/enum/pad_state_enum.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/pad_util.dart';
+import 'package:drumpad_flutter/core/utils/star_util.dart';
 import 'package:drumpad_flutter/note.util.dart';
 import 'package:drumpad_flutter/sound_type_enum.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
@@ -212,16 +213,19 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   }
 
   void _navigateToNextScreen() async {
+    final provider = context.read<DrumLearnProvider>();
+
     _pauseTimer?.cancel();
-    context.read<DrumLearnProvider>().resetPerfectPoint();
+    provider.resetPerfectPoint();
     /// 📌 check condition of result to save unlocked lesson or campaign and save star
     widget.onChangeUnlockedModeCampaign?.call();
     widget.onChangeCampaignStar?.call(getStar());
     /// 👀 check stop record
-    if(context.read<DrumLearnProvider>().isRecording) await ScreenRecorderService().stopRecording();
+    if(provider.isRecording) await ScreenRecorderService().stopRecording();
     /// 📖 save learn from song and beat runner count for information at profile screen
-    if(!widget.isFromLearnScreen) context.read<DrumLearnProvider>().addBeatRunnerSongComplete(widget.currentSong!.id ?? '');
-    if(currentLesson >= lessons.length - 1 && widget.isFromLearnScreen)context.read<DrumLearnProvider>().addLearnSongComplete(widget.currentSong!.id ?? '');
+    if(!widget.isFromLearnScreen) provider.addBeatRunnerSongComplete(widget.currentSong!.id ?? '');
+    if(currentLesson >= lessons.length - 1 && widget.isFromLearnScreen)provider.addLearnSongComplete(widget.currentSong!.id ?? '');
+   print('8324ynuvq98ery837R12 ${getStar()}');
     /// push navigation and check cases
     final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, currentLesson: currentLesson, maxLesson: lessons.length,),));
     if(result != null && result == 'play_again'){

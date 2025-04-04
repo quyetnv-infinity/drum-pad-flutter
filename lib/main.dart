@@ -16,6 +16,7 @@ import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/locale_view_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/rate_app_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/result_information_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -47,6 +48,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => DrumLearnProvider(), lazy: false,),
         ChangeNotifierProvider(create: (_) => TutorialProvider(), lazy: false,),
         ChangeNotifierProvider(create: (_) => CampaignProvider(), lazy: false,),
+        ChangeNotifierProvider(create: (_) => ResultInformationProvider(), lazy: false,),
         ChangeNotifierProvider(create: (_) => adsProvider),
         ChangeNotifierProvider(create: (_) => purchaseProvider),
         ChangeNotifierProxyProvider2<AdsProvider, PurchaseProvider, AppStateProvider>(

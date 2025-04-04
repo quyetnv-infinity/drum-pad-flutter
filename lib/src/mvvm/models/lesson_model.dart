@@ -119,6 +119,9 @@ class SongCollection extends HiveObject{
     );
   }
 
+  double getTotalStars() {
+    return lessons.fold(0.0, (total, lesson) => total + lesson.star);
+  }
 }
 
 

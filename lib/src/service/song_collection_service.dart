@@ -50,4 +50,36 @@ class SongCollectionService {
       await addSong(newSong);
     }
   }
+  static Future<double> getTotalStarsOfAllSongCollections() async {
+    if (!_box.isOpen) {
+      await Hive.openBox<SongCollection>(HiveTable.songCollectionTable);
+    }
+
+    final list = _box.values.toList();
+
+    double totalStars = 0.0;
+    for (var songCollection in list) {
+      totalStars += songCollection.getTotalStars();
+    }
+
+    return totalStars;
+  }
+
+  static Future<double> getLessonStarsByIndexFromAllSongCollections(int lessonIndex) async {
+    if (!_box.isOpen) {
+      await Hive.openBox<SongCollection>(HiveTable.songCollectionTable);
+    }
+
+    final list = _box.values.toList();
+    double totalStars = 0.0;
+
+    for (var songCollection in list) {
+      if (songCollection.lessons.length > lessonIndex) {
+        totalStars += songCollection.lessons[lessonIndex].star.toDouble() ?? 0.0;
+      }
+    }
+
+    return totalStars;
+  }
+
 }

@@ -1,6 +1,7 @@
 import 'package:drumpad_flutter/core/res/dimen/spacing.dart';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/result_information_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/home_screen.dart';
 import 'package:drumpad_flutter/src/widgets/button/gradient_button.dart';
@@ -10,6 +11,7 @@ import 'package:drumpad_flutter/src/widgets/text/judgement_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class ResultScreen extends StatefulWidget {
   final int perfectScore;
@@ -53,19 +55,24 @@ class _ResultScreenState extends State<ResultScreen>
   @override
   void initState() {
     super.initState();
-    print('total notes ${widget.maxLesson}');
-    print('total notes ${widget.currentLesson}');
     _calculateTotalNotes();
     _animationController = AnimationController(
       duration: Duration(milliseconds: 1500),
       vsync: this,
     );
-
-    // Thiết lập các animations
     _setupAnimations();
-
-    // Bắt đầu animation
     _animationController.forward();
+
+    final provider = context.read<ResultInformationProvider>();
+    provider.loadPoints();
+    provider.addPoints(
+      early: widget.earlyScore,
+      good: widget.goodScore,
+      late: widget.lateScore,
+      perfect: widget.perfectScore,
+      miss: widget.totalNotes - (widget.earlyScore + widget.goodScore + widget.lateScore + widget.perfectScore)
+    );
+
   }
 
   void _calculateTotalNotes() {
