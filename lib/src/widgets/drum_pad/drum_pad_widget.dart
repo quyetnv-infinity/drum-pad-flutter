@@ -256,7 +256,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         }
         // print(' result pop $result');
       });
-      if(widget.isFromLearnScreen) campaignProvider.setCurrentSongCampaign(currentLesson);
+      if(widget.isFromLearnScreen) campaignProvider.setCurrentLessonCampaign(currentLesson);
       if(widget.isFromCampaign) {
         final song = campaignProvider.currentCampaign[campaignProvider.currentSongCampaign + 1];
         widget.onNextSongAtCampaign?.call(song);
