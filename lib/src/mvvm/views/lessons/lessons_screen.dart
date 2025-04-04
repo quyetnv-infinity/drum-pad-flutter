@@ -113,37 +113,27 @@ class _LessonsScreenState extends State<LessonsScreen> {
       backgroundImage: ResImage.imgBackgroundScreen,
       backgroundFit: BoxFit.cover,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        leadingWidth: 100,
-        leading: InkWell(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          onTap: () {
-            Navigator.maybePop(context);
-          },
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(width: 12),
-              Icon(Icons.arrow_back_ios, size: 18),
-              SizedBox(width: 4.0),
-              Text(
-                context.locale.back,
-                style: TextStyle(fontSize: 17, fontWeight: AppFonts.regular),
+          leadingWidth: 100,
+          toolbarHeight: 50,
+          backgroundColor: Colors.transparent,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Row(
+                children: [
+                  Icon(Icons.arrow_back_ios, color: Colors.white, size: 22),
+                  Text(context.locale.back, style: TextStyle(color: Colors.white, fontSize: 17),)
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-        title: Text(
-          context.locale.campaign,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: AppFonts.bold,
-            color: Colors.white,
-          ),
-        ),
+          title: Text(
+            context.locale.campaign,
+            style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700),
+          )
       ),
       body: isLoading
         ? CupertinoActivityIndicator()

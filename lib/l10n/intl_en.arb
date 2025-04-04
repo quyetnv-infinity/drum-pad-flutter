@@ -92,6 +92,10 @@
   "miss": "Miss",
   "play_again": "Play Again",
   "level": "Level",
+  "song_completed": "Song\nCompleted",
+  "star_collected": "Star\nCollected",
+  "average_accuracy": "Average\nAccuracy",
+  "your_profile": "Your Profile",
   "more": "More",
   "step": "Step"
 }

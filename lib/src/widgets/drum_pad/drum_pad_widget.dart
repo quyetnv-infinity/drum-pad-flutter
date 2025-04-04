@@ -139,6 +139,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         _startSequence();
       });
     }
+    checkModeChange(oldWidget);
   }
 
   @override
@@ -179,6 +180,39 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     });
   }
 
+  void checkModeChange(DrumPadScreen oldWidget){
+
+    if (oldWidget.practiceMode != widget.practiceMode && widget.practiceMode == "practice") {
+      setState(() {
+        _totalNotes = 0;
+      });
+      _loadSequenceDataFromFile(lessons.length - 1).then((_) {
+        setState(() {
+          _pauseTimer?.cancel();
+          isLoading = false;
+        });
+        // Start sequence if song exists
+        _resetSequence();
+        _startSequence();
+        widget.onChangeStarLearn?.call(0);
+        context.read<DrumLearnProvider>().resetPerfectPoint();
+      });
+    } else if(oldWidget.practiceMode != widget.practiceMode && widget.practiceMode != "practice"){
+      setState(() {
+        _totalNotes = 0;
+      });
+      _loadSequenceDataFromFile(widget.lessonIndex).then((_) {
+        setState(() {
+          isLoading = false;
+        });
+        // Start sequence if song exists
+        _resetSequence();
+        _startSequence();
+        widget.onChangeStarLearn?.call(0);
+        context.read<DrumLearnProvider>().resetPerfectPoint();
+      });
+    }
+  }
 
   void _navigateToNextScreen() async {
     _pauseTimer?.cancel();
@@ -186,8 +220,12 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     /// 📌 check condition of result to save unlocked lesson or campaign and save star
     widget.onChangeUnlockedModeCampaign?.call();
     widget.onChangeCampaignStar?.call(getStar());
+    /// 👀 check stop record
     if(context.read<DrumLearnProvider>().isRecording) await ScreenRecorderService().stopRecording();
-    print('bf push$currentLesson');
+    /// 📖 save learn from song and beat runner count for information at profile screen
+    if(!widget.isFromLearnScreen) context.read<DrumLearnProvider>().addBeatRunnerSongComplete(widget.currentSong!.id ?? '');
+    if(currentLesson >= lessons.length - 1 && widget.isFromLearnScreen)context.read<DrumLearnProvider>().addLearnSongComplete(widget.currentSong!.id ?? '');
+    /// push navigation and check cases
     final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length,),));
     if(result != null && result == 'play_again'){
       widget.onChangeStarLearn?.call(0);
@@ -197,7 +235,9 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         _previousTotalPoint = 0;
         totalPoint = 0;
       });
-    } else if(result != null && result is SongCollection){
+    }
+    /// that case which check for back to Beat Runner screen and choose another song
+    else if(result != null && result is SongCollection){
       widget.onTapChooseSong?.call(result);
       widget.onChangeStarLearn?.call(0);
       _resetSequence(isPlayingDrum: true);
@@ -307,6 +347,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
 
   Future<void> _loadSequenceDataFromFile(int lesson) async {
     try {
+      _totalNotes = 0;
       lessons = widget.currentSong?.lessons ?? [];
       currentLesson = lesson;
       events = lessons[currentLesson].events;

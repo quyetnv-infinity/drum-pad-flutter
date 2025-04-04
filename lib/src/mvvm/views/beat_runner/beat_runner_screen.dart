@@ -261,15 +261,18 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                       ),
                     ),
                     Column(
+                      spacing: 8,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(context.locale.progress, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
                         RatingStars.custom(
                           value: _percentStar,
                           isFlatStar: true,
-                          smallStarWidth: 18,
-                          smallStarHeight: 18,
-                          bigStarWidth: 18,
-                          bigStarHeight: 18,
+                          smallStarWidth: 22,
+                          smallStarHeight: 22,
+                          bigStarWidth: 22,
+                          bigStarHeight: 22,
                         ),
                         Text(context.locale.score, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
                         Text(_currentScore.toString(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 32, color: Colors.white),)

@@ -12,6 +12,8 @@ class ResImage {
   static const String imgBgButtonStepLesson = '$basePath/img_bg_button_step_lesson.png';
   static const String imgBgButtonStepLessonUnlock = '$basePath/ic_level_unlock.png';
   static const String imgBGMode = '$basePath/bg_mode.png';
+  static const String imgCarouselBG1 = '$basePath/img_carousel_bg1.png';
+  static const String imgCarouselBG2 = '$basePath/img_carousel_bg2.png';
   static const String imgTutoStick = '$basePath/tuto_stick.png';
 
   static const String imgBgButtonDrumLearn = '$basePath/img_bg_button_drum_learn.png';

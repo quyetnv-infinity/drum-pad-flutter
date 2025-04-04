@@ -148,7 +148,7 @@ class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObse
                     if (widget.fromSetting) {
                       Navigator.pop(context);
                     } else {
-                      Navigator.push(context, CupertinoPageRoute(builder: (context) => OnboardingScreen(),));
+                      Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => OnboardingScreen(),));
                     }
                   },
                 ),
