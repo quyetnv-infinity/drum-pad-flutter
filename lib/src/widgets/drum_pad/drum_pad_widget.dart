@@ -326,6 +326,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
 
   Future<void> _loadSequenceDataFromFile(int lesson) async {
     try {
+      _totalNotes = 0;
       lessons = widget.currentSong?.lessons ?? [];
       currentLesson = lesson;
       events = lessons[currentLesson].events;
