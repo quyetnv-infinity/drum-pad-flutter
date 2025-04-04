@@ -15,6 +15,14 @@ class CampaignProvider with ChangeNotifier {
   int get hardUnlocked => _hardUnlocked;
   int get demonicUnlocked => _demonicUnlocked;
 
+  int _currentLessonCampaign = 0;
+  int get currentLessonCampaign => _currentLessonCampaign;
+
+  int _currentSongCampaign = 0;
+  int get currentSongCampaign => _currentSongCampaign;
+
+  List<SongCollection> currentCampaign = [];
+
   List<SongCollection> _easyCampaign = [];
   List<SongCollection> _mediumCampaign = [];
   List<SongCollection> _hardCampaign = [];
@@ -35,6 +43,24 @@ class CampaignProvider with ChangeNotifier {
     _mediumUnlocked = prefs.getInt('mediumUnlocked') ?? 0;
     _hardUnlocked = prefs.getInt('hardUnlocked') ?? 0;
     _demonicUnlocked = prefs.getInt('demonicUnlocked') ?? 0;
+  }
+
+  void setCurrentLessonCampaign(int value){
+    _currentLessonCampaign = value;
+    notifyListeners();
+  }
+
+  void setCurrentSongCampaign(int value){
+    _currentSongCampaign = value;
+    notifyListeners();
+  }
+
+  void setCurrentCampaign({bool isEasy = false, bool isMedium = false, bool isHard = false, bool isDemonic = false}){
+    if(isEasy) currentCampaign = _easyCampaign;
+    if(isMedium) currentCampaign = _mediumCampaign;
+    if(isHard) currentCampaign = _hardCampaign;
+    if(isDemonic) currentCampaign = _demonicCampaign;
+    notifyListeners();
   }
 
   Future<void> fetchCampaignSong({bool isEasy = false, bool isMedium = false, bool isHard = false, bool isDemonic = false}) async {

@@ -5,6 +5,7 @@ import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/res/style/text_style.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
@@ -190,7 +191,8 @@ class _LessonsScreenState extends State<LessonsScreen> {
                           onTap: () async {
                             // Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: 20, goodScore: 30, earlyScore: 20, lateScore: 10, missScore: 1),));
                             if(item.isCompleted || index == displayData.length - 1) {
-                              context.read<DrumLearnProvider>().addToResume(widget.songCollection.id);
+                              await context.read<DrumLearnProvider>().addToResume(widget.songCollection.id);
+                              Provider.of<CampaignProvider>(context, listen: false).setCurrentLessonCampaign(displayData.length - (index + 1));
                               await Navigator.push(context, CupertinoPageRoute(
                                 builder: (context) =>
                                     GamePlayScreen(songCollection: _song,

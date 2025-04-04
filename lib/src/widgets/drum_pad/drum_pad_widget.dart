@@ -7,6 +7,7 @@ import 'package:drumpad_flutter/core/utils/star_util.dart';
 import 'package:drumpad_flutter/note.util.dart';
 import 'package:drumpad_flutter/sound_type_enum.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/result/result_screen.dart';
 import 'package:drumpad_flutter/src/service/screen_record_service.dart';
@@ -26,8 +27,10 @@ class DrumPadScreen extends StatefulWidget {
   final void Function(double star)? onChangeCampaignStar;
   final String? practiceMode;
   final bool isFromLearnScreen;
+  final bool isFromCampaign;
   final Function(SongCollection song)? onTapChooseSong;
-  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong});
+  final Function(SongCollection song)? onNextSongAtCampaign;
+  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onNextSongAtCampaign});
 
   @override
   State<DrumPadScreen> createState() => _DrumPadScreenState();
@@ -227,7 +230,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     if(currentLesson >= lessons.length - 1 && widget.isFromLearnScreen)provider.addLearnSongComplete(widget.currentSong!.id ?? '');
    print('8324ynuvq98ery837R12 ${getStar()}');
     /// push navigation and check cases
-    final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, currentLesson: currentLesson, maxLesson: lessons.length,),));
+    final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length,),));
     if(result != null && result == 'play_again'){
       widget.onChangeStarLearn?.call(0);
       _resetSequence(isPlayingDrum: true);
@@ -247,13 +250,23 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         _previousTotalPoint = 0;
         totalPoint = 0;
       });
-    }
-    /// check to user wanna play next song at Learn Drum Screen
-    else if(result != null && result is int){
+    } else if(result != null && result is int){
+      final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
       setState(() {
-        currentLesson = result;
-        print(' result pop $result');
+        if(widget.isFromLearnScreen) {
+          currentLesson = result;
+        } else if(widget.isFromCampaign) {
+          currentLesson = 0;
+        }
+        // print(' result pop $result');
       });
+      if(widget.isFromLearnScreen) campaignProvider.setCurrentLessonCampaign(currentLesson);
+      if(widget.isFromCampaign) {
+        final song = campaignProvider.currentCampaign[campaignProvider.currentSongCampaign + 1];
+        widget.onNextSongAtCampaign?.call(song);
+        print(song.name);
+        campaignProvider.setCurrentSongCampaign(campaignProvider.currentSongCampaign + 1);
+      }
       widget.onChangeStarLearn?.call(0);
       _resetSequence(isPlayingDrum: true);
       setState(() {

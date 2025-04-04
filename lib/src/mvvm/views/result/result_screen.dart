@@ -2,6 +2,7 @@ import 'package:drumpad_flutter/core/res/dimen/spacing.dart';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/result_information_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/home_screen.dart';
 import 'package:drumpad_flutter/src/widgets/button/gradient_button.dart';
@@ -22,6 +23,7 @@ class ResultScreen extends StatefulWidget {
   final int totalScore;
   final int totalNotes;
   final bool isFromLearn;
+  final bool isFromCampaign;
   final int currentLesson;
   final int maxLesson;
 
@@ -31,7 +33,7 @@ class ResultScreen extends StatefulWidget {
     required this.goodScore,
     required this.earlyScore,
     required this.lateScore,
-    required this.missScore, required this.totalScore, required this.totalNotes, required this.isFromLearn, required this.currentLesson, required this.maxLesson,
+    required this.missScore, required this.totalScore, required this.totalNotes, required this.isFromLearn, required this.currentLesson, required this.maxLesson, required this.isFromCampaign,
   });
 
   @override
@@ -224,7 +226,7 @@ class _ResultScreenState extends State<ResultScreen>
                   children: [
                     GradientButton(
                       onPressed: () async {
-                        if(widget.isFromLearn){
+                        if(widget.isFromLearn || widget.isFromCampaign){
                           Navigator.pop(context);
                           Navigator.pop(context);
                         }else{
@@ -236,7 +238,7 @@ class _ResultScreenState extends State<ResultScreen>
                       },
                       shape: BoxShape.circle,
                       padding: EdgeInsets.all(14),
-                      child: widget.isFromLearn ? SvgPicture.asset(ResIcon.icList) :SvgPicture.asset(ResIcon.icMusic),
+                      child: widget.isFromLearn || widget.isFromCampaign ? SvgPicture.asset(ResIcon.icList) :SvgPicture.asset(ResIcon.icMusic),
                     ),
                     GradientButton(
                       onPressed: () {
@@ -255,7 +257,7 @@ class _ResultScreenState extends State<ResultScreen>
                     ),
                     GradientButton(
                       onPressed: () {
-                        if(widget.isFromLearn && widget.currentLesson < widget.maxLesson -1){
+                        if(checkNotLastCampaign()){
                           Navigator.pop(context, widget.currentLesson + 1);
                         }else{
                         Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
@@ -264,7 +266,7 @@ class _ResultScreenState extends State<ResultScreen>
                       },
                       shape: BoxShape.circle,
                       padding: EdgeInsets.all(14),
-                      child: widget.isFromLearn && widget.currentLesson < widget.maxLesson -1 ? SvgPicture.asset(ResIcon.icNext) : SvgPicture.asset(ResIcon.icHome),
+                      child: checkNotLastCampaign() ? SvgPicture.asset(ResIcon.icNext) : SvgPicture.asset(ResIcon.icHome),
                     ),
                   ],
                 ),
@@ -274,6 +276,16 @@ class _ResultScreenState extends State<ResultScreen>
         ),
       ),
     );
+  }
+
+  bool checkNotLastCampaign(){
+    if(widget.isFromLearn){
+      return widget.currentLesson < widget.maxLesson - 1;
+    } else if(widget.isFromCampaign) {
+      final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
+      return campaignProvider.currentSongCampaign < campaignProvider.currentCampaign.length - 1;
+    }
+    return false;
   }
 
   Widget _rowScore(

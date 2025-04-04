@@ -95,5 +95,7 @@
   "song_completed": "Song\nCompleted",
   "star_collected": "Star\nCollected",
   "average_accuracy": "Average\nAccuracy",
-  "your_profile": "Your Profile"
+  "your_profile": "Your Profile",
+  "more": "More",
+  "step": "Step"
 }
