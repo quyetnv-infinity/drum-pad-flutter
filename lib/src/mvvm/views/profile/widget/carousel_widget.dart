@@ -38,7 +38,6 @@ class _CarouselWidgetState extends State<CarouselWidget> {
   double calculatePercent(int point, int totalPoint) {
     if (totalPoint == 0) return 0;
     final percent = (point / totalPoint) * 100;
-    print(percent.floor());
     return percent.floorToDouble();
   }
 
