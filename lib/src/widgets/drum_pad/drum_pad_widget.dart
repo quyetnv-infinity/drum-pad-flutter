@@ -217,16 +217,18 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   void _navigateToNextScreen() async {
     _pauseTimer?.cancel();
     context.read<DrumLearnProvider>().resetPerfectPoint();
-    /// 📌 check condition of result to save unlocked lesson or campaign and save star
-    widget.onChangeUnlockedModeCampaign?.call();
-    widget.onChangeCampaignStar?.call(getStar());
     /// 👀 check stop record
-    if(context.read<DrumLearnProvider>().isRecording) await ScreenRecorderService().stopRecording();
+    if (context.read<DrumLearnProvider>().isRecording) await ScreenRecorderService().stopRecording();
+    widget.onChangeCampaignStar?.call(getStar());
+    /// 📌 check condition of result to save unlocked lesson or campaign and save star
+    if(getStar() > 1) {
+      widget.onChangeUnlockedModeCampaign?.call();
+    }
     /// 📖 save learn from song and beat runner count for information at profile screen
-    if(!widget.isFromLearnScreen) context.read<DrumLearnProvider>().addBeatRunnerSongComplete(widget.currentSong!.id ?? '');
-    if(currentLesson >= lessons.length - 1 && widget.isFromLearnScreen)context.read<DrumLearnProvider>().addLearnSongComplete(widget.currentSong!.id ?? '');
+    if (!widget.isFromLearnScreen) context.read<DrumLearnProvider>().addBeatRunnerSongComplete(widget.currentSong!.id);
+    if (currentLesson >= lessons.length - 1 && widget.isFromLearnScreen) context.read<DrumLearnProvider>().addLearnSongComplete(widget.currentSong!.id);
     /// push navigation and check cases
-    final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length,),));
+    final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() > 1,),));
     if(result != null && result == 'play_again'){
       widget.onChangeStarLearn?.call(0);
       _resetSequence(isPlayingDrum: true);
