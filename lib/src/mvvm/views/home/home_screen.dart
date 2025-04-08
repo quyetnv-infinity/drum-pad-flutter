@@ -108,6 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
               width: 120,
               height: 120,
               data: _data,
+              isShowDifficult: true,
               onTap: (item, index) {
                 Navigator.push(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: item,),));
               },
