@@ -328,7 +328,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         if (state == PadStateEnum.good) goodPoint++;
         if (state == PadStateEnum.late) latePoint++;
         if (state == PadStateEnum.early) earlyPoint++;
-        if (state == PadStateEnum.miss) missPoint++;
 
         provider.resetPerfectPoint();
         print('reset perfect');
@@ -570,6 +569,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
 
     setState(() {
       increasePoint(state);
+      if(state == PadStateEnum.miss) missPoint++;
       padStates[sound] = state;
     });
 

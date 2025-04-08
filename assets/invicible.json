@@ -1,0 +1,380 @@
+[
+  {
+    "events": [
+      {
+        "notes": [
+          "invincible_mid10_face_a_drum_kick_a",
+          "invincible_mid11_face_a_drum_hihat_a",
+          "invincible_mid01_face_a_lead_lead1_a",
+          "invincible_mid04_face_a_bass_bass1_a",
+          "invincible_mid09_face_a_fx_fx_a"
+        ],
+        "time": 0.0
+      },
+      {
+        "notes": [
+          "invincible_mid11_face_a_drum_hihat_a",
+          "invincible_mid12_face_a_drum_snare_a"
+        ],
+        "time": 0.6
+      },
+      {
+        "notes": [
+          "invincible_mid05_face_a_bass_bass2_a"
+        ],
+        "time": 1.05
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_a_drum_kick_a",
+          "invincible_mid11_face_a_drum_hihat_a"
+        ],
+        "time": 1.2
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_a_drum_kick_a"
+        ],
+        "time": 1.5
+      },
+      {
+        "notes": [
+          "invincible_mid11_face_a_drum_hihat_a",
+          "invincible_mid12_face_a_drum_snare_a"
+        ],
+        "time": 1.8
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_a_drum_kick_a",
+          "invincible_mid11_face_a_drum_hihat_a",
+          "invincible_mid02_face_a_lead_lead2_a",
+          "invincible_mid07_face_a_bass_bass3_a"
+        ],
+        "time": 2.4
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_a_drum_kick_a"
+        ],
+        "time": 2.7
+      },
+      {
+        "notes": [
+          "invincible_mid11_face_a_drum_hihat_a",
+          "invincible_mid12_face_a_drum_snare_a"
+        ],
+        "time": 3.0
+      },
+      {
+        "notes": [
+          "invincible_mid08_face_a_bass_bass4_a"
+        ],
+        "time": 3.45
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_a_drum_kick_a",
+          "invincible_mid11_face_a_drum_hihat_a"
+        ],
+        "time": 3.6
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_a_drum_kick_a"
+        ],
+        "time": 3.9
+      },
+      {
+        "notes": [
+          "invincible_mid11_face_a_drum_hihat_a",
+          "invincible_mid12_face_a_drum_snare_a"
+        ],
+        "time": 4.2
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_a_drum_kick_a"
+        ],
+        "time": 4.5
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_a_drum_kick_a",
+          "invincible_mid11_face_a_drum_hihat_a",
+          "invincible_mid03_face_a_lead_lead3_a",
+          "invincible_mid04_face_a_bass_bass1_a"
+        ],
+        "time": 4.8
+      },
+      {
+        "notes": [
+          "invincible_mid11_face_a_drum_hihat_a",
+          "invincible_mid12_face_a_drum_snare_a"
+        ],
+        "time": 5.4
+      },
+      {
+        "notes": [
+          "invincible_mid05_face_a_bass_bass2_a"
+        ],
+        "time": 5.85
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_a_drum_kick_a",
+          "invincible_mid11_face_a_drum_hihat_a"
+        ],
+        "time": 6.0
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_a_drum_kick_a"
+        ],
+        "time": 6.3
+      },
+      {
+        "notes": [
+          "invincible_mid11_face_a_drum_hihat_a",
+          "invincible_mid12_face_a_drum_snare_a"
+        ],
+        "time": 6.6
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_a_drum_kick_a",
+          "invincible_mid11_face_a_drum_hihat_a",
+          "invincible_mid06_face_a_lead_lead4_a",
+          "invincible_mid07_face_a_bass_bass3_a"
+        ],
+        "time": 7.2
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_a_drum_kick_a"
+        ],
+        "time": 7.5
+      },
+      {
+        "notes": [
+          "invincible_mid11_face_a_drum_hihat_a",
+          "invincible_mid12_face_a_drum_snare_a"
+        ],
+        "time": 7.8
+      },
+      {
+        "notes": [
+          "invincible_mid08_face_a_bass_bass4_a"
+        ],
+        "time": 8.25
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_a_drum_kick_a",
+          "invincible_mid11_face_a_drum_hihat_a"
+        ],
+        "time": 8.4
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_a_drum_kick_a"
+        ],
+        "time": 8.7
+      },
+      {
+        "notes": [
+          "invincible_mid11_face_a_drum_hihat_a",
+          "invincible_mid12_face_a_drum_snare_a"
+        ],
+        "time": 9.0
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_a_drum_kick_a"
+        ],
+        "time": 9.3
+      }
+    ]
+  },
+  {
+    "events": [
+      {
+        "notes": [
+          "invincible_mid10_face_b_drum_kick_b",
+          "invincible_mid11_face_b_drum_hihat_b",
+          "invincible_mid01_face_b_lead_lead1_b",
+          "invincible_mid04_face_b_bass_bass1_b"
+        ],
+        "time": 0.0
+      },
+      {
+        "notes": [
+          "invincible_mid11_face_b_drum_hihat_b",
+          "invincible_mid12_face_b_drum_snare_b"
+        ],
+        "time": 0.6
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_b_drum_kick_b",
+          "invincible_mid11_face_b_drum_hihat_b",
+          "invincible_mid02_face_b_lead_lead2_b",
+          "invincible_mid05_face_b_bass_bass2_b"
+        ],
+        "time": 1.2
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_b_drum_kick_b"
+        ],
+        "time": 1.5
+      },
+      {
+        "notes": [
+          "invincible_mid11_face_b_drum_hihat_b",
+          "invincible_mid12_face_b_drum_snare_b"
+        ],
+        "time": 1.8
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_b_drum_kick_b",
+          "invincible_mid11_face_b_drum_hihat_b",
+          "invincible_mid03_face_b_lead_lead3_b",
+          "invincible_mid07_face_b_bass_bass3_b"
+        ],
+        "time": 2.4
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_b_drum_kick_b"
+        ],
+        "time": 2.7
+      },
+      {
+        "notes": [
+          "invincible_mid11_face_b_drum_hihat_b",
+          "invincible_mid12_face_b_drum_snare_b"
+        ],
+        "time": 3.0
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_b_drum_kick_b",
+          "invincible_mid11_face_b_drum_hihat_b",
+          "invincible_mid06_face_b_lead_lead4_b",
+          "invincible_mid08_face_b_bass_bass4_b"
+        ],
+        "time": 3.6
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_b_drum_kick_b"
+        ],
+        "time": 3.9
+      },
+      {
+        "notes": [
+          "invincible_mid11_face_b_drum_hihat_b",
+          "invincible_mid12_face_b_drum_snare_b"
+        ],
+        "time": 4.2
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_b_drum_kick_b"
+        ],
+        "time": 4.5
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_b_drum_kick_b",
+          "invincible_mid11_face_b_drum_hihat_b",
+          "invincible_mid01_face_b_lead_lead1_b",
+          "invincible_mid04_face_b_bass_bass1_b"
+        ],
+        "time": 4.8
+      },
+      {
+        "notes": [
+          "invincible_mid11_face_b_drum_hihat_b",
+          "invincible_mid12_face_b_drum_snare_b"
+        ],
+        "time": 5.4
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_b_drum_kick_b",
+          "invincible_mid11_face_b_drum_hihat_b",
+          "invincible_mid02_face_b_lead_lead2_b",
+          "invincible_mid05_face_b_bass_bass2_b"
+        ],
+        "time": 6.0
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_b_drum_kick_b"
+        ],
+        "time": 6.3
+      },
+      {
+        "notes": [
+          "invincible_mid11_face_b_drum_hihat_b",
+          "invincible_mid12_face_b_drum_snare_b"
+        ],
+        "time": 6.6
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_b_drum_kick_b",
+          "invincible_mid11_face_b_drum_hihat_b",
+          "invincible_mid03_face_b_lead_lead3_b",
+          "invincible_mid07_face_b_bass_bass3_b",
+          "invincible_mid09_face_b_fx_fx_b"
+        ],
+        "time": 7.2
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_b_drum_kick_b"
+        ],
+        "time": 7.5
+      },
+      {
+        "notes": [
+          "invincible_mid11_face_b_drum_hihat_b",
+          "invincible_mid12_face_b_drum_snare_b"
+        ],
+        "time": 7.8
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_b_drum_kick_b",
+          "invincible_mid11_face_b_drum_hihat_b",
+          "invincible_mid06_face_b_lead_lead4_b",
+          "invincible_mid08_face_b_bass_bass4_b"
+        ],
+        "time": 8.4
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_b_drum_kick_b"
+        ],
+        "time": 8.7
+      },
+      {
+        "notes": [
+          "invincible_mid11_face_b_drum_hihat_b",
+          "invincible_mid12_face_b_drum_snare_b"
+        ],
+        "time": 9.0
+      },
+      {
+        "notes": [
+          "invincible_mid10_face_b_drum_kick_b"
+        ],
+        "time": 9.3
+      }
+    ]
+  }
+]
