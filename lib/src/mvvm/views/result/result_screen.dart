@@ -26,6 +26,7 @@ class ResultScreen extends StatefulWidget {
   final bool isFromCampaign;
   final int currentLesson;
   final int maxLesson;
+  final bool isCompleted;
 
   const ResultScreen({
     super.key,
@@ -33,7 +34,7 @@ class ResultScreen extends StatefulWidget {
     required this.goodScore,
     required this.earlyScore,
     required this.lateScore,
-    required this.missScore, required this.totalScore, required this.totalNotes, required this.isFromLearn, required this.currentLesson, required this.maxLesson, required this.isFromCampaign,
+    required this.missScore, required this.totalScore, required this.totalNotes, required this.isFromLearn, required this.currentLesson, required this.maxLesson, required this.isFromCampaign, required this.isCompleted,
   });
 
   @override
@@ -280,10 +281,10 @@ class _ResultScreenState extends State<ResultScreen>
 
   bool checkNotLastCampaign(){
     if(widget.isFromLearn){
-      return widget.currentLesson < widget.maxLesson - 1;
+      return widget.currentLesson < widget.maxLesson - 1 && widget.isCompleted;
     } else if(widget.isFromCampaign) {
       final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
-      return campaignProvider.currentSongCampaign < campaignProvider.currentCampaign.length - 1;
+      return campaignProvider.currentSongCampaign < campaignProvider.currentCampaign.length - 1 && widget.isCompleted;
     }
     return false;
   }
