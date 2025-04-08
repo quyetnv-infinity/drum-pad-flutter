@@ -145,7 +145,7 @@ class _ResultScreenState extends State<ResultScreen>
             Color(0xFF5A2CE4),
             Color(0xFF141414),
           ],
-          stops: [0.4, 0.9],
+          stops: [0.2, 0.9],
         ),
         body: AnimatedBuilder(
           animation: _animationController,
@@ -154,16 +154,36 @@ class _ResultScreenState extends State<ResultScreen>
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  context.locale.congratulation,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 27,
-                    fontWeight: FontWeight.w600,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    !checkNotLastCampaign() && (widget.isFromCampaign || widget.isFromLearn) ? Container(
+                      margin: EdgeInsets.only(left: 16),
+                      child: IconButton(
+                        onPressed: (){
+                          Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
+                        },
+                        icon: SvgPicture.asset(ResIcon.icHome, width: 32,)
+                      ),
+                    ) : SizedBox(width: 58,),
+                    Expanded(
+                      child: Text(
+                        context.locale.congratulation,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 58,)
+                  ],
                 ),
+                SizedBox(height: 16,),
                 // Sử dụng giá trị animation cho RatingStars
-                RatingStars(value: _starAnimation.value),
+                RatingStars(value: _starAnimation.value, isFlatStar: true,),
+                SizedBox(height: 32,),
                 Text(
                   context.locale.final_score,
                   style: TextStyle(
@@ -261,7 +281,7 @@ class _ResultScreenState extends State<ResultScreen>
                         if(checkNotLastCampaign()){
                           Navigator.pop(context, widget.currentLesson + 1);
                         }else{
-                        Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
+                          Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
                         }
                         // Navigator.popUntil(context, (route) => route.isFirst);
                       },
