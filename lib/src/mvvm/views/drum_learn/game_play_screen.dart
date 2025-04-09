@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/pad_util.dart';
+import 'package:drumpad_flutter/core/utils/permission_util.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
@@ -18,6 +19,7 @@ import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
@@ -323,9 +325,10 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
-                        onTap: () {
+                        onTap: ()async {
                           Navigator.pop(context);
                           context.read<DrumLearnProvider>().resetPerfectPoint();
+                          if (context.read<DrumLearnProvider>().isRecording) await ScreenRecorderService().stopRecording();
                         },
                         child: Row(
                           children: [
@@ -450,14 +453,13 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
       child: Row(
         spacing: 6,
         children: [
-          ModeButton(title: context.locale.mode, initialSelected: false, onSelected: (bool selected) {},),
+          // ModeButton(title: context.locale.mode, initialSelected: false, onSelected: (bool selected) {},),
           ModeButton(title: context.locale.practice, initialSelected: false, onSelected: (bool selected) {
             selected ? _updateSelectedMode("practice") : _updateSelectedMode("null");
           },),
           ModeButton(title: context.locale.rec, initialSelected: _isRecordingSelected, onSelected: (bool selected) async{
             setState(() {
               _isRecordingSelected = selected;
-              print("8120349yeuhwjinkd$_isRecordingSelected");
             });
             if (selected) {
               // If button is selected (toggled ON), start recording
@@ -474,5 +476,18 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
         ],
       ),
     );
+  }
+  Future<void> handleOnToggleRecordScreenTab() async {
+    final permissionStatus = await Permission.unknown .status;
+    if (!permissionStatus.isGranted) {
+      await Permission.microphone.request();
+      if(await Permission.microphone.status.isPermanentlyDenied){
+        if(!mounted) return;
+        PermissionUtil.showRequestRecordScreenPermissionDialog(context);
+        return;
+      } else if (await Permission.microphone.status.isGranted){
+        // await initCamera();
+      }
+    }
   }
 }
