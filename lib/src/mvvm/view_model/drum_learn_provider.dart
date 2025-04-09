@@ -39,7 +39,8 @@ class DrumLearnProvider extends ChangeNotifier {
     getBeatRunnerSongComplete();
     getLearnSongComplete();
     getTotalStars();
-    getBeatRunnerStars();
+    // getBeatRunnerStars();
+    getBeatRunnerStar();
   }
 
   void increasePerfectPoint() {
@@ -195,16 +196,39 @@ class DrumLearnProvider extends ChangeNotifier {
     print('add count $_learnSongComplete');
     notifyListeners();
   }
+  /// BeatRunnerStar
+  Future<void> getBeatRunnerStar() async {
+    final prefs = await SharedPreferences.getInstance();
+    double? savedValue = prefs.getDouble('beatRunnerStar');
+    _beatRunnerStar = savedValue ?? 0;
+    notifyListeners();
+  }
+
+  Future<void> addBeatRunnerStar(String id, double star) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    List<String> completedIds = prefs.getStringList('beatRunnerStarIds') ?? [];
+
+    if (completedIds.contains(id)) return;
+
+    completedIds.add(id);
+    await prefs.setStringList('beatRunnerStarIds', completedIds);
+
+    _beatRunnerStar += star;
+    await prefs.setDouble('beatRunnerStar', _beatRunnerStar);
+    print('add count $_beatRunnerStar');
+    notifyListeners();
+  }
 
   Future<void> getTotalStars() async{
      _totalStar = await SongCollectionService.getTotalStarsOfAllSongCollections();
     print(totalStar);
     notifyListeners();
   }
-  Future<void> getBeatRunnerStars() async{
-    _beatRunnerStar = await SongCollectionService.getLessonStarsByIndexFromAllSongCollections(0);
-    print(_beatRunnerStar);
-    notifyListeners();
-  }
+  // Future<void> getBeatRunnerStars() async{
+  //   _beatRunnerStar = await SongCollectionService.getLessonStarsByIndexFromAllSongCollections(0);
+  //   print(_beatRunnerStar);
+  //   notifyListeners();
+  // }
 
 }

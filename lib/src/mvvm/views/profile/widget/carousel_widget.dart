@@ -25,7 +25,8 @@ class _CarouselWidgetState extends State<CarouselWidget> {
     final drumProvider = context.read<DrumLearnProvider>();
     final resultProvider = context.read<ResultInformationProvider>();
     drumProvider.getTotalStars();
-    drumProvider.getBeatRunnerStars();
+    // drumProvider.getBeatRunnerStars();
+    drumProvider.getBeatRunnerStar();
     drumProvider.getLearnSongComplete();
     drumProvider.getBeatRunnerSongComplete();
     drumProvider.getRandomSongs();

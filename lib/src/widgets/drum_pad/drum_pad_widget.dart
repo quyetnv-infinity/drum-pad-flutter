@@ -30,7 +30,8 @@ class DrumPadScreen extends StatefulWidget {
   final bool isFromCampaign;
   final Function(SongCollection song)? onTapChooseSong;
   final Function(SongCollection song)? onNextSongAtCampaign;
-  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onNextSongAtCampaign});
+  final VoidCallback? onResetRecordingToggle;
+  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onNextSongAtCampaign, this.onResetRecordingToggle});
 
   @override
   State<DrumPadScreen> createState() => _DrumPadScreenState();
@@ -223,12 +224,17 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     /// 👀 check stop record
     if (provider.isRecording) await ScreenRecorderService().stopRecording();
     widget.onChangeCampaignStar?.call(getStar());
+    widget.onResetRecordingToggle?.call();
     /// 📌 check condition of result to save unlocked lesson or campaign and save star
     if(getStar() > 1) {
       widget.onChangeUnlockedModeCampaign?.call();
     }
     /// 📖 save learn from song and beat runner count for information at profile screen
-    if (!widget.isFromLearnScreen) provider.addBeatRunnerSongComplete(widget.currentSong!.id);
+    if (!widget.isFromLearnScreen)
+      {
+        provider.addBeatRunnerSongComplete(widget.currentSong!.id);
+        provider.addBeatRunnerStar(widget.currentSong!.id, getStar());
+      }
     if (currentLesson >= lessons.length - 1 && widget.isFromLearnScreen) provider.addLearnSongComplete(widget.currentSong!.id);
     /// push navigation and check cases
     final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() > 1,),));
