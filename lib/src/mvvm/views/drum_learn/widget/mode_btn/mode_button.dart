@@ -32,6 +32,15 @@ class _ModeButtonState extends State<ModeButton> {
     });
     widget.onSelected(isSelected);
   }
+  @override
+  void didUpdateWidget(covariant ModeButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialSelected != widget.initialSelected) {
+      setState(() {
+        isSelected = widget.initialSelected;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

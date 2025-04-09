@@ -42,6 +42,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   String selectedMode = "";
   bool isRecording = false;
   double _percentStar = 0;
+  bool _isRecordingSelected = false;
 
 
   @override
@@ -264,6 +265,11 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                     },
                     isFromLearnScreen: true,
                     isFromCampaign: false,
+                    onResetRecordingToggle: () {
+                      setState(() {
+                        _isRecordingSelected = false;
+                      });
+                    },
                   )
                 ],
               ),
@@ -448,7 +454,11 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
           ModeButton(title: context.locale.practice, initialSelected: false, onSelected: (bool selected) {
             selected ? _updateSelectedMode("practice") : _updateSelectedMode("null");
           },),
-          ModeButton(title: context.locale.rec, initialSelected: false, onSelected: (bool selected) async{
+          ModeButton(title: context.locale.rec, initialSelected: _isRecordingSelected, onSelected: (bool selected) async{
+            setState(() {
+              _isRecordingSelected = selected;
+              print("8120349yeuhwjinkd$_isRecordingSelected");
+            });
             if (selected) {
               // If button is selected (toggled ON), start recording
               print("ModeButton selected: true - Attempting to start recording...");

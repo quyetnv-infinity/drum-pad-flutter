@@ -30,7 +30,8 @@ class DrumPadScreen extends StatefulWidget {
   final bool isFromCampaign;
   final Function(SongCollection song)? onTapChooseSong;
   final Function(SongCollection song)? onNextSongAtCampaign;
-  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onNextSongAtCampaign});
+  final VoidCallback? onResetRecordingToggle;
+  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onNextSongAtCampaign, this.onResetRecordingToggle});
 
   @override
   State<DrumPadScreen> createState() => _DrumPadScreenState();
@@ -223,6 +224,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     /// 👀 check stop record
     if (provider.isRecording) await ScreenRecorderService().stopRecording();
     widget.onChangeCampaignStar?.call(getStar());
+    widget.onResetRecordingToggle?.call();
     /// 📌 check condition of result to save unlocked lesson or campaign and save star
     if(getStar() > 1) {
       widget.onChangeUnlockedModeCampaign?.call();
