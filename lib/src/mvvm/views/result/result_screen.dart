@@ -157,7 +157,7 @@ class _ResultScreenState extends State<ResultScreen>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    !checkNotLastCampaign() && (widget.isFromCampaign || widget.isFromLearn) ? Container(
+                    checkNotLastCampaign() && (widget.isFromCampaign || widget.isFromLearn) ? Container(
                       margin: EdgeInsets.only(left: 16),
                       child: IconButton(
                         onPressed: (){

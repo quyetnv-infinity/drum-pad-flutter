@@ -1865,15 +1865,50 @@ final List<SongCollection> dataSongCollections = [
       author: "Deaf Kev",
       name: "Invincible"),
   SongCollection(
-      lessons: [],
+      lessons: [
+        LessonSequence(
+          events: [
+            NoteEvent(notes: ['invincible_mid01_face_a_lead_a'], time: 0.0),
+            NoteEvent(notes: ['invincible_mid02_face_a_lead_a'], time: 2.4),
+            NoteEvent(notes: ['invincible_mid03_face_a_lead_a'], time: 4.8),
+            NoteEvent(notes: ['invincible_mid04_face_a_lead_a'], time: 7.2),
+            NoteEvent(notes: ['invincible_mid05_face_a_drum_a'], time: 9.6),
+            NoteEvent(notes: ['invincible_mid06_face_a_drum_a'], time: 12.0),
+            NoteEvent(notes: ['invincible_mid07_face_a_drum_a'], time: 14.4),
+            NoteEvent(notes: ['invincible_mid08_face_a_lead_a'], time: 16.8),
+            NoteEvent(notes: ['invincible_mid09_face_a_lead_a'], time: 19.2),
+            NoteEvent(notes: ['invincible_mid10_face_a_drum_a'], time: 21.6),
+            NoteEvent(notes: ['invincible_mid11_face_a_drum_a'], time: 24.0),
+            NoteEvent(notes: ['invincible_mid12_face_a_drum_a'], time: 26.4),
+            NoteEvent(notes: ['invincible_mid13_face_a_drum_a'], time: 28.8),
+          ]
+        )
+      ],
       image: "assets/images/lactroi.png",
-      author: "Sơn Tùng M-TP",
-      name: "Lạc Trôi"),
+      author: "Deaf Kev",
+      name: "Linh ta linh tinh"),
   SongCollection(
-      lessons: [],
-      image: "assets/images/lactroi.png",
-      author: "Sơn Tùng M-TP",
-      name: "Lạc Trôi"),
+    id: 'despacito',
+    lessons: [
+      LessonSequence(
+        events: [
+          NoteEvent(notes: ['despacito_mid04_face_a_drum_a'], time: 0.0),
+          NoteEvent(notes: ['despacito_mid03_face_a_drum_a'], time: 2.7),
+          NoteEvent(notes: ['despacito_mid02_face_a_drum_a'], time: 5.3),
+          NoteEvent(notes: ['despacito_mid01_face_a_lead_a'], time: 8.0),
+          NoteEvent(notes: ['despacito_mid05_face_a_drum_a'], time: 10.7),
+          NoteEvent(notes: ['despacito_mid12_face_a_lead_a'], time: 13.3),
+          NoteEvent(notes: ['despacito_mid09_face_a_lead_a'], time: 16.0),
+          NoteEvent(notes: ['despacito_mid06_face_a_lead_a'], time: 18.7),
+          NoteEvent(notes: ['despacito_mid11_face_a_drum_a'], time: 21.3),
+          NoteEvent(notes: ['despacito_mid08_face_a_lead_a'], time: 24.0),
+          NoteEvent(notes: ['despacito_mid10_face_a_lead_a'], time: 26.7),
+        ]
+      )
+    ],
+    image: "assets/images/music_99%.png",
+    author: "Anh Tung",
+    name: "Despacito"),
   SongCollection(
       lessons: [],
       image: "assets/images/lactroi.png",

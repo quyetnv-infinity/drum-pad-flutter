@@ -137,7 +137,7 @@ class _CampaignItemState extends State<CampaignItem> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     BlurWidget(text: DifficultyMode.getString(context, widget.difficult).toUpperCase(),),
-                    Text('Fundamental 1', style: TextStyle(fontSize: 23, fontWeight: FontWeight.w600, color:  Colors.white)),
+                    Text(isEasy ? '${context.locale.fundamental} 1' : (isMedium ? '${context.locale.fundamental} 2' : (isHard ? '${context.locale.follow_da_beat} 1' : '${context.locale.follow_da_beat} 2')), style: TextStyle(fontSize: 23, fontWeight: FontWeight.w600, color:  Colors.white)),
                     Text('${context.locale.progress}: $_percent%', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color:  Colors.white)),
                     RatingStars.custom(value: _star, smallStarWidth: 20, smallStarHeight: 20, bigStarWidth: 20, bigStarHeight: 20, isFlatStar: true,)
                   ],
