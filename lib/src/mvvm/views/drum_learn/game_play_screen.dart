@@ -457,36 +457,62 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
           ModeButton(title: context.locale.practice, initialSelected: false, onSelected: (bool selected) {
             selected ? _updateSelectedMode("practice") : _updateSelectedMode("null");
           },),
-          ModeButton(title: context.locale.rec, initialSelected: _isRecordingSelected, onSelected: (bool selected) async{
-            setState(() {
-              _isRecordingSelected = selected;
-            });
-            if (selected) {
-              // If button is selected (toggled ON), start recording
-              print("ModeButton selected: true - Attempting to start recording...");
-              await ScreenRecorderService().startRecording();
-              context.read<DrumLearnProvider>().updateRecording();
-            } else {
-              // If button is deselected (toggled OFF), stop recording
-              print("ModeButton selected: false - Attempting to stop recording...");
-              await ScreenRecorderService().stopRecording();
-              context.read<DrumLearnProvider>().updateRecording();
-            }
-          },),
+          ModeButton(
+            title: context.locale.rec,
+            initialSelected: _isRecordingSelected,
+            onSelected: (bool selected) async {
+              setState(() {
+                _isRecordingSelected = selected;
+              });
+              if (selected) {
+                print("ModeButton selected: true - Attempting to start recording...");
+                await handleOnToggleRecordScreenTab();
+                try {
+                  await ScreenRecorderService().startRecording();
+                  context.read<DrumLearnProvider>().updateRecording();
+                } catch (e) {
+                  print("Lỗi khi bắt đầu ghi màn hình: $e");
+                  setState(() {
+                    _isRecordingSelected = false;
+                  });
+                  if (context.mounted) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text("Không thể bắt đầu ghi màn hình"),
+                        content: Text("Vui lòng kiểm tra quyền hệ thống hoặc cài đặt lại quyền trong Settings."),
+                        actions: [
+                          TextButton(
+                            child: Text("OK"),
+                            onPressed: () => Navigator.of(context).pop(),
+                          )
+                        ],
+                      ),
+                    );
+                  }
+                }
+              } else {
+                print("ModeButton selected: false - Attempting to stop recording...");
+                await ScreenRecorderService().stopRecording();
+                context.read<DrumLearnProvider>().updateRecording();
+              }
+            },
+          ),
         ],
       ),
     );
   }
   Future<void> handleOnToggleRecordScreenTab() async {
-    final permissionStatus = await Permission.unknown .status;
+    final permissionStatus = await Permission.photosAddOnly.status;
     if (!permissionStatus.isGranted) {
-      await Permission.microphone.request();
-      if(await Permission.microphone.status.isPermanentlyDenied){
+      await Permission.photosAddOnly.request();
+      if(await Permission.photosAddOnly.status.isPermanentlyDenied){
         if(!mounted) return;
         PermissionUtil.showRequestRecordScreenPermissionDialog(context);
         return;
-      } else if (await Permission.microphone.status.isGranted){
-        // await initCamera();
+      } else if (await Permission.photosAddOnly.status.isGranted){
+        await ScreenRecorderService().startRecording();
+        context.read<DrumLearnProvider>().updateRecording();
       }
     }
   }
