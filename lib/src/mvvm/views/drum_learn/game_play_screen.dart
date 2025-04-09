@@ -497,32 +497,14 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
     );
   }
   Future<void> handleOnToggleRecordScreenTab() async {
-    final status = await Permission.photosAddOnly.status;
-    if (!status.isGranted) {
-      final result = await Permission.photosAddOnly.request();
-      if (result.isPermanentlyDenied) {
-        if (!mounted) return;
+    final permissionStatus = await Permission.microphone.status;
+    if (!permissionStatus.isGranted) {
+      await Permission.microphone.request();
+      if(await Permission.microphone.status.isPermanentlyDenied){
+        if(!mounted) return;
         PermissionUtil.showRequestRecordScreenPermissionDialog(context);
         return;
-      }
-      if (result.isDenied) {
-        if (!mounted) return;
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text("Không thể lưu video"),
-            content: Text("Ứng dụng cần quyền truy cập thư viện ảnh để lưu video ghi màn hình."),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text("OK"),
-              )
-            ],
-          ),
-        );
-        return;
-      }
-      if (!result.isGranted) {
+      } else if (await Permission.microphone.status.isGranted){
         return;
       }
     }
