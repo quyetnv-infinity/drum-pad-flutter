@@ -3,12 +3,12 @@ import 'package:flutter/services.dart';
 class ScreenRecorderService {
   static const MethodChannel platform = MethodChannel('screen_recording');
 
-  Future<void> startRecording() async {
+  Future<void> startRecording(Function() onError) async {
     try {
       await platform.invokeMethod('startRecording');
       print("Bắt đầu quay màn hình");
     } on PlatformException catch (e) {
-      print("Lỗi: '${e.message}'.");
+      onError();
     }
   }
 

@@ -457,21 +457,14 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
           ModeButton(title: context.locale.practice, initialSelected: false, onSelected: (bool selected) {
             selected ? _updateSelectedMode("practice") : _updateSelectedMode("null");
           },),
-          ModeButton(
-            title: context.locale.rec,
-            initialSelected: _isRecordingSelected,
-            onSelected: (bool selected) async {
+          ModeButton(title: context.locale.rec, initialSelected: _isRecordingSelected, onSelected: (bool selected) async {
               setState(() {
                 _isRecordingSelected = selected;
               });
               if (selected) {
                 print("ModeButton selected: true - Attempting to start recording...");
                 await handleOnToggleRecordScreenTab();
-                try {
-                  await ScreenRecorderService().startRecording();
-                  context.read<DrumLearnProvider>().updateRecording();
-                } catch (e) {
-                  print("Lỗi khi bắt đầu ghi màn hình: $e");
+                await ScreenRecorderService().startRecording(() {
                   setState(() {
                     _isRecordingSelected = false;
                   });
@@ -490,7 +483,8 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                       ),
                     );
                   }
-                }
+                },);
+                context.read<DrumLearnProvider>().updateRecording();
               } else {
                 print("ModeButton selected: false - Attempting to stop recording...");
                 await ScreenRecorderService().stopRecording();
@@ -503,16 +497,33 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
     );
   }
   Future<void> handleOnToggleRecordScreenTab() async {
-    final permissionStatus = await Permission.photosAddOnly.status;
-    if (!permissionStatus.isGranted) {
-      await Permission.photosAddOnly.request();
-      if(await Permission.photosAddOnly.status.isPermanentlyDenied){
-        if(!mounted) return;
+    final status = await Permission.photosAddOnly.status;
+    if (!status.isGranted) {
+      final result = await Permission.photosAddOnly.request();
+      if (result.isPermanentlyDenied) {
+        if (!mounted) return;
         PermissionUtil.showRequestRecordScreenPermissionDialog(context);
         return;
-      } else if (await Permission.photosAddOnly.status.isGranted){
-        await ScreenRecorderService().startRecording();
-        context.read<DrumLearnProvider>().updateRecording();
+      }
+      if (result.isDenied) {
+        if (!mounted) return;
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Không thể lưu video"),
+            content: Text("Ứng dụng cần quyền truy cập thư viện ảnh để lưu video ghi màn hình."),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text("OK"),
+              )
+            ],
+          ),
+        );
+        return;
+      }
+      if (!result.isGranted) {
+        return;
       }
     }
   }
