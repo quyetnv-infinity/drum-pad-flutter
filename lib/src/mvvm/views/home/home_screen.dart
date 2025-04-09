@@ -12,6 +12,7 @@ import 'package:drumpad_flutter/src/mvvm/views/iap/iap_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/beat_runner/beat_runner_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/drum_learn_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/load_file/load_file_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/profile/profile_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/setting/setting_screen.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
@@ -56,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.push(
                 context,
                 CupertinoPageRoute(
-                  builder: (context) => IapScreen(),
+                  builder: (context) => LoadFileScreen(),
                 ),
               );
             },

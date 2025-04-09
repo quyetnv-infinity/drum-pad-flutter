@@ -90,7 +90,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
 
   List<Map<String, dynamic>> getFutureNotes(LessonSequence data) {
     List<Map<String, dynamic>> futureNotes = [];
-    List<NoteEvent> events = widget.currentSong?.lessons[widget.lessonIndex].events ?? [];
+    List<NoteEvent> events = widget.currentSong?.lessons[currentLesson].events ?? [];
 
     for (int i = 1; i < events.length; i++) {
       List<String> notes = events[i].notes;
@@ -380,6 +380,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       lessonSounds.clear();
       lessonSounds.addAll(sortDrumpadSounds(uniqueSounds.toList(), lessons[currentLesson].events[0].notes[0].contains("_face_b_") ? _faceB : _faceA));
       _futureNotes = getFutureNotes(lessons[currentLesson]);
+      // print(_futureNotes);
       print("lessonssss $lessonSounds");
     } catch (e) {
       print('Error loading sequence data from file: $e');
@@ -606,9 +607,11 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         padStates[sound] = state;
       });
     } else if (highlightedSounds.contains(sound)) {
-      if (_futureNotes.isNotEmpty && (_futureNotes[0]["notes"] as List).contains(sound) && currentEventIndex != 0) {
-        _futureNotes.removeAt(0);
-        setState(() {});
+      if (_futureNotes.isNotEmpty && (_futureNotes[0]["notes"] as List).contains(sound) && currentEventIndex == (_futureNotes[0]["index"] as int) && currentEventIndex != 0) {
+        print('remove=========');
+        setState(() {
+          _futureNotes.removeAt(0);
+        });
       }
       firstRemainSound = DateTime.now();
 
@@ -828,7 +831,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
                       && (_futureNotes[0]["notes"] as List).contains(sound)
                       && currentEventIndex != 0
                       && !padProgress.containsKey(sound)
-                      && !sound.contains("drums")
+                      && !sound.contains("drum")
                       && _futureNotes[0]["index"] - currentEventIndex < 4
                   )
                     if(widget.practiceMode !='practice')

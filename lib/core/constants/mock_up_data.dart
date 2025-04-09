@@ -1800,6 +1800,126 @@ final List<SongCollection> dataSongCollections = [
       id: 'invincible',
       lessons: [
         LessonSequence(
+          events: [
+            NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a'], time: 0.0),
+            NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 0.6),
+            NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a'], time: 1.2),
+            NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 1.5),
+            NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 1.8),
+            NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a'], time: 2.4),
+            NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 2.7),
+            NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 3.0),
+            NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a'], time: 3.6),
+            NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 3.9),
+            NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 4.2),
+            NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 4.5),
+            NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a'], time: 4.8),
+            NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 5.4),
+            NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a'], time: 6.0),
+            NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 6.3),
+            NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 6.6),
+            NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a'], time: 7.2),
+            NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 7.5),
+            NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 7.8),
+            NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a'], time: 8.4),
+            NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 8.7),
+            NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 9.0),
+            NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 9.3)
+          ],
+        ),
+        LessonSequence(
+            events: [
+              NoteEvent(notes: ['invincible_mid01_face_a_lead_lead1_a'], time: 0.0),
+              NoteEvent(notes: ['invincible_mid02_face_a_lead_lead2_a'], time: 2.4),
+              NoteEvent(notes: ['invincible_mid03_face_a_lead_lead3_a'], time: 4.8),
+              NoteEvent(notes: ['invincible_mid06_face_a_lead_lead4_a'], time: 7.2)
+            ]
+        ),
+        LessonSequence(
+            events: [
+              NoteEvent(notes: ['invincible_mid04_face_a_bass_bass1_a'], time: 0.0),
+              NoteEvent(notes: ['invincible_mid05_face_a_bass_bass2_a'], time: 1.05),
+              NoteEvent(notes: ['invincible_mid07_face_a_bass_bass3_a'], time: 2.4),
+              NoteEvent(notes: ['invincible_mid08_face_a_bass_bass4_a'], time: 3.45),
+              NoteEvent(notes: ['invincible_mid04_face_a_bass_bass1_a'], time: 4.8),
+              NoteEvent(notes: ['invincible_mid05_face_a_bass_bass2_a'], time: 5.85),
+              NoteEvent(notes: ['invincible_mid07_face_a_bass_bass3_a'], time: 7.2),
+              NoteEvent(notes: ['invincible_mid08_face_a_bass_bass4_a'], time: 8.25)
+            ]
+        ),
+        LessonSequence(
+            events: [
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a', 'invincible_mid04_face_a_bass_bass1_a'], time: 0.0),
+              NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 0.6),
+              NoteEvent(notes: ['invincible_mid05_face_a_bass_bass2_a'], time: 1.05),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a'], time: 1.2),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 1.5),
+              NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 1.8),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a', 'invincible_mid07_face_a_bass_bass3_a'], time: 2.4),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 2.7),
+              NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 3.0),
+              NoteEvent(notes: ['invincible_mid08_face_a_bass_bass4_a'], time: 3.45),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a'], time: 3.6),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 3.9),
+              NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 4.2),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 4.5),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a', 'invincible_mid04_face_a_bass_bass1_a'], time: 4.8),
+              NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 5.4),
+              NoteEvent(notes: ['invincible_mid05_face_a_bass_bass2_a'], time: 5.85),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a'], time: 6.0),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 6.3),
+              NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 6.6),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a', 'invincible_mid07_face_a_bass_bass3_a'], time: 7.2),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 7.5),
+              NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 7.8),
+              NoteEvent(notes: ['invincible_mid08_face_a_bass_bass4_a'], time: 8.25),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a'], time: 8.4),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 8.7),
+              NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 9.0),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 9.3)
+            ]
+        ),
+        LessonSequence(
+            events: [
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a', 'invincible_mid01_face_a_lead_lead1_a'], time: 0.0),
+              NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 0.6),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a'], time: 1.2),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 1.5),
+              NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 1.8),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a', 'invincible_mid02_face_a_lead_lead2_a'], time: 2.4),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 2.7),
+              NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 3.0),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a'], time: 3.6),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 3.9),
+              NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 4.2),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 4.5),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a', 'invincible_mid03_face_a_lead_lead3_a'], time: 4.8),
+              NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 5.4),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a'], time: 6.0),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 6.3),
+              NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 6.6),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a', 'invincible_mid06_face_a_lead_lead4_a'], time: 7.2),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 7.5),
+              NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 7.8),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a'], time: 8.4),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 8.7),
+              NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 9.0),
+              NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a'], time: 9.3)
+            ]
+        ),
+        LessonSequence(
+            events: [
+              NoteEvent(notes: ['invincible_mid01_face_a_lead_lead1_a', 'invincible_mid04_face_a_bass_bass1_a'], time: 0.0),
+              NoteEvent(notes: ['invincible_mid05_face_a_bass_bass2_a'], time: 1.05),
+              NoteEvent(notes: ['invincible_mid02_face_a_lead_lead2_a', 'invincible_mid07_face_a_bass_bass3_a'], time: 2.4),
+              NoteEvent(notes: ['invincible_mid08_face_a_bass_bass4_a'], time: 3.45),
+              NoteEvent(notes: ['invincible_mid03_face_a_lead_lead3_a', 'invincible_mid04_face_a_bass_bass1_a'], time: 4.8),
+              NoteEvent(notes: ['invincible_mid05_face_a_bass_bass2_a'], time: 5.85),
+              NoteEvent(notes: ['invincible_mid06_face_a_lead_lead4_a', 'invincible_mid07_face_a_bass_bass3_a'], time: 7.2),
+              NoteEvent(notes: ['invincible_mid08_face_a_bass_bass4_a'], time: 8.25),
+            ]
+        ),
+        LessonSequence(
             events: [
               NoteEvent(notes: ['invincible_mid10_face_a_drum_kick_a', 'invincible_mid11_face_a_drum_hihat_a', 'invincible_mid01_face_a_lead_lead1_a', 'invincible_mid04_face_a_bass_bass1_a', 'invincible_mid09_face_a_fx_fx_a'], time: 0.0),
               NoteEvent(notes: ['invincible_mid11_face_a_drum_hihat_a', 'invincible_mid12_face_a_drum_snare_a'], time: 0.6),
