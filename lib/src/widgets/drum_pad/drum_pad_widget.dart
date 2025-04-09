@@ -228,7 +228,11 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       widget.onChangeUnlockedModeCampaign?.call();
     }
     /// 📖 save learn from song and beat runner count for information at profile screen
-    if (!widget.isFromLearnScreen) provider.addBeatRunnerSongComplete(widget.currentSong!.id);
+    if (!widget.isFromLearnScreen)
+      {
+        provider.addBeatRunnerSongComplete(widget.currentSong!.id);
+        provider.addBeatRunnerStar(widget.currentSong!.id, getStar());
+      }
     if (currentLesson >= lessons.length - 1 && widget.isFromLearnScreen) provider.addLearnSongComplete(widget.currentSong!.id);
     /// push navigation and check cases
     final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() > 1,),));

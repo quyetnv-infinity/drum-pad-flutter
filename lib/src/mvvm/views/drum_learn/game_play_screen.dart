@@ -387,19 +387,36 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                             ),
                             Text(context.locale.score, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
                             // Text(_currentScore.toString(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 32, color: Colors.white),),
-                            AnimatedSwitcher(
-                              switchInCurve: Curves.fastEaseInToSlowEaseOut,
-                              duration: const Duration(milliseconds: 100),
-                              transitionBuilder: (Widget child, Animation<double> animation) {
-                                return ScaleTransition(scale: animation, child: child);
+                            TweenAnimationBuilder<double>(
+                              tween: Tween<double>(
+                                begin: 1.0,
+                                end: 1.0 + (context.watch<DrumLearnProvider>().perfectPoint.clamp(0, 8) * 0.05),
+                              ),
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.elasticOut,
+                              builder: (context, scale, child) {
+                                return Transform.scale(
+                                  scale: scale,
+                                  child: child,
+                                );
                               },
-                              child: Text(
-                                _currentScore.toString(),
-                                key: ValueKey<int>(_currentScore),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 32,
-                                  color: Colors.white,
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 150),
+                                switchInCurve: Curves.fastEaseInToSlowEaseOut,
+                                transitionBuilder: (Widget child, Animation<double> animation) {
+                                  return FadeTransition(
+                                    opacity: animation,
+                                    child: child,
+                                  );
+                                },
+                                child: Text(
+                                  _currentScore.toString(),
+                                  key: ValueKey<int>(_currentScore),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 32,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),

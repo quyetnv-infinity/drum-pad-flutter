@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/pad_util.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
 import 'package:drumpad_flutter/src/widgets/drum_pad/drum_pad_widget.dart';
@@ -208,6 +209,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                   GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
+                      context.read<DrumLearnProvider>().resetPerfectPoint();
                     },
                     child: Row(
                       children: [
