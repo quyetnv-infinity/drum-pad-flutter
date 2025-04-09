@@ -188,7 +188,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       setState(() {
         _totalNotes = 0;
       });
-      _loadSequenceDataFromFile(lessons.length - 1).then((_) {
+      _loadSequenceDataFromFile(0).then((_) {
         setState(() {
           _pauseTimer?.cancel();
           isLoading = false;
