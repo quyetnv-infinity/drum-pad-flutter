@@ -469,19 +469,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                     _isRecordingSelected = false;
                   });
                   if (context.mounted) {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text("Không thể bắt đầu ghi màn hình"),
-                        content: Text("Vui lòng kiểm tra quyền hệ thống hoặc cài đặt lại quyền trong Settings."),
-                        actions: [
-                          TextButton(
-                            child: Text("OK"),
-                            onPressed: () => Navigator.of(context).pop(),
-                          )
-                        ],
-                      ),
-                    );
+                    PermissionUtil.showRequestScreenRecordPermissionDialog(context);
                   }
                 },);
                 context.read<DrumLearnProvider>().updateRecording();
@@ -502,7 +490,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
       await Permission.microphone.request();
       if(await Permission.microphone.status.isPermanentlyDenied){
         if(!mounted) return;
-        PermissionUtil.showRequestRecordScreenPermissionDialog(context);
+        PermissionUtil.showRequestPhotosPermissionDialog(context);
         return;
       } else if (await Permission.microphone.status.isGranted){
         return;
