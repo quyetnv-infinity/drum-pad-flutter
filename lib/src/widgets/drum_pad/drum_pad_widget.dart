@@ -80,6 +80,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   int missPoint = 0;
   int totalPoint = 0;
   int _previousTotalPoint = 0;
+  int tempLessonIndex = 0;
 
   int _totalNotes = 0;
   Timer? _pauseTimer;
@@ -108,8 +109,11 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   void initState() {
     super.initState();
     if(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty) {
-      _loadSequenceDataFromFile(widget.lessonIndex).then((_) {
-        _initializeAudioPlayers();
+      setState(() {
+        isLoading = true;
+      });
+      _loadSequenceDataFromFile(widget.lessonIndex).then((_) async{
+        await _initializeAudioPlayers();
         setState(() {
           isLoading = false;
         });
@@ -130,9 +134,11 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     super.didUpdateWidget(oldWidget);
     // Start sequence when song changes from null to non-null
     if (oldWidget.currentSong != widget.currentSong && widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty) {
-      print('start');
-      _loadSequenceDataFromFile(widget.lessonIndex).then((_) {
-        _initializeAudioPlayers();
+      setState(() {
+        isLoading = true;
+      });
+      _loadSequenceDataFromFile(widget.lessonIndex).then((_) async{
+        await _initializeAudioPlayers();
         setState(() {
           isLoading = false;
         });
@@ -183,12 +189,12 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   }
 
   void checkModeChange(DrumPadScreen oldWidget){
-
     if (oldWidget.practiceMode != widget.practiceMode && widget.practiceMode == "practice") {
       setState(() {
         _totalNotes = 0;
+        tempLessonIndex = currentLesson;
       });
-      _loadSequenceDataFromFile(0).then((_) {
+      _loadSequenceDataFromFile(lessons.length - 1).then((_) {
         setState(() {
           _pauseTimer?.cancel();
           isLoading = false;
@@ -199,15 +205,14 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         widget.onChangeStarLearn?.call(0);
         context.read<DrumLearnProvider>().resetPerfectPoint();
       });
-    } else if(oldWidget.practiceMode != widget.practiceMode && widget.practiceMode != "practice"){
+    }else if(oldWidget.practiceMode != widget.practiceMode && widget.practiceMode != "practice"){
       setState(() {
         _totalNotes = 0;
       });
-      _loadSequenceDataFromFile(widget.lessonIndex).then((_) {
+      _loadSequenceDataFromFile(tempLessonIndex).then((_) {
         setState(() {
           isLoading = false;
         });
-        // Start sequence if song exists
         _resetSequence();
         _startSequence();
         widget.onChangeStarLearn?.call(0);
@@ -239,12 +244,14 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     /// push navigation and check cases
     final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() > 1,),));
     if(result != null && result == 'play_again'){
+      final tempTotalNote = _totalNotes;
       widget.onChangeStarLearn?.call(0);
       _resetSequence(isPlayingDrum: true);
       _startSequence();
       setState(() {
         _previousTotalPoint = 0;
         totalPoint = 0;
+        _totalNotes = tempTotalNote;
       });
     }
     /// that case which check for back to Beat Runner screen and choose another song
@@ -257,7 +264,9 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         _previousTotalPoint = 0;
         totalPoint = 0;
       });
-    } else if(result != null && result is int){
+    }
+    /// next Lesson
+    else if(result != null && result is int){
       final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
       setState(() {
         if(widget.isFromLearnScreen) {
@@ -279,9 +288,10 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       setState(() {
         _previousTotalPoint = 0;
         totalPoint = 0;
+        isLoading = true;
       });
-      _loadSequenceDataFromFile(currentLesson).then((_) {
-        _initializeAudioPlayers();
+      _loadSequenceDataFromFile(currentLesson).then((_) async {
+        await _initializeAudioPlayers();
         setState(() {
           isLoading = false;
         });
@@ -706,176 +716,194 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   Widget build(BuildContext context) {
     return IgnorePointer(
       ignoring: currentEventIndex >= events.length,
-      child: Listener(
-        behavior: HitTestBehavior.translucent,
-        onPointerDown: (event) {
-          if(!(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty)) return;
-          // Track new pointer
-          RenderBox box = context.findRenderObject() as RenderBox;
-          Offset localPosition = box.globalToLocal(event.position);
-          _lastPointerPositions[event.pointer] = localPosition;
+      child: Stack(
+        children: [
+          Listener(
+            behavior: HitTestBehavior.translucent,
+            onPointerDown: (event) {
+              if(!(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty)) return;
+              // Track new pointer
+              RenderBox box = context.findRenderObject() as RenderBox;
+              Offset localPosition = box.globalToLocal(event.position);
+              _lastPointerPositions[event.pointer] = localPosition;
 
-          // Calculate which pad was touched
-          double itemWidth = box.size.width / 3;
-          double itemHeight = itemWidth;
-          int col = (localPosition.dx ~/ itemWidth).clamp(0, 2);
-          int row = ((localPosition.dy) ~/ itemHeight)
-              .clamp(0, (12 ~/ 3));
-          int index = row * 3 + col;
-          // print(index);
+              // Calculate which pad was touched
+              double itemWidth = box.size.width / 3;
+              double itemHeight = itemWidth;
+              int col = (localPosition.dx ~/ itemWidth).clamp(0, 2);
+              int row = ((localPosition.dy) ~/ itemHeight)
+                  .clamp(0, (12 ~/ 3));
+              int index = row * 3 + col;
+              // print(index);
 
-          if (index < 12) {
-            _pointerToPadIndex[event.pointer] = index;
-            _pointerToSound[event.pointer] = lessonSounds[index];
-          }
-        },
+              if (index < 12) {
+                _pointerToPadIndex[event.pointer] = index;
+                _pointerToSound[event.pointer] = lessonSounds[index];
+              }
+            },
 
-        onPointerUp: (event) {
-          if(!(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty)) return;
-          // Clean up when pointer is released
-          _pointerToPadIndex.remove(event.pointer);
-          _pointerToSound.remove(event.pointer);
-          _lastPointerPositions.remove(event.pointer);
-        },
-        onPointerMove: (event) async {
-          if(!(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty)) return;
-          RenderBox box = context.findRenderObject() as RenderBox;
-          Offset localPosition = box.globalToLocal(event.position);
+            onPointerUp: (event) {
+              if(!(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty)) return;
+              // Clean up when pointer is released
+              _pointerToPadIndex.remove(event.pointer);
+              _pointerToSound.remove(event.pointer);
+              _lastPointerPositions.remove(event.pointer);
+            },
+            onPointerMove: (event) async {
+              if(!(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty)) return;
+              RenderBox box = context.findRenderObject() as RenderBox;
+              Offset localPosition = box.globalToLocal(event.position);
 
-          // Check if this pointer has moved enough to trigger a new pad
-          if (_lastPointerPositions.containsKey(event.pointer)) {
-            double distance = (localPosition - _lastPointerPositions[event.pointer]!).distance;
-            if (distance < _movementThreshold) {
-              return; // Movement too small, ignore
-            }
-          }
+              // Check if this pointer has moved enough to trigger a new pad
+              if (_lastPointerPositions.containsKey(event.pointer)) {
+                double distance = (localPosition - _lastPointerPositions[event.pointer]!).distance;
+                if (distance < _movementThreshold) {
+                  return; // Movement too small, ignore
+                }
+              }
 
-          double itemWidth = box.size.width / 3;
-          double itemHeight = itemWidth;
-          int col = (localPosition.dx ~/ itemWidth).clamp(0, 2);
-          int row = ((localPosition.dy) ~/ itemHeight)
-              .clamp(0, (12 ~/ 3));
-          int index = row * 3 + col;
+              double itemWidth = box.size.width / 3;
+              double itemHeight = itemWidth;
+              int col = (localPosition.dx ~/ itemWidth).clamp(0, 2);
+              int row = ((localPosition.dy) ~/ itemHeight)
+                  .clamp(0, (12 ~/ 3));
+              int index = row * 3 + col;
 
-          // Only process if index is valid
-          if (index < 12) {
-            String currentSound = lessonSounds[index];
+              // Only process if index is valid
+              if (index < 12) {
+                String currentSound = lessonSounds[index];
 
-            // Check if this pointer is already on this pad or has already played this sound
-            if (_pointerToPadIndex[event.pointer] == index ||
-                _pointerToSound[event.pointer] == currentSound) {
-              return; // Already on this pad or already played this sound
-            }
+                // Check if this pointer is already on this pad or has already played this sound
+                if (_pointerToPadIndex[event.pointer] == index ||
+                    _pointerToSound[event.pointer] == currentSound) {
+                  return; // Already on this pad or already played this sound
+                }
 
-            _pointerToPadIndex[event.pointer] = index;
-            _pointerToSound[event.pointer] = currentSound;
-            _lastPointerPositions[event.pointer] = localPosition;
+                _pointerToPadIndex[event.pointer] = index;
+                _pointerToSound[event.pointer] = currentSound;
+                _lastPointerPositions[event.pointer] = localPosition;
 
-            _onPadPressed(currentSound, index);
-          }
-        },
-        child: GridView.builder(
-          padding: const EdgeInsets.all(8.0),
-          shrinkWrap: true,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            childAspectRatio: 1.0,
-            crossAxisSpacing: 4,
-            mainAxisSpacing: 4,
-          ),
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: 12,
-          itemBuilder: (context, index) {
-            final bool hasSound = index < lessonSounds.length && widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty;
-            final String soundId = hasSound && lessonSounds.length == 12 ? lessonSounds[index] : '';
-            final bool isHighlighted = highlightedSounds.contains(soundId);
-            final sound = lessonSounds.length == 12 ? lessonSounds[index] : '';
-            bool isActive = _padPressedIndex.isNotEmpty && _padPressedIndex.contains(index) && widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty;
-            return GestureDetector(
-              onTapDown: (_) {
-                _onPadPressed(sound, index);
-              },
-              child: Stack(
-                children: [
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 150),
-                    curve: Curves.easeInOut,
-                    padding: EdgeInsets.all(isActive ? 8 : 0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12.0),
-                          gradient: RadialGradient(colors: getPadColor(isHighlighted, hasSound, isActive, soundId))
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: TweenAnimationBuilder(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                      tween: Tween<double>(begin: 1.0, end: isActive ? 2.5 : 1.0),
-                      builder: (context, scale, child) {
-                        return Transform.scale(
-                          scale: scale,
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 100),
-                            curve: Curves.easeInOut,
-                            transform: Matrix4.translationValues(0, padStates[sound] != null ? -80 : 0, 0),
-                            child: (padStates[sound] ?? PadStateEnum.none).getDisplayWidget(context),
+                _onPadPressed(currentSound, index);
+              }
+            },
+            child: GridView.builder(
+              padding: const EdgeInsets.all(8.0),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: 1.0,
+                crossAxisSpacing: 4,
+                mainAxisSpacing: 4,
+              ),
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: 12,
+              itemBuilder: (context, index) {
+                final bool hasSound = index < lessonSounds.length && widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty && !isLoading;
+                final String soundId = hasSound && lessonSounds.length == 12 ? lessonSounds[index] : '';
+                final bool isHighlighted = highlightedSounds.contains(soundId);
+                final sound = lessonSounds.length == 12 ? lessonSounds[index] : '';
+                bool isActive = _padPressedIndex.isNotEmpty && _padPressedIndex.contains(index) && widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty;
+                return GestureDetector(
+                  onTapDown: (_) {
+                    _onPadPressed(sound, index);
+                  },
+                  child: Stack(
+                    children: [
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        curve: Curves.easeInOut,
+                        padding: EdgeInsets.all(isActive ? 8 : 0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.0),
+                              gradient: RadialGradient(colors: getPadColor(isHighlighted, hasSound, isActive, soundId))
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                  // (padStates[sound] ?? PadStateEnum.none).getDisplayWidget(context),
-                  if (_futureNotes.isNotEmpty
-                      && (_futureNotes[0]["notes"] as List).contains(sound)
-                      && currentEventIndex != 0
-                      && !padProgress.containsKey(sound)
-                      && !sound.contains("drum")
-                      && _futureNotes[0]["index"] - currentEventIndex < 4
-                  )
-                    if(widget.practiceMode !='practice')
-                    Stack(
-                      children: [
+                        ),
+                      ),
+                      Center(
+                        child: TweenAnimationBuilder(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          tween: Tween<double>(begin: 1.0, end: isActive ? 2.5 : 1.0),
+                          builder: (context, scale, child) {
+                            return Transform.scale(
+                              scale: scale,
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 100),
+                                curve: Curves.easeInOut,
+                                transform: Matrix4.translationValues(0, padStates[sound] != null ? -80 : 0, 0),
+                                child: (padStates[sound] ?? PadStateEnum.none).getDisplayWidget(context),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      // (padStates[sound] ?? PadStateEnum.none).getDisplayWidget(context),
+                      if (_futureNotes.isNotEmpty
+                          && (_futureNotes[0]["notes"] as List).contains(sound)
+                          && currentEventIndex != 0
+                          && !padProgress.containsKey(sound)
+                          && !sound.contains("drum")
+                          && _futureNotes[0]["index"] - currentEventIndex < 4
+                      )
+                        if(widget.practiceMode !='practice')
+                        Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.center,
+                              child: CircularProgressIndicator(
+                                value: _calculateProgressValue(currentEventIndex, _futureNotes[0]["index"]),
+                                strokeWidth: 5,
+                                backgroundColor: Colors.white24,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            ),
+                            Align(
+                                alignment: Alignment.center,
+                                child: Text(context.locale.wait, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: Colors.white))),
+                          ],
+                        ),
+                      if (padProgress.containsKey(sound) && hasSound && widget.practiceMode != 'practice')
                         Align(
                           alignment: Alignment.center,
-                          child: CircularProgressIndicator(
-                            value: _calculateProgressValue(currentEventIndex, _futureNotes[0]["index"]),
-                            strokeWidth: 5,
-                            backgroundColor: Colors.white24,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          child:  SizedBox(
+                            width: 36,
+                            height: 36,
+                            child: CircularProgressIndicator(
+                              value: padProgress[sound],
+                              strokeWidth: 5,
+                              backgroundColor: Colors.white24,
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
                           ),
                         ),
+                      if (isActive)
+                        Lottie.asset('assets/anim/lightning_button.json', fit: BoxFit.cover, controller: _controller),
+                      if(!padProgress.containsKey(sound) && isHighlighted && widget.practiceMode != 'practice')
                         Align(
                             alignment: Alignment.center,
-                            child: Text(context.locale.wait, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: Colors.white))),
-                      ],
-                    ),
-                  if (padProgress.containsKey(sound) && hasSound && widget.practiceMode != 'practice')
-                    Align(
-                      alignment: Alignment.center,
-                      child:  SizedBox(
-                        width: 36,
-                        height: 36,
-                        child: CircularProgressIndicator(
-                          value: padProgress[sound],
-                          strokeWidth: 5,
-                          backgroundColor: Colors.white24,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                      ),
-                    ),
-                  if (isActive)
-                    Lottie.asset('assets/anim/lightning_button.json', fit: BoxFit.cover, controller: _controller),
-                  if(!padProgress.containsKey(sound) && isHighlighted && widget.practiceMode != 'practice')
-                    Align(
-                        alignment: Alignment.center,
-                        child: Lottie.asset('assets/anim/click_here.json', height: MediaQuery.sizeOf(context).width /3 - 50))
-                ],
+                            child: Lottie.asset('assets/anim/click_here.json', height: MediaQuery.sizeOf(context).width /3 - 50))
+                    ],
+                  ),
+                );
+              },
+            )
+          ),
+          if(isLoading)
+            Positioned.fill(child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.black.withValues(alpha: 0.5),
               ),
-            );
-          },
-        )
+              child: Center(
+                child: SizedBox(
+                  width: 100, height: 100,
+                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 10,)
+                )
+              )
+            )
+          )
+        ],
       ),
     );
   }
