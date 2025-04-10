@@ -57,7 +57,16 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.push(
                 context,
                 CupertinoPageRoute(
-                  builder: (context) => LoadFileScreen(),
+                  builder: (context) => LoadFileScreen(
+                    callbackLoadingCompleted: (song){
+                      Future.delayed(Duration(seconds: 2), (){
+                        Navigator.pop(context);
+                      });
+                    },
+                    callbackLoadingFailed: (){
+                      Navigator.pop(context);
+                    },
+                  ),
                 ),
               );
             },
@@ -135,7 +144,6 @@ class _HomeScreenState extends State<HomeScreen> {
               content: context.locale.sub_button_drum_learn,
               imageBackground: ResImage.imgBgButtonBeatRunner,
               onPressed: () {
-                print('heheeh');
                 Navigator.push(context, CupertinoPageRoute(builder: (context) => DrumLearnScreen(),));
               },
             ),

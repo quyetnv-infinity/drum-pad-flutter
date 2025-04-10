@@ -61,6 +61,7 @@ class LessonSequence extends HiveObject{
 class SongCollection extends HiveObject{
   String id;
   List<LessonSequence> lessons;
+  List<LessonSequence> beatRunnerLessons;
   String? author;
   String? name;
   String difficulty;
@@ -70,6 +71,7 @@ class SongCollection extends HiveObject{
   SongCollection({
     String? id,
     required this.lessons,
+    required this.beatRunnerLessons,
     this.author,
     this.name,
     this.difficulty = DifficultyMode.unknown,
@@ -77,11 +79,12 @@ class SongCollection extends HiveObject{
     this.campaignStar = 0
   }) : id = id ?? const Uuid().v4();
 
-  factory SongCollection.fromJson(List<dynamic> json) {
+  factory SongCollection.fromJson(List<dynamic> jsonLessons, List<dynamic> jsonBeatRunnerLessons) {
     final List<LessonSequence> lessons = [];
+    final List<LessonSequence> beatRunnerLessons = [];
 
-    for (int i = 0; i < json.length; i++) {
-      var lessonJson = json[i];
+    for (int i = 0; i < jsonLessons.length; i++) {
+      var lessonJson = jsonLessons[i];
       var lesson = LessonSequence.fromJson(lessonJson);
 
       if (i == 0) {
@@ -94,14 +97,30 @@ class SongCollection extends HiveObject{
       lessons.add(lesson);
     }
 
+    for (int i = 0; i < jsonBeatRunnerLessons.length; i++) {
+      var lessonJson = jsonBeatRunnerLessons[i];
+      var lesson = LessonSequence.fromJson(lessonJson);
+
+      if (i == 0) {
+        lesson.isCompleted = true;
+        lesson.star = 0.0;
+      }
+
+      lesson.level = i + 1;
+
+      beatRunnerLessons.add(lesson);
+    }
+
     return SongCollection(
       lessons: lessons,
+      beatRunnerLessons: beatRunnerLessons
     );
   }
 
   SongCollection copyWith({
     String? id,
     List<LessonSequence>? lessons,
+    List<LessonSequence>? beatRunnerLessons,
     String? author,
     String? name,
     String? difficulty,
@@ -111,6 +130,7 @@ class SongCollection extends HiveObject{
     return SongCollection(
       id: id ?? this.id,
       lessons: lessons ?? this.lessons,
+      beatRunnerLessons: beatRunnerLessons ?? this.beatRunnerLessons,
       author: author ?? this.author,
       name: name ?? this.name,
       difficulty: difficulty ?? this.difficulty,

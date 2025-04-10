@@ -19,6 +19,7 @@ class SongCollectionAdapter extends TypeAdapter<SongCollection> {
     return SongCollection(
       id: fields[5] as String?,
       lessons: (fields[0] as List).cast<LessonSequence>(),
+      beatRunnerLessons: (fields[7] as List).cast<LessonSequence>(),
       author: fields[1] as String?,
       name: fields[2] as String?,
       difficulty:
@@ -31,7 +32,7 @@ class SongCollectionAdapter extends TypeAdapter<SongCollection> {
   @override
   void write(BinaryWriter writer, SongCollection obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.lessons)
       ..writeByte(1)
@@ -45,7 +46,9 @@ class SongCollectionAdapter extends TypeAdapter<SongCollection> {
       ..writeByte(5)
       ..write(obj.id)
       ..writeByte(6)
-      ..write(obj.campaignStar);
+      ..write(obj.campaignStar)
+      ..writeByte(7)
+      ..write(obj.beatRunnerLessons);
   }
 
   @override

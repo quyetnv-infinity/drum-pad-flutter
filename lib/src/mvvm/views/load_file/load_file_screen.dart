@@ -2,42 +2,41 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:archive/archive.dart';
-import 'package:dio/dio.dart';
+import 'package:drumpad_flutter/core/constants/mock_up_data.dart';
+import 'package:drumpad_flutter/core/utils/locator_support.dart';
+import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 
 class LoadFileScreen extends StatefulWidget {
-  const LoadFileScreen({super.key});
+  /// navigate to next screen with data
+  final Function(SongCollection song) callbackLoadingCompleted;
+  final Function() callbackLoadingFailed;
+  const LoadFileScreen({super.key, required this.callbackLoadingCompleted, required this.callbackLoadingFailed});
 
   @override
   State<LoadFileScreen> createState() => _LoadFileScreenState();
 }
 
 class _LoadFileScreenState extends State<LoadFileScreen> {
-  final TextEditingController _urlController = TextEditingController();
-  final TextEditingController _packNameController = TextEditingController();
-  bool _isDownloading = false;
-  double _downloadProgress = 0.0;
-  String _statusText = '';
   List<String> _downloadedPacks = [];
-  List<AudioFile> _audioFiles = [];
   List<dynamic>? _sequenceData;
+  List<dynamic>? _beatRunnerData;
   final AudioPlayer _audioPlayer = AudioPlayer();
-  String? _currentlyPlaying;
 
   @override
   void initState() {
     super.initState();
     _loadDownloadedPacks();
+    _downloadAndExtractZip();
   }
 
   @override
   void dispose() {
-    _urlController.dispose();
-    _packNameController.dispose();
     _audioPlayer.dispose();
     super.dispose();
   }
@@ -57,19 +56,16 @@ class _LoadFileScreenState extends State<LoadFileScreen> {
 
         setState(() {
           _downloadedPacks = packs;
-          _statusText = 'Đã tìm thấy ${packs.length} gói audio.';
         });
       }
     } catch (e) {
-      setState(() {
-        _statusText = 'Lỗi khi tải danh sách gói: $e';
-      });
+      print(e);
     }
   }
 
   Future<Directory> _getPacksDirectory() async {
     final appDir = await getApplicationDocumentsDirectory();
-    final packsDir = Directory('${appDir.path}/audio_packs');
+    final packsDir = Directory('${appDir.path}/data_packs');
 
     if (!await packsDir.exists()) {
       await packsDir.create(recursive: true);
@@ -90,41 +86,10 @@ class _LoadFileScreenState extends State<LoadFileScreen> {
   }
 
   Future<void> _downloadAndExtractZip() async {
-    final url = _urlController.text.trim();
-    String packName = _packNameController.text.trim();
-
-    if (url.isEmpty) {
-      setState(() {
-        _statusText = 'Vui lòng nhập URL hợp lệ';
-      });
-      return;
-    }
-
-    if (packName.isEmpty) {
-      packName = 'audio_pack_${DateTime.now().millisecondsSinceEpoch}';
-    }
-
-    // Kiểm tra quyền
-    if (Platform.isAndroid) {
-      var status = await Permission.storage.status;
-      if (!status.isGranted) {
-        status = await Permission.storage.request();
-        if (!status.isGranted) {
-          setState(() {
-            _statusText = 'Không có quyền lưu trữ';
-          });
-          return;
-        }
-      }
-    }
+    final url = 'https://github.com/hoanglm6201/zip_archive/raw/refs/heads/main/unity.zip';
+    String packName = 'Unity (NCS)';
 
     try {
-      setState(() {
-        _isDownloading = true;
-        _downloadProgress = 0.0;
-        _statusText = 'Đang tải gói audio...';
-      });
-
       final tempDir = await getTemporaryDirectory();
       final zipFilePath = '${tempDir.path}/$packName.zip';
 
@@ -134,17 +99,13 @@ class _LoadFileScreenState extends State<LoadFileScreen> {
       final file = File(zipFilePath);
       await file.writeAsBytes(response.bodyBytes);
 
-      setState(() {
-        _statusText = 'Đang giải nén gói...';
-      });
-
       // 2. Đọc file ZIP
       final bytes = await File(zipFilePath).readAsBytes();
       final archive = ZipDecoder().decodeBytes(bytes);
 
       // 3. Tạo thư mục cho gói
       final packDir = await _getPackDirectory(packName);
-
+      print('=========$packDir======');
       // 4. Giải nén từng file và lưu với debug info
       int fileCount = 0;
       int totalFiles = archive.length;
@@ -154,10 +115,6 @@ class _LoadFileScreenState extends State<LoadFileScreen> {
 
       for (final file in archive) {
         fileCount++;
-        setState(() {
-          _downloadProgress = 0.5 + (fileCount / totalFiles * 0.5);
-          _statusText = 'Đang giải nén: ${file.name}';
-        });
 
         // Chuẩn hóa tên file và đường dẫn
         final filename = file.name;
@@ -191,8 +148,6 @@ class _LoadFileScreenState extends State<LoadFileScreen> {
       await File(zipFilePath).delete();
 
       setState(() {
-        _isDownloading = false;
-        _statusText = 'Đã tải và giải nén thành công: $audioFilesCount file audio, ${jsonFound ? 'có' : 'không có'} file sequence.json';
         if (!_downloadedPacks.contains(packName)) {
           _downloadedPacks.add(packName);
         }
@@ -204,28 +159,24 @@ class _LoadFileScreenState extends State<LoadFileScreen> {
       // Tải lại danh sách gói và mở gói vừa tải
       await _loadDownloadedPacks();
       await _loadPackContent(packName);
+
+      /// Xử lý data và navigate
+      widget.callbackLoadingCompleted(dataSongCollections.first);
     } catch (e) {
       print('Error during download/extract: $e');
-      setState(() {
-        _isDownloading = false;
-        _statusText = 'Lỗi khi tải hoặc giải nén: $e';
-      });
     }
   }
 
   Future<void> _loadPackContent(String packName) async {
     try {
       setState(() {
-        _statusText = 'Đang tải dữ liệu gói: $packName';
-        _audioFiles = [];
         _sequenceData = null;
+        _beatRunnerData = null;
       });
 
       final packDir = await _getPackDirectory(packName);
       if (!await packDir.exists()) {
-        setState(() {
-          _statusText = 'Không tìm thấy thư mục gói: $packName';
-        });
+        print('Không tìm thấy thư mục gói: $packName');
         return;
       }
 
@@ -235,6 +186,7 @@ class _LoadFileScreenState extends State<LoadFileScreen> {
 
       List<AudioFile> audioFiles = [];
       List<dynamic>? sequenceData;
+      List<dynamic>? beatRunnerData;
 
       // Debug: in ra tất cả entities
       for (var entity in entities) {
@@ -295,7 +247,14 @@ class _LoadFileScreenState extends State<LoadFileScreen> {
                     String jsonContent = await File(subEntity.path).readAsString();
                     sequenceData = jsonDecode(jsonContent);
                   } catch (e) {
-                    print('Error parsing JSON in subdirectory: $e');
+                    print('Error parsing Sequence JSON in subdirectory: $e');
+                  }
+                } else if (filename.toLowerCase() == 'beat_runner.json'){
+                  try {
+                    String jsonContent = await File(subEntity.path).readAsString();
+                    beatRunnerData = jsonDecode(jsonContent);
+                  } catch (e) {
+                    print('Error parsing Beat Runner JSON in subdirectory: $e');
                   }
                 }
               }
@@ -305,220 +264,36 @@ class _LoadFileScreenState extends State<LoadFileScreen> {
       }
 
       setState(() {
-        _audioFiles = audioFiles;
         _sequenceData = sequenceData;
-        _statusText = sequenceData != null
-            ? 'Đã tải gói: $packName (${audioFiles.length} file audio, có file sequence.json)'
-            : 'Đã tải gói: $packName (${audioFiles.length} file audio, không có file sequence.json)';
+        _beatRunnerData = beatRunnerData;
       });
     } catch (e) {
       print('Error loading pack content: $e');
-      setState(() {
-        _statusText = 'Lỗi khi tải nội dung gói: $e';
-      });
     }
-  }
-
-  Future<void> _playAudio(AudioFile audio) async {
-    try {
-      await _audioPlayer.stop();
-      await _audioPlayer.setFilePath(audio.path);
-      await _audioPlayer.play();
-
-      setState(() {
-        _currentlyPlaying = audio.path;
-        _statusText = 'Đang phát: ${audio.name}';
-      });
-
-      // Cập nhật trạng thái khi phát xong
-      _audioPlayer.playerStateStream.listen((state) {
-        if (state.processingState == ProcessingState.completed) {
-          setState(() {
-            _currentlyPlaying = null;
-            _statusText = 'Phát xong: ${audio.name}';
-          });
-        }
-      });
-    } catch (e) {
-      setState(() {
-        _statusText = 'Lỗi khi phát file: $e';
-      });
-    }
-  }
-
-  Future<void> _deleteAudioPack(String packName) async {
-    try {
-      final packDir = await _getPackDirectory(packName);
-
-      if (await packDir.exists()) {
-        await packDir.delete(recursive: true);
-
-        setState(() {
-          _downloadedPacks.remove(packName);
-          if (_audioFiles.any((file) => file.path.contains(packName))) {
-            _audioFiles = [];
-            _sequenceData = null;
-            _audioPlayer.stop();
-            _currentlyPlaying = null;
-          }
-          _statusText = 'Đã xóa gói: $packName';
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _statusText = 'Lỗi khi xóa gói: $e';
-      });
-    }
-  }
-
-  Widget _buildSequenceViewer() {
-    if (_sequenceData == null) {
-      return Center(
-        child: Text(
-          'Không có dữ liệu sequence.json',
-          style: TextStyle(fontStyle: FontStyle.italic),
-        ),
-      );
-    }
-
-    return Card(
-      margin: EdgeInsets.all(8),
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Dữ liệu sequence.json:',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            SizedBox(height: 8),
-            Container(
-              height: 150,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Text(
-                    const JsonEncoder.withIndent('  ').convert(_sequenceData),
-                    style: TextStyle(fontFamily: 'monospace'),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Tải và Phát Gói Audio'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: _urlController,
-              decoration: InputDecoration(
-                labelText: 'URL file ZIP',
-                border: OutlineInputBorder(),
-              ),
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              Color(0xFF311E6B), Color(0xFF141414)
+            ], begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: [0, 0.2])
+          ),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Lottie.asset('assets/anim/loading.json', width: MediaQuery.of(context).size.width*0.45, fit: BoxFit.fill),
+                SizedBox(height: 16,),
+                Text('${context.locale.loading}...', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 20),)
+              ],
             ),
-            SizedBox(height: 12),
-            TextField(
-              controller: _packNameController,
-              decoration: InputDecoration(
-                labelText: 'Tên gói (tùy chọn)',
-                border: OutlineInputBorder(),
-                hintText: 'my_audio_pack',
-              ),
-            ),
-            SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: _isDownloading ? null : _downloadAndExtractZip,
-              child: Text('Tải và Giải Nén'),
-            ),
-            if (_isDownloading)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Column(
-                  children: [
-                    LinearProgressIndicator(value: _downloadProgress),
-                    SizedBox(height: 4),
-                    Text('${(_downloadProgress * 100).toStringAsFixed(1)}%'),
-                  ],
-                ),
-              ),
-            SizedBox(height: 8),
-            Text(
-              _statusText,
-              style: TextStyle(fontStyle: FontStyle.italic),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Gói audio đã tải:',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            SizedBox(height: 8),
-            Container(
-              height: 120,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: ListView.builder(
-                itemCount: _downloadedPacks.length,
-                itemBuilder: (context, index) {
-                  final packName = _downloadedPacks[index];
-
-                  return ListTile(
-                    title: Text(packName),
-                    leading: Icon(Icons.folder),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => _deleteAudioPack(packName),
-                    ),
-                    onTap: () => _loadPackContent(packName),
-                  );
-                },
-              ),
-            ),
-            if (_sequenceData != null)
-              _buildSequenceViewer(),
-            SizedBox(height: 16),
-            Text(
-              'Files trong gói (${_audioFiles.length} files):',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _audioFiles.length,
-                itemBuilder: (context, index) {
-                  final audioFile = _audioFiles[index];
-                  final isPlaying = _currentlyPlaying == audioFile.path;
-
-                  return ListTile(
-                    title: Text(audioFile.name),
-                    leading: Icon(
-                      isPlaying ? Icons.pause_circle_filled : Icons.music_note,
-                      color: isPlaying ? Colors.blue : Colors.grey,
-                    ),
-                    onTap: () => _playAudio(audioFile),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+          ),
+        )
       ),
     );
   }

@@ -208,7 +208,7 @@ class _ModeCampaignScreenState extends State<ModeCampaignScreen> {
                                     provider.setUnlocked(difficult: widget.difficult ,value: provider.currentSongCampaign >= getUnlockedIndex(provider) ? provider.currentSongCampaign + 1 : getUnlockedIndex(provider));
                                   },
                                   onChangeCampaignStar: (star) async {
-                                    await updateStar(provider, item, star);
+                                    await updateStar(provider, displayData[displayData.length - provider.currentSongCampaign - 1], star);
                                   },
                                   isFromCampaign: true,
                                 ),
