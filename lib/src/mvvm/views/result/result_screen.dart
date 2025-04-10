@@ -57,6 +57,12 @@ class _ResultScreenState extends State<ResultScreen>
 
   @override
   void initState() {
+    print('15teiugdsfkjvc ${widget.totalNotes}');
+    print('15teiugdsfkjvc ${widget.perfectScore}');
+    print('15teiugdsfkjvc ${widget.goodScore}');
+    print('15teiugdsfkjvc ${widget.lateScore}');
+    print('15teiugdsfkjvc ${widget.earlyScore}');
+    print('15teiugdsfkjvc ${widget.missScore}');
     super.initState();
     _calculateTotalNotes();
     _animationController = AnimationController(
