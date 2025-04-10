@@ -62,6 +62,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   Map<int, String> _pointerToSound = {};
 
   String? _currentLeadSound;
+  String? _currentBassSound;
   Set<int> _padPressedIndex = {};
 
   DateTime? lastEventTime;
@@ -446,6 +447,11 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         if(_currentLeadSound != null) audioPlayers[_currentLeadSound]?.pause();
         setState(() {
           _currentLeadSound = sound;
+        });
+      }else if (PadUtil.getSoundType(sound) == SoundType.bass){
+        if(_currentBassSound != null) audioPlayers[_currentBassSound]?.pause();
+        setState(() {
+          _currentBassSound = sound;
         });
       }
       audioPlayers[sound]?.seek(Duration.zero);
