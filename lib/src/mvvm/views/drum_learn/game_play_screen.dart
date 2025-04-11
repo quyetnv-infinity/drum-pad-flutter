@@ -458,41 +458,47 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
             selected ? _updateSelectedMode("practice") : _updateSelectedMode("null");
           },),
           ModeButton(title: context.locale.rec, initialSelected: _isRecordingSelected, onSelected: (bool selected) async {
-              setState(() {
-                _isRecordingSelected = selected;
-              });
-              if (selected) {
-                print("ModeButton selected: true - Attempting to start recording...");
-                await handleOnToggleRecordScreenTab();
-                await ScreenRecorderService().startRecording(() {
-                  setState(() {
-                    _isRecordingSelected = false;
-                  });
-                  if (context.mounted) {
-                    PermissionUtil.showRequestScreenRecordPermissionDialog(context);
-                  }
-                },);
-                context.read<DrumLearnProvider>().updateRecording();
-              } else {
-                print("ModeButton selected: false - Attempting to stop recording...");
-                await ScreenRecorderService().stopRecording();
-                context.read<DrumLearnProvider>().updateRecording();
+            setState(() {
+              _isRecordingSelected = selected;
+            });
+            if (selected) {
+              await handleOnTogglePhotosAddOnlyPermission();
+              if(!await Permission.photosAddOnly.status.isGranted){
+                setState(() {
+                  _isRecordingSelected = false;
+                });
+                return;
               }
-            },
+
+              await ScreenRecorderService().startRecording(() {
+                setState(() {
+                  _isRecordingSelected = false;
+                });
+              },);
+              if(!_isRecordingSelected) return;
+              context.read<DrumLearnProvider>().updateRecording();
+              print("ModeButton selected: true - Attempting to start recording...");
+            } else {
+              print("ModeButton selected: false - Attempting to stop recording...");
+              await ScreenRecorderService().stopRecording();
+              context.read<DrumLearnProvider>().updateRecording();
+            }
+          },
           ),
         ],
       ),
     );
   }
-  Future<void> handleOnToggleRecordScreenTab() async {
-    final permissionStatus = await Permission.microphone.status;
+  Future<void> handleOnTogglePhotosAddOnlyPermission() async {
+    final permissionStatus = await Permission.photos.status;
+    print(permissionStatus);
     if (!permissionStatus.isGranted) {
-      await Permission.microphone.request();
-      if(await Permission.microphone.status.isPermanentlyDenied){
+      await Permission.photos.request();
+      if(await Permission.photos.status.isPermanentlyDenied || await Permission.photos.status.isDenied ){
         if(!mounted) return;
         PermissionUtil.showRequestPhotosPermissionDialog(context);
         return;
-      } else if (await Permission.microphone.status.isGranted){
+      } else if (await Permission.photos.status.isGranted){
         return;
       }
     }

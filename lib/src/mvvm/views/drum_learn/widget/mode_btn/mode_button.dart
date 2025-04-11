@@ -47,9 +47,9 @@ class _ModeButtonState extends State<ModeButton> {
     return InkWell(
       onTap: _toggleSelection,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 4),
-        height: 28,
-        width: 52,
+        padding: EdgeInsets.symmetric(horizontal: 6),
+        height: 30,
+        width: 56,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           image: DecorationImage(image: AssetImage(ResImage.imgBGMode)),

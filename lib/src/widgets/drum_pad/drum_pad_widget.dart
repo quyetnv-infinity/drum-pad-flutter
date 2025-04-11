@@ -627,7 +627,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     //     padStates[sound] = 'Miss';
     //   });
     // }
-    if (remainSounds.contains(sound)) {
+    if (remainSounds.contains(sound) ) {
       PadStateEnum state = PadStateEnum.none;
       if(currentEventIndex != 0){
         if (currentTime > 0.2) {
@@ -637,6 +637,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         }
         remainSounds.remove(sound);
       }
+      print('remains $remainSounds');
       increasePoint(state);
       setState(() {
         padStates[sound] = state;
