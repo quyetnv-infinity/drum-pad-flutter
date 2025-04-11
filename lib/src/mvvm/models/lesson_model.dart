@@ -64,6 +64,7 @@ class SongCollection extends HiveObject{
   List<LessonSequence> beatRunnerLessons;
   String? author;
   String? name;
+  String? pathZipFile;
   String difficulty;
   double campaignStar;
   String? image;
@@ -74,6 +75,7 @@ class SongCollection extends HiveObject{
     List<LessonSequence>? beatRunnerLessons,
     this.author,
     this.name,
+    this.pathZipFile,
     this.difficulty = DifficultyMode.unknown,
     this.image,
     this.campaignStar = 0
@@ -124,6 +126,7 @@ class SongCollection extends HiveObject{
     return SongCollection(
       id: json['id'],
       name: json['name'],
+      pathZipFile: json['zip'],
       author: json['author'],
       image: json['thumbnail'],
       difficulty: json['difficulty'],
@@ -136,6 +139,7 @@ class SongCollection extends HiveObject{
     List<LessonSequence>? beatRunnerLessons,
     String? author,
     String? name,
+    String? pathZipFile,
     String? difficulty,
     double? campaignStar,
     String? image,
@@ -146,6 +150,7 @@ class SongCollection extends HiveObject{
       beatRunnerLessons: beatRunnerLessons ?? this.beatRunnerLessons,
       author: author ?? this.author,
       name: name ?? this.name,
+      pathZipFile: pathZipFile ?? this.pathZipFile,
       difficulty: difficulty ?? this.difficulty,
       campaignStar: campaignStar ?? this.campaignStar,
       image: image ?? this.image,

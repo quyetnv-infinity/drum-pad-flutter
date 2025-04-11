@@ -3,9 +3,12 @@ import 'package:drumpad_flutter/core/constants/mock_up_data.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/service/song_collection_service.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class DrumLearnProvider extends ChangeNotifier {
   List<SongCollection> data = dataSongCollections;
+  /// path to get audio file
+  String pathDir = '';
 
   List<String> _listIdSongResume = [];
   // List<String> get listIdSongResume => _listIdSongResume;
@@ -41,6 +44,14 @@ class DrumLearnProvider extends ChangeNotifier {
     getTotalStars();
     // getBeatRunnerStars();
     getBeatRunnerStar();
+    _setPathDir();
+  }
+
+  Future<void> _setPathDir() async {
+    var dir = await getApplicationDocumentsDirectory();
+    await dir.create(recursive: true);
+    pathDir = '${dir.path}/data_packs';
+    notifyListeners();
   }
 
   void increasePerfectPoint() {
@@ -82,8 +93,8 @@ class DrumLearnProvider extends ChangeNotifier {
   }
 
   /// Function for drum learn song
-  Future<SongCollection> getSong(String id) async {
-    return await SongCollectionService.getSongById(id) ?? await getSongFromServer(id);
+  Future<SongCollection?> getSong(String id) async {
+    return await SongCollectionService.getSongById(id);
   }
 
   Future<List<SongCollection>> getRandomSongs() async {
@@ -137,7 +148,7 @@ class DrumLearnProvider extends ChangeNotifier {
     for (final id in _listIdSongResume) {
       try {
         final song = await getSong(id);
-        listSong.add(song);
+        if(song != null) listSong.add(song);
       } catch (e) {
         print('Error fetching song with id $id: $e');
       }

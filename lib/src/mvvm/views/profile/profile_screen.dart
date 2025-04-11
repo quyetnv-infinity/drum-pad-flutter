@@ -4,6 +4,7 @@ import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/horizontal_list.dart';
 import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/loading_data/loading_data_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/profile/widget/carousel_widget.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:flutter/cupertino.dart';
@@ -85,7 +86,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 120,
                   data: randomSongs,
                   onTap: (item, index) {
-                    Navigator.push(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: item,),));
+                    Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                      song: item,
+                      callbackLoadingFailed: (){
+                        Navigator.pop(context);
+                      },
+                      callbackLoadingCompleted: (song) {
+                        Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: song,),));
+                      },
+                    ),));
                   },
                 ),
               ]

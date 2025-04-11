@@ -12,7 +12,7 @@ import 'package:drumpad_flutter/src/mvvm/views/iap/iap_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/beat_runner/beat_runner_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/drum_learn_screen.dart';
-import 'package:drumpad_flutter/src/mvvm/views/load_file/load_file_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/loading_data/loading_data_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/profile/profile_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/setting/setting_screen.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
@@ -57,16 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.push(
                 context,
                 CupertinoPageRoute(
-                  builder: (context) => LoadFileScreen(
-                    callbackLoadingCompleted: (song){
-                      Future.delayed(Duration(seconds: 2), (){
-                        Navigator.pop(context);
-                      });
-                    },
-                    callbackLoadingFailed: (){
-                      Navigator.pop(context);
-                    },
-                  ),
+                  builder: (context) => IapScreen()
                 ),
               );
             },
@@ -120,7 +111,15 @@ class _HomeScreenState extends State<HomeScreen> {
               data: _data,
               isShowDifficult: true,
               onTap: (item, index) {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: item,),));
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                  song: item,
+                  callbackLoadingFailed: (){
+                    Navigator.pop(context);
+                  },
+                  callbackLoadingCompleted: (song) {
+                    Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: song,),));
+                  },
+                ),));
               },
             ),
             ButtonAction(
@@ -136,7 +135,15 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 240,
               data: _data,
               onTap: (item, index) {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) => BeatRunnerScreen(songCollection: item,),));
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                  song: item,
+                  callbackLoadingFailed: (){
+                    Navigator.pop(context);
+                  },
+                  callbackLoadingCompleted: (song) {
+                    Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => BeatRunnerScreen(songCollection: song,),));
+                  },
+                ),));
               },
             ),
             ButtonAction(
@@ -153,7 +160,15 @@ class _HomeScreenState extends State<HomeScreen> {
               data: _data,
               isShowDifficult: true,
               onTap: (item, index) {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: item,),));
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                  song: item,
+                  callbackLoadingFailed: (){
+                    Navigator.pop(context);
+                  },
+                  callbackLoadingCompleted: (song) {
+                    Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: song,),));
+                  },
+                ),));
               },
             ),
           ],

@@ -209,7 +209,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   Future<void> updateUnlockedLesson() async {
     final drumLearnProvider = Provider.of<DrumLearnProvider>(context, listen: false);
     final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
-    List<LessonSequence> updatedLessons = (await drumLearnProvider.getSong(widget.songCollection.id)).lessons;
+    List<LessonSequence> updatedLessons = (await drumLearnProvider.getSong(widget.songCollection.id))!.lessons;
 
     final indexUpdated = campaignProvider.currentLessonCampaign + 1;
     if (indexUpdated > 0 && indexUpdated < updatedLessons.length) {
@@ -223,7 +223,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   Future<void> updateLessonStar(double star) async {
     final provider = Provider.of<DrumLearnProvider>(context, listen: false);
     final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
-    List<LessonSequence> updatedLessons = (await provider.getSong(widget.songCollection.id)).lessons;
+    List<LessonSequence> updatedLessons = (await provider.getSong(widget.songCollection.id))!.lessons;
     updatedLessons[campaignProvider.currentLessonCampaign].star = star;
     final newSong = widget.songCollection.copyWith(lessons: updatedLessons);
     await provider.updateSong(widget.songCollection.id, newSong);

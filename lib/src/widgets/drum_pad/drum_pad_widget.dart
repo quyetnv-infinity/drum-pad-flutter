@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:drumpad_flutter/core/enum/pad_state_enum.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/pad_util.dart';
-import 'package:drumpad_flutter/core/utils/star_util.dart';
 import 'package:drumpad_flutter/note.util.dart';
 import 'package:drumpad_flutter/sound_type_enum.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
@@ -13,7 +12,6 @@ import 'package:drumpad_flutter/src/mvvm/views/result/result_screen.dart';
 import 'package:drumpad_flutter/src/service/screen_record_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -425,8 +423,9 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     for (String sound in availableSounds) {
       if (sound.isEmpty) return;
       final player = AudioPlayer();
+      final pathDir = context.read<DrumLearnProvider>().pathDir;
       try {
-        await player.setAsset('assets/audio/$sound.mp3');
+        await player.setFilePath('$pathDir/${widget.currentSong?.id}/$sound.mp3');
         audioPlayers[sound] = player;
       } catch (e) {
         print('Error loading audio file for $sound: $e');
@@ -915,7 +914,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
               },
             )
           ),
-          if(isLoading)
+          if(isLoading && widget.currentSong != null)
             Positioned.fill(child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),

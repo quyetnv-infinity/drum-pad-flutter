@@ -45,7 +45,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
       final songCollection = await drumLearnProvider.getSong(widget.songCollection.id);
 
       // Bây giờ bạn có thể sử dụng songCollection.lessons để truy cập vào các bài học
-      print("Số lượng bài học: ${songCollection.lessons.length}");
+      print("Số lượng bài học: ${songCollection!.lessons.length}");
 
       // Ví dụ: in ra số lượng events trong bài học đầu tiên
       if (songCollection.lessons.isNotEmpty) {

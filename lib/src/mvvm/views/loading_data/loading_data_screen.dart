@@ -2,48 +2,59 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:archive/archive.dart';
-import 'package:drumpad_flutter/core/constants/mock_up_data.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
-class LoadFileScreen extends StatefulWidget {
+class LoadingDataScreen extends StatefulWidget {
+  final SongCollection song;
   /// navigate to next screen with data
   final Function(SongCollection song) callbackLoadingCompleted;
   final Function() callbackLoadingFailed;
-  const LoadFileScreen({super.key, required this.callbackLoadingCompleted, required this.callbackLoadingFailed});
+  const LoadingDataScreen({super.key, required this.callbackLoadingCompleted, required this.callbackLoadingFailed, required this.song});
 
   @override
-  State<LoadFileScreen> createState() => _LoadFileScreenState();
+  State<LoadingDataScreen> createState() => _LoadingDataScreenState();
 }
 
-class _LoadFileScreenState extends State<LoadFileScreen> {
+class _LoadingDataScreenState extends State<LoadingDataScreen> {
+  final String _urlZipFile = 'https://github.com/hoanglm6201/zip_archive/raw/refs/heads/main/unity.zip';
   List<String> _downloadedPacks = [];
   List<dynamic>? _sequenceData;
   List<dynamic>? _beatRunnerData;
-  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
     super.initState();
-    _loadDownloadedPacks();
-    _downloadAndExtractZip();
+    getSongDetail();
   }
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
     super.dispose();
+  }
+
+  Future<void> getSongDetail() async {
+    final drumLearnProvider = Provider.of<DrumLearnProvider>(context, listen: false);
+    final song = await drumLearnProvider.getSong(widget.song.id);
+    if(song != null){
+      widget.callbackLoadingCompleted(song);
+      print('song exist');
+      return;
+    }
+    await _loadDownloadedPacks();
+    await _downloadAndExtractZip();
   }
 
   Future<void> _loadDownloadedPacks() async {
     try {
       final packsDir = await _getPacksDirectory();
+      // print('========${packsDir.path}');
       if (await packsDir.exists()) {
         final entities = packsDir.listSync();
         List<String> packs = [];
@@ -86,8 +97,8 @@ class _LoadFileScreenState extends State<LoadFileScreen> {
   }
 
   Future<void> _downloadAndExtractZip() async {
-    final url = 'https://github.com/hoanglm6201/zip_archive/raw/refs/heads/main/unity.zip';
-    String packName = 'Unity (NCS)';
+    final url = _urlZipFile;
+    String packName = widget.song.id;
 
     try {
       final tempDir = await getTemporaryDirectory();
@@ -105,7 +116,7 @@ class _LoadFileScreenState extends State<LoadFileScreen> {
 
       // 3. Tạo thư mục cho gói
       final packDir = await _getPackDirectory(packName);
-      print('=========$packDir======');
+      // print('=========$packDir======');
       // 4. Giải nén từng file và lưu với debug info
       int fileCount = 0;
       int totalFiles = archive.length;
@@ -161,9 +172,15 @@ class _LoadFileScreenState extends State<LoadFileScreen> {
       await _loadPackContent(packName);
 
       /// Xử lý data và navigate
-      widget.callbackLoadingCompleted(dataSongCollections.first);
+      if(_sequenceData == null && _beatRunnerData == null) widget.callbackLoadingFailed();
+      final SongCollection song = SongCollection.fromJson(_sequenceData ?? [], _beatRunnerData ?? []);
+      final dataSong = song.copyWith(id: widget.song.id, image: widget.song.image, difficulty: widget.song.difficulty, author: widget.song.author, name: widget.song.name,);
+      print('${dataSong.lessons.length} || ${dataSong.beatRunnerLessons.length}');
+      context.read<DrumLearnProvider>().updateSong(widget.song.id, dataSong);
+      widget.callbackLoadingCompleted(dataSong);
     } catch (e) {
       print('Error during download/extract: $e');
+      widget.callbackLoadingFailed();
     }
   }
 

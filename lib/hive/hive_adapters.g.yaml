@@ -5,7 +5,7 @@ nextTypeId: 3
 types:
   SongCollection:
     typeId: 0
-    nextIndex: 8
+    nextIndex: 9
     fields:
       lessons:
         index: 0
@@ -23,6 +23,8 @@ types:
         index: 6
       beatRunnerLessons:
         index: 7
+      pathZipFile:
+        index: 8
   LessonSequence:
     typeId: 1
     nextIndex: 9

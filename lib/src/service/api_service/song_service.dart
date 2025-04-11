@@ -1,6 +1,6 @@
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
-import 'package:drumpad_flutter/src/mvvm/service/api_response.dart';
-import 'package:drumpad_flutter/src/mvvm/service/api_service.dart';
+import 'package:drumpad_flutter/src/service/api_service/api_response.dart';
+import 'package:drumpad_flutter/src/service/api_service/api_service.dart';
 
 class SongService extends ApiService {
   SongService({super.baseUrl});

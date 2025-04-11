@@ -3,6 +3,7 @@ import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/views/beat_runner/beat_runner_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/item_category_song.dart';
 import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/loading_data/loading_data_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 class ListCategorySongWidget extends StatelessWidget {
@@ -21,9 +22,25 @@ class ListCategorySongWidget extends StatelessWidget {
         return InkWell(
           onTap: () {
             if (isChooseSong) {
-              Navigator.pop(context, song);
+              Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                song: song,
+                callbackLoadingFailed: (){
+                  Navigator.pop(context);
+                },
+                callbackLoadingCompleted: (songData) {
+                  Navigator.pop(context, songData);
+                },
+              ),));
             } else {
-              Navigator.push(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: song)));
+              Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                song: song,
+                callbackLoadingFailed: (){
+                  Navigator.pop(context);
+                },
+                callbackLoadingCompleted: (songData) {
+                  Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: songData,),));
+                },
+              ),));
             }
           },
           child: ItemCategorySong(model: song),

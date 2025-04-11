@@ -6,6 +6,7 @@ import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/beat_runner/beat_runner_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/loading_data/loading_data_screen.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -202,18 +203,26 @@ class _ModeCampaignScreenState extends State<ModeCampaignScreen> {
                           // Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: 20, goodScore: 30, earlyScore: 20, lateScore: 10, missScore: 1),));
                           if(isUnlocked(provider, displayData.length, index)) {
                             provider.setCurrentSongCampaign(actualIndex);
-                            await Navigator.push(
-                              context,
-                              CupertinoPageRoute(builder: (context) => BeatRunnerScreen(songCollection: item, onChangeUnlockedModeCampaign: () {
-                                    provider.setUnlocked(difficult: widget.difficult ,value: provider.currentSongCampaign >= getUnlockedIndex(provider) ? provider.currentSongCampaign + 1 : getUnlockedIndex(provider));
-                                  },
-                                  onChangeCampaignStar: (star) async {
-                                    await updateStar(provider, displayData[displayData.length - provider.currentSongCampaign - 1], star);
-                                  },
-                                  isFromCampaign: true,
-                                ),
-                              )
-                            );
+                            await Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                              song: item,
+                              callbackLoadingFailed: (){
+                                Navigator.pop(context);
+                              },
+                              callbackLoadingCompleted: (song) async {
+                                await Navigator.pushReplacement(
+                                    context,
+                                  CupertinoPageRoute(builder: (context) => BeatRunnerScreen(songCollection: song, onChangeUnlockedModeCampaign: () {
+                                      provider.setUnlocked(difficult: widget.difficult ,value: provider.currentSongCampaign >= getUnlockedIndex(provider) ? provider.currentSongCampaign + 1 : getUnlockedIndex(provider));
+                                    },
+                                      onChangeCampaignStar: (star) async {
+                                        await updateStar(provider, displayData[displayData.length - provider.currentSongCampaign - 1], star);
+                                      },
+                                      isFromCampaign: true,
+                                    ),
+                                  )
+                                );
+                              },
+                            ),));
                             await fetchData();
                           }
                         },

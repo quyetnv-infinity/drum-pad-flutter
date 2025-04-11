@@ -7,6 +7,7 @@ import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart'
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_category_details.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/song_item.dart';
 import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/loading_data/loading_data_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -69,9 +70,25 @@ class _ListSongWidgetState extends State<ListSongWidget> {
                 return GestureDetector(
                   onTap: (){
                     if(widget.isChooseSong){
-                      Navigator.pop(context, song);
+                      Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                        song: song,
+                        callbackLoadingFailed: (){
+                          Navigator.pop(context);
+                        },
+                        callbackLoadingCompleted: (songData) {
+                          Navigator.pop(context, songData);
+                        },
+                      ),));
                     } else {
-                      Navigator.push(context, CupertinoPageRoute(builder: (context) =>  LessonsScreen(songCollection: song,),));
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                        song: song,
+                        callbackLoadingFailed: (){
+                          Navigator.pop(context);
+                        },
+                        callbackLoadingCompleted: (songData) {
+                          Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: songData,),));
+                        },
+                      ),));
                     }
                   },
                   child: SongItem(
