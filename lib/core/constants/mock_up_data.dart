@@ -6,14 +6,14 @@ final List<SongCollection> dataSongCollections = [
       lessons: [
         LessonSequence(
             events: [
-              NoteEvent(notes: ["unity_mid45_face_a_drums_kick"], time: 0.0),
-              NoteEvent(notes: ["unity_mid46_face_a_drums_hihat"], time: 0.2857),
-              NoteEvent(notes: ["unity_mid47_face_a_drums_snare"], time: 0.5714),
-              NoteEvent(notes: ["unity_mid46_face_a_drums_hihat"], time: 0.8571),
-              NoteEvent(notes: ["unity_mid45_face_a_drums_kick"], time: 1.1429),
-              NoteEvent(notes: ["unity_mid46_face_a_drums_hihat"], time: 1.4286),
-              NoteEvent(notes: ["unity_mid47_face_a_drums_snare"], time: 1.7143),
-              NoteEvent(notes: ["unity_mid46_face_a_drums_hihat"], time: 2.0)
+              NoteEvent(notes: ["unity_mid45_face_a_drums_kick"], time: 10.0),
+              NoteEvent(notes: ["unity_mid46_face_a_drums_hihat"], time: 10.2857),
+              NoteEvent(notes: ["unity_mid47_face_a_drums_snare"], time: 10.5714),
+              NoteEvent(notes: ["unity_mid46_face_a_drums_hihat"], time: 10.8571),
+              NoteEvent(notes: ["unity_mid45_face_a_drums_kick"], time: 11.1429),
+              NoteEvent(notes: ["unity_mid46_face_a_drums_hihat"], time: 11.4286),
+              NoteEvent(notes: ["unity_mid47_face_a_drums_snare"], time: 11.7143),
+              NoteEvent(notes: ["unity_mid46_face_a_drums_hihat"], time: 12.0)
             ]
         ),
         LessonSequence(
