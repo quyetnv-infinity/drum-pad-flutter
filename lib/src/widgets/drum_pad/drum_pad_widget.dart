@@ -10,6 +10,7 @@ import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/result/result_screen.dart';
 import 'package:drumpad_flutter/src/service/screen_record_service.dart';
+import 'package:drumpad_flutter/src/widgets/drum_pad/border_anim.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
@@ -256,6 +257,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       }
     if (currentLesson >= lessons.length - 1 && widget.isFromLearnScreen) provider.addLearnSongComplete(widget.currentSong!.id);
     /// push navigation and check cases
+    checkPointsExceed();
     final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() > 1,),));
     if(result != null && result == 'play_again'){
       final tempTotalNote = _totalNotes;
@@ -516,7 +518,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     final currentEvent = events[currentEventIndex];
     final nextEventTime = currentEvent.time;
     if (currentEventIndex == 0) {
-      startTimeOffset = 0.0;
+      startTimeOffset = events[0].time;
     } else {
       final prevEvent = events[currentEventIndex - 1];
       startTimeOffset = prevEvent.time;
@@ -715,6 +717,46 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     return isHighlighted && widget.practiceMode != 'practice' ? [Color(0xFFEDC78C), Colors.orange] : (hasSound ? PadUtil.getPadGradientColor(isActive, soundId) : [Color(0xFF919191), Color(0xFF5E5E5E)]);
   }
 
+  void checkPointsExceed() {
+    final totalPoints = perfectPoint + goodPoint + earlyPoint + latePoint + missPoint;
+    if (totalPoints > _totalNotes) {
+      int exceed = totalPoints - _totalNotes;
+      final pointMap = {
+        'perfect': perfectPoint,
+        'good': goodPoint,
+        'early': earlyPoint,
+        'late': latePoint,
+        'miss': missPoint,
+      };
+      final sortedEntries = pointMap.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
+      final firstKey = sortedEntries[0].key;
+      final secondKey = sortedEntries[1].key;
+      final firstReduction = (exceed * 0.6).round();
+      final secondReduction = exceed - firstReduction;
+      switch (firstKey) {
+        case 'perfect': perfectPoint -= firstReduction; break;
+        case 'good': goodPoint -= firstReduction; break;
+        case 'early': earlyPoint -= firstReduction; break;
+        case 'late': latePoint -= firstReduction; break;
+        case 'miss': missPoint -= firstReduction; break;
+      }
+      switch (secondKey) {
+        case 'perfect': perfectPoint -= secondReduction; break;
+        case 'good': goodPoint -= secondReduction; break;
+        case 'early': earlyPoint -= secondReduction; break;
+        case 'late': latePoint -= secondReduction; break;
+        case 'miss': missPoint -= secondReduction; break;
+      }
+      perfectPoint = perfectPoint.clamp(0, double.infinity).toInt();
+      goodPoint = goodPoint.clamp(0, double.infinity).toInt();
+      earlyPoint = earlyPoint.clamp(0, double.infinity).toInt();
+      latePoint = latePoint.clamp(0, double.infinity).toInt();
+      missPoint = missPoint.clamp(0, double.infinity).toInt();
+    }
+  }
+
+
   // Future<void> setLessonToPlay(int index) async {
   //   setState(() {
   //     isLoading = true;
@@ -876,7 +918,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
                           children: [
                             Align(
                               alignment: Alignment.center,
-                              child: CircularProgressIndicator(
+                              child:
+                              CircularProgressIndicator(
                                 value: _calculateProgressValue(currentEventIndex, _futureNotes[0]["index"]),
                                 strokeWidth: 5,
                                 backgroundColor: Colors.white24,
@@ -887,6 +930,17 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
                                 alignment: Alignment.center,
                                 child: Text(context.locale.wait, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: Colors.white))),
                           ],
+                        ),
+                      if (padProgress.containsKey(sound) && hasSound && widget.practiceMode != 'practice')
+                        Positioned.fill(
+                          child: CustomPaint(
+                            painter: SquareProgressPainter(
+                              progress: padProgress[sound] ?? 0,
+                              color: Colors.white,
+                              strokeWidth: 4,
+                              borderRadius: 10,
+                            ),
+                          ),
                         ),
                       if (padProgress.containsKey(sound) && hasSound && widget.practiceMode != 'practice')
                         Align(
