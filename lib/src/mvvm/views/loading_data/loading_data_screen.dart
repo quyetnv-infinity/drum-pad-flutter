@@ -23,7 +23,7 @@ class LoadingDataScreen extends StatefulWidget {
 }
 
 class _LoadingDataScreenState extends State<LoadingDataScreen> {
-  final String _urlZipFile = 'https://github.com/hoanglm6201/zip_archive/raw/refs/heads/main/unity.zip';
+  String _urlZipFile = 'https://github.com/hoanglm6201/zip_archive/raw/refs/heads/main/unity.zip';
   List<String> _downloadedPacks = [];
   List<dynamic>? _sequenceData;
   List<dynamic>? _beatRunnerData;
@@ -31,6 +31,7 @@ class _LoadingDataScreenState extends State<LoadingDataScreen> {
   @override
   void initState() {
     super.initState();
+    _urlZipFile = widget.song.pathZipFile ?? 'https://github.com/hoanglm6201/zip_archive/raw/refs/heads/main/unity.zip';
     getSongDetail();
   }
 
