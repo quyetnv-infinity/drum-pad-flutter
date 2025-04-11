@@ -70,15 +70,18 @@ class SongCollection extends HiveObject{
 
   SongCollection({
     String? id,
-    required this.lessons,
-    required this.beatRunnerLessons,
+    List<LessonSequence>? lessons,
+    List<LessonSequence>? beatRunnerLessons,
     this.author,
     this.name,
     this.difficulty = DifficultyMode.unknown,
     this.image,
     this.campaignStar = 0
-  }) : id = id ?? const Uuid().v4();
+  }) :  id = id ?? const Uuid().v4(),
+        lessons = lessons ?? [],
+        beatRunnerLessons = beatRunnerLessons ?? [];
 
+  /// factory to get lessons and beatRunnerLessons
   factory SongCollection.fromJson(List<dynamic> jsonLessons, List<dynamic> jsonBeatRunnerLessons) {
     final List<LessonSequence> lessons = [];
     final List<LessonSequence> beatRunnerLessons = [];
@@ -114,6 +117,16 @@ class SongCollection extends HiveObject{
     return SongCollection(
       lessons: lessons,
       beatRunnerLessons: beatRunnerLessons
+    );
+  }
+
+  factory SongCollection.fromJsonRoot(Map<String, dynamic> json) {
+    return SongCollection(
+      id: json['id'],
+      name: json['name'],
+      author: json['author'],
+      image: json['thumbnail'],
+      difficulty: json['difficulty'],
     );
   }
 

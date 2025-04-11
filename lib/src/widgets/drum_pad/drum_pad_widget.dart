@@ -189,13 +189,28 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     });
   }
 
+  int getLastIndexOfCurrentFace(){
+    bool isFaceA = lessons[currentLesson].events.first.notes.first.contains('face_a');
+    if(isFaceA){
+      for(var i = 0; i < lessons.length; i++){
+        if(lessons[i].events.first.notes.first.contains('face_b')){
+          return i - 1;
+        }
+      }
+    }
+    return lessons.length - 1;
+
+  }
+
   void checkModeChange(DrumPadScreen oldWidget){
     if (oldWidget.practiceMode != widget.practiceMode && widget.practiceMode == "practice") {
       setState(() {
         _totalNotes = 0;
         tempLessonIndex = currentLesson;
       });
-      _loadSequenceDataFromFile(lessons.length - 1).then((_) {
+      int lastLessonOfCurrentFace = getLastIndexOfCurrentFace();
+      print(lastLessonOfCurrentFace);
+      _loadSequenceDataFromFile(lastLessonOfCurrentFace).then((_) {
         setState(() {
           _pauseTimer?.cancel();
           isLoading = false;
@@ -381,11 +396,15 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       }
       availableSounds.addAll(uniqueSounds.toList());
       uniqueSounds = {};
+      int countNote = 0;
       for (var event in events) {
         final notes = event.notes;
         uniqueSounds.addAll(notes);
-        _totalNotes += notes.length;
+        countNote += notes.length;
       }
+      // print(uniqueSounds);
+      // print('totalNotes $countNote');
+      _totalNotes = countNote;
 
       _splitSoundsByFace();
       lessonSounds.clear();

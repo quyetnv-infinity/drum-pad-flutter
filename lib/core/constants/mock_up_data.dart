@@ -1683,7 +1683,6 @@ final List<SongCollection> dataSongCollections = [
               NoteEvent(notes: ['invincible_mid10_face_a_drum_a'], time: 21.6),
               NoteEvent(notes: ['invincible_mid11_face_a_drum_a'], time: 24.0),
               NoteEvent(notes: ['invincible_mid12_face_a_drum_a'], time: 26.4),
-              NoteEvent(notes: ['invincible_mid13_face_a_drum_a'], time: 28.8),
             ]
         )
       ],
