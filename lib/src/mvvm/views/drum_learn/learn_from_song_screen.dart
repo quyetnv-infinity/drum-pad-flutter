@@ -48,6 +48,7 @@ class _LearnFromSongScreenState extends State<LearnFromSongScreen> {
         child: SafeArea(
           child: SingleChildScrollView(
             child: Column(
+              spacing: 16,
               children: [
                 if(provider.listSongResume.isNotEmpty) ListSongWidget(title: context.locale.resume, isMore: false, isChooseSong: widget.isChooseSong, listSongData: provider.listSongResume),
                 ListSongWidget(title: 'V-pop', isMore: true, isChooseSong: widget.isChooseSong, listSongData: provider.data,),

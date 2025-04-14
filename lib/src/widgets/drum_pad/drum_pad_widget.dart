@@ -127,6 +127,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       vsync: this,
       duration: Duration(milliseconds: 150), // Thời gian chạy mặc định
     )..repeat();
+    context.read<DrumLearnProvider>().addBeatRunnerSongComplete(widget.currentSong!.id);
+
   }
 
   @override
@@ -238,6 +240,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
 
   void _navigateToNextScreen() async {
     final provider = context.read<DrumLearnProvider>();
+    final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
+    final checkLastCampaign = campaignProvider.currentSongCampaign >= campaignProvider.currentCampaign.length - 1 && widget.isFromCampaign;
 
     _pauseTimer?.cancel();
     provider.resetPerfectPoint();
@@ -252,13 +256,12 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     /// 📖 save learn from song and beat runner count for information at profile screen
     if (!widget.isFromLearnScreen)
       {
-        provider.addBeatRunnerSongComplete(widget.currentSong!.id);
         provider.addBeatRunnerStar(widget.currentSong!.id, getStar());
       }
     if (currentLesson >= lessons.length - 1 && widget.isFromLearnScreen) provider.addLearnSongComplete(widget.currentSong!.id);
     /// push navigation and check cases
     checkPointsExceed();
-    final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() > 1,),));
+    final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() > 1, isCompleteCampaign: checkLastCampaign,),));
     if(result != null && result == 'play_again'){
       final tempTotalNote = _totalNotes;
       widget.onChangeStarLearn?.call(0);

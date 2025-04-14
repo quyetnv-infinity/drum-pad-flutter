@@ -24,15 +24,18 @@ class ItemCategorySong extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               image: DecorationImage(image: AssetImage(model.image ?? ResImage.imgRose), fit: BoxFit.cover))
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 4,
-            children: [
-              Text(model.name ?? "Null", style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600)),
-              Text(model.author ?? "Null", style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w400)),
-              BlurWidget(text: model.difficulty,),
-            ],
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 4,
+              children: [
+                Text("Nuqi bwnuorhavwns97rhacwiunrhaciowurghawnibryagwryouiabesngrvsyjiaduvgawioraw7ragbwsonjrhkgsaoiuyrawegeull", maxLines: 1,overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600)),
+                Text(model.author ?? "Null", style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w400)),
+                IntrinsicWidth(
+                  child: BlurWidget(text: model.difficulty,)),
+              ],
+            ),
           )
         ],
       ),

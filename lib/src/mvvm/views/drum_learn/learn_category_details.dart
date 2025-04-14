@@ -1,4 +1,5 @@
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
+import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/item_category_song.dart';
@@ -117,7 +118,7 @@ class _LearnCategoryDetailsState extends State<LearnCategoryDetails> {
               style: const TextStyle(color: Colors.white70),
               decoration: InputDecoration(
                 maintainHintHeight: true,
-                hintText: "Find your song here",
+                hintText: context.locale.find_your_song_here,
                 hintStyle: TextStyle(color: Colors.white54),
                 border: InputBorder.none,
                 counterText: "",
