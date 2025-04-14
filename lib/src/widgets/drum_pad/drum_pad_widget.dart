@@ -408,7 +408,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     try {
       _totalNotes = 0;
       lessons = widget.currentSong?.lessons ?? [];
-      currentLesson = lesson;
+      currentLesson = widget.isFromCampaign ? lessons.length - 1 : lesson;
       events = lessons[currentLesson].events;
       Set<String> uniqueSounds = {};
       for (var lesson in lessons) {

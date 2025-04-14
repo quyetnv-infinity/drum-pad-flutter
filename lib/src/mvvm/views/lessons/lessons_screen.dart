@@ -25,7 +25,6 @@ class LessonsScreen extends StatefulWidget {
 
 class _LessonsScreenState extends State<LessonsScreen> {
   final ScrollController _scrollController = ScrollController();
-  late SongCollection _song;
   bool isLoading = false;
 
   List<LessonSequence> displayData = [];
@@ -41,20 +40,17 @@ class _LessonsScreenState extends State<LessonsScreen> {
       isLoading = true;
     });
     try {
-      final drumLearnProvider = Provider.of<DrumLearnProvider>(context, listen: false);
-      final songCollection = await drumLearnProvider.getSong(widget.songCollection.id);
 
       // Bây giờ bạn có thể sử dụng songCollection.lessons để truy cập vào các bài học
-      print("Số lượng bài học: ${songCollection!.lessons.length}");
+      print("Số lượng bài học: ${widget.songCollection.lessons.length}");
 
       // Ví dụ: in ra số lượng events trong bài học đầu tiên
-      if (songCollection.lessons.isNotEmpty) {
-        print("Số lượng events trong bài học đầu tiên: ${songCollection.lessons[0].events.length}");
+      if (widget.songCollection.lessons.isNotEmpty) {
+        print("Số lượng events trong bài học đầu tiên: ${widget.songCollection.lessons[0].events.length}");
       }
 
       setState(() {
-        _song = songCollection;
-        displayData = _song.lessons.reversed.toList();
+        displayData = widget.songCollection.lessons.reversed.toList();
       });
     } catch (e) {
       print('Error loading sequence data from file: $e');
@@ -195,7 +191,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
                               Provider.of<CampaignProvider>(context, listen: false).setCurrentLessonCampaign(displayData.length - (index + 1));
                               await Navigator.push(context, CupertinoPageRoute(
                                 builder: (context) =>
-                                    GamePlayScreen(songCollection: _song,
+                                    GamePlayScreen(songCollection: widget.songCollection,
                                       index: displayData.length -
                                           (index + 1),),));
                               await fetchLessonData();
