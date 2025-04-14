@@ -72,6 +72,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   List<LessonSequence> lessons = [];
   int currentLesson = 0;
 
+  bool isNavigatedToResult = false;
+
   List<String> _faceA = [];
   List<String> _faceB = [];
 
@@ -246,6 +248,10 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   }
 
   void _navigateToNextScreen() async {
+    if(isNavigatedToResult) return;
+    setState(() {
+      isNavigatedToResult = true;
+    });
     final provider = context.read<DrumLearnProvider>();
     final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
     final checkLastCampaign = campaignProvider.currentSongCampaign >= campaignProvider.currentCampaign.length - 1 && widget.isFromCampaign;
@@ -269,6 +275,9 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     /// push navigation and check cases
     checkPointsExceed();
     final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() > 1, isCompleteCampaign: checkLastCampaign,),));
+    setState(() {
+      isNavigatedToResult = false;
+    });
     if(result != null && result == 'play_again'){
       final tempTotalNote = _totalNotes;
       widget.onChangeStarLearn?.call(0);
