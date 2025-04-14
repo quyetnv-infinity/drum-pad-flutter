@@ -30,7 +30,9 @@ class DrumPadScreen extends StatefulWidget {
   final bool isFromCampaign;
   final Function(SongCollection song)? onTapChooseSong;
   final VoidCallback? onResetRecordingToggle;
-  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onResetRecordingToggle});
+  final void Function(VoidCallback pauseHandler)? onRegisterPauseHandler;
+
+  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onResetRecordingToggle, this.onRegisterPauseHandler});
 
   @override
   State<DrumPadScreen> createState() => _DrumPadScreenState();
@@ -128,7 +130,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       duration: Duration(milliseconds: 150), // Thời gian chạy mặc định
     )..repeat();
     context.read<DrumLearnProvider>().addBeatRunnerSongComplete(widget.currentSong!.id);
-
+    widget.onRegisterPauseHandler?.call(pause);
   }
 
   @override
@@ -189,6 +191,10 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         _navigateToNextScreen();
       }
     });
+  }
+  void pause() {
+    _pauseTimer?.cancel();
+    print('pauseTimer cancelled!');
   }
 
   int getLastIndexOfCurrentFace(){
@@ -276,7 +282,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     }
     /// that case which check for back to Beat Runner screen and choose another song
     else if(result != null && result is SongCollection){
-      // print('#########${result.pathZipFile}');
       widget.onTapChooseSong?.call(result);
       widget.onChangeStarLearn?.call(0);
       _resetSequence(isPlayingDrum: true);

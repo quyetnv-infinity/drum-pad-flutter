@@ -25,10 +25,12 @@ class DrumLearnProvider extends ChangeNotifier {
   int _totalPoint = 0;
   double _totalStar = 0;
   double _beatRunnerStar = 0;
+  bool _isChooseSong = false;
 
 
   int get perfectPoint => _perfectPoint;
   bool get isCombo => _isCombo;
+  bool get isChooseSong => _isChooseSong;
   bool get isRecording => _isRecording;
   int get increaseScoreByCombo => _increaseScoreByCombo;
   int get totalPoint => _totalPoint;
@@ -242,4 +244,8 @@ class DrumLearnProvider extends ChangeNotifier {
   //   notifyListeners();
   // }
 
+  void updateChooseSong(){
+    _isChooseSong = !_isChooseSong;
+    notifyListeners();
+  }
 }

@@ -35,6 +35,8 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
   late TutorialCoachMark tutorialCoachMark;
   final GlobalKey _chooseSongKey = GlobalKey();
   double _percentStar = 0;
+  late void Function()? _pauseFromDrumPad;
+
 
   @override
   void initState() {
@@ -166,6 +168,9 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                     print(song.name);
                   });
                 } ,
+                onRegisterPauseHandler: (VoidCallback pauseHandler) {
+                  _pauseFromDrumPad = pauseHandler;
+                },
               )
             ],
           ),
@@ -288,6 +293,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
 
   Future<void> onTapChooseSong() async {
     print('onTap chooseSound');
+    _pauseFromDrumPad?.call();
     final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => LearnFromSongScreen(isChooseSong: true,),));
     if(result != null) {
       setState(() {
