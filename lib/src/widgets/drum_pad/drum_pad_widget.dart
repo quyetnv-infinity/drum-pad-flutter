@@ -8,6 +8,7 @@ import 'package:drumpad_flutter/sound_type_enum.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/views/loading_data/loading_data_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/result/result_screen.dart';
 import 'package:drumpad_flutter/src/service/screen_record_service.dart';
 import 'package:drumpad_flutter/src/widgets/drum_pad/border_anim.dart';
@@ -28,9 +29,8 @@ class DrumPadScreen extends StatefulWidget {
   final bool isFromLearnScreen;
   final bool isFromCampaign;
   final Function(SongCollection song)? onTapChooseSong;
-  final Function(SongCollection song)? onNextSongAtCampaign;
   final VoidCallback? onResetRecordingToggle;
-  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onNextSongAtCampaign, this.onResetRecordingToggle});
+  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onResetRecordingToggle});
 
   @override
   State<DrumPadScreen> createState() => _DrumPadScreenState();
@@ -134,6 +134,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     super.didUpdateWidget(oldWidget);
     // Start sequence when song changes from null to non-null
     if (oldWidget.currentSong != widget.currentSong && widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty) {
+      print('reload song');
       setState(() {
         isLoading = true;
       });
@@ -272,6 +273,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     }
     /// that case which check for back to Beat Runner screen and choose another song
     else if(result != null && result is SongCollection){
+      // print('#########${result.pathZipFile}');
       widget.onTapChooseSong?.call(result);
       widget.onChangeStarLearn?.call(0);
       _resetSequence(isPlayingDrum: true);
@@ -287,18 +289,36 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       setState(() {
         if(widget.isFromLearnScreen) {
           currentLesson = result;
-        } else if(widget.isFromCampaign) {
-          currentLesson = 0;
         }
         // print(' result pop $result');
       });
       if(widget.isFromLearnScreen) campaignProvider.setCurrentLessonCampaign(currentLesson);
-      if(widget.isFromCampaign) {
-        final song = campaignProvider.currentCampaign[campaignProvider.currentSongCampaign + 1];
-        widget.onNextSongAtCampaign?.call(song);
-        print(song.name);
-        campaignProvider.setCurrentSongCampaign(campaignProvider.currentSongCampaign + 1);
-      }
+      widget.onChangeStarLearn?.call(0);
+      _resetSequence(isPlayingDrum: true);
+      setState(() {
+        _previousTotalPoint = 0;
+        totalPoint = 0;
+        isLoading = true;
+      });
+      _loadSequenceDataFromFile(currentLesson).then((_) async {
+        await _initializeAudioPlayers();
+        setState(() {
+          isLoading = false;
+        });
+        // Start sequence if song exists
+        if (widget.currentSong != null) {
+          _startSequence();
+        }
+      });
+    } /// next campaign
+    else if(result != null && result is SongCollection){
+      setState(() {
+        if(widget.isFromCampaign) {
+          currentLesson = 0;
+        }
+      });
+      widget.onTapChooseSong?.call(result);
+      print('========${result.name}');
       widget.onChangeStarLearn?.call(0);
       _resetSequence(isPlayingDrum: true);
       setState(() {
@@ -394,6 +414,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
           uniqueSounds.addAll(notes);
         }
       }
+      availableSounds.clear();
       availableSounds.addAll(uniqueSounds.toList());
       uniqueSounds = {};
       int countNote = 0;
@@ -423,7 +444,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   Future<void> _initializeAudioPlayers() async {
     _disposeAudioPlayers();
     for (String sound in availableSounds) {
-      if (sound.isEmpty) return;
+      if (sound.isEmpty) continue;
       final player = AudioPlayer();
       final pathDir = context.read<DrumLearnProvider>().pathDir;
       try {
@@ -431,6 +452,14 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         audioPlayers[sound] = player;
       } catch (e) {
         print('Error loading audio file for $sound: $e');
+        // Clean up failed player
+        await player.dispose();
+
+        // Try to reload the song data
+        if (widget.onTapChooseSong != null && widget.currentSong != null) {
+          widget.onTapChooseSong?.call(widget.currentSong!);
+          return;
+        }
       }
     }
   }

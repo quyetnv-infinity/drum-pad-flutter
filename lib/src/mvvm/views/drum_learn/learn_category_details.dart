@@ -1,4 +1,5 @@
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
+import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/item_category_song.dart';
@@ -66,7 +67,7 @@ class _LearnCategoryDetailsState extends State<LearnCategoryDetails> {
             child: Row(
               children: [
                 Icon(Icons.arrow_back_ios, color: Colors.white, size: 22),
-                Text('Back', style: TextStyle(color: Colors.white, fontSize: 17)),
+                Text(context.locale.back, style: TextStyle(color: Colors.white, fontSize: 17)),
               ],
             ),
           ),

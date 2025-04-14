@@ -52,6 +52,7 @@ class CampaignProvider with ChangeNotifier {
 
   void setCurrentSongCampaign(int value){
     _currentSongCampaign = value;
+    print('campaign index at $value');
     notifyListeners();
   }
 

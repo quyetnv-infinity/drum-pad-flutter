@@ -218,15 +218,17 @@ class _ModeCampaignScreenState extends State<ModeCampaignScreen> {
                                       provider.setUnlocked(difficult: widget.difficult ,value: provider.currentSongCampaign >= getUnlockedIndex(provider) ? provider.currentSongCampaign + 1 : getUnlockedIndex(provider));
                                     },
                                       onChangeCampaignStar: (star) async {
+                                        print('change star index: ${displayData.length - provider.currentSongCampaign - 1}');
                                         await updateStar(provider, displayData[displayData.length - provider.currentSongCampaign - 1], star);
                                       },
                                       isFromCampaign: true,
                                     ),
                                   )
                                 );
+                                print('fetch data campaign');
+                                await fetchData();
                               },
                             ),));
-                            await fetchData();
                           }
                         },
                         child: Container(

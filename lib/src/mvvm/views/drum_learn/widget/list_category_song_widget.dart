@@ -29,6 +29,7 @@ class ListCategorySongWidget extends StatelessWidget {
                 },
                 callbackLoadingCompleted: (songData) {
                   Navigator.pop(context, songData);
+                  Navigator.pop(context, songData);
                 },
               ),));
             } else {

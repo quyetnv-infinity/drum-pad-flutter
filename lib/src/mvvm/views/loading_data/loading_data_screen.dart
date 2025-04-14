@@ -175,7 +175,7 @@ class _LoadingDataScreenState extends State<LoadingDataScreen> {
       /// Xử lý data và navigate
       if(_sequenceData == null && _beatRunnerData == null) widget.callbackLoadingFailed();
       final SongCollection song = SongCollection.fromJson(_sequenceData ?? [], _beatRunnerData ?? []);
-      final dataSong = song.copyWith(id: widget.song.id, image: widget.song.image, difficulty: widget.song.difficulty, author: widget.song.author, name: widget.song.name,);
+      final dataSong = song.copyWith(id: widget.song.id, image: widget.song.image, difficulty: widget.song.difficulty, author: widget.song.author, name: widget.song.name, pathZipFile: widget.song.pathZipFile);
       print('${dataSong.lessons.length} || ${dataSong.beatRunnerLessons.length}');
       context.read<DrumLearnProvider>().updateSong(widget.song.id, dataSong);
       widget.callbackLoadingCompleted(dataSong);

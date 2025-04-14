@@ -7,6 +7,7 @@ import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/loading_data/loading_data_screen.dart';
 import 'package:drumpad_flutter/src/widgets/drum_pad/drum_pad_widget.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
@@ -156,12 +157,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                   setState(() {
                     _percentStar = star;
                   });
-                },
-                onNextSongAtCampaign: (song) {
-                  setState(() {
-                    _currentSong = song;
-                  });
-                },
+                },lessonIndex: 0,
                 isFromLearnScreen: false,
                 isFromCampaign: widget.isFromCampaign,
                 onTapChooseSong:(song) {
@@ -298,6 +294,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
         _currentSong = result;
       });
       print(_currentSong?.name);
+      print(_currentSong?.lessons.first.events.length);
     }
   }
 }

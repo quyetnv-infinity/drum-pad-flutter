@@ -5,6 +5,7 @@ import 'package:drumpad_flutter/src/mvvm/view_model/result_information_provider.
 import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/home_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/loading_data/loading_data_screen.dart';
 import 'package:drumpad_flutter/src/widgets/button/gradient_button.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
@@ -259,7 +260,17 @@ class _ResultScreenState extends State<ResultScreen>
                         }else{
                           final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => LearnFromSongScreen(isChooseSong: true),));
                           if(result != null){
-                            Navigator.pop(context, result);
+                            final loadingResult = await Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                                callbackLoadingCompleted: (song) {
+                                  Navigator.pop(context, song);
+                                },
+                                callbackLoadingFailed: () {
+                                  Navigator.pop(context);
+                                },
+                                song: result),
+                            ));
+                            print('=======$loadingResult');
+                            Navigator.pop(context, loadingResult);
                           }
                         }
                       },
@@ -283,9 +294,26 @@ class _ResultScreenState extends State<ResultScreen>
                       ),
                     ),
                     GradientButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if(checkNotLastCampaign()){
-                          Navigator.pop(context, widget.currentLesson + 1);
+                          if(widget.isFromLearn) Navigator.pop(context, widget.currentLesson + 1);
+                          if(widget.isFromCampaign) {
+                            final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
+                            final currentCampaignIndex = campaignProvider.currentSongCampaign + 1;
+                            campaignProvider.setCurrentSongCampaign(currentCampaignIndex);
+                            final song = campaignProvider.currentCampaign[currentCampaignIndex];
+                            await Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                                callbackLoadingCompleted: (songData) {
+                                  Navigator.pop(context, songData);
+                                  Navigator.pop(context, songData);
+                                },
+                                callbackLoadingFailed: () {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                                song: song),
+                            ));
+                          }
                         }else{
                           Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
                         }

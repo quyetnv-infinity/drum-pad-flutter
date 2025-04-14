@@ -70,12 +70,13 @@ class _ListSongWidgetState extends State<ListSongWidget> {
                 return GestureDetector(
                   onTap: (){
                     if(widget.isChooseSong){
-                      Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
                         song: song,
                         callbackLoadingFailed: (){
                           Navigator.pop(context);
                         },
                         callbackLoadingCompleted: (songData) {
+                          Navigator.pop(context, songData);
                           Navigator.pop(context, songData);
                         },
                       ),));
