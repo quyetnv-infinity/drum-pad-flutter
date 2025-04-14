@@ -72,6 +72,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   List<LessonSequence> lessons = [];
   int currentLesson = 0;
 
+  bool isNavigatedToResult = false;
+
   List<String> _faceA = [];
   List<String> _faceB = [];
 
@@ -129,7 +131,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       vsync: this,
       duration: Duration(milliseconds: 150), // Thời gian chạy mặc định
     )..repeat();
-    context.read<DrumLearnProvider>().addBeatRunnerSongComplete(widget.currentSong!.id);
+    if(widget.currentSong != null) context.read<DrumLearnProvider>().addBeatRunnerSongComplete(widget.currentSong!.id);
     widget.onRegisterPauseHandler?.call(pause);
   }
 
@@ -246,6 +248,10 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   }
 
   void _navigateToNextScreen() async {
+    if(isNavigatedToResult) return;
+    setState(() {
+      isNavigatedToResult = true;
+    });
     final provider = context.read<DrumLearnProvider>();
     final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
     final checkLastCampaign = campaignProvider.currentSongCampaign >= campaignProvider.currentCampaign.length - 1 && widget.isFromCampaign;
@@ -269,6 +275,9 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     /// push navigation and check cases
     checkPointsExceed();
     final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() > 1, isCompleteCampaign: checkLastCampaign,),));
+    setState(() {
+      isNavigatedToResult = false;
+    });
     if(result != null && result == 'play_again'){
       final tempTotalNote = _totalNotes;
       widget.onChangeStarLearn?.call(0);
@@ -412,7 +421,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   Future<void> _loadSequenceDataFromFile(int lesson) async {
     try {
       _totalNotes = 0;
-      lessons = widget.currentSong?.lessons ?? [];
+      /// check beat runner or drum learn/campaign
+      lessons = (!widget.isFromCampaign && !widget.isFromLearnScreen) ? (widget.currentSong?.beatRunnerLessons ?? []) : (widget.currentSong?.lessons ?? []);
       currentLesson = widget.isFromCampaign ? lessons.length - 1 : lesson;
       events = lessons[currentLesson].events;
       Set<String> uniqueSounds = {};

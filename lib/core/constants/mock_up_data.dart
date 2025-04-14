@@ -21,7 +21,7 @@ final List<SongCollection> dataSongCollections = [
       name: "Lost Sky - Where We Started"),
   SongCollection(
       id: '1233',
-      pathZipFile: 'https://github.com/hoanglm6201/zip_archive/raw/refs/heads/main/Janji%20-%20Heroes%20Tonight.zip',
+      pathZipFile: 'https://github.com/hoanglm6201/zip_archive/raw/refs/heads/main/Heroes_Tonight.zip',
       lessons: [],
       beatRunnerLessons: [],
       difficulty: DifficultyMode.hard,

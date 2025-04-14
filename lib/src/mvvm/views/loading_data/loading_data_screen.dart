@@ -231,6 +231,15 @@ class _LoadingDataScreenState extends State<LoadingDataScreen> {
             } catch (e) {
               print('Error parsing JSON: $e');
             }
+          } else if (filename.toLowerCase() == 'beat_runner.json' && !filename.toLowerCase().contains('._')) {
+            print('Found JSON: $filename');
+            try {
+              String jsonContent = await File(entity.path).readAsString();
+              beatRunnerData = List.from(json.decode(jsonContent));
+              print('JSON parsed successfully');
+            } catch (e) {
+              print('Error parsing JSON: $e');
+            }
           } else if(filename.toLowerCase().contains('._')) {
             File file = File(entity.path);
             if(file.existsSync()){
