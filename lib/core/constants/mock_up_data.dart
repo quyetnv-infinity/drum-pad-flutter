@@ -55,4 +55,23 @@ final List<SongCollection> dataSongCollections = [
       image: "assets/images/music_99%.png",
       author: "Tobu",
       name: "Tobu Hope"),
+  SongCollection(
+      id: 'invinciblee',
+      pathZipFile: 'https://github.com/hoanglm6201/zip_archive/raw/refs/heads/main/Deaf%20Kev_Invincible.zip',
+      lessons: [],
+      beatRunnerLessons: [],
+      difficulty: DifficultyMode.demonic,
+      image: "assets/images/music_99%.png",
+      author: "Kev Điếc",
+      name: "Invincible"),
+  SongCollection(
+      id: 'the_spectre',
+      pathZipFile: 'https://github.com/hoanglm6201/zip_archive/raw/refs/heads/main/Alan%20Walker_The%20Spectre.zip',
+      lessons: [],
+      beatRunnerLessons: [],
+      difficulty: DifficultyMode.hard,
+      image: "assets/images/music_99%.png",
+      author: "Anh Lân đi bộ",
+      name: "The Spectre"),
+
 ];

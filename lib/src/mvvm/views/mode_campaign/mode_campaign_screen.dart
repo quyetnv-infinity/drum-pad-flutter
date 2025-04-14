@@ -36,6 +36,9 @@ class _ModeCampaignScreenState extends State<ModeCampaignScreen> {
   void initState() {
     super.initState();
     _campaignSongs = widget.listCampaignSong;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchData();
+    });
   }
 
   Future<void> fetchData() async {
