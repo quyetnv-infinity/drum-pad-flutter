@@ -129,7 +129,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       vsync: this,
       duration: Duration(milliseconds: 150), // Thời gian chạy mặc định
     )..repeat();
-    context.read<DrumLearnProvider>().addBeatRunnerSongComplete(widget.currentSong!.id);
+    if(widget.currentSong != null) context.read<DrumLearnProvider>().addBeatRunnerSongComplete(widget.currentSong!.id);
     widget.onRegisterPauseHandler?.call(pause);
   }
 
@@ -412,7 +412,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   Future<void> _loadSequenceDataFromFile(int lesson) async {
     try {
       _totalNotes = 0;
-      lessons = widget.currentSong?.lessons ?? [];
+      /// check beat runner or drum learn/campaign
+      lessons = (!widget.isFromCampaign && !widget.isFromLearnScreen) ? (widget.currentSong?.beatRunnerLessons ?? []) : (widget.currentSong?.lessons ?? []);
       currentLesson = widget.isFromCampaign ? lessons.length - 1 : lesson;
       events = lessons[currentLesson].events;
       Set<String> uniqueSounds = {};
