@@ -93,7 +93,6 @@ class _ListSongWidgetState extends State<ListSongWidget> {
                     }
                   },
                   child: SongItem(
-                  height: MediaQuery.sizeOf(context).width * 0.55,
                   isFromLearnFromSong: !widget.isChooseSong,
                   model: song),
                 );

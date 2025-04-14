@@ -118,7 +118,7 @@ class _LearnCategoryDetailsState extends State<LearnCategoryDetails> {
               style: const TextStyle(color: Colors.white70),
               decoration: InputDecoration(
                 maintainHintHeight: true,
-                hintText: "Find your song here",
+                hintText: context.locale.find_your_song_here,
                 hintStyle: TextStyle(color: Colors.white54),
                 border: InputBorder.none,
                 counterText: "",

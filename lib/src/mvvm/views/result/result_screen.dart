@@ -6,6 +6,7 @@ import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/home_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/loading_data/loading_data_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/result/widget/congratulations_widget.dart';
 import 'package:drumpad_flutter/src/widgets/button/gradient_button.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
@@ -28,6 +29,7 @@ class ResultScreen extends StatefulWidget {
   final int currentLesson;
   final int maxLesson;
   final bool isCompleted;
+  final bool isCompleteCampaign;
 
   const ResultScreen({
     super.key,
@@ -35,7 +37,7 @@ class ResultScreen extends StatefulWidget {
     required this.goodScore,
     required this.earlyScore,
     required this.lateScore,
-    required this.missScore, required this.totalScore, required this.totalNotes, required this.isFromLearn, required this.currentLesson, required this.maxLesson, required this.isFromCampaign, required this.isCompleted,
+    required this.missScore, required this.totalScore, required this.totalNotes, required this.isFromLearn, required this.currentLesson, required this.maxLesson, required this.isFromCampaign, required this.isCompleted, required this.isCompleteCampaign,
   });
 
   @override
@@ -45,6 +47,7 @@ class ResultScreen extends StatefulWidget {
 class _ResultScreenState extends State<ResultScreen>
     with SingleTickerProviderStateMixin {
   double _percentStar = 0;
+  late bool isShowCongratulations;
 
   // Khởi tạo các biến cho animation
   late AnimationController _animationController;
@@ -65,6 +68,7 @@ class _ResultScreenState extends State<ResultScreen>
     print('15teiugdsfkjvc ${widget.earlyScore}');
     print('15teiugdsfkjvc ${widget.missScore}');
     super.initState();
+    isShowCongratulations = widget.isCompleteCampaign;
     _calculateTotalNotes();
     _animationController = AnimationController(
       duration: Duration(milliseconds: 1500),
@@ -157,174 +161,201 @@ class _ResultScreenState extends State<ResultScreen>
         body: AnimatedBuilder(
           animation: _animationController,
           builder: (context, child) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
+            return Stack(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    checkNotLastCampaign() && (widget.isFromCampaign || widget.isFromLearn) ? Container(
-                      margin: EdgeInsets.only(left: 16),
-                      child: IconButton(
-                        onPressed: (){
-                          Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
-                        },
-                        icon: SvgPicture.asset(ResIcon.icHome, width: 32,)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        checkNotLastCampaign() && (widget.isFromCampaign || widget.isFromLearn) || widget.isCompleteCampaign ? Container(
+                          margin: EdgeInsets.only(left: 16),
+                          child: IconButton(
+                            onPressed: (){
+                              Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
+                            },
+                            icon: SvgPicture.asset(ResIcon.icHome, width: 32,)
+                          ),
+                        ) : SizedBox(width: 58,),
+                        Expanded(
+                          child: Text(
+                            context.locale.congratulation,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 28,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 58,)
+                      ],
+                    ),
+                    SizedBox(height: 16,),
+                    // Sử dụng giá trị animation cho RatingStars
+                    RatingStars(value: _starAnimation.value, isFlatStar: true,),
+                    SizedBox(height: 32,),
+                    Text(
+                      context.locale.final_score,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 27),
+                    ),
+                    // Sử dụng giá trị animation cho điểm
+                    Text(
+                      "${_scoreAnimation.value.toInt()}",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 60,
                       ),
-                    ) : SizedBox(width: 58,),
-                    Expanded(
-                      child: Text(
-                        context.locale.congratulation,
+                    ),
+                    SizedBox(height: 18),
+                    _rowScore(
+                      title: JudgementText.perfect(
+                        context.locale.perfect,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 28,
-                          fontWeight: FontWeight.w600,
-                        ),
                       ),
+                      value: _perfectPercentAnimation.value,
+                      count: widget.perfectScore,
                     ),
-                    SizedBox(width: 58,)
+                    _rowScore(
+                      title: JudgementText.good(
+                        context.locale.good,
+                        textAlign: TextAlign.center,
+                      ),
+                      value: _goodPercentAnimation.value,
+                      count: widget.goodScore,
+                    ),
+                    _rowScore(
+                      title: JudgementText.early(
+                        context.locale.early,
+                        textAlign: TextAlign.center,
+                      ),
+                      value: _earlyPercentAnimation.value,
+                      count: widget.earlyScore,
+                    ),
+                    _rowScore(
+                      title: JudgementText.late(
+                        context.locale.late,
+                        textAlign: TextAlign.center,
+                      ),
+                      value: _latePercentAnimation.value,
+                      count: widget.lateScore,
+                    ),
+                    _rowScore(
+                      title: JudgementText.miss(
+                        context.locale.miss,
+                        textAlign: TextAlign.center,
+                      ),
+                      value: _missPercentAnimation.value,
+                      count: widget.missScore,
+                    ),
+                    ResSpacing.h48,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GradientButton(
+                          onPressed: () async {
+                            if(widget.isFromLearn || widget.isFromCampaign){
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            }else{
+                              final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => LearnFromSongScreen(isChooseSong: true),));
+                              if(result != null){
+                                final loadingResult = await Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                                    callbackLoadingCompleted: (song) {
+                                      Navigator.pop(context, song);
+                                    },
+                                    callbackLoadingFailed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    song: result),
+                                ));
+                                print('=======$loadingResult');
+                                Navigator.pop(context, loadingResult);
+                              }
+                            }
+                          },
+                          shape: BoxShape.circle,
+                          padding: EdgeInsets.all(14),
+                          child: widget.isFromLearn || widget.isFromCampaign ? SvgPicture.asset(ResIcon.icList) :SvgPicture.asset(ResIcon.icMusic),
+                        ),
+                        !widget.isCompleteCampaign ?
+                        GradientButton(
+                          onPressed: () {
+                            Navigator.pop(context, 'play_again');
+                          },
+                          padding: EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+                          borderRadius: BorderRadius.circular(32),
+                          child: Text(
+                            context.locale.play_again,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ):GradientButton(
+                          onPressed: () {
+                            Navigator.pop(context,);
+                            Navigator.pop(context,);
+                            Navigator.pop(context,);
+                          },
+                          padding: EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+                          borderRadius: BorderRadius.circular(32),
+                          child: Text(
+                            context.locale.choose_song,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        !widget.isCompleteCampaign ?
+                        GradientButton(
+                          onPressed: () async {
+                            if(checkNotLastCampaign()){
+                              if(widget.isFromLearn) Navigator.pop(context, widget.currentLesson + 1);
+                              if(widget.isFromCampaign) {
+                                final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
+                                final currentCampaignIndex = campaignProvider.currentSongCampaign + 1;
+                                campaignProvider.setCurrentSongCampaign(currentCampaignIndex);
+                                final song = campaignProvider.currentCampaign[currentCampaignIndex];
+                                await Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                                    callbackLoadingCompleted: (songData) {
+                                      Navigator.pop(context, songData);
+                                      Navigator.pop(context, songData);
+                                    },
+                                    callbackLoadingFailed: () {
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    },
+                                    song: song),
+                                ));
+                              }
+                            }else{
+                              Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
+                            }
+                            // Navigator.popUntil(context, (route) => route.isFirst);
+                          },
+                          shape: BoxShape.circle,
+                          padding: EdgeInsets.all(14),
+                          child: checkNotLastCampaign() ? SvgPicture.asset(ResIcon.icNext) : SvgPicture.asset(ResIcon.icHome),
+                        ) : SizedBox.shrink(),
+                      ],
+                    )
                   ],
                 ),
-                SizedBox(height: 16,),
-                // Sử dụng giá trị animation cho RatingStars
-                RatingStars(value: _starAnimation.value, isFlatStar: true,),
-                SizedBox(height: 32,),
-                Text(
-                  context.locale.final_score,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 27),
-                ),
-                // Sử dụng giá trị animation cho điểm
-                Text(
-                  "${_scoreAnimation.value.toInt()}",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 60,
-                  ),
-                ),
-                SizedBox(height: 18),
-                _rowScore(
-                  title: JudgementText.perfect(
-                    context.locale.perfect,
-                    textAlign: TextAlign.center,
-                  ),
-                  value: _perfectPercentAnimation.value,
-                  count: widget.perfectScore,
-                ),
-                _rowScore(
-                  title: JudgementText.good(
-                    context.locale.good,
-                    textAlign: TextAlign.center,
-                  ),
-                  value: _goodPercentAnimation.value,
-                  count: widget.goodScore,
-                ),
-                _rowScore(
-                  title: JudgementText.early(
-                    context.locale.early,
-                    textAlign: TextAlign.center,
-                  ),
-                  value: _earlyPercentAnimation.value,
-                  count: widget.earlyScore,
-                ),
-                _rowScore(
-                  title: JudgementText.late(
-                    context.locale.late,
-                    textAlign: TextAlign.center,
-                  ),
-                  value: _latePercentAnimation.value,
-                  count: widget.lateScore,
-                ),
-                _rowScore(
-                  title: JudgementText.miss(
-                    context.locale.miss,
-                    textAlign: TextAlign.center,
-                  ),
-                  value: _missPercentAnimation.value,
-                  count: widget.missScore,
-                ),
-                ResSpacing.h48,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GradientButton(
-                      onPressed: () async {
-                        if(widget.isFromLearn || widget.isFromCampaign){
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        }else{
-                          final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => LearnFromSongScreen(isChooseSong: true),));
-                          if(result != null){
-                            final loadingResult = await Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
-                                callbackLoadingCompleted: (song) {
-                                  Navigator.pop(context, song);
-                                },
-                                callbackLoadingFailed: () {
-                                  Navigator.pop(context);
-                                },
-                                song: result),
-                            ));
-                            print('=======$loadingResult');
-                            Navigator.pop(context, loadingResult);
-                          }
-                        }
-                      },
-                      shape: BoxShape.circle,
-                      padding: EdgeInsets.all(14),
-                      child: widget.isFromLearn || widget.isFromCampaign ? SvgPicture.asset(ResIcon.icList) :SvgPicture.asset(ResIcon.icMusic),
-                    ),
-                    GradientButton(
-                      onPressed: () {
-                        Navigator.pop(context, 'play_again');
-                      },
-                      padding: EdgeInsets.symmetric(horizontal: 28, vertical: 16),
-                      borderRadius: BorderRadius.circular(32),
-                      child: Text(
-                        context.locale.play_again,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    GradientButton(
-                      onPressed: () async {
-                        if(checkNotLastCampaign()){
-                          if(widget.isFromLearn) Navigator.pop(context, widget.currentLesson + 1);
-                          if(widget.isFromCampaign) {
-                            final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
-                            final currentCampaignIndex = campaignProvider.currentSongCampaign + 1;
-                            campaignProvider.setCurrentSongCampaign(currentCampaignIndex);
-                            final song = campaignProvider.currentCampaign[currentCampaignIndex];
-                            await Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
-                                callbackLoadingCompleted: (songData) {
-                                  Navigator.pop(context, songData);
-                                  Navigator.pop(context, songData);
-                                },
-                                callbackLoadingFailed: () {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                },
-                                song: song),
-                            ));
-                          }
-                        }else{
-                          Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
-                        }
-                        // Navigator.popUntil(context, (route) => route.isFirst);
-                      },
-                      shape: BoxShape.circle,
-                      padding: EdgeInsets.all(14),
-                      child: checkNotLastCampaign() ? SvgPicture.asset(ResIcon.icNext) : SvgPicture.asset(ResIcon.icHome),
-                    ),
-                  ],
-                ),
+                if(isShowCongratulations) CongratulationsWidget(onTapExit: () {
+                  setState(() {
+                    isShowCongratulations = false;
+                  });
+                },)
               ],
             );
           },
