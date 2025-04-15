@@ -44,7 +44,7 @@ class _LoadingDataScreenState extends State<LoadingDataScreen> {
     final drumLearnProvider = Provider.of<DrumLearnProvider>(context, listen: false);
     final song = await drumLearnProvider.getSong(widget.song.id);
     if(song != null){
-      Future.delayed(Duration(seconds: 2), () {
+      Future.delayed(Duration(seconds: 1), () {
         widget.callbackLoadingCompleted(song);
         print('song exist');
         return;
