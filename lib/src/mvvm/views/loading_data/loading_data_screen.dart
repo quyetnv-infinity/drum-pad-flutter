@@ -49,6 +49,7 @@ class _LoadingDataScreenState extends State<LoadingDataScreen> {
         print('song exist');
         return;
       },);
+      return;
     }
     await _loadDownloadedPacks();
     await _downloadAndExtractZip();

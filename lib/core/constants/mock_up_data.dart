@@ -7,7 +7,7 @@ final List<SongCollection> dataSongCollections = [
       lessons: [],
       beatRunnerLessons: [],
       difficulty: DifficultyMode.easy,
-      image: "assets/images/music_99%.png",
+      image: "assets/images/unity.jpg",
       author: "MCK",
       name: "99%"),
   SongCollection(
@@ -16,7 +16,7 @@ final List<SongCollection> dataSongCollections = [
       lessons: [],
       beatRunnerLessons: [],
       difficulty: DifficultyMode.hard,
-      image: "assets/images/lactroi.png",
+      image: "assets/images/where_we_started.jpeg",
       author: "Anh Tùng Lúi",
       name: "Lost Sky - Where We Started"),
   SongCollection(
@@ -25,7 +25,7 @@ final List<SongCollection> dataSongCollections = [
       lessons: [],
       beatRunnerLessons: [],
       difficulty: DifficultyMode.hard,
-      image: "assets/images/lactroi.png",
+      image: "assets/images/heroes_tonight.webp",
       author: "Anh Chìm Loi",
       name: "Một Bài Nhạc Hay"),
   SongCollection(
@@ -43,7 +43,7 @@ final List<SongCollection> dataSongCollections = [
       lessons: [],
       beatRunnerLessons: [],
       difficulty: DifficultyMode.medium,
-      image: "assets/images/lactroi.png",
+      image: "assets/images/unity.jpg",
       author: "Olodo",
       name: "ytinU"),
   SongCollection(
@@ -52,7 +52,7 @@ final List<SongCollection> dataSongCollections = [
       lessons: [],
       beatRunnerLessons: [],
       difficulty: DifficultyMode.medium,
-      image: "assets/images/music_99%.png",
+      image: "assets/images/hope.jpeg",
       author: "Tobu",
       name: "Tobu Hope"),
   SongCollection(
@@ -61,7 +61,7 @@ final List<SongCollection> dataSongCollections = [
       lessons: [],
       beatRunnerLessons: [],
       difficulty: DifficultyMode.demonic,
-      image: "assets/images/music_99%.png",
+      image: "assets/images/invincible.jpeg",
       author: "Kev Điếc",
       name: "Invincible"),
   SongCollection(
@@ -70,7 +70,7 @@ final List<SongCollection> dataSongCollections = [
       lessons: [],
       beatRunnerLessons: [],
       difficulty: DifficultyMode.hard,
-      image: "assets/images/music_99%.png",
+      image: "assets/images/the_spectre.jpeg",
       author: "Anh Lân đi bộ",
       name: "The Spectre"),
 

@@ -140,7 +140,7 @@ class DrumLearnProvider extends ChangeNotifier {
     }
     await prefs.setStringList('listResume', listResume);
     _listIdSongResume = listResume;
-    _getListResumeSongById();
+    await _getListResumeSongById();
     notifyListeners();
   }
 
@@ -155,6 +155,7 @@ class DrumLearnProvider extends ChangeNotifier {
         print('Error fetching song with id $id: $e');
       }
     }
+    // print('get list resume ${listSong.first.name}');
     _listSongResume =  listSong;
     notifyListeners();
   }

@@ -36,7 +36,13 @@ class _ListSongWidgetState extends State<ListSongWidget> {
   }
 
   Future<void> getListByCategory() async {
-    if(widget.listSongData.isNotEmpty) {
+    if(!widget.isMore) {
+      print('get resume');
+      setState(() {
+        _listSongData = context.read<DrumLearnProvider>().listSongResume;
+      });
+      return;
+    }else if(widget.listSongData.isNotEmpty) {
       setState(() {
         _listSongData = widget.listSongData;
       });
@@ -44,6 +50,16 @@ class _ListSongWidgetState extends State<ListSongWidget> {
       final list = await Provider.of<DrumLearnProvider>(context, listen: false).getSongsByCategory('category');
       setState(() {
         _listSongData = list;
+      });
+    }
+  }
+
+  @override
+  void didUpdateWidget(ListSongWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.listSongData != oldWidget.listSongData && !widget.isMore) {
+      setState(() {
+        _listSongData = context.read<DrumLearnProvider>().listSongResume;
       });
     }
   }
