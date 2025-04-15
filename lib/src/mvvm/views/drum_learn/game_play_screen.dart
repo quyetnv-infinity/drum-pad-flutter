@@ -170,25 +170,55 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.4),
-                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Icon(Icons.arrow_upward, color: Colors.white, size: 28,),
-                          SizedBox(height: 12),
-                          Text(
-                            context.locale.change_mode,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w500
-                            ),
+                          Spacer(),
+                          Column(
+                            spacing: 10,
+                            children: [
+                              Icon(Icons.arrow_upward, color: Colors.white, size: 28,),
+                              Text(
+                                context.locale.rec,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500
+                                ),
+                              ),
+                            ],
                           ),
+                          SizedBox(width: 20),
+                          Column(
+                            spacing: 10,
+                            children: [
+                              Icon(Icons.arrow_upward, color: Colors.white, size: 28,),
+                              Text(
+                                context.locale.practice,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500
+                                ),
+                              ),
+                            ],
+                          )
+                          // Text(
+                          //   context.locale.change_mode,
+                          //   textAlign: TextAlign.center,
+                          //   style: TextStyle(
+                          //       color: Colors.white,
+                          //       fontSize: 17,
+                          //       fontWeight: FontWeight.w500
+                          //   ),
+                          // ),
                         ],
                       ),
                     ],
