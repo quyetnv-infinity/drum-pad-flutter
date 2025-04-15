@@ -5,6 +5,13 @@ import 'package:hive_ce/hive.dart';
 class SongCollectionService {
   static final _box = Hive.box<SongCollection>(HiveTable.songCollectionTable);
 
+  static Future<List<SongCollection>> getAll() async {
+    if (!_box.isOpen) {
+      await Hive.openBox<SongCollection>(HiveTable.songCollectionTable);
+    }
+    return _box.values.toList();
+  }
+
   static Future<void> addSong(SongCollection song) async {
     if (!_box.isOpen) {
       await Hive.openBox<SongCollection>(HiveTable.songCollectionTable);

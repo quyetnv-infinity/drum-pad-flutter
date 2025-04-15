@@ -159,6 +159,16 @@ class DrumLearnProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<List<SongCollection>> getSongsByCategory(String category) async {
+    return mergeLists(data, await SongCollectionService.getAll());
+  }
+
+  List<SongCollection> mergeLists(List<SongCollection> listFromServer, List<SongCollection> listFromDB) {
+    Map<String, SongCollection> mapB = {for (var item in listFromDB) item.id: item};
+
+    return listFromServer.map((item) => mapB.containsKey(item.id) ? mapB[item.id]! : item).toList();
+  }
+
   ///runner
   Future<void> getBeatRunnerSongComplete() async {
     final prefs = await SharedPreferences.getInstance();

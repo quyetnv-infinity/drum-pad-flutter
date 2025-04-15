@@ -25,6 +25,28 @@ class ListSongWidget extends StatefulWidget {
 
 class _ListSongWidgetState extends State<ListSongWidget> {
   SongCollection? _currentSongSelected;
+  List<SongCollection> _listSongData = [];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getListByCategory();
+    },);
+  }
+
+  Future<void> getListByCategory() async {
+    if(widget.listSongData.isNotEmpty) {
+      setState(() {
+        _listSongData = widget.listSongData;
+      });
+    } else {
+      final list = await Provider.of<DrumLearnProvider>(context, listen: false).getSongsByCategory('category');
+      setState(() {
+        _listSongData = list;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,10 +85,10 @@ class _ListSongWidgetState extends State<ListSongWidget> {
             child: ListView.builder(
               shrinkWrap: true,
               padding: EdgeInsets.symmetric(horizontal: 16),
-              itemCount: widget.listSongData.length,
+              itemCount: _listSongData.length,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
-                final song = widget.listSongData[index];
+                final song = _listSongData[index];
                 return GestureDetector(
                   onTap: (){
                     if(widget.isChooseSong){
@@ -86,8 +108,9 @@ class _ListSongWidgetState extends State<ListSongWidget> {
                         callbackLoadingFailed: (){
                           Navigator.pop(context);
                         },
-                        callbackLoadingCompleted: (songData) {
-                          Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: songData,),));
+                        callbackLoadingCompleted: (songData) async {
+                          await Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: songData,),));
+                          await getListByCategory();
                         },
                       ),));
                     }

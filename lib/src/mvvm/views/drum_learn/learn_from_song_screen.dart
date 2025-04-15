@@ -2,7 +2,6 @@ import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/list_song_widget.dart';
-import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/resume_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -51,8 +50,8 @@ class _LearnFromSongScreenState extends State<LearnFromSongScreen> {
               spacing: 16,
               children: [
                 if(provider.listSongResume.isNotEmpty) ListSongWidget(title: context.locale.resume, isMore: false, isChooseSong: widget.isChooseSong, listSongData: provider.listSongResume),
-                ListSongWidget(title: 'V-pop', isMore: true, isChooseSong: widget.isChooseSong, listSongData: provider.data,),
-                ListSongWidget(title: 'Rap', isMore: true, isChooseSong: widget.isChooseSong, listSongData: provider.data,),
+                ListSongWidget(title: 'EDM', isMore: true, isChooseSong: widget.isChooseSong, listSongData: [],),
+                ListSongWidget(title: 'Rap', isMore: true, isChooseSong: widget.isChooseSong, listSongData: [],),
               ],
             ),
           ),
