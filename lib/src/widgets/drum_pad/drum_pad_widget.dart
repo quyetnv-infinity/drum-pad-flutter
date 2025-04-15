@@ -979,7 +979,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
                                 child: Text(context.locale.wait, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: Colors.white))),
                           ],
                         ),
-                      if (padProgress.containsKey(sound) && hasSound && widget.practiceMode != 'practice')
+                      if (padProgress.containsKey(sound) && hasSound && widget.practiceMode != 'practice' && !widget.isFromLearnScreen)
                         Positioned.fill(
                           child: CustomPaint(
                             painter: SquareProgressPainter(
@@ -990,7 +990,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
                             ),
                           ),
                         ),
-                      if (padProgress.containsKey(sound) && hasSound && widget.practiceMode != 'practice')
+                      if (padProgress.containsKey(sound) && hasSound && widget.practiceMode != 'practice' && widget.isFromLearnScreen)
                         Align(
                           alignment: Alignment.center,
                           child:  SizedBox(
