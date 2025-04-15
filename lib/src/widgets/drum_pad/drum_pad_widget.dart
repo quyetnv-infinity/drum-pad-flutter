@@ -254,7 +254,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     });
     final provider = context.read<DrumLearnProvider>();
     final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
-    final checkLastCampaign = campaignProvider.currentSongCampaign >= campaignProvider.currentCampaign.length - 1 && widget.isFromCampaign;
+    /// check is last for a song or for a campaign
+    final checkLastCampaign = (campaignProvider.currentSongCampaign >= campaignProvider.currentCampaign.length - 1 && widget.isFromCampaign) || (currentLesson >= lessons.length - 1 && widget.isFromLearnScreen);
 
     _pauseTimer?.cancel();
     provider.resetPerfectPoint();
