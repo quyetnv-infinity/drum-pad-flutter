@@ -613,10 +613,11 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   }
 
   Future<void> _onPadPressed(String sound, int index) async {
-    if(currentEventIndex > 0) _startTimer();
     if(currentEventIndex >= events.length) return;
     if(widget.currentSong == null || widget.currentSong!.lessons.isEmpty) return;
     if(!PadUtil.getPadEnable(sound)) return;
+
+    _startTimer();
 
     List<String> requiredNotes = events[currentEventIndex].notes;
     // Add this check to prevent duplicate activations
@@ -657,7 +658,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     } else if(requiredNotes.contains(sound) ) {
       widget.onChangePlayState?.call(true);
       state = PadStateEnum.perfect;
-      _startTimer();
     }
 
     setState(() {
