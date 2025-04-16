@@ -1,10 +1,17 @@
+import 'package:ads_tracking_plugin/ads_controller.dart';
+import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/setting_funcs.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/iap/widget/text_gradient.dart';
+import 'package:drumpad_flutter/src/widgets/overlay_loading/overlay_loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class IapScreen extends StatefulWidget {
   const IapScreen({super.key});
@@ -13,8 +20,69 @@ class IapScreen extends StatefulWidget {
   State<IapScreen> createState() => _IapScreenState();
 }
 
-class _IapScreenState extends State<IapScreen> {
+class _IapScreenState extends State<IapScreen> with WidgetsBindingObserver {
+  late PurchaseProvider _purchaseProvider;
   int selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _purchaseProvider = Provider.of<PurchaseProvider>(context, listen: false);
+    _purchaseProvider.fetchProducts();
+    _purchaseProvider.addListener(_showSuccessAnimation);
+
+    AdController.shared.setResumeAdState(true);
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  void _showSuccessAnimation() {
+    if (_purchaseProvider.isSubscribed && !_purchaseProvider.isLoading) {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                backgroundColor: Colors.transparent,
+                content: Center(
+                    child: Lottie.asset('assets/anim/success.json', width: 200, height: 200, fit: BoxFit.fill)
+                )
+            );
+          }
+      );
+      Future.delayed(const Duration(seconds: 3), () {
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
+
+        Navigator.pop(context);
+      });
+    }
+
+    if (_purchaseProvider.isLoading) {
+      OverlayLoading.show(context);
+    } else {
+      OverlayLoading.hide();
+    }
+  }
+
+  @override
+  void dispose() {
+    _purchaseProvider.removeListener(_showSuccessAnimation);
+    WidgetsBinding.instance.removeObserver(this);
+    AdController.shared.setResumeAdState(false);
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _subscriptionTracking();
+  }
+
+  void _subscriptionTracking() {
+    AnalyticsUtil.logEvent("sub_display");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,18 +106,42 @@ class _IapScreenState extends State<IapScreen> {
                 SafeArea(
                   child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Center(child: iapText(context.locale.unlock_all_premium_features)),
-                        _buildDescription(context),
-                        _buildSubscriptionItem(context, context.locale.monthly, "hehe", 0),
-                        SizedBox(height: 16),
-                        _buildSubscriptionItem(context, context.locale.yearly, "hihi", 1),
-                        SizedBox(height: 24),
-                        _buildContinueButton(context, () {},),
-                        _buildPolicyRow()
-                      ],
+                    child: Consumer<PurchaseProvider>(
+                      builder: (context, purchaseProvider, _) {
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Center(child: iapText(context.locale.unlock_all_premium_features)),
+                            _buildDescription(context),
+                            if(purchaseProvider.products.isEmpty)
+                              const CircularProgressIndicator(color: Colors.white,),
+                            Column(
+                              spacing: 16,
+                              children: purchaseProvider.products.asMap().entries.map((entry) {
+                                int index = entry.key;
+                                final sub = entry.value;
+                                return _buildSubscriptionItem(
+                                  text: sub.title,
+                                  price: sub.price,
+                                  index: index
+                                );
+                              }).toList()
+                            ),
+                            SizedBox(height: 24),
+                            _buildContinueButton(
+                              onTapPurchase: () {
+                                if(purchaseProvider.products.isEmpty) return;
+                                purchaseProvider.purchaseSubscription(purchaseProvider.products[selectedIndex].id);
+                              },
+                            ),
+                            _buildPolicyRow(
+                              onTapRestore: () {
+                                purchaseProvider.restorePurchases();
+                              },
+                            )
+                          ],
+                        );
+                      }
                     ),
                   ),
                 )
@@ -98,7 +190,7 @@ class _IapScreenState extends State<IapScreen> {
       ),
     );
   }
-  Widget _buildSubscriptionItem(BuildContext context, String text, String price, int index){
+  Widget _buildSubscriptionItem({required String text, required String price, required int index}){
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -131,9 +223,9 @@ class _IapScreenState extends State<IapScreen> {
       ),
     );
   }
-  Widget _buildContinueButton(BuildContext context, Function() func){
+  Widget _buildContinueButton({required Function() onTapPurchase}){
     return GestureDetector(
-      onTap: func,
+      onTap: onTapPurchase,
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 16),
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
@@ -152,7 +244,7 @@ class _IapScreenState extends State<IapScreen> {
       ),
     );
   }
-  Widget _buildPolicyRow(){
+  Widget _buildPolicyRow({required Function() onTapRestore}){
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -169,7 +261,7 @@ class _IapScreenState extends State<IapScreen> {
             child: Text(context.locale.privacy_policy, style: TextStyle( color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),),
           ),
           /// RESTORE FUNC
-          TextButton(onPressed: () {},
+          TextButton(onPressed: onTapRestore,
             child: Text(context.locale.restore, style: TextStyle( color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),),
           ),
         ],

@@ -1,6 +1,7 @@
 import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
 import 'package:ads_tracking_plugin/collapsible_banner_ad/collapsible_banner_ad_widget.dart';
+import 'package:drumpad_flutter/config/ads_config.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -61,13 +62,13 @@ class AppStateProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // void initializeAds() {
-  //   AdController.shared.initialize(
-  //     isAdDisabled: !shouldShowAds,
-  //     configurations: getAdConfigurations(_isFirstOpenApp),
-  //     adjustConfig: AdjustConfig("sxnlmet7vocg", AdjustEnvironment.production),
-  //   );
-  // }
+  void initializeAds() {
+    AdController.shared.initialize(
+      isAdDisabled: !shouldShowAds,
+      configurations: getAdConfigurations(_isFirstOpenApp),
+      adjustConfig: AdjustConfig("sxnlmet7vocg", AdjustEnvironment.production),
+    );
+  }
 
   Future<bool> getFirstOpenApp() async {
     final prefs = await SharedPreferences.getInstance();

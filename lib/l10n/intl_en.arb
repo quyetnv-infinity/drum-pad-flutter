@@ -110,5 +110,6 @@
   "lost_connection_description": "Oh no, something went wrong! Please check the connection then try again.",
   "fundamental": "Fundamental",
   "follow_da_beat": "Follow Da Beat",
-  "loading": "Loading"
+  "loading": "Loading",
+  "score_and_progress": "Score & Progress"
 }

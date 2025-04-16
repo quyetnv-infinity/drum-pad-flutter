@@ -1,17 +1,11 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
 class AppSettingsProvider with ChangeNotifier {
-  // AdsProvider adsProvider;
-  // PurchaseProvider purchaseProvider;
 
   bool _isFirstOpenApp = true;
   bool _isInitialized = false;
-
-  // bool get shouldShowAds => adsProvider.adsEnabled && !purchaseProvider.isSubscribed;
 
   bool get isFirstOpenApp => _isFirstOpenApp;
   bool get isInitialized => _isInitialized;
@@ -40,73 +34,13 @@ class AppSettingsProvider with ChangeNotifier {
   bool _toolTips = true;
   bool get toolTips => _toolTips;
 
-  // Future<void> showInterstitialAd(BuildContext context) async {
-  //   if (_isLoading) return;
-  //
-  //   final now = DateTime.now();
-  //   if(!context.read<CheckConnectProvider>().isConnected){
-  //     context.pop();
-  //     return;
-  //   }
-  //   if(shouldShowAds){
-  //   if (_lastAdTime == null || now.difference(_lastAdTime!).inSeconds >= 30) {
-  //     print('show ad');
-  //     _isLoading = true;
-  //     EasyLoading.show();
-  //     notifyListeners();
-  //     try {
-  //       await AdController.shared.interstitialAd.showAd(
-  //         "inter_back",
-  //         onLoadingStateChanged: (isLoading, [String? errorMessage]) {
-  //           _isLoading = isLoading;
-  //           notifyListeners();
-  //         },
-  //         onFullScreenAdDismissed: (_) {
-  //           updateAdTime(DateTime.now());
-  //         },
-  //       );
-  //     } catch (e) {
-  //       print(e);
-  //     } finally {
-  //       _isLoading = false;
-  //       notifyListeners();
-  //       EasyLoading.dismiss();
-  //     }
-  //   }
-  //   }
-  //   context.pop();
-  // }
-
   AppSettingsProvider() {
     _initSettings();
     getFirstOpenApp().then((value) {
       _isFirstOpenApp = value;
       notifyListeners();
-      // purchaseProvider.loadSubscription().then((_) {
-      //   initializeAds();
-      // });
     });
   }
-
-
-  // void updateDependencies(AdsProvider adsProvider, PurchaseProvider purchaseProvider) {
-  //   adsProvider = adsProvider;
-  //   purchaseProvider = purchaseProvider;
-  //   notifyListeners();
-  // }
-
-  // void updateAdsState(bool isEnabled) {
-  //   adsProvider.updateAdsState(isEnabled);
-  //   notifyListeners();
-  // }
-
-  // void initializeAds() {
-  //   print("initializeAds: $shouldShowAds");
-  //   AdController.shared.initialize(
-  //     isAdDisabled: !shouldShowAds,
-  //     configurations: getAdConfigurations(_isFirstOpenApp),
-  //   );
-  // }
 
   Future<void> _initSettings() async {
     _isFirstOpenApp = await getFirstOpenApp();

@@ -34,6 +34,8 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
   int _currentScore = 0;
   late TutorialCoachMark tutorialCoachMark;
   final GlobalKey _chooseSongKey = GlobalKey();
+  final GlobalKey _scoreAndProgress = GlobalKey();
+
   double _percentStar = 0;
   late void Function()? _pauseFromDrumPad;
 
@@ -115,6 +117,66 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                           fontWeight: FontWeight.w500
                         ),
                       ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: "_scoreAndProgress",
+        keyTarget: _scoreAndProgress,
+        alignSkip: Alignment.bottomRight,
+        shape: ShapeLightFocus.RRect,
+        radius: 8,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return InkWell(
+                onTap: () {
+                  tutorialCoachMark.next();
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.4),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Spacer(),
+                          Column(
+                            spacing: 10,
+                            children: [
+                              Icon(Icons.arrow_upward, color: Colors.white, size: 28,),
+                              Text(
+                                context.locale.score_and_progress,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(width: 30,)
+                        ],
+                      ),
+                      Container(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        alignment: Alignment.topCenter,
+                        padding: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.2),
+                        child: Text(context.locale.tap_to_exit, style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w500),),
+                      )
                     ],
                   ),
                 ),
@@ -269,23 +331,33 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                         ),
                       ),
                     ),
-                    Column(
-                      spacing: 8,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(context.locale.progress, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
-                        RatingStars.custom(
-                          value: _percentStar,
-                          isFlatStar: true,
-                          smallStarWidth: 22,
-                          smallStarHeight: 22,
-                          bigStarWidth: 22,
-                          bigStarHeight: 22,
-                        ),
-                        Text(context.locale.score, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
-                        Text(_currentScore.toString(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 32, color: Colors.white),)
-                      ],
+                    SizedBox(width: 16,),
+                    Expanded(
+                      child: Column(
+                        key: _scoreAndProgress,
+                        spacing: 8,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(context.locale.progress, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(width: 8,),
+                              RatingStars.custom(
+                                value: _percentStar,
+                                isFlatStar: true,
+                                smallStarWidth: 22,
+                                smallStarHeight: 22,
+                                bigStarWidth: 22,
+                                bigStarHeight: 22,
+                              ),
+                            ],
+                          ),
+                          Text(context.locale.score, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
+                          Text(_currentScore.toString(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 32, color: Colors.white),)
+                        ],
+                      ),
                     )
                   ],
                 ),
