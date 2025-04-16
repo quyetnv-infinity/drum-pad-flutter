@@ -1,11 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
+import 'package:ads_tracking_plugin/analyze/analytics_tracker.dart';
 import 'package:drumpad_flutter/config/ads_config.dart';
 import 'package:drumpad_flutter/core/constants/hive_table.dart';
 import 'package:drumpad_flutter/hive/hive_registrar.g.dart';
 import 'package:drumpad_flutter/service_locator/service_locator.dart';
-import 'package:drumpad_flutter/sound_type_enum.dart';
 import 'package:drumpad_flutter/src/application/my_application.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
@@ -19,20 +18,16 @@ import 'package:drumpad_flutter/src/mvvm/view_model/rate_app_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/result_information_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hive_ce/hive.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-
-import 'note.util.dart';
-import 'src/mvvm/views/drum_learn/drum_learn_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  // await RemoteConfig.initializeRemoteConfig(adConfigs: getAdConfigurations(false), devMode: AdUnitId.devMode);
+  AnalyticsTracker.setupCrashlytics();
+  await RemoteConfig.initializeRemoteConfig(adConfigs: getAdConfigurations(false), devMode: AdUnitId.devMode);
+  AnalyticsUtil.trackAppOpens();
   await _initHive();
 
   await ServiceLocator.instance.initialise();

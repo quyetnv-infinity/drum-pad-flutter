@@ -334,7 +334,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
       children: [
         Container(
           clipBehavior: Clip.antiAlias,
-          margin: EdgeInsets.only(right: 16, left: 16, bottom: 16),
+          margin: EdgeInsets.only(right: 16, left: 16, bottom: 16, top: 24),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
           ),

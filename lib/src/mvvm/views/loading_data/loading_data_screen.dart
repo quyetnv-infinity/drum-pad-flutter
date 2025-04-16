@@ -205,7 +205,6 @@ class _LoadingDataScreenState extends State<LoadingDataScreen> {
       final entities = packDir.listSync();
       print('Found ${entities.length} entities in pack directory');
 
-      List<AudioFile> audioFiles = [];
       List<dynamic>? sequenceData;
       List<dynamic>? beatRunnerData;
 
@@ -221,10 +220,6 @@ class _LoadingDataScreenState extends State<LoadingDataScreen> {
 
           if (filename.toLowerCase().endsWith('.mp3') && !filename.toLowerCase().contains('._')) {
             print('Found MP3: $filename');
-            audioFiles.add(AudioFile(
-              name: filename,
-              path: entity.path,
-            ));
           } else if (filename.toLowerCase() == 'sequence.json' && !filename.toLowerCase().contains('._')) {
             print('Found JSON: $filename');
             try {
@@ -248,46 +243,6 @@ class _LoadingDataScreenState extends State<LoadingDataScreen> {
             if(file.existsSync()){
               file.deleteSync();
               print('Deleted file: $filename');
-            }
-          }
-        }
-      }
-
-      // Nếu không tìm thấy file, tìm kiếm trong các thư mục con
-      if (audioFiles.isEmpty) {
-        print('No files found in root directory, checking subdirectories');
-        // Kiểm tra trong các thư mục con (thường là cấu trúc thư mục từ file ZIP)
-        for (var entity in entities) {
-          if (entity is Directory) {
-            print('Checking subdirectory: ${entity.path}');
-            final subEntities = entity.listSync();
-
-            for (var subEntity in subEntities) {
-              if (subEntity is File) {
-                String filename = subEntity.path.split('/').last;
-                print('Found in subdirectory: $filename');
-
-                if (filename.toLowerCase().endsWith('.mp3')) {
-                  audioFiles.add(AudioFile(
-                    name: filename,
-                    path: subEntity.path,
-                  ));
-                } else if (filename.toLowerCase() == 'sequence.json') {
-                  try {
-                    String jsonContent = await File(subEntity.path).readAsString();
-                    sequenceData = jsonDecode(jsonContent);
-                  } catch (e) {
-                    print('Error parsing Sequence JSON in subdirectory: $e');
-                  }
-                } else if (filename.toLowerCase() == 'beat_runner.json'){
-                  try {
-                    String jsonContent = await File(subEntity.path).readAsString();
-                    beatRunnerData = jsonDecode(jsonContent);
-                  } catch (e) {
-                    print('Error parsing Beat Runner JSON in subdirectory: $e');
-                  }
-                }
-              }
             }
           }
         }
