@@ -176,7 +176,11 @@ class _LoadingDataScreenState extends State<LoadingDataScreen> {
       await _loadPackContent(packName);
 
       /// Xử lý data và navigate
-      if(_sequenceData == null && _beatRunnerData == null) widget.callbackLoadingFailed();
+      if(_sequenceData == null && _beatRunnerData == null) {
+        showToastLoadFailed();
+        widget.callbackLoadingFailed();
+        return;
+      }
       final SongCollection song = SongCollection.fromJson(_sequenceData ?? [], _beatRunnerData ?? []);
       final dataSong = song.copyWith(id: widget.song.id, image: widget.song.image, difficulty: widget.song.difficulty, author: widget.song.author, name: widget.song.name, pathZipFile: widget.song.pathZipFile);
       print('${dataSong.lessons.length} || ${dataSong.beatRunnerLessons.length}');
@@ -184,8 +188,30 @@ class _LoadingDataScreenState extends State<LoadingDataScreen> {
       widget.callbackLoadingCompleted(dataSong);
     } catch (e) {
       print('Error during download/extract: $e');
+      showToastLoadFailed();
       widget.callbackLoadingFailed();
+      return;
     }
+  }
+
+  void showToastLoadFailed(){
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Container(
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.black.withValues(alpha: 0.7)
+            ),
+            child: Text('Load Failed!', style: TextStyle(color: Colors.white, fontSize: 18), textAlign: TextAlign.center,)
+        ),
+        duration: Duration(seconds: 1),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        width: MediaQuery.of(context).size.width * 0.5,
+      ),
+    );
   }
 
   Future<void> _loadPackContent(String packName) async {
