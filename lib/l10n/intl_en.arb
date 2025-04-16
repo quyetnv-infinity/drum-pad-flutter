@@ -112,5 +112,8 @@
   "follow_da_beat": "Follow Da Beat",
   "loading": "Loading",
   "score_and_progress": "Score & Progress",
-  "no_song_similar_found": "No song similar found"
+  "no_song_similar_found": "No song similar found",
+  "recording_started": "Recording Started!",
+  "recording_saved": "Recording Saved!",
+  "maximum_length_reached": "Maximum length reached!"
 }

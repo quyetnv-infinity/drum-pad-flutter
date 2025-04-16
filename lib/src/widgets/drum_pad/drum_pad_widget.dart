@@ -31,8 +31,9 @@ class DrumPadScreen extends StatefulWidget {
   final Function(SongCollection song)? onTapChooseSong;
   final VoidCallback? onResetRecordingToggle;
   final void Function(VoidCallback pauseHandler)? onRegisterPauseHandler;
+  final void Function(bool isPlaying)? onChangePlayState;
 
-  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onResetRecordingToggle, this.onRegisterPauseHandler});
+  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onResetRecordingToggle, this.onRegisterPauseHandler, this.onChangePlayState});
 
   @override
   State<DrumPadScreen> createState() => _DrumPadScreenState();
@@ -260,7 +261,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     _pauseTimer?.cancel();
     provider.resetPerfectPoint();
     /// 👀 check stop record
-    if (provider.isRecording) await ScreenRecorderService().stopRecording();
+    if (provider.isRecording) await ScreenRecorderService().stopRecording(context);
     widget.onChangeCampaignStar?.call(getStar());
     widget.onResetRecordingToggle?.call();
     /// 📌 check condition of result to save unlocked lesson or campaign and save star
@@ -535,6 +536,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       isPlaying = true;
     });
     _scheduleNextEvent();
+    widget.onChangePlayState?.call(false);
   }
 
   void _resetSequence({bool isPlayingDrum = false}) {
@@ -542,7 +544,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     for (var player in audioPlayers.values) {
       if(!isPlayingDrum) player.pause();
     }
-
     setState(() {
       isPlaying = false;
       currentEventIndex = 0;
@@ -654,6 +655,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         state = PadStateEnum.perfect;
       }
     } else if(requiredNotes.contains(sound) ) {
+      widget.onChangePlayState?.call(true);
       state = PadStateEnum.perfect;
       _startTimer();
     }

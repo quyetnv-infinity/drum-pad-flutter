@@ -20,7 +20,7 @@ class LearnCategoryDetails extends StatefulWidget {
 }
 
 class _LearnCategoryDetailsState extends State<LearnCategoryDetails> {
-  TextEditingController _textEditingController = TextEditingController();
+  final TextEditingController _textEditingController = TextEditingController();
   List<SongCollection> _allSongs = [];
   List<SongCollection> _filteredSongs = [];
 
@@ -43,6 +43,25 @@ class _LearnCategoryDetailsState extends State<LearnCategoryDetails> {
           song.author!.toLowerCase().trim().contains(query.toLowerCase()))
       ).toList();
     });
+    if(query.length >= 50) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: Colors.black.withValues(alpha: 0.7)
+              ),
+              child: Text('${context.locale.maximum_length_reached} (50/50)', style: TextStyle(color: Colors.white, fontSize: 18), textAlign: TextAlign.center,)
+          ),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          width: MediaQuery.of(context).size.width * 0.6,
+        ),
+      );
+    }
   }
 
   @override
@@ -116,7 +135,7 @@ class _LearnCategoryDetailsState extends State<LearnCategoryDetails> {
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Color(0xFFFFFFFF).withOpacity(0.2),
+        color: Color(0xFFFFFFFF).withValues(alpha: 0.2),
       ),
       child: Row(
         children: [
@@ -126,10 +145,8 @@ class _LearnCategoryDetailsState extends State<LearnCategoryDetails> {
             child: TextField(
               controller: _textEditingController,
               onChanged: _onSearch, // Gọi hàm lọc khi nhập text
-              maxLength: 30,
-              expands: false,
+              maxLength: 50,
               maxLines: 1,
-              maxLengthEnforcement: MaxLengthEnforcement.none,
               style: const TextStyle(color: Colors.white70),
               decoration: InputDecoration(
                 maintainHintHeight: true,
@@ -137,7 +154,8 @@ class _LearnCategoryDetailsState extends State<LearnCategoryDetails> {
                 hintStyle: TextStyle(color: Colors.white54),
                 border: InputBorder.none,
                 counterText: "",
-                contentPadding: EdgeInsets.symmetric(vertical: 7),
+                contentPadding: EdgeInsets.zero,
+                isDense: true
               ),
             ),
           ),

@@ -45,7 +45,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
   bool isRecording = false;
   double _percentStar = 0;
   bool _isRecordingSelected = false;
-
+  bool _isPlaying = false;
 
   @override
   void initState() {
@@ -302,6 +302,11 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                         _isRecordingSelected = false;
                       });
                     },
+                    onChangePlayState: (isPlaying) {
+                      setState(() {
+                        _isPlaying = isPlaying;
+                      });
+                    },
                   )
                 ],
               ),
@@ -358,7 +363,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                         onTap: ()async {
                           Navigator.pop(context);
                           context.read<DrumLearnProvider>().resetPerfectPoint();
-                          if (context.read<DrumLearnProvider>().isRecording) await ScreenRecorderService().stopRecording();
+                          if (context.read<DrumLearnProvider>().isRecording) await ScreenRecorderService().stopRecording(context);
                         },
                         child: Row(
                           children: [
@@ -367,7 +372,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                           ],
                         ),
                       ),
-                      InkWell(
+                      if(!_isPlaying) InkWell(
                         onTap: (){
                           showTutorial();
                         },
@@ -500,7 +505,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                 return;
               }
 
-              await ScreenRecorderService().startRecording(() {
+              await ScreenRecorderService().startRecording(context, () {
                 setState(() {
                   _isRecordingSelected = false;
                 });
@@ -510,7 +515,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
               print("ModeButton selected: true - Attempting to start recording...");
             } else {
               print("ModeButton selected: false - Attempting to stop recording...");
-              await ScreenRecorderService().stopRecording();
+              await ScreenRecorderService().stopRecording(context);
               context.read<DrumLearnProvider>().updateRecording();
             }
           },
