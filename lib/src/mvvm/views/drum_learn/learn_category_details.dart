@@ -7,6 +7,7 @@ import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/list_category_s
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class LearnCategoryDetails extends StatefulWidget {
@@ -85,7 +86,21 @@ class _LearnCategoryDetailsState extends State<LearnCategoryDetails> {
             children: [
               searchBar(),
               SizedBox(height: 24),
-              Expanded(child: ListCategorySongWidget(isChooseSong: widget.isChooseSong, songs: _filteredSongs))
+              Expanded(
+                child: _filteredSongs.isNotEmpty ? ListCategorySongWidget(
+                  isChooseSong: widget.isChooseSong,
+                  songs: _filteredSongs
+                )
+                :
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/icons/ic_no_song.svg', width: MediaQuery.of(context).size.width*0.5,),
+                    Text(context.locale.no_song_similar_found, style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontWeight: FontWeight.w400, fontSize: 20),),
+                    SizedBox(height: 200,)
+                  ],
+                )
+              )
             ],
           ),
         ),

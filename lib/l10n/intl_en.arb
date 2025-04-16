@@ -111,5 +111,6 @@
   "fundamental": "Fundamental",
   "follow_da_beat": "Follow Da Beat",
   "loading": "Loading",
-  "score_and_progress": "Score & Progress"
+  "score_and_progress": "Score & Progress",
+  "no_song_similar_found": "No song similar found"
 }
