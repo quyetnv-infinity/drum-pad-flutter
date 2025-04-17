@@ -18,10 +18,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class BeatRunnerScreen extends StatefulWidget {
   final SongCollection? songCollection;
-  final void Function()? onChangeUnlockedModeCampaign;
-  final void Function(double star)? onChangeCampaignStar;
-  final bool isFromCampaign;
-  const BeatRunnerScreen({super.key, this.songCollection, this.onChangeUnlockedModeCampaign, this.onChangeCampaignStar, this.isFromCampaign = false});
+  const BeatRunnerScreen({super.key, this.songCollection,});
 
   @override
   State<BeatRunnerScreen> createState() => _BeatRunnerScreenState();
@@ -211,19 +208,13 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                     _currentScore = score;
                   });
                },
-                onChangeUnlockedModeCampaign: (){
-                  widget.onChangeUnlockedModeCampaign?.call();
-                },
-                onChangeCampaignStar: (star) {
-                  widget.onChangeCampaignStar?.call(star);
-                },
                 onChangeStarLearn: (star) {
                   setState(() {
                     _percentStar = star;
                   });
                 },lessonIndex: 0,
                 isFromLearnScreen: false,
-                isFromCampaign: widget.isFromCampaign,
+                isFromCampaign: false,
                 onTapChooseSong:(song) {
                   setState(() {
                     _currentSong = song;
@@ -304,7 +295,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                       key: _chooseSongKey,
                       child: GestureDetector(
                         onTap: (){
-                          if(!widget.isFromCampaign) onTapChooseSong();
+                          onTapChooseSong();
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.45,

@@ -26,7 +26,10 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 class GamePlayScreen extends StatefulWidget {
   final SongCollection songCollection;
   final int index;
-  const GamePlayScreen({super.key, required this.songCollection, required this.index});
+  final bool isFromCampaign;
+  final void Function()? onChangeUnlockedModeCampaign;
+  final void Function(double star)? onChangeCampaignStar;
+  const GamePlayScreen({super.key, required this.songCollection, required this.index, this.isFromCampaign = false, this.onChangeUnlockedModeCampaign, this.onChangeCampaignStar});
 
   @override
   State<GamePlayScreen> createState() => _GamePlayScreenState();
@@ -122,18 +125,18 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.4),
-                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 48.0),
+                        padding: const EdgeInsets.only(left: 60.0),
                         child: Icon(Icons.arrow_upward, color: Colors.white, size: 28,),
                       ),
                       SizedBox(height: 12),
                       Text(
-                        context.locale.select_your_song,
+                        context.locale.your_song_appear_here,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 17,
@@ -184,7 +187,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                             children: [
                               Icon(Icons.arrow_upward, color: Colors.white, size: 28,),
                               Text(
-                                context.locale.rec,
+                                context.locale.practice,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white,
@@ -200,7 +203,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                             children: [
                               Icon(Icons.arrow_upward, color: Colors.white, size: 28,),
                               Text(
-                                context.locale.practice,
+                                context.locale.rec,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white,
@@ -290,13 +293,21 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                       });
                     },
                     onChangeUnlockedModeCampaign: () async {
-                      await updateUnlockedLesson();
+                      if(widget.isFromCampaign){
+                        widget.onChangeUnlockedModeCampaign?.call();
+                      } else {
+                        await updateUnlockedLesson();
+                      }
                     },
                     onChangeCampaignStar: (star) async {
-                      await updateLessonStar(star);
+                      if(widget.isFromCampaign){
+                        widget.onChangeCampaignStar?.call(star);
+                      } else {
+                        await updateLessonStar(star);
+                      }
                     },
-                    isFromLearnScreen: true,
-                    isFromCampaign: false,
+                    isFromLearnScreen: !widget.isFromCampaign,
+                    isFromCampaign: widget.isFromCampaign,
                     onResetRecordingToggle: () {
                       setState(() {
                         _isRecordingSelected = false;

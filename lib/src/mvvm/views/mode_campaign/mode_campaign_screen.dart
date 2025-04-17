@@ -47,6 +47,7 @@ class _ModeCampaignScreenState extends State<ModeCampaignScreen> {
     setState(() {
       _campaignSongs = isEasy ? provider.easyCampaign : (isMedium ? provider.mediumCampaign : (isHard ? provider.hardCampaign : provider.demonicCampaign));
     });
+    print('new star: ${_campaignSongs.first.campaignStar}');
   }
 
   int getUnlockedIndex(CampaignProvider campaignProvider){
@@ -212,19 +213,18 @@ class _ModeCampaignScreenState extends State<ModeCampaignScreen> {
                                 Navigator.pop(context);
                               },
                               callbackLoadingCompleted: (song) async {
-                                await Navigator.pushReplacement(
-                                    context,
-                                  CupertinoPageRoute(builder: (context) => BeatRunnerScreen(songCollection: song, onChangeUnlockedModeCampaign: () {
-                                      provider.setUnlocked(difficult: widget.difficult ,value: provider.currentSongCampaign >= getUnlockedIndex(provider) ? provider.currentSongCampaign + 1 : getUnlockedIndex(provider));
-                                    },
-                                      onChangeCampaignStar: (star) async {
-                                        print('change star index: ${displayData.length - provider.currentSongCampaign - 1}');
-                                        await updateStar(provider, displayData[displayData.length - provider.currentSongCampaign - 1], star);
-                                      },
-                                      isFromCampaign: true,
-                                    ),
-                                  )
-                                );
+                                await Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => GamePlayScreen(
+                                  songCollection: song,
+                                  index: song.lessons.length - 1,
+                                  isFromCampaign: true,
+                                  onChangeCampaignStar: (star) async {
+                                    print('change star index: ${displayData.length - provider.currentSongCampaign - 1} with $star');
+                                    await updateStar(provider, displayData[displayData.length - provider.currentSongCampaign - 1], star);
+                                  },
+                                  onChangeUnlockedModeCampaign: () {
+                                    provider.setUnlocked(difficult: widget.difficult ,value: provider.currentSongCampaign >= getUnlockedIndex(provider) ? provider.currentSongCampaign + 1 : getUnlockedIndex(provider));
+                                  },
+                                ),));
                                 print('fetch data campaign');
                                 await fetchData();
                               },

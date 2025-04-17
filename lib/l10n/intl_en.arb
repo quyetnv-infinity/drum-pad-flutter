@@ -115,5 +115,6 @@
   "no_song_similar_found": "No song similar found",
   "recording_started": "Recording Started!",
   "recording_saved": "Recording Saved!",
-  "maximum_length_reached": "Maximum length reached!"
+  "maximum_length_reached": "Maximum length reached!",
+  "your_song_appear_here": "Your song appear here"
 }

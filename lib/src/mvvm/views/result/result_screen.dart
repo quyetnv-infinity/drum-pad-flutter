@@ -284,7 +284,7 @@ class _ResultScreenState extends State<ResultScreen>
                           padding: EdgeInsets.all(14),
                           child: widget.isFromLearn || widget.isFromCampaign ? SvgPicture.asset(ResIcon.icList) :SvgPicture.asset(ResIcon.icMusic),
                         ),
-                        !widget.isCompleteCampaign ?
+                        !(widget.isCompleteCampaign && widget.isCompleted) ?
                         GradientButton(
                           onPressed: () {
                             Navigator.pop(context, 'play_again');
@@ -316,7 +316,7 @@ class _ResultScreenState extends State<ResultScreen>
                             ),
                           ),
                         ),
-                        !widget.isCompleteCampaign ?
+                        !(widget.isCompleteCampaign && widget.isCompleted) ?
                         GradientButton(
                           onPressed: () async {
                             if(checkNotLastCampaign()){
@@ -351,7 +351,7 @@ class _ResultScreenState extends State<ResultScreen>
                     )
                   ],
                 ),
-                if(isShowCongratulations) CongratulationsWidget(onTapExit: () {
+                if(isShowCongratulations && widget.isCompleted) CongratulationsWidget(onTapExit: () {
                   setState(() {
                     isShowCongratulations = false;
                   });

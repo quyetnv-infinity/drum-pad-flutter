@@ -40,7 +40,7 @@ class SongItem extends StatelessWidget {
                       children: [
                         BlurWidget(text: model.difficulty.toUpperCase(),),
                         if(isFromLearnFromSong)
-                          BlurWidget(text: '${model.lessons.length} ${context.locale.step.toUpperCase()}',),
+                          BlurWidget(text: '${model.lessons.isNotEmpty ? model.lessons.length : model.stepQuantity} ${context.locale.step.toUpperCase()}',),
                       ],
                     )),
                   if(model.lessons.isNotEmpty && getStarAverage() != 0) Positioned(

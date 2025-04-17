@@ -68,7 +68,7 @@ class CampaignProvider with ChangeNotifier {
     if(isEasy) _easyCampaign = mergeLists(dataSongCollections.where((song) => song.difficulty == DifficultyMode.easy,).toList(), await getListSongByDifficulty(DifficultyMode.easy));
     if(isMedium) _mediumCampaign = mergeLists(dataSongCollections.where((song) => song.difficulty == DifficultyMode.medium,).toList(), await getListSongByDifficulty(DifficultyMode.medium));
     if(isHard) _hardCampaign = mergeLists(dataSongCollections.where((song) => song.difficulty == DifficultyMode.hard,).toList(), await getListSongByDifficulty(DifficultyMode.hard));
-    if(isEasy) _demonicCampaign = mergeLists(dataSongCollections.where((song) => song.difficulty == DifficultyMode.demonic,).toList(), await getListSongByDifficulty(DifficultyMode.demonic));
+    if(isDemonic) _demonicCampaign = mergeLists(dataSongCollections.where((song) => song.difficulty == DifficultyMode.demonic,).toList(), await getListSongByDifficulty(DifficultyMode.demonic));
     notifyListeners();
   }
 

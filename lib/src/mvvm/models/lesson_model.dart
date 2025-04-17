@@ -62,6 +62,7 @@ class SongCollection extends HiveObject{
   String id;
   List<LessonSequence> lessons;
   List<LessonSequence> beatRunnerLessons;
+  int stepQuantity;
   String? author;
   String? name;
   String? pathZipFile;
@@ -73,6 +74,7 @@ class SongCollection extends HiveObject{
     String? id,
     List<LessonSequence>? lessons,
     List<LessonSequence>? beatRunnerLessons,
+    this.stepQuantity = 0,
     this.author,
     this.name,
     this.pathZipFile,
@@ -126,6 +128,7 @@ class SongCollection extends HiveObject{
     return SongCollection(
       id: json['id'],
       name: json['name'],
+      stepQuantity: json['stepQuantity'],
       pathZipFile: json['zip'],
       author: json['author'],
       image: json['thumbnail'],
@@ -137,6 +140,7 @@ class SongCollection extends HiveObject{
     String? id,
     List<LessonSequence>? lessons,
     List<LessonSequence>? beatRunnerLessons,
+    int? stepQuantity,
     String? author,
     String? name,
     String? pathZipFile,
@@ -148,6 +152,7 @@ class SongCollection extends HiveObject{
       id: id ?? this.id,
       lessons: lessons ?? this.lessons,
       beatRunnerLessons: beatRunnerLessons ?? this.beatRunnerLessons,
+      stepQuantity: stepQuantity ?? this.stepQuantity,
       author: author ?? this.author,
       name: name ?? this.name,
       pathZipFile: pathZipFile ?? this.pathZipFile,
