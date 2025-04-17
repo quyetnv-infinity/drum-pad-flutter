@@ -56,6 +56,7 @@ class _LoadingDataScreenState extends State<LoadingDataScreen> {
       final networkProvider = Provider.of<NetworkProvider>(context, listen: false);
       if(!networkProvider.isConnected) {
         await NetworkChecking.checkNetwork(context, handleActionWhenComplete: widget.callbackLoadingFailed);
+        return;
       }
       await _loadDownloadedPacks();
       await _downloadAndExtractZip();
