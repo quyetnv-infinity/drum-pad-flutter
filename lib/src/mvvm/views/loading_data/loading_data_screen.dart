@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:archive/archive.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
+import 'package:drumpad_flutter/core/utils/network_checking.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/network_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
@@ -50,9 +52,14 @@ class _LoadingDataScreenState extends State<LoadingDataScreen> {
         return;
       },);
       return;
+    } else {
+      final networkProvider = Provider.of<NetworkProvider>(context, listen: false);
+      if(!networkProvider.isConnected) {
+        await NetworkChecking.checkNetwork(context, handleActionWhenComplete: widget.callbackLoadingFailed);
+      }
+      await _loadDownloadedPacks();
+      await _downloadAndExtractZip();
     }
-    await _loadDownloadedPacks();
-    await _downloadAndExtractZip();
   }
 
   Future<void> _loadDownloadedPacks() async {

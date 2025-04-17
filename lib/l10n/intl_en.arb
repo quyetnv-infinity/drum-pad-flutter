@@ -116,5 +116,6 @@
   "recording_started": "Recording Started!",
   "recording_saved": "Recording Saved!",
   "maximum_length_reached": "Maximum length reached!",
-  "your_song_appear_here": "Your song appear here"
+  "your_song_appear_here": "Your song appear here",
+  "try_again": "Try Again"
 }

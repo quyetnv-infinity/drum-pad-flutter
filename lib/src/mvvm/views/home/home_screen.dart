@@ -1,11 +1,14 @@
 import 'dart:ui';
 
+import 'package:ads_tracking_plugin/utils/network_checking.dart';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/res/style/text_style.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
+import 'package:drumpad_flutter/core/utils/network_checking.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/network_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/button_action.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/horizontal_list.dart';
 import 'package:drumpad_flutter/src/mvvm/views/iap/iap_screen.dart';
@@ -34,10 +37,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _data = context.read<DrumLearnProvider>().data;
+    fetchData();
     fetchRecommendSongs();
+    final networkProvider = Provider.of<NetworkProvider>(context, listen: false);
+    networkProvider.addListener(() => checkNetwork);
+  }
+
+  void checkNetwork(NetworkProvider networkProvider){
+    if(_data.isNotEmpty) {
+      print('data exist');
+      return;
+    }
+    NetworkChecking.checkNetwork(context, handleActionWhenComplete: () {
+      if(!networkProvider.isConnected) return;
+      fetchData();
+      fetchRecommendSongs();
+      print('reload data');
+    },);
+  }
+
+  void fetchData(){
+    _data = context.read<DrumLearnProvider>().data;
   }
 
   void fetchRecommendSongs() async {

@@ -6,8 +6,8 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // sub
-const String monthlySubscription = "sub.monthly.aifusion.infinity";
-const String yearlySubscription = "sub.yearly.aifusion.infinity";
+const String weeklySubscription = "sub.weekly.drumpad.infinity";
+const String yearlySubscription = "sub.yearly.drumpad.infinity";
 
 class PurchaseProvider with ChangeNotifier {
   final InAppPurchase _inAppPurchase = InAppPurchase.instance;
@@ -44,7 +44,7 @@ class PurchaseProvider with ChangeNotifier {
       return;
     }
 
-    const Set<String> ids = {yearlySubscription, monthlySubscription};
+    const Set<String> ids = {yearlySubscription, weeklySubscription};
     final ProductDetailsResponse response = await _inAppPurchase.queryProductDetails(ids);
     if (response.error != null) {
       print('Error: ${response.error!.message}');
@@ -128,7 +128,7 @@ class PurchaseProvider with ChangeNotifier {
       print("_checkSubscriptionStatus: ${customerInfo.activeSubscriptions}");
 
       if (customerInfo.activeSubscriptions.contains(yearlySubscription)
-          || customerInfo.activeSubscriptions.contains(monthlySubscription)
+          || customerInfo.activeSubscriptions.contains(weeklySubscription)
       ) {
         _isSubscribed = true;
       } else {

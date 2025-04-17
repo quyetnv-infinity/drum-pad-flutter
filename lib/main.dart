@@ -3,6 +3,7 @@ import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
 import 'package:ads_tracking_plugin/analyze/analytics_tracker.dart';
 import 'package:drumpad_flutter/config/ads_config.dart';
 import 'package:drumpad_flutter/core/constants/hive_table.dart';
+import 'package:drumpad_flutter/core/utils/network_checking.dart';
 import 'package:drumpad_flutter/hive/hive_registrar.g.dart';
 import 'package:drumpad_flutter/service_locator/service_locator.dart';
 import 'package:drumpad_flutter/src/application/my_application.dart';
@@ -13,6 +14,7 @@ import 'package:drumpad_flutter/src/mvvm/view_model/app_state_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/locale_view_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/network_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/rate_app_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/result_information_provider.dart';
@@ -40,6 +42,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => LocateViewModel()),
         ChangeNotifierProvider(create: (_) => appSettingsProvider),
         ChangeNotifierProvider(create: (_) => RateAppProvider()),
+        ChangeNotifierProvider(create: (_) => NetworkProvider()),
         ChangeNotifierProvider(create: (_) => DrumLearnProvider(), lazy: false,),
         ChangeNotifierProvider(create: (_) => TutorialProvider(), lazy: false,),
         ChangeNotifierProvider(create: (_) => CampaignProvider(), lazy: false,),
