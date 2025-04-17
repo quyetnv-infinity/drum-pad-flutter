@@ -29,14 +29,24 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   late List<SongCollection> _data;
+  List<SongCollection> recommendSongs = [];
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _data = context.read<DrumLearnProvider>().data;
+    fetchRecommendSongs();
   }
+
+  void fetchRecommendSongs() async {
+    List<SongCollection> songs = await context.read<DrumLearnProvider>().getRandomSongs();
+    setState(() {
+      recommendSongs = songs;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -108,16 +118,17 @@ class _HomeScreenState extends State<HomeScreen> {
             HorizontalList(
               width: 120,
               height: 120,
-              data: _data,
+              data: recommendSongs,
               isShowDifficult: true,
               onTap: (item, index) {
+                final random = DateTime.now().millisecondsSinceEpoch % 2 == 0;
                 Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
                   song: item,
                   callbackLoadingFailed: (){
                     Navigator.pop(context);
                   },
                   callbackLoadingCompleted: (song) {
-                    Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: song,),));
+                    Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => random ? LessonsScreen(songCollection: song,) : BeatRunnerScreen(songCollection: song,),));
                   },
                 ),));
               },
