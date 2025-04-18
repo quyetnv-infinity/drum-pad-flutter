@@ -14,24 +14,33 @@ class CarouselWidget extends StatefulWidget {
   const CarouselWidget({super.key});
 
   @override
-  State<CarouselWidget> createState() => _CarouselWidgetState();
+  State<CarouselWidget> createState() => CarouselWidgetState();
 }
 
-class _CarouselWidgetState extends State<CarouselWidget> {
+class CarouselWidgetState extends State<CarouselWidget> {
 
   @override
   void initState() {
     super.initState();
+    _loadData();
+  }
+
+  void _loadData() {
     final drumProvider = context.read<DrumLearnProvider>();
     final resultProvider = context.read<ResultInformationProvider>();
+
     drumProvider.getTotalStars();
-    // drumProvider.getBeatRunnerStars();
     drumProvider.getBeatRunnerStar();
     drumProvider.getLearnSongComplete();
     drumProvider.getBeatRunnerSongComplete();
     drumProvider.getRandomSongs();
 
     resultProvider.loadPoints();
+  }
+
+  void refreshData() {
+    _loadData();
+    setState(() {});
   }
 
   int indexCarouselItem = 0;

@@ -20,6 +20,8 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   List<SongCollection> randomSongs = [];
+  final GlobalKey<CarouselWidgetState> _carouselKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -31,6 +33,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       randomSongs = songs;
     });
+  }
+
+  Future<void> _refreshData() async {
+    _carouselKey.currentState?.refreshData();
   }
 
   @override
@@ -64,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            CarouselWidget(),
+            CarouselWidget(key: _carouselKey,),
             Spacer(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,8 +97,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       callbackLoadingFailed: (){
                         Navigator.pop(context);
                       },
-                      callbackLoadingCompleted: (song) {
-                        Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: song,),));
+                      callbackLoadingCompleted: (song) async {
+                        await Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: song,),));
+                        _refreshData();
                       },
                     ),));
                   },
