@@ -89,6 +89,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
 
   int _totalNotes = 0;
   Timer? _pauseTimer;
+  bool _isFromBeatRunner = false;
 
   late AnimationController _controller;
 
@@ -113,6 +114,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   @override
   void initState() {
     super.initState();
+    _isFromBeatRunner = !widget.isFromCampaign && !widget.isFromLearnScreen;
     if(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty) {
       setState(() {
         isLoading = true;
@@ -512,7 +514,12 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
 
   Future<void> _playSound(String sound) async {
     if (audioPlayers.containsKey(sound)) {
-      if(PadUtil.getSoundType(sound) == SoundType.lead){
+      if(_isFromBeatRunner){
+        if(_currentLeadSound != null) audioPlayers[_currentLeadSound]?.pause();
+        setState(() {
+          _currentLeadSound = sound;
+        });
+      } else if(PadUtil.getSoundType(sound) == SoundType.lead){
         if(_currentLeadSound != null) audioPlayers[_currentLeadSound]?.pause();
         setState(() {
           _currentLeadSound = sound;
