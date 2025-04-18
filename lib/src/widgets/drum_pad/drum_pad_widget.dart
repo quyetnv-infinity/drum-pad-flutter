@@ -263,7 +263,10 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     _pauseTimer?.cancel();
     provider.resetPerfectPoint();
     /// 👀 check stop record
-    if (provider.isRecording) await ScreenRecorderService().stopRecording(context);
+    if (provider.isRecording) {
+      await ScreenRecorderService().stopRecording(context);
+      provider.updateRecording();
+    }
     widget.onChangeCampaignStar?.call(getStar());
     widget.onResetRecordingToggle?.call();
     /// 📌 check condition of result to save unlocked lesson or campaign and save star
