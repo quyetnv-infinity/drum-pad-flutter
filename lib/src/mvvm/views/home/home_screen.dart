@@ -34,34 +34,64 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late List<SongCollection> _data;
   List<SongCollection> recommendSongs = [];
+  late NetworkProvider networkProvider;
+  bool _isDialogNetworkShown = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    fetchData();
-    fetchRecommendSongs();
-    final networkProvider = Provider.of<NetworkProvider>(context, listen: false);
-    networkProvider.addListener(() => checkNetwork);
+    networkProvider = Provider.of<NetworkProvider>(context, listen: false);
+    networkProvider.addListener(checkNetwork);
+    _initializeData();
   }
 
-  void checkNetwork(NetworkProvider networkProvider){
+  @override
+  void dispose() {
+    networkProvider.removeListener(checkNetwork);
+    super.dispose();
+  }
+
+  Future<void> _initializeData() async {
+    if (_isLoading) return;
+    _isLoading = true;
+
+    await fetchData();
+    await fetchRecommendSongs();
+    _isLoading = false;
+  }
+
+  void checkNetwork(){
     if(_data.isNotEmpty) {
       print('data exist');
       return;
     }
-    NetworkChecking.checkNetwork(context, handleActionWhenComplete: () {
-      if(!networkProvider.isConnected) return;
-      fetchData();
-      fetchRecommendSongs();
-      print('reload data');
-    },);
+    if(networkProvider.isConnected){
+      if(_isDialogNetworkShown) Navigator.pop(context);
+    }
+    NetworkChecking.checkNetwork(
+      context,
+      handleActionWhenComplete: () {
+        setState(() {
+          _isDialogNetworkShown = false;
+        });
+        if(!networkProvider.isConnected) return;
+        _initializeData();
+        print('reload data');
+      },
+      handleWhenShowDialog: () {
+        setState(() {
+          _isDialogNetworkShown = true;
+        });
+      },
+    );
   }
 
-  void fetchData(){
+  Future<void> fetchData() async {
     _data = context.read<DrumLearnProvider>().data;
   }
 
-  void fetchRecommendSongs() async {
+  Future<void> fetchRecommendSongs() async {
     List<SongCollection> songs = await context.read<DrumLearnProvider>().getRandomSongs();
     setState(() {
       recommendSongs = songs;
