@@ -13,7 +13,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 class SongItem extends StatelessWidget {
   final bool isFromLearnFromSong;
   final SongCollection model;
-  const SongItem({super.key, required this.isFromLearnFromSong,required this.model});
+  final bool isUnlocked;
+  const SongItem({super.key, required this.isFromLearnFromSong,required this.model, this.isUnlocked = true});
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +48,19 @@ class SongItem extends StatelessWidget {
                     bottom: 10,
                     left: 10,
                     child: RatingStars.custom(value: getStarAverage() * 100/3, smallStarWidth: 20, smallStarHeight: 20, bigStarWidth: 20, bigStarHeight: 20, isFlatStar: true,),
+                  ),
+                  if(!isUnlocked) Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(8),
+                        gradient: LinearGradient(colors: [
+                          Color(0xFF5936C2).withValues(alpha: 0.7), Color(0xFF150C31).withValues(alpha: 0.7)
+                        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)
+                      ),
+                      alignment: Alignment.center,
+                      child: SvgPicture.asset('assets/icons/ic_lock.svg'),
+                    )
                   )
                 ],
               ),

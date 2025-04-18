@@ -455,6 +455,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
       _futureNotes = getFutureNotes(lessons[currentLesson]);
       // print(_futureNotes);
       print("lessonssss $lessonSounds");
+      print(events.first.notes);
     } catch (e) {
       print('Error loading sequence data from file: $e');
       events = [];
@@ -473,15 +474,15 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
         await player.setFilePath('$pathDir/${widget.currentSong?.id}/$sound.mp3');
         audioPlayers[sound] = player;
       } catch (e) {
-        print('Error loading audio file for $sound: $e');
+        print('Error loading audio file for $sound: $e at $pathDir/${widget.currentSong?.id}/$sound.mp3');
         // Clean up failed player
         await player.dispose();
 
         // Try to reload the song data
         if (widget.onTapChooseSong != null && widget.currentSong != null) {
           widget.onTapChooseSong?.call(widget.currentSong!);
-          return;
         }
+        continue;
       }
     }
   }

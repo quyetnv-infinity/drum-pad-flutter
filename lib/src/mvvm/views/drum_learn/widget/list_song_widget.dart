@@ -2,10 +2,12 @@ import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/beat_runner/beat_runner_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_category_details.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/song_item.dart';
+import 'package:drumpad_flutter/src/mvvm/views/iap/iap_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/loading_data/loading_data_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -105,35 +107,46 @@ class _ListSongWidgetState extends State<ListSongWidget> {
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
                 final song = _listSongData[index];
-                return GestureDetector(
-                  onTap: (){
-                    if(widget.isChooseSong){
-                      Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
-                        song: song,
-                        callbackLoadingFailed: (){
-                          Navigator.pop(context);
-                        },
-                        callbackLoadingCompleted: (songData) {
-                          Navigator.pop(context, songData);
-                          Navigator.pop(context, songData);
-                        },
-                      ),));
-                    } else {
-                      Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
-                        song: song,
-                        callbackLoadingFailed: (){
-                          Navigator.pop(context);
-                        },
-                        callbackLoadingCompleted: (songData) async {
-                          await Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: songData,),));
-                          await getListByCategory();
-                        },
-                      ),));
-                    }
-                  },
-                  child: SongItem(
-                  isFromLearnFromSong: !widget.isChooseSong,
-                  model: song),
+                return Consumer<PurchaseProvider>(
+                  builder: (context, purchaseProvider, _) {
+                    bool isUnlocked = context.read<DrumLearnProvider>().data.indexWhere((item) => song.id == item.id) < 2 || purchaseProvider.isSubscribed || !widget.isMore;
+                    return GestureDetector(
+                      onTap: (){
+                        if(!isUnlocked) {
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => IapScreen(),));
+                          return;
+                        }
+                        if(widget.isChooseSong){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                            song: song,
+                            callbackLoadingFailed: (){
+                              Navigator.pop(context);
+                            },
+                            callbackLoadingCompleted: (songData) {
+                              Navigator.pop(context, songData);
+                              Navigator.pop(context, songData);
+                            },
+                          ),));
+                        } else {
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                            song: song,
+                            callbackLoadingFailed: (){
+                              Navigator.pop(context);
+                            },
+                            callbackLoadingCompleted: (songData) async {
+                              await Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: songData,),));
+                              await getListByCategory();
+                            },
+                          ),));
+                        }
+                      },
+                      child: SongItem(
+                        isFromLearnFromSong: !widget.isChooseSong,
+                        model: song,
+                        isUnlocked: isUnlocked,
+                      ),
+                    );
+                  }
                 );
               })
           ),
