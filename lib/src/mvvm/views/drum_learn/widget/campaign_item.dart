@@ -2,12 +2,15 @@ import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/views/iap/iap_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/mode_campaign/mode_campaign_screen.dart';
 import 'package:drumpad_flutter/src/widgets/blur_widget.dart';
 import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class CampaignItem extends StatefulWidget {
@@ -111,39 +114,69 @@ class _CampaignItemState extends State<CampaignItem> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context).width;
-    return Consumer<CampaignProvider>(
-      builder: (context, provider, _) {
+    return Consumer2<CampaignProvider, PurchaseProvider>(
+      builder: (context, provider, purchaseProvider, _) {
+        bool isUnlocked = widget.difficult == DifficultyMode.easy || purchaseProvider.isSubscribed;
         return GestureDetector(
           onTap: () async {
-            provider.setCurrentCampaign(isEasy: isEasy, isMedium: isMedium, isHard: isHard, isDemonic: isDemonic);
-            await Navigator.push(context, CupertinoPageRoute(builder: (context) => ModeCampaignScreen(difficult: widget.difficult, listCampaignSong: _listCampaign,),));
-            await setPercent(provider);
+            if(isUnlocked) {
+              provider.setCurrentCampaign(isEasy: isEasy,
+                  isMedium: isMedium,
+                  isHard: isHard,
+                  isDemonic: isDemonic);
+              await Navigator.push(context, CupertinoPageRoute(
+                builder: (context) =>
+                    ModeCampaignScreen(difficult: widget.difficult,
+                      listCampaignSong: _listCampaign,),));
+              await setPercent(provider);
+            } else {
+              Navigator.push(context, CupertinoPageRoute(builder: (context) => IapScreen(),));
+            }
           },
-          child: Container(
-            height: size * 0.4,
-            margin: EdgeInsets.symmetric(vertical: 16),
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              image: DecorationImage(image: AssetImage(ResImage.imgCampaignBG), fit: BoxFit.cover)
-            ),
-            child: Row(
-              spacing: 16,
-              // mainAxisSize: MainAxisSize.max,
-              children: [
-                Image.asset(ResImage.imgPad),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Stack(
+            children: [
+              Container(
+                height: size * 0.4,
+                margin: EdgeInsets.symmetric(vertical: 16),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  image: DecorationImage(image: AssetImage(ResImage.imgCampaignBG), fit: BoxFit.cover)
+                ),
+                child: Row(
+                  spacing: 16,
+                  // mainAxisSize: MainAxisSize.max,
                   children: [
-                    BlurWidget(text: DifficultyMode.getString(context, widget.difficult).toUpperCase(),),
-                    Text(isEasy ? '${context.locale.fundamental} 1' : (isMedium ? '${context.locale.fundamental} 2' : (isHard ? '${context.locale.follow_da_beat} 1' : '${context.locale.follow_da_beat} 2')), style: TextStyle(fontSize: 23, fontWeight: FontWeight.w600, color:  Colors.white)),
-                    Text('${context.locale.progress}: $_percent%', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color:  Colors.white)),
-                    RatingStars.custom(value: _star, smallStarWidth: 20, smallStarHeight: 20, bigStarWidth: 20, bigStarHeight: 20, isFlatStar: true,)
+                    Image.asset(ResImage.imgPad),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        BlurWidget(text: DifficultyMode.getString(context, widget.difficult).toUpperCase(),),
+                        Text(isEasy ? '${context.locale.fundamental} 1' : (isMedium ? '${context.locale.fundamental} 2' : (isHard ? '${context.locale.follow_da_beat} 1' : '${context.locale.follow_da_beat} 2')), style: TextStyle(fontSize: 23, fontWeight: FontWeight.w600, color:  Colors.white)),
+                        Text('${context.locale.progress}: $_percent%', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color:  Colors.white)),
+                        RatingStars.custom(value: _star, smallStarWidth: 20, smallStarHeight: 20, bigStarWidth: 20, bigStarHeight: 20, isFlatStar: true,)
+                      ],
+                    )
                   ],
+                ),
+              ),
+              if(!isUnlocked)
+                Container(
+                  height: size * 0.4,
+                  width: double.infinity,
+                  margin: EdgeInsets.symmetric(vertical: 16),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    gradient: LinearGradient(colors: [
+                      Color(0xFF5936C2).withValues(alpha: 0.7), Color(0xFF150C31).withValues(alpha: 0.7)
+                    ], begin: Alignment.topCenter, end: Alignment.bottomCenter)
+                  ),
+                  alignment: Alignment.center,
+                  child: SvgPicture.asset('assets/icons/ic_lock.svg', width: 52, height: 52,),
                 )
-              ],
-            ),
+            ],
           ),
         );
       }
