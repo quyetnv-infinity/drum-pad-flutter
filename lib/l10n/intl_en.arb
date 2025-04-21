@@ -117,5 +117,15 @@
   "recording_saved": "Recording Saved!",
   "maximum_length_reached": "Maximum length reached!",
   "your_song_appear_here": "Your song appear here",
-  "try_again": "Try Again"
+  "try_again": "Try Again",
+  "unlock_all_song": "Unlock all song",
+  "get_premium": "Get Premium",
+  "get_this_song_for_free": "Get this song for free",
+  "watch_ad": "Watch ad",
+  "unlock_question": "Unlock?",
+  "item_locked_watch_video_to_unlock": "This item is locked. Please watch a video to unlock it.",
+  "watch_ads": "Watch Ads",
+  "please_connect_internet_and_try_again": "Oh no, something went wrong! Please check the connection then try again.",
+  "something_went_wrong": "Something went wrong.",
+  "go_to_settings": "Go to settings"
 }

@@ -1,10 +1,15 @@
 import 'dart:ui';
 
+import 'package:drumpad_flutter/config/ads_config.dart';
+import 'package:drumpad_flutter/core/constants/unlock_song_quantity.dart';
+import 'package:drumpad_flutter/core/utils/dialog_unlock_song.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/marquee_text.dart';
 import 'package:drumpad_flutter/src/mvvm/views/iap/iap_screen.dart';
+import 'package:drumpad_flutter/src/widgets/overlay_loading/overlay_loading.dart';
+import 'package:drumpad_flutter/src/widgets/unlock_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -41,13 +46,25 @@ class HorizontalList extends StatelessWidget {
                   right: index == data.length - 1 ? 16 : 12),
               child: Consumer<PurchaseProvider>(
                 builder: (context, purchaseProvider, _) {
-                  bool isUnlocked = context.read<DrumLearnProvider>().data.indexWhere((song) => song.id == item.id) < 2 || purchaseProvider.isSubscribed;
+                  bool isUnlocked = context.read<DrumLearnProvider>().data.indexWhere((song) => song.id == item.id) < unlockSongQuantity || purchaseProvider.isSubscribed;
                   return InkWell(
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     onTap: () {
                       if(!isUnlocked) {
-                        Navigator.push(context, CupertinoPageRoute(builder: (context) => IapScreen(),));
+                        showDialogUnlockSongItem(
+                          context: context,
+                          item: item,
+                          onTapGetPremium: () {
+                            Navigator.pop(context);
+                            Navigator.push(context, CupertinoPageRoute(builder: (context) => IapScreen(),));
+                          },
+                          onTapWatchAds: () {
+                            showRequestRewardUnlockSongDialog(context: context, onUserEarnedReward: () {
+
+                            },);
+                          },
+                        );
                       } else {
                         onTap(item, index);
                       }

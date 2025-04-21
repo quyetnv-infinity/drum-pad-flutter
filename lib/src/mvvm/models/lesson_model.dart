@@ -63,23 +63,23 @@ class SongCollection extends HiveObject{
   List<LessonSequence> lessons;
   List<LessonSequence> beatRunnerLessons;
   int stepQuantity;
-  String? author;
-  String? name;
-  String? pathZipFile;
+  String author;
+  String name;
+  String pathZipFile;
   String difficulty;
   double campaignStar;
-  String? image;
+  String image;
 
   SongCollection({
     String? id,
     List<LessonSequence>? lessons,
     List<LessonSequence>? beatRunnerLessons,
     this.stepQuantity = 0,
-    this.author,
-    this.name,
-    this.pathZipFile,
+    this.author = 'Unknown',
+    this.name = 'Unknown',
+    this.pathZipFile = '',
     this.difficulty = DifficultyMode.unknown,
-    this.image,
+    this.image = '',
     this.campaignStar = 0
   }) :  id = id ?? const Uuid().v4(),
         lessons = lessons ?? [],

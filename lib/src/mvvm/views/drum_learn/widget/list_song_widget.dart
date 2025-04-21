@@ -1,4 +1,6 @@
+import 'package:drumpad_flutter/core/constants/unlock_song_quantity.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
+import 'package:drumpad_flutter/core/utils/dialog_unlock_song.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
@@ -109,11 +111,23 @@ class _ListSongWidgetState extends State<ListSongWidget> {
                 final song = _listSongData[index];
                 return Consumer<PurchaseProvider>(
                   builder: (context, purchaseProvider, _) {
-                    bool isUnlocked = context.read<DrumLearnProvider>().data.indexWhere((item) => song.id == item.id) < 2 || purchaseProvider.isSubscribed || !widget.isMore;
+                    bool isUnlocked = context.read<DrumLearnProvider>().data.indexWhere((item) => song.id == item.id) < unlockSongQuantity || purchaseProvider.isSubscribed || !widget.isMore;
                     return GestureDetector(
                       onTap: (){
                         if(!isUnlocked) {
-                          Navigator.push(context, CupertinoPageRoute(builder: (context) => IapScreen(),));
+                          showDialogUnlockSongItem(
+                            context: context,
+                            item: song,
+                            onTapGetPremium: () {
+                              Navigator.pop(context);
+                              Navigator.push(context, CupertinoPageRoute(builder: (context) => IapScreen(),));
+                            },
+                            onTapWatchAds: () {
+                              showRequestRewardUnlockSongDialog(context: context, onUserEarnedReward: () {
+
+                              },);
+                            },
+                          );
                           return;
                         }
                         if(widget.isChooseSong){

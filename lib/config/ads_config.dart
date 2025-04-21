@@ -1,5 +1,10 @@
 import 'dart:io';
 import 'package:ads_tracking_plugin/ad_config.dart';
+import 'package:ads_tracking_plugin/ads_controller.dart';
+import 'package:drumpad_flutter/core/utils/locator_support.dart';
+import 'package:drumpad_flutter/src/widgets/overlay_loading/overlay_loading.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:open_settings_plus/core/open_settings_plus.dart';
 
 
 String bannerAdUnitId = Platform.isAndroid ? "ca-app-pub-3940256099942544/6300978111" : "ca-app-pub-3940256099942544/2934735716";
@@ -96,4 +101,64 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       format: AdFormat.appOpen,
     ),
   ];
+}
+
+Future<void> showRewardAd({required BuildContext context, required String adId, required Function onUserEarnedReward, Function? onAdDismissedFullScreenContent}) async {
+  try {
+    AdController.shared.rewardedAd.showAd(
+        adId,
+        onRewardEarned: (_, __) async {
+          OverlayLoading.hide();
+          await onUserEarnedReward();
+        },
+        onFullScreenAdDismissed: (_) {
+          onAdDismissedFullScreenContent?.call();
+        },
+        onLoadingStateChanged: (isLoading, [error]) {
+          if (isLoading) {
+            OverlayLoading.show(context);
+          } else {
+            OverlayLoading.hide();
+            if (error != null) {
+              print(error);
+              showCupertinoDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) {
+                  return CupertinoAlertDialog(
+                    title: Text(context.locale.lost_connection),
+                    content: Text(error.contains(
+                        "The Internet connection appears to be offline")
+                        ? context.locale.please_connect_internet_and_try_again
+                        : context.locale.something_went_wrong
+                    ),
+                    actions: [
+                      CupertinoDialogAction(
+                        onPressed: () {
+                          AdController.shared.setResumeAdState(true);
+                          OpenSettingsPlusIOS settings = const OpenSettingsPlusIOS();
+                          settings.wifi();
+                        },
+                        child: Text(context.locale.go_to_settings,
+                            style: const TextStyle(
+                                color: Color(0xFF007AFF),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600
+                            )
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ).then((_) => {
+                AdController.shared.setResumeAdState(false)
+              });
+            }
+          }
+        }
+    );
+  } catch (e) {
+    OverlayLoading.hide();
+    print("Ad failed to load: $e");
+  }
 }
