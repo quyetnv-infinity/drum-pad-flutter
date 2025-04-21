@@ -131,4 +131,14 @@ final List<SongCollection> dataSongCollections = [
       image: "assets/images/mortal.jpeg",
       author: "Mortals",
       name: "Mortals"),
+  SongCollection(
+      id: 'tell_me',
+      pathZipFile: 'https://github.com/hoanglm6201/zip_archive/raw/refs/heads/main/Tell%20Me%20-%20Cee%20Qui%20Ell.zip',
+      lessons: [],
+      beatRunnerLessons: [],
+      stepQuantity: 13,
+      difficulty: DifficultyMode.medium,
+      image: "assets/images/tell_me.jpg",
+      name: "Tell Me",
+      author: "Cee Qui Ell"),
 ];

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:drumpad_flutter/core/enum/pad_state_enum.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
@@ -8,7 +9,6 @@ import 'package:drumpad_flutter/sound_type_enum.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
-import 'package:drumpad_flutter/src/mvvm/views/loading_data/loading_data_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/result/result_screen.dart';
 import 'package:drumpad_flutter/src/service/screen_record_service.dart';
 import 'package:drumpad_flutter/src/widgets/drum_pad/border_anim.dart';
@@ -39,7 +39,7 @@ class DrumPadScreen extends StatefulWidget {
   State<DrumPadScreen> createState() => _DrumPadScreenState();
 }
 
-class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProviderStateMixin {
+class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateMixin {
   List<String> availableSounds = [];
   List<String> lessonSounds = [];
   Map<String, AudioPlayer> audioPlayers = {};
@@ -92,6 +92,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
   bool _isFromBeatRunner = false;
 
   late AnimationController _controller;
+  Map<int, AnimationController> _colorControllers = {};
+  Map<int, Animation<Color?>> _colorAnimations = {};
 
   List<Map<String, dynamic>> _futureNotes = [];
 
@@ -162,6 +164,9 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
 
   @override
   void dispose() {
+    for (var controller in _colorControllers.values) {
+      controller.dispose();
+    }
     _disposeAudioPlayers();
     audioPlayers.clear();
     sequenceTimer?.cancel();
@@ -169,6 +174,61 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     _controller.dispose();
     _pauseTimer?.cancel();
     super.dispose();
+  }
+
+  List<Color> colorsPad = [Color(0xFFC3FF80), Color(0xFF80EAFF), Color(0xFF80FFEE), Color(0xFFD880FF)];
+  void _startColorAnimation(int pressedIndex, String sound) {
+    if (!mounted) return;
+    if(!_isFromBeatRunner) return;
+    try {
+      // Clear previous animations safely
+      for (var controller in _colorControllers.values) {
+        controller.dispose();
+      }
+      _colorControllers.clear();
+      _colorAnimations.clear();
+
+      // Calculate distances and delays for each pad
+      for (int i = 0; i < 12; i++) {
+        if (i == pressedIndex) continue;
+
+        final controller = AnimationController(
+          duration: Duration(milliseconds: 1000),
+          vsync: this,
+        );
+
+        var random = Random();
+        Color randomColor = colorsPad[random.nextInt(colorsPad.length)];
+        final animation = ColorTween(
+          begin: randomColor.withValues(alpha: 0.9),
+        ).animate(CurvedAnimation(
+          parent: controller,
+          curve: Curves.easeOutQuad,
+        ));
+
+        _colorControllers[i] = controller;
+        _colorAnimations[i] = animation;
+
+        // Safe animation start with delay
+        Future.delayed(Duration(milliseconds: 100), () {
+          if (mounted &&
+              _colorControllers[i] != null &&
+              !_colorControllers[i]!.isAnimating) {
+            _colorControllers[i]!.forward().then((_) {
+              if (mounted) {
+                _colorControllers[i]?.dispose();
+                setState(() {
+                  _colorControllers.remove(i);
+                  _colorAnimations.remove(i);
+                });
+              }
+            });
+          }
+        });
+      }
+    } catch (e) {
+      print('Color animation error: $e');
+    }
   }
 
   void resetPoint(){
@@ -627,7 +687,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
     if(currentEventIndex >= events.length) return;
     if(widget.currentSong == null || widget.currentSong!.lessons.isEmpty) return;
     if(!PadUtil.getPadEnable(sound)) return;
-
+    _startColorAnimation(index, sound);
     _startTimer();
 
     List<String> requiredNotes = events[currentEventIndex].notes;
@@ -932,7 +992,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
                 final sound = lessonSounds.length == 12 ? lessonSounds[index] : '';
                 bool isActive = _padPressedIndex.isNotEmpty && _padPressedIndex.contains(index) && widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty;
                 return GestureDetector(
-                  onTapDown: (_) {
+                  onTapDown: (details) {
                     _onPadPressed(sound, index);
                   },
                   child: Stack(
@@ -1022,7 +1082,22 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
                       if(!padProgress.containsKey(sound) && isHighlighted && widget.practiceMode != 'practice')
                         Align(
                             alignment: Alignment.center,
-                            child: Lottie.asset('assets/anim/click_here.json', height: MediaQuery.sizeOf(context).width /3 - 50))
+                            child: Lottie.asset('assets/anim/click_here.json', height: MediaQuery.sizeOf(context).width /3 - 50)),
+                      if (_colorAnimations.containsKey(index) &&
+                          _colorAnimations[index] != null &&
+                          _colorControllers[index] != null &&
+                          _colorControllers[index]!.isAnimating)
+                        AnimatedBuilder(
+                          animation: _colorAnimations[index]!,
+                          builder: (context, child) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12.0),
+                                color: _colorAnimations[index]?.value ?? Colors.transparent,
+                              ),
+                            );
+                          },
+                        ),
                     ],
                   ),
                 );
@@ -1042,7 +1117,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with SingleTickerProvider
                 )
               )
             )
-          )
+          ),
         ],
       ),
     );

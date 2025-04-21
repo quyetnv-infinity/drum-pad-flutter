@@ -7,6 +7,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class DrumLearnProvider extends ChangeNotifier {
   List<SongCollection> data = dataSongCollections;
+  Map<String, List<SongCollection>> _categoryCache = {};
+  bool _isLoadingCategories = false;
   /// path to get audio file
   String pathDir = '';
 
@@ -107,12 +109,6 @@ class DrumLearnProvider extends ChangeNotifier {
   Future<void> updateSong(String id, SongCollection songCollection) async {
     await SongCollectionService.updateSong(id, songCollection);
   }
-
-  Future<SongCollection> getSongFromServer(String id) async {
-    /// call api get song by id
-    return dataSongCollections.firstWhere((element) => element.id == id, orElse: () => dataSongCollections.last,);
-  }
-
 
   Future<void> fetchListResume() async {
     final prefs = await SharedPreferences.getInstance();
@@ -257,6 +253,42 @@ class DrumLearnProvider extends ChangeNotifier {
 
   void updateChooseSong(){
     _isChooseSong = !_isChooseSong;
+    notifyListeners();
+  }
+
+  Future<List<SongCollection>> getCategoryData(String category) async {
+    // Return cached data if available
+    if (_categoryCache.containsKey(category)) {
+      return _categoryCache[category]!;
+    }
+
+    // Wait if another category is being loaded
+    while (_isLoadingCategories) {
+      await Future.delayed(Duration(milliseconds: 100));
+    }
+
+    _isLoadingCategories = true;
+    try {
+      final songs = data; // await loadCategoryData(category); // call api
+      _categoryCache[category] = songs;
+      _isLoadingCategories = false;
+      return songs;
+    } catch (e) {
+      _isLoadingCategories = false;
+      rethrow;
+    }
+  }
+
+  Future<void> preloadCategories(List<String> categories) async {
+    for (final category in categories) {
+      if (!_categoryCache.containsKey(category)) {
+        await getCategoryData(category);
+      }
+    }
+  }
+
+  void clearCache() {
+    _categoryCache.clear();
     notifyListeners();
   }
 }
