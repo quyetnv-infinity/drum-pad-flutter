@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 class ApiService {
   late final Dio dio;
-  static const String BASEURL = 'https://aifusionios.infinitydashboard.info';
+  static const String BASEURL = 'https://strapiv2.backendvn.com';
   ApiService({String baseUrl = BASEURL}) {
     dio = Dio(
       BaseOptions(
