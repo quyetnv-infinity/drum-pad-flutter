@@ -135,10 +135,14 @@ class _ListSongWidgetState extends State<ListSongWidget> {
                                 },
                                 callbackLoadingCompleted: (songData) async {
                                   // await Provider.of<AdsProvider>(context, listen: false).nextScreenFuture(context,LessonsScreen(songCollection: songData,),true);
-                                  await Provider.of<AdsProvider>(context, listen: false).nextScreenFuture(context, () {
-                                    Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: songData,)));
-                                  },);
-                                  await getListByCategory();
+                                  if(widget.isChooseSong){
+                                    Navigator.pop(context, songData);
+                                    Navigator.pop(context, songData);
+                                  }else{
+                                    await Provider.of<AdsProvider>(context, listen: false).nextScreenFuture(context, () {
+                                    Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: songData,)));},);
+                                    await getListByCategory();
+                                  }
                                 },
                               ),));
                             },);
@@ -146,32 +150,24 @@ class _ListSongWidgetState extends State<ListSongWidget> {
                         );
                         return;
                       }
-                      if(widget.isChooseSong){
-                        Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
-                          song: song,
-                          callbackLoadingFailed: (){
-                            Navigator.pop(context);
-                          },
-                          callbackLoadingCompleted: (songData) {
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                        song: song,
+                        callbackLoadingFailed: (){
+                          Navigator.pop(context);
+                        },
+                        callbackLoadingCompleted: (songData) async {
+                          if(widget.isChooseSong){
                             Navigator.pop(context, songData);
                             Navigator.pop(context, songData);
-                          },
-                        ),));
-                      } else {
-                        Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
-                          song: song,
-                          callbackLoadingFailed: (){
-                            Navigator.pop(context);
-                          },
-                          callbackLoadingCompleted: (songData) async {
+                          }else{
                             await Provider.of<AdsProvider>(context, listen: false).nextScreenFuture(context, () {
                               Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: songData,)));
                             },);
                             await getListByCategory();
-                          },
-                        ),));
-                      }
-                    },
+                          }
+                        },
+                      ),));
+                      },
                     child: SongItem(
                       isFromLearnFromSong: !widget.isChooseSong,
                       model: song,
