@@ -57,7 +57,6 @@ flutter:
   generate: true
 
   assets:
-    - assets/audio/
     - assets/anim/
     - assets/
     - assets/images/

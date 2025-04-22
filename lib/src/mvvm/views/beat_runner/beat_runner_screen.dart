@@ -240,7 +240,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
   Widget topView(){
     return Container(
       clipBehavior: Clip.antiAlias,
-      margin: EdgeInsets.only(right: 16, left: 16, bottom: 16, top: 24),
+      margin: EdgeInsets.only(right: 16, left: 16, bottom: 10, top: 24),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
       ),
@@ -326,7 +326,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                     Expanded(
                       child: Column(
                         key: _scoreAndProgress,
-                        spacing: 8,
+                        spacing: 6,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

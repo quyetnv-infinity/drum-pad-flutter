@@ -65,22 +65,23 @@ class AdsProvider with ChangeNotifier {
     }
   }
 
-  Future<void> nextScreenFuture(BuildContext context, Widget screen, bool isReplacement) async {
+  Future<void> nextScreenFuture(BuildContext context, Function() callback) async {
     if (appSettingsProvider.timeOpenApp == 1) {
-      _navigate(context, screen, isReplacement);
+     callback();
     } else {
       showInterAd(
         name: "inter_home",
-        callback: () => _navigate(context, screen, isReplacement),
+        callback: () => callback(),
       );
     }
   }
 
-  void _navigate(BuildContext context, Widget screen, bool isReplacement) {
+
+  Future<void> _navigate(BuildContext context, Widget screen, bool isReplacement)  async {
     if (!isReplacement) {
-      Navigator.push(context, CupertinoPageRoute(builder: (_) => screen));
+      await Navigator.push(context, CupertinoPageRoute(builder: (_) => screen));
     } else {
-      Navigator.pushReplacement(context, CupertinoPageRoute(builder: (_) => screen));
+      await Navigator.pushReplacement(context, CupertinoPageRoute(builder: (_) => screen));
     }
   }
 }

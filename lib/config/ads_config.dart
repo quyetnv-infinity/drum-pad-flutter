@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:ads_tracking_plugin/ad_config.dart';
 import 'package:ads_tracking_plugin/ads_controller.dart';
+import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/widgets/overlay_loading/overlay_loading.dart';
 import 'package:flutter/cupertino.dart';
@@ -84,6 +85,9 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       name: 'banner_collap_all',
       format: AdFormat.collapsibleBanner,
       preload: true,
+      adRequest: const AdRequest(extras: {
+        "collapsible": "bottom",
+      }),
     ),
     ///reward
     AdConfiguration(

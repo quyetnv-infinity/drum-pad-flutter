@@ -193,10 +193,13 @@ class _LessonsScreenState extends State<LessonsScreen> {
                               await context.read<DrumLearnProvider>().addToResume(widget.songCollection.id);
                               Provider.of<CampaignProvider>(context, listen: false).setCurrentLessonCampaign(displayData.length - (index + 1));
                               await Provider.of<AdsProvider>(context, listen: false).nextScreenFuture(
-                                context, GamePlayScreen(songCollection: widget.songCollection,
-                                      index: displayData.length -
-                                          (index + 1),),false);
+                                context,() async{
+                                 await Navigator.push(context, CupertinoPageRoute( builder:(context) =>  GamePlayScreen(songCollection: widget.songCollection,
+                                    index: displayData.length -
+                                      (index + 1),)));
+                              print('FETCH LESSON DATA ------------------');
                               await fetchLessonData();
+                              });
                             }
                           },
                           child: Container(

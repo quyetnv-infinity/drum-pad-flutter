@@ -350,7 +350,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
       children: [
         Container(
           clipBehavior: Clip.antiAlias,
-          margin: EdgeInsets.only(right: 16, left: 16, bottom: 16, top: 24),
+          margin: EdgeInsets.only(right: 16, left: 16, bottom: 10, top: 24),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -426,8 +426,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                           ),
                         ),
                         Column(
-                          // spacing: 8,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(context.locale.progress, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),

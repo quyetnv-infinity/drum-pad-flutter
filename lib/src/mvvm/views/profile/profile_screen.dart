@@ -99,7 +99,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Navigator.pop(context);
                       },
                       callbackLoadingCompleted: (song) async {
-                        await Provider.of<AdsProvider>(context, listen: false).nextScreenFuture(context,LessonsScreen(songCollection: song,), false);
+                        await Provider.of<AdsProvider>(context, listen: false).nextScreenFuture(context, () {
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: song,)));
+                        },);
                         _refreshData();
                       },
                     ),));

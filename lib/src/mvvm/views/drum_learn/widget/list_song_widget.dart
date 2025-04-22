@@ -134,7 +134,10 @@ class _ListSongWidgetState extends State<ListSongWidget> {
                                   Navigator.pop(context);
                                 },
                                 callbackLoadingCompleted: (songData) async {
-                                  await Provider.of<AdsProvider>(context, listen: false).nextScreenFuture(context,LessonsScreen(songCollection: songData,),true);
+                                  // await Provider.of<AdsProvider>(context, listen: false).nextScreenFuture(context,LessonsScreen(songCollection: songData,),true);
+                                  await Provider.of<AdsProvider>(context, listen: false).nextScreenFuture(context, () {
+                                    Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: songData,)));
+                                  },);
                                   await getListByCategory();
                                 },
                               ),));
@@ -161,7 +164,9 @@ class _ListSongWidgetState extends State<ListSongWidget> {
                             Navigator.pop(context);
                           },
                           callbackLoadingCompleted: (songData) async {
-                            await Provider.of<AdsProvider>(context, listen: false).nextScreenFuture(context,LessonsScreen(songCollection: songData,),true);
+                            await Provider.of<AdsProvider>(context, listen: false).nextScreenFuture(context, () {
+                              Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: songData,)));
+                            },);
                             await getListByCategory();
                           },
                         ),));
