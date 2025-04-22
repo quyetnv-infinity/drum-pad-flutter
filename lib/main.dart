@@ -19,6 +19,7 @@ import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/rate_app_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/result_information_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/unlock_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:path_provider/path_provider.dart';
@@ -48,6 +49,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => TutorialProvider(), lazy: false,),
         ChangeNotifierProvider(create: (_) => CampaignProvider(), lazy: false,),
         ChangeNotifierProvider(create: (_) => ResultInformationProvider(), lazy: false,),
+        ChangeNotifierProvider(create: (_) => UnlockedSongsProvider()),
         ChangeNotifierProvider(create: (_) => adsProvider),
         ChangeNotifierProvider(create: (_) => purchaseProvider),
         ChangeNotifierProxyProvider2<AdsProvider, PurchaseProvider, AppStateProvider>(

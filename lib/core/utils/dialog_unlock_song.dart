@@ -25,7 +25,7 @@ void showRequestRewardUnlockSongDialog({required BuildContext context, required 
           Navigator.pop(dialogContext);
           showRewardAd(
             context: context,
-            adId: "reward_choose_sound",
+            adId: "reward_choose_song",
             onUserEarnedReward: () async {
               print("onUserEarnedReward");
               OverlayLoading.show(context);

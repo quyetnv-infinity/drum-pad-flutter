@@ -6,6 +6,7 @@ import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/unlock_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/beat_runner/beat_runner_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_category_details.dart';
@@ -72,100 +73,111 @@ class _ListSongWidgetState extends State<ListSongWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(widget.title, style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600),),
-                if(widget.isMore)InkWell(
-                  onTap: () async {
-                    final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => LearnCategoryDetails(category: widget.title, isChooseSong: widget.isChooseSong,),));
-                    if(result != null && widget.isChooseSong){
-                      setState(() {
-                        _currentSongSelected = result;
-                      });
-                      Navigator.pop(context, _currentSongSelected);
-                    }
-                  },
-                  child: Row(
-                    children: [
-                      Text(context.locale.more, style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),),
-                      Icon(Icons.chevron_right_rounded, size: 22)
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 12),
-          SizedBox(
-            height: MediaQuery.sizeOf(context).width * 0.67,
-            child: ListView.builder(
-              shrinkWrap: true,
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              itemCount: _listSongData.length,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                final song = _listSongData[index];
-                return Consumer<PurchaseProvider>(
-                  builder: (context, purchaseProvider, _) {
-                    bool isUnlocked = context.read<DrumLearnProvider>().data.indexWhere((item) => song.id == item.id) < unlockSongQuantity || purchaseProvider.isSubscribed || !widget.isMore;
-                    return GestureDetector(
-                      onTap: (){
-                        if(!isUnlocked) {
-                          showDialogUnlockSongItem(
-                            context: context,
-                            item: song,
-                            onTapGetPremium: () {
-                              Navigator.pop(context);
-                              Navigator.push(context, CupertinoPageRoute(builder: (context) => IapScreen(),));
-                            },
-                            onTapWatchAds: () {
-                              showRequestRewardUnlockSongDialog(context: context, onUserEarnedReward: () {
-
-                              },);
-                            },
-                          );
-                          return;
-                        }
-                        if(widget.isChooseSong){
-                          Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
-                            song: song,
-                            callbackLoadingFailed: (){
-                              Navigator.pop(context);
-                            },
-                            callbackLoadingCompleted: (songData) {
-                              Navigator.pop(context, songData);
-                              Navigator.pop(context, songData);
-                            },
-                          ),));
-                        } else {
-                          Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
-                            song: song,
-                            callbackLoadingFailed: (){
-                              Navigator.pop(context);
-                            },
-                            callbackLoadingCompleted: (songData) async {
-                              await Provider.of<AdsProvider>(context, listen: false).nextScreenFuture(context,LessonsScreen(songCollection: songData,),false);
-                              await getListByCategory();
-                            },
-                          ),));
-                        }
-                      },
-                      child: SongItem(
-                        isFromLearnFromSong: !widget.isChooseSong,
-                        model: song,
-                        isUnlocked: isUnlocked,
-                      ),
-                    );
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(widget.title, style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600),),
+              if(widget.isMore)InkWell(
+                onTap: () async {
+                  final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => LearnCategoryDetails(category: widget.title, isChooseSong: widget.isChooseSong,),));
+                  if(result != null && widget.isChooseSong){
+                    setState(() {
+                      _currentSongSelected = result;
+                    });
+                    Navigator.pop(context, _currentSongSelected);
                   }
-                );
-              })
+                },
+                child: Row(
+                  children: [
+                    Text(context.locale.more, style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),),
+                    Icon(Icons.chevron_right_rounded, size: 22)
+                  ],
+                ),
+              ),
+            ],
           ),
-        ]
+        ),
+        SizedBox(height: 12),
+        SizedBox(
+          height: MediaQuery.sizeOf(context).width * 0.67,
+          child: ListView.builder(
+            shrinkWrap: true,
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            itemCount: _listSongData.length,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              final song = _listSongData[index];
+              return Consumer<PurchaseProvider>(
+                builder: (context, purchaseProvider, _) {
+                  bool songUnlock = context.watch<UnlockedSongsProvider>().isSongUnlocked(song.id);
+                  bool isUnlocked = songUnlock || context.read<DrumLearnProvider>().data.indexWhere((item) => song.id == item.id) < unlockSongQuantity || purchaseProvider.isSubscribed || !widget.isMore;
+                  return GestureDetector(
+                    onTap: (){
+                      if(!isUnlocked) {
+                        showDialogUnlockSongItem(
+                          context: context,
+                          item: song,
+                          onTapGetPremium: () {
+                            Navigator.pop(context);
+                            Navigator.push(context, CupertinoPageRoute(builder: (context) => IapScreen(),));
+                          },
+                          onTapWatchAds: () {
+                            showRequestRewardUnlockSongDialog(context: context, onUserEarnedReward: () {
+                              context.read<UnlockedSongsProvider>().unlockSong(song.id);
+                              Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                                song: song,
+                                callbackLoadingFailed: (){
+                                  Navigator.pop(context);
+                                },
+                                callbackLoadingCompleted: (songData) async {
+                                  await Provider.of<AdsProvider>(context, listen: false).nextScreenFuture(context,LessonsScreen(songCollection: songData,),true);
+                                  await getListByCategory();
+                                },
+                              ),));
+                            },);
+                          },
+                        );
+                        return;
+                      }
+                      if(widget.isChooseSong){
+                        Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                          song: song,
+                          callbackLoadingFailed: (){
+                            Navigator.pop(context);
+                          },
+                          callbackLoadingCompleted: (songData) {
+                            Navigator.pop(context, songData);
+                            Navigator.pop(context, songData);
+                          },
+                        ),));
+                      } else {
+                        Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                          song: song,
+                          callbackLoadingFailed: (){
+                            Navigator.pop(context);
+                          },
+                          callbackLoadingCompleted: (songData) async {
+                            await Provider.of<AdsProvider>(context, listen: false).nextScreenFuture(context,LessonsScreen(songCollection: songData,),true);
+                            await getListByCategory();
+                          },
+                        ),));
+                      }
+                    },
+                    child: SongItem(
+                      isFromLearnFromSong: !widget.isChooseSong,
+                      model: song,
+                      isUnlocked: isUnlocked,
+                    ),
+                  );
+                }
+              );
+            })
+        ),
+      ]
     );
   }
 }
