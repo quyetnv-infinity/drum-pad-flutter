@@ -1,6 +1,7 @@
 import 'package:drumpad_flutter/core/res/style/text_style.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/horizontal_list.dart';
 import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
@@ -98,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Navigator.pop(context);
                       },
                       callbackLoadingCompleted: (song) async {
-                        await Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: song,),));
+                        await Provider.of<AdsProvider>(context, listen: false).nextScreenFuture(context,LessonsScreen(songCollection: song,), false);
                         _refreshData();
                       },
                     ),));

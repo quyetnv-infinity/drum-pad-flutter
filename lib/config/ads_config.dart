@@ -17,18 +17,19 @@ String collapsibleBannerAdUnitId = Platform.isAndroid ? "" : "ca-app-pub-3940256
 class AdUnitId {
   static bool devMode = true;
 
-  static String inter_splash = devMode ? interstitialAdUnitId: "ca-app-pub-6691965685689933/7992888706";
-  static String inter_trendy_video = devMode ? interstitialAdUnitId: "ca-app-pub-6691965685689933/9250130056";
-  static String inter_home = devMode ? interstitialAdUnitId: "ca-app-pub-6691965685689933/7406803022";
-  static String inter_fusion = devMode ? interstitialAdUnitId: "ca-app-pub-6691965685689933/2142868052";
-  static String inter_result = devMode ? interstitialAdUnitId: "ca-app-pub-6691965685689933/9508284380";
+  static String inter_splash = devMode ? interstitialAdUnitId: "ca-app-pub-6691965685689933/8862284060";
+  static String inter_home = devMode ? interstitialAdUnitId: "ca-app-pub-6691965685689933/5531744842";
+  static String inter_result = devMode ? interstitialAdUnitId: "ca-app-pub-6691965685689933/5531744842";
 
-  static String native_language = devMode ? nativeAdUnitId: "ca-app-pub-6691965685689933/3647521413";
-  static String native_onboarding_1_1 = devMode ? nativeAdUnitId: "ca-app-pub-6691965685689933/5366725361";
-  static String native_onboarding_1_4 = devMode ? nativeAdUnitId: "ca-app-pub-6691965685689933/3134447725";
-  static String native_home = devMode ? nativeAdUnitId : "ca-app-pub-6691965685689933/5086657794";
+  static String native_language = devMode ? nativeAdUnitId: "ca-app-pub-6691965685689933/8211322033";
+  static String native_onboarding_1_1 = devMode ? nativeAdUnitId: "ca-app-pub-6691965685689933/6921764430";
+  static String native_onboarding_1_4 = devMode ? nativeAdUnitId: "ca-app-pub-6691965685689933/7549202394";
 
-  static String open_resume = devMode ? openAdUnitId: "ca-app-pub-6691965685689933/1821366055";
+  static String open_resume = devMode ? openAdUnitId: "ca-app-pub-6691965685689933/5608682768";
+
+  static String banner_collap_all = devMode ? collapsibleBannerAdUnitId: "ca-app-pub-6691965685689933/4295601099";
+
+  static String reward_choose_song = devMode ? rewardedAdUnitId: "ca-app-pub-6691965685689933/2982519428";
 }
 
 List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
@@ -48,26 +49,17 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       format: AdFormat.interstitial,
     ),
     AdConfiguration(
-      adUnit: AdUnit(defaultId: AdUnitId.inter_trendy_video),
-      name: 'inter_trendy_video',
-      format: AdFormat.interstitial,
-    ),
-    AdConfiguration(
-      adUnit: AdUnit(defaultId: AdUnitId.inter_fusion),
-      name: 'inter_fusion',
-      format: AdFormat.interstitial,
-    ),
-    AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.inter_result),
       name: 'inter_result',
       format: AdFormat.interstitial,
     ),
+    ///native
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.native_language),
       name: 'native_language',
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdLarge,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#2F80ED", ctaGradientEndColor: "#56CCF2"),
+      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#6141BE", ctaGradientEndColor: "#421AB5"),
       preload: preload,
     ),
     AdConfiguration(
@@ -75,7 +67,7 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       name: 'native_onboarding_1_1',
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdLarge,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#2F80ED", ctaGradientEndColor: "#56CCF2"),
+      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#6141BE", ctaGradientEndColor: "#421AB5"),
       preload: preload,
     ),
     AdConfiguration(
@@ -83,18 +75,23 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       name: 'native_onboarding_1_4',
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdLarge,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#2F80ED", ctaGradientEndColor: "#56CCF2"),
+      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#6141BE", ctaGradientEndColor: "#421AB5"),
       preload: preload,
     ),
-    // AdConfiguration(
-    //   adUnit: AdUnit(defaultId: AdUnitId.native_home),
-    //   name: 'native_home',
-    //   format: AdFormat.native,
-    //   nativeFactoryId: NativeFactoryId.layoutCustom,
-    //   nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF"),
-    //   preload: true,
-    //   disabled: !native_home_enabled
-    // ),
+    ///banner
+    AdConfiguration(
+      adUnit: AdUnit(defaultId: AdUnitId.banner_collap_all),
+      name: 'banner_collap_all',
+      format: AdFormat.collapsibleBanner,
+      preload: true,
+    ),
+    ///reward
+    AdConfiguration(
+      adUnit: AdUnit(defaultId: AdUnitId.reward_choose_song),
+      name: 'reward_choose_song',
+      format: AdFormat.rewarded,
+    ),
+    ///resume
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.open_resume),
       name: 'open_resume',

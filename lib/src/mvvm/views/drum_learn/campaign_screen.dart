@@ -1,3 +1,4 @@
+import 'package:ads_tracking_plugin/collapsible_banner_ad/collapsible_banner_ad_widget.dart';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
@@ -19,6 +20,7 @@ class _CampaignScreenState extends State<CampaignScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")),
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
       appBar: AppBar(

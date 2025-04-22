@@ -33,9 +33,10 @@ void main() async {
   await _initHive();
 
   await ServiceLocator.instance.initialise();
-  final adsProvider = AdsProvider();
   final purchaseProvider = PurchaseProvider();
   final AppSettingsProvider appSettingsProvider = AppSettingsProvider();
+  final adsProvider = AdsProvider(appSettingsProvider: appSettingsProvider);
+  
   runApp(
     MultiProvider(
       providers: [

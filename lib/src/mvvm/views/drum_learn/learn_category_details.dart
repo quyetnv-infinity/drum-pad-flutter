@@ -1,3 +1,4 @@
+import 'package:ads_tracking_plugin/collapsible_banner_ad/collapsible_banner_ad_widget.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
@@ -73,6 +74,7 @@ class _LearnCategoryDetailsState extends State<LearnCategoryDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leadingWidth: 100,

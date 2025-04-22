@@ -1,3 +1,4 @@
+import 'package:ads_tracking_plugin/collapsible_banner_ad/collapsible_banner_ad_widget.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
@@ -19,6 +20,7 @@ class _LearnFromSongScreenState extends State<LearnFromSongScreen> {
   Widget build(BuildContext context) {
     final provider = Provider.of<DrumLearnProvider>(context, listen: true);
     return Scaffold(
+      bottomNavigationBar: const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leadingWidth: 100,

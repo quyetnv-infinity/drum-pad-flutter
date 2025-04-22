@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:ads_tracking_plugin/collapsible_banner_ad/collapsible_banner_ad_widget.dart';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/res/style/text_style.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart';
@@ -108,6 +110,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
       // backgroundType: BackgroundType.gradient,
       backgroundImage: ResImage.imgBackgroundScreen,
       backgroundFit: BoxFit.cover,
+      bottomNavigationBar: const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")),
       appBar: AppBar(
           leadingWidth: 100,
           toolbarHeight: 50,
@@ -189,11 +192,10 @@ class _LessonsScreenState extends State<LessonsScreen> {
                             if(item.isCompleted || index == displayData.length - 1) {
                               await context.read<DrumLearnProvider>().addToResume(widget.songCollection.id);
                               Provider.of<CampaignProvider>(context, listen: false).setCurrentLessonCampaign(displayData.length - (index + 1));
-                              await Navigator.push(context, CupertinoPageRoute(
-                                builder: (context) =>
-                                    GamePlayScreen(songCollection: widget.songCollection,
+                              await Provider.of<AdsProvider>(context, listen: false).nextScreenFuture(
+                                context, GamePlayScreen(songCollection: widget.songCollection,
                                       index: displayData.length -
-                                          (index + 1),),));
+                                          (index + 1),),false);
                               await fetchLessonData();
                             }
                           },

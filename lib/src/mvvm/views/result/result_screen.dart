@@ -1,6 +1,7 @@
 import 'package:drumpad_flutter/core/res/dimen/spacing.dart';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/result_information_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
@@ -287,7 +288,9 @@ class _ResultScreenState extends State<ResultScreen>
                         !(widget.isCompleteCampaign && widget.isCompleted) ?
                         GradientButton(
                           onPressed: () {
-                            Navigator.pop(context, 'play_again');
+                            Provider.of<AdsProvider>(context, listen: false).showInterAd(name: 'inter_result', callback: () {
+                              Navigator.pop(context, 'play_again');
+                            },);
                           },
                           padding: EdgeInsets.symmetric(horizontal: 28, vertical: 16),
                           borderRadius: BorderRadius.circular(32),
@@ -320,7 +323,11 @@ class _ResultScreenState extends State<ResultScreen>
                         GradientButton(
                           onPressed: () async {
                             if(checkNotLastCampaign()){
-                              if(widget.isFromLearn) Navigator.pop(context, widget.currentLesson + 1);
+                              if(widget.isFromLearn) {
+                                Provider.of<AdsProvider>(context, listen: false).showInterAd(name: 'inter_result', callback: () {
+                                  Navigator.pop(context, widget.currentLesson + 1);
+                                },);
+                              }
                               if(widget.isFromCampaign) {
                                 final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
                                 final currentCampaignIndex = campaignProvider.currentSongCampaign + 1;

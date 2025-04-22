@@ -3,6 +3,7 @@ import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/dialog_unlock_song.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/beat_runner/beat_runner_screen.dart';
@@ -148,7 +149,7 @@ class _ListSongWidgetState extends State<ListSongWidget> {
                               Navigator.pop(context);
                             },
                             callbackLoadingCompleted: (songData) async {
-                              await Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: songData,),));
+                              await Provider.of<AdsProvider>(context, listen: false).nextScreenFuture(context,LessonsScreen(songCollection: songData,),false);
                               await getListByCategory();
                             },
                           ),));

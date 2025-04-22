@@ -58,6 +58,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
       appStateProvider.setFirstOpenApp();
       Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => HomeScreen()));
       Provider.of<AppSettingsProvider>(context, listen: false).increaseTimeOpenApp();
+      print('time open appppp${Provider.of<AppSettingsProvider>(context, listen: false).timeOpenApp}');
     } else {
       pageController.nextPage(
         duration: const Duration(milliseconds: 300),
@@ -132,18 +133,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
                 children: [
                   Offstage(
                     offstage: currentPage != 0 || !appStateProvider.shouldShowAds,
-                    child: Container(
-                      width: double.infinity,
-                      height: 300,
-                      color: Colors.blue,
+                    child: NativeAdWidget(
+                      adName: 'native_onboarding_1_1',
+                      color: Color(0xFF5A2CE4).withAlpha(30),
+                      padding: const EdgeInsets.only(bottom: 16),
                     )
                   ),
                   Offstage(
                     offstage: currentPage != 3 || !appStateProvider.shouldShowAds,
-                    child: Container(
-                      width: double.infinity,
-                      height: 300,
-                      color: Colors.blue,
+                    child: NativeAdWidget(
+                      adName: 'native_onboarding_1_4',
+                      color: Color(0xFF5A2CE4).withAlpha(30),
+                      padding: const EdgeInsets.only(bottom: 16),
                     )
                   )
                 ],

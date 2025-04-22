@@ -42,10 +42,10 @@ class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObse
     super.didChangeAppLifecycleState(state);
     if(widget.fromSetting) return;
     if (state == AppLifecycleState.paused) {
-      // AdController.shared.toggleResumeAdDisabled(true);
+      AdController.shared.setResumeAdState(true);
     }
     if (state == AppLifecycleState.resumed) {
-      // AdController.shared.toggleResumeAdDisabled(false);
+      AdController.shared.setResumeAdState(false);
     }
   }
 

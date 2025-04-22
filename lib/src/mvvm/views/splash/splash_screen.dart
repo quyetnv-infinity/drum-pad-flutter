@@ -1,4 +1,6 @@
+import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:drumpad_flutter/core/constants/app_info.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_setting_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_state_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/drum_learn_screen.dart';
@@ -32,25 +34,25 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if(state == AppLifecycleState.paused) {
-      // AdController.shared.toggleResumeAdDisabled(true);
+      AdController.shared.setResumeAdState(true);
     }
     if(state == AppLifecycleState.resumed) {
-      // AdController.shared.toggleResumeAdDisabled(false);
+      AdController.shared.setResumeAdState(false);
     }
   }
 
   void _onLoadingEnd() {
-    // final adsProvider = Provider.of<AdsProvider>(context, listen: false);
-    // adsProvider.showInterAd(
-    //   name: "inter_splash",
-    //   callback: () {
+    final adsProvider = Provider.of<AdsProvider>(context, listen: false);
+    adsProvider.showInterAd(
+      name: "inter_splash",
+      callback: () {
         _navigateToHome();
-    //   }
-    // );
+      }
+    );
   }
 
   Future<void> _navigateToHome() async {
-    // AdController.shared.toggleResumeAdDisabled(false);
+    AdController.shared.setResumeAdState(false);
     final isFirstOpenApp = Provider.of<AppStateProvider>(context, listen: false).isFirstOpenApp;
 
     if (isFirstOpenApp) {
@@ -58,6 +60,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     } else {
       Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => const HomeScreen()));
       Provider.of<AppSettingsProvider>(context, listen: false).increaseTimeOpenApp();
+      print('time open appppp${Provider.of<AppSettingsProvider>(context, listen: false).timeOpenApp}');
     }
   }
 

@@ -2,7 +2,8 @@ import UIKit
 import Flutter
 import ReplayKit
 import AVFoundation
-
+import ads_tracking_plugin
+import google_mobile_ads
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -45,6 +46,26 @@ import AVFoundation
                         result(FlutterMethodNotImplemented)
                     }
                 }
+        // Initialize Google Mobile Ads SDK
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        // Register NativeAdFactoryExample
+
+        let layoutTopCTA = LayoutTopCTA()
+        let layoutAdLarge = LayoutAdLarge()
+
+        FLTGoogleMobileAdsPlugin.registerNativeAdFactory(
+          self,
+          factoryId: "layoutTopCTA",
+          nativeAdFactory: layoutTopCTA
+        )
+
+        FLTGoogleMobileAdsPlugin.registerNativeAdFactory(
+          self,
+          factoryId: "layoutAdLarge",
+          nativeAdFactory: layoutAdLarge
+        )
+
+    
        
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }

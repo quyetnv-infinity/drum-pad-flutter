@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/campaign_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart';
@@ -32,16 +33,16 @@ class _ResumeWidgetState extends State<ResumeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<DrumLearnProvider>(
-      builder: (context, provider, _) {
+    return Consumer2<DrumLearnProvider, AdsProvider>(
+      builder: (context, provider, adsProvider, _) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if(provider.listSongResume.isNotEmpty) ListSongWidget(title: context.locale.resume, isMore: false, isChooseSong: false, listSongData: provider.listSongResume),
             SizedBox(height: 12),
-            OptionsWidget(title: context.locale.learn_from_song, description: context.locale.learn_from_song_des, asset: ResImage.imgLearnFromSong, func: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => LearnFromSongScreen()))),
+            OptionsWidget(title: context.locale.learn_from_song, description: context.locale.learn_from_song_des, asset: ResImage.imgLearnFromSong, func: () => adsProvider.nextScreen(context, LearnFromSongScreen(), false)),
             SizedBox(height: 12),
-            OptionsWidget(title:  context.locale.campaign, description:  context.locale.campaign_des, asset: ResImage.imgCampaign, func: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => CampaignScreen())))
+            OptionsWidget(title:  context.locale.campaign, description:  context.locale.campaign_des, asset: ResImage.imgCampaign, func: () => adsProvider.nextScreen(context, CampaignScreen(), false)),
           ]
         );
       }

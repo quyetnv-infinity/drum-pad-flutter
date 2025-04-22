@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:ads_tracking_plugin/collapsible_banner_ad/collapsible_banner_ad_widget.dart';
 import 'package:ads_tracking_plugin/utils/network_checking.dart';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
@@ -7,6 +8,7 @@ import 'package:drumpad_flutter/core/res/style/text_style.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/network_checking.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/network_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/button_action.dart';
@@ -35,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late List<SongCollection> _data;
   List<SongCollection> recommendSongs = [];
   late NetworkProvider networkProvider;
+  late AdsProvider adsProvider;
   bool _isDialogNetworkShown = false;
   bool _isLoading = false;
 
@@ -42,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     networkProvider = Provider.of<NetworkProvider>(context, listen: false);
+    adsProvider = Provider.of<AdsProvider>(context, listen: false);
     networkProvider.addListener(checkNetwork);
     _initializeData();
   }
@@ -101,6 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
+      bottomNavigationBar: const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")),
       backgroundType: BackgroundType.gradient,
       appBar: AppBar(
         centerTitle: false,
@@ -179,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.pop(context);
                   },
                   callbackLoadingCompleted: (song) {
-                    Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => random ? LessonsScreen(songCollection: song,) : BeatRunnerScreen(songCollection: song,),));
+                    adsProvider.nextScreen(context, random ? LessonsScreen(songCollection: song,) : BeatRunnerScreen(songCollection: song), true);
                   },
                 ),));
               },
@@ -189,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
               content: context.locale.sub_button_beat_runner,
               imageBackground: ResImage.imgBgButtonBeatRunner,
               onPressed: () {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) => BeatRunnerScreen(),));
+                adsProvider.nextScreen(context, BeatRunnerScreen(), false);
               },
             ),
             HorizontalList(
@@ -203,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.pop(context);
                   },
                   callbackLoadingCompleted: (song) {
-                    Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => BeatRunnerScreen(songCollection: song,),));
+                    adsProvider.nextScreen(context, BeatRunnerScreen(songCollection: song), true);
                   },
                 ),));
               },
@@ -228,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.pop(context);
                   },
                   callbackLoadingCompleted: (song) {
-                    Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: song,),));
+                    adsProvider.nextScreen(context, LessonsScreen(songCollection: song,), false);
                   },
                 ),));
               },
