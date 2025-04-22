@@ -49,7 +49,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => TutorialProvider(), lazy: false,),
         ChangeNotifierProvider(create: (_) => CampaignProvider(), lazy: false,),
         ChangeNotifierProvider(create: (_) => ResultInformationProvider(), lazy: false,),
-        ChangeNotifierProvider(create: (_) => UnlockedSongsProvider()),
+        ChangeNotifierProvider(create: (_) => UnlockedSongsProvider(), lazy: false,),
         ChangeNotifierProvider(create: (_) => adsProvider),
         ChangeNotifierProvider(create: (_) => purchaseProvider),
         ChangeNotifierProxyProvider2<AdsProvider, PurchaseProvider, AppStateProvider>(

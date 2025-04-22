@@ -4,10 +4,14 @@ import 'package:drumpad_flutter/config/ads_config.dart';
 import 'package:drumpad_flutter/core/constants/unlock_song_quantity.dart';
 import 'package:drumpad_flutter/core/utils/dialog_unlock_song.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/unlock_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/marquee_text.dart';
 import 'package:drumpad_flutter/src/mvvm/views/iap/iap_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
+import 'package:drumpad_flutter/src/mvvm/views/loading_data/loading_data_screen.dart';
 import 'package:drumpad_flutter/src/widgets/overlay_loading/overlay_loading.dart';
 import 'package:drumpad_flutter/src/widgets/unlock_dialog.dart';
 import 'package:flutter/cupertino.dart';
@@ -46,7 +50,8 @@ class HorizontalList extends StatelessWidget {
                   right: index == data.length - 1 ? 16 : 12),
               child: Consumer<PurchaseProvider>(
                 builder: (context, purchaseProvider, _) {
-                  bool isUnlocked = context.read<DrumLearnProvider>().data.indexWhere((song) => song.id == item.id) < unlockSongQuantity || purchaseProvider.isSubscribed;
+                  bool songUnlock = context.watch<UnlockedSongsProvider>().isSongUnlocked(item.id);
+                  bool isUnlocked = songUnlock || context.read<DrumLearnProvider>().data.indexWhere((song) => song.id == item.id) < unlockSongQuantity || purchaseProvider.isSubscribed;
                   return InkWell(
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,
@@ -61,7 +66,8 @@ class HorizontalList extends StatelessWidget {
                           },
                           onTapWatchAds: () {
                             showRequestRewardUnlockSongDialog(context: context, onUserEarnedReward: () {
-
+                              context.read<UnlockedSongsProvider>().unlockSong(item.id);
+                              onTap(item, index);
                             },);
                           },
                         );

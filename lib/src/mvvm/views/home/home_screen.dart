@@ -233,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.pop(context);
                   },
                   callbackLoadingCompleted: (song) {
-                    adsProvider.nextScreen(context, LessonsScreen(songCollection: song,), false);
+                    adsProvider.nextScreen(context, LessonsScreen(songCollection: song,), true);
                   },
                 ),));
               },
