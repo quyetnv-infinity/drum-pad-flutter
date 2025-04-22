@@ -58,7 +58,7 @@ class DialogUnlockSong extends StatelessWidget {
         children: [
           Stack(
             children: [
-              ClipRRect(borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),child: Image.asset(song.image, fit: BoxFit.fitWidth,)),
+              ClipRRect(borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),child: Image.asset(song.image, fit: BoxFit.cover, width: MediaQuery.of(context).size.width - 56, height: MediaQuery.of(context).size.width - 56,)),
               Positioned(
                 right: 10,
                 top: 10,
