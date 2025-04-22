@@ -1,4 +1,5 @@
 import 'package:drumpad_flutter/config/ads_config.dart';
+import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/widgets/overlay_loading/overlay_loading.dart';
@@ -55,7 +56,19 @@ class DialogUnlockSong extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ClipRRect(borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),child: Image.asset(song.image, fit: BoxFit.fitWidth,)),
+          Stack(
+            children: [
+              ClipRRect(borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),child: Image.asset(song.image, fit: BoxFit.fitWidth,)),
+              Positioned(
+                right: 10,
+                top: 10,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: SvgPicture.asset('assets/icons/ic_close.svg')))
+            ],
+          ),
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(colors: [
