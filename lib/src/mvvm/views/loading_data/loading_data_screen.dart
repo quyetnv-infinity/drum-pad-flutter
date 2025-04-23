@@ -5,6 +5,7 @@ import 'package:archive/archive.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/network_checking.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/background_audio_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/network_provider.dart';
 import 'package:drumpad_flutter/src/service/api_service/api_service.dart';
@@ -36,6 +37,9 @@ class _LoadingDataScreenState extends State<LoadingDataScreen> {
     super.initState();
     _urlZipFile = '${ApiService.BASEURL}${widget.song.pathZipFile}';
     getSongDetail();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<BackgroundAudioProvider>(context, listen: false).pause();
+    });
   }
 
   @override

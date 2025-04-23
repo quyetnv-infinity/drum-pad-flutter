@@ -53,14 +53,14 @@ class AdsProvider with ChangeNotifier {
       callback?.call();
     }
   }
-  void nextScreen(BuildContext context, Widget screen, bool isReplacement) {
+  Future<void> nextScreen(BuildContext context, Widget screen, bool isReplacement) async{
     print(appSettingsProvider.timeOpenApp);
     if (appSettingsProvider.timeOpenApp == 1) {
-      _navigate(context, screen, isReplacement);
+      await _navigate(context, screen, isReplacement);
     } else {
       showInterAd(
         name: "inter_home",
-        callback: () => _navigate(context, screen, isReplacement),
+        callback: () async => await _navigate(context, screen, isReplacement),
       );
     }
   }

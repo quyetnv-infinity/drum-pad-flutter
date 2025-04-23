@@ -7,6 +7,7 @@ import 'package:drumpad_flutter/core/res/style/text_style.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/background_audio_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart';
@@ -118,6 +119,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
           leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
+              Provider.of<BackgroundAudioProvider>(context, listen: false).play();
             },
             child: Padding(
               padding: const EdgeInsets.only(left: 16),

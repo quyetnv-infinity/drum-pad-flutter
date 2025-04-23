@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/pad_util.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/background_audio_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
@@ -54,7 +55,9 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
           tutorialProvider.setFirstShowTutorial();
         },);
       }
+      Provider.of<BackgroundAudioProvider>(context, listen: false).pause();
     });
+
   }
 
   @override
@@ -266,6 +269,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                     onTap: () {
                       Navigator.pop(context);
                       context.read<DrumLearnProvider>().resetPerfectPoint();
+                      Provider.of<BackgroundAudioProvider>(context, listen: false).play();
                     },
                     child: Row(
                       children: [

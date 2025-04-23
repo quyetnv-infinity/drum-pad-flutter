@@ -4,6 +4,7 @@ import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/res/style/text_style.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/background_audio_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/beat_runner/beat_runner_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart';
@@ -39,6 +40,7 @@ class _ModeCampaignScreenState extends State<ModeCampaignScreen> {
     _campaignSongs = widget.listCampaignSong;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       fetchData();
+      Provider.of<BackgroundAudioProvider>(context, listen: false).pause();
     });
   }
 
@@ -125,6 +127,7 @@ class _ModeCampaignScreenState extends State<ModeCampaignScreen> {
           highlightColor: Colors.transparent,
           onTap: () {
             Navigator.maybePop(context);
+            Provider.of<BackgroundAudioProvider>(context, listen: false).play();
           },
           child: Row(
             mainAxisSize: MainAxisSize.min,
