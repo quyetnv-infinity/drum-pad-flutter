@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/pad_util.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
@@ -8,6 +9,7 @@ import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/loading_data/loading_data_screen.dart';
+import 'package:drumpad_flutter/src/service/api_service/api_service.dart';
 import 'package:drumpad_flutter/src/widgets/drum_pad/drum_pad_widget.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
@@ -317,7 +319,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                           :
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: Image.asset(_currentSong!.image!, fit: BoxFit.cover, width: double.infinity, height: double.infinity,)
+                            child: CachedNetworkImage(imageUrl: '${ApiService.BASEURL}${_currentSong!.image}', fit: BoxFit.cover, width: double.infinity, height: double.infinity,)
                           ),
                         ),
                       ),

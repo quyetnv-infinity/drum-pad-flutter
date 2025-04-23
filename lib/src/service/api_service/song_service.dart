@@ -35,12 +35,12 @@ class SongService extends ApiService {
   }
 
   /// get item
-  Future<ApiResponse<List<CategoryItem>>> fetchItemsByCategory(String categoryCode) async {
+  Future<ApiResponse<List<SongCollection>>> fetchItemsByCategory(String categoryCode) async {
     try {
       final jsonResponse = await getRequest('/api/ios-drumpads?categoryCode=$categoryCode');
       return ApiResponse.fromJson(jsonResponse.data, (data) {
         return (data as List)
-            .map((item) => CategoryItem.fromJson(item))
+            .map((item) => SongCollection.fromJsonRoot(item))
             .toList();
       },);
     } catch (e) {

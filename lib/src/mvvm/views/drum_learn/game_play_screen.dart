@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/pad_util.dart';
 import 'package:drumpad_flutter/core/utils/permission_util.dart';
@@ -10,6 +11,7 @@ import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/mode_btn/mode_button.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/tutorial_blur_widget.dart';
+import 'package:drumpad_flutter/src/service/api_service/api_service.dart';
 import 'package:drumpad_flutter/src/service/screen_record_service.dart';
 import 'package:drumpad_flutter/src/widgets/anim/text_animation.dart';
 import 'package:drumpad_flutter/src/widgets/blur_widget.dart';
@@ -414,7 +416,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                               borderRadius: BorderRadius.circular(8),
                               child: Stack(
                                 children: [
-                                  Image.asset(widget.songCollection.image!, fit: BoxFit.cover, width: double.infinity, height: double.infinity,),
+                                  CachedNetworkImage(imageUrl: '${ApiService.BASEURL}${widget.songCollection.image}', fit: BoxFit.cover, width: double.infinity, height: double.infinity,),
                                   Positioned(
                                     top: 10,
                                     left: 10,

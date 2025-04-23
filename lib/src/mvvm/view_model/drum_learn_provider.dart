@@ -1,11 +1,13 @@
 
 import 'package:drumpad_flutter/core/constants/mock_up_data.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/service/api_service/song_service.dart';
 import 'package:drumpad_flutter/src/service/song_collection_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class DrumLearnProvider extends ChangeNotifier {
+  final SongService _songService;
   List<SongCollection> data = dataSongCollections;
   Map<String, List<SongCollection>> _categoryCache = {};
   bool _isLoadingCategories = false;
@@ -18,6 +20,12 @@ class DrumLearnProvider extends ChangeNotifier {
   List<SongCollection> _listSongResume = [];
   List<SongCollection> get listSongResume => _listSongResume;
 
+  List<SongCollection> _listRecommend = [];
+  List<SongCollection> get listRecommend => _listRecommend;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
   int _perfectPoint = 0;
   bool _isCombo = false;
   bool _isRecording = false;
@@ -28,7 +36,6 @@ class DrumLearnProvider extends ChangeNotifier {
   double _totalStar = 0;
   double _beatRunnerStar = 0;
   bool _isChooseSong = false;
-
 
   int get perfectPoint => _perfectPoint;
   bool get isCombo => _isCombo;
@@ -41,7 +48,7 @@ class DrumLearnProvider extends ChangeNotifier {
   double get totalStar => _totalStar;
   double get beatRunnerStar => _beatRunnerStar;
 
-  DrumLearnProvider(){
+  DrumLearnProvider(this._songService){
     fetchListResume();
     getBeatRunnerSongComplete();
     getLearnSongComplete();
@@ -101,9 +108,20 @@ class DrumLearnProvider extends ChangeNotifier {
     return await SongCollectionService.getSongById(id);
   }
 
-  Future<List<SongCollection>> getRandomSongs() async {
-    List<SongCollection> shuffledList = List.from(dataSongCollections)..shuffle();
-    return shuffledList.take(5).toList();
+  Future<void> getRecommend() async {
+    if(_listRecommend.isNotEmpty) return;
+      _isLoading = true;
+    try {
+      final res = await _songService.fetchRecommend();
+      _listRecommend = res.data ?? [];
+      print("trending: $_listRecommend");
+    } catch (e, stackTrace) {
+
+      print('Error fetching trending: $e $stackTrace');
+    }finally{
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<void> updateSong(String id, SongCollection songCollection) async {

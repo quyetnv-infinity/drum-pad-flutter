@@ -20,6 +20,7 @@ import 'package:drumpad_flutter/src/mvvm/view_model/rate_app_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/result_information_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/tutorial_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/unlock_provider.dart';
+import 'package:drumpad_flutter/src/service/api_service/song_service.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:path_provider/path_provider.dart';
@@ -37,6 +38,7 @@ void main() async {
   final purchaseProvider = PurchaseProvider();
   final AppSettingsProvider appSettingsProvider = AppSettingsProvider();
   final adsProvider = AdsProvider(appSettingsProvider: appSettingsProvider);
+  final songService = SongService();
   
   runApp(
     MultiProvider(
@@ -45,7 +47,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => appSettingsProvider),
         ChangeNotifierProvider(create: (_) => RateAppProvider()),
         ChangeNotifierProvider(create: (_) => NetworkProvider()),
-        ChangeNotifierProvider(create: (_) => DrumLearnProvider(), lazy: false,),
+        ChangeNotifierProvider(create: (_) => DrumLearnProvider(songService), lazy: false,),
         ChangeNotifierProvider(create: (_) => TutorialProvider(), lazy: false,),
         ChangeNotifierProvider(create: (_) => CampaignProvider(), lazy: false,),
         ChangeNotifierProvider(create: (_) => ResultInformationProvider(), lazy: false,),

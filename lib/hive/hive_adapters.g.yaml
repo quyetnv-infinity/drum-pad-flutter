@@ -61,23 +61,9 @@ types:
     typeId: 3
     nextIndex: 4
     fields:
-      id:
-        index: 0
       name:
         index: 1
       code:
-        index: 2
-      items:
-        index: 3
-  CategoryItem:
-    typeId: 4
-    nextIndex: 4
-    fields:
-      id:
-        index: 0
-      name:
-        index: 1
-      image:
         index: 2
       items:
         index: 3

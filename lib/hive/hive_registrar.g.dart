@@ -8,7 +8,6 @@ import 'package:drumpad_flutter/hive/hive_adapters.dart';
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(CategoryAdapter());
-    registerAdapter(CategoryItemAdapter());
     registerAdapter(LessonSequenceAdapter());
     registerAdapter(NoteEventAdapter());
     registerAdapter(SongCollectionAdapter());

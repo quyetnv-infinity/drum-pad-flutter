@@ -33,7 +33,6 @@ class CarouselWidgetState extends State<CarouselWidget> {
     drumProvider.getBeatRunnerStar();
     drumProvider.getLearnSongComplete();
     drumProvider.getBeatRunnerSongComplete();
-    drumProvider.getRandomSongs();
 
     resultProvider.loadPoints();
   }

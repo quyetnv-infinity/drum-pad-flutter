@@ -128,8 +128,8 @@ class SongCollection extends HiveObject{
     return SongCollection(
       id: json['id'],
       name: json['name'],
-      stepQuantity: json['stepQuantity'],
-      pathZipFile: json['zip'],
+      stepQuantity: json['step_quantity'],
+      pathZipFile: json['media'],
       author: json['author'],
       image: json['thumbnail'],
       difficulty: json['difficulty'],
@@ -169,11 +169,11 @@ class SongCollection extends HiveObject{
 
 
 class DifficultyMode {
-  static const String easy = 'easy';
-  static const String medium = 'medium';
-  static const String hard = 'hard';
-  static const String demonic = 'demonic';
-  static const String unknown = 'unknown';
+  static const String easy = 'Easy';
+  static const String medium = 'Medium';
+  static const String hard = 'Hard';
+  static const String demonic = 'Demonic';
+  static const String unknown = 'Unknown';
 
   static String getString(BuildContext context, String mode){
     switch(mode){

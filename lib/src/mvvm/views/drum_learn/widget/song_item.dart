@@ -1,10 +1,12 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/marquee_text.dart';
+import 'package:drumpad_flutter/src/service/api_service/api_service.dart';
 import 'package:drumpad_flutter/src/widgets/blur_widget.dart';
 import 'package:drumpad_flutter/src/widgets/star/star_result.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +31,7 @@ class SongItem extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.red,
                 borderRadius: BorderRadius.circular(8),
-                image: DecorationImage(image: AssetImage(model.image ?? ResImage.imgRose), fit: BoxFit.cover)
+                image: DecorationImage(image: CachedNetworkImageProvider('${ApiService.BASEURL}${model.image}'), fit: BoxFit.cover)
               ),
               child: Stack(
                 children: [

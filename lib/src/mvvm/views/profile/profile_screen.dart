@@ -30,10 +30,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void fetchData() async {
-    List<SongCollection> songs = await context.read<DrumLearnProvider>().getRandomSongs();
-    setState(() {
-      randomSongs = songs;
-    });
+    final drumLearnProvider = Provider.of<DrumLearnProvider>(context, listen: false);
+    if(drumLearnProvider.listRecommend.isEmpty) {
+      await context.read<DrumLearnProvider>().getRecommend();
+      setState(() {
+        randomSongs = drumLearnProvider.listRecommend;
+      });
+    }
   }
 
   Future<void> _refreshData() async {

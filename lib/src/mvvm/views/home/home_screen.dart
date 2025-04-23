@@ -96,10 +96,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> fetchRecommendSongs() async {
-    List<SongCollection> songs = await context.read<DrumLearnProvider>().getRandomSongs();
-    setState(() {
-      recommendSongs = songs;
-    });
+    final drumLearnProvider = Provider.of<DrumLearnProvider>(context, listen: false);
+    if(drumLearnProvider.listRecommend.isEmpty) {
+      await context.read<DrumLearnProvider>().getRecommend();
+      setState(() {
+        recommendSongs = drumLearnProvider.listRecommend;
+      });
+    }
   }
 
   @override

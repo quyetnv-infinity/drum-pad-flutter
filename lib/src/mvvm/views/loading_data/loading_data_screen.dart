@@ -7,6 +7,7 @@ import 'package:drumpad_flutter/core/utils/network_checking.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/network_provider.dart';
+import 'package:drumpad_flutter/src/service/api_service/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
@@ -25,7 +26,7 @@ class LoadingDataScreen extends StatefulWidget {
 }
 
 class _LoadingDataScreenState extends State<LoadingDataScreen> {
-  String _urlZipFile = 'https://github.com/hoanglm6201/zip_archive/raw/refs/heads/main/unity.zip';
+  String _urlZipFile = '';
   List<String> _downloadedPacks = [];
   List<dynamic>? _sequenceData;
   List<dynamic>? _beatRunnerData;
@@ -33,7 +34,7 @@ class _LoadingDataScreenState extends State<LoadingDataScreen> {
   @override
   void initState() {
     super.initState();
-    _urlZipFile = widget.song.pathZipFile ?? 'https://github.com/hoanglm6201/zip_archive/raw/refs/heads/main/unity.zip';
+    _urlZipFile = '${ApiService.BASEURL}${widget.song.pathZipFile}';
     getSongDetail();
   }
 
