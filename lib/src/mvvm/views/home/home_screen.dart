@@ -9,6 +9,7 @@ import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/network_checking.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/background_audio_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/network_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/button_action.dart';
@@ -24,6 +25,7 @@ import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -38,14 +40,21 @@ class _HomeScreenState extends State<HomeScreen> {
   List<SongCollection> recommendSongs = [];
   late NetworkProvider networkProvider;
   late AdsProvider adsProvider;
+  late BackgroundAudioProvider backgroundAudioProvider;
   bool _isDialogNetworkShown = false;
   bool _isLoading = false;
+
 
   @override
   void initState() {
     super.initState();
     networkProvider = Provider.of<NetworkProvider>(context, listen: false);
     adsProvider = Provider.of<AdsProvider>(context, listen: false);
+    backgroundAudioProvider = Provider.of<BackgroundAudioProvider>(context, listen: false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      backgroundAudioProvider.play();
+    });
     networkProvider.addListener(checkNetwork);
     _initializeData();
   }
@@ -104,18 +113,54 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return CustomScaffold(
       bottomNavigationBar: const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")),
       backgroundType: BackgroundType.gradient,
       appBar: AppBar(
         centerTitle: false,
-        title: Text(
-          context.locale.drum_pad.toUpperCase(),
-          style: TextStyle(
-            fontFamily: AppFonts.ethnocentric,
-            fontWeight: FontWeight.w400,
-            color: Colors.white,
-          ),
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 6,
+          children: [
+            Consumer<BackgroundAudioProvider>(
+              builder: (context, provider, child) {
+                return InkWell(
+                  borderRadius: BorderRadius.circular(100),
+                  onTap: () {
+                    provider.isPlaying ? provider.pause() : provider.play();
+                  },
+                  child: SvgPicture.asset(
+                    provider.isPlaying
+                        ? 'assets/icons/ic_pause.svg'
+                        : 'assets/icons/ic_play.svg',
+                    width: 30,
+                  ),
+                );
+              },
+            ),
+            Expanded(
+              child: SizedBox(
+                height: 24,
+                child: Marquee(
+                  text: '${context.locale.playing}: ${backgroundAudioProvider.playingSong()} ',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20
+                  ),
+                  scrollAxis: Axis.horizontal,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  blankSpace: 50.0,
+                  velocity: 30.0,
+                  startPadding: 10.0,
+                  accelerationDuration: Duration(seconds: 1),
+                  accelerationCurve: Curves.linear,
+                  decelerationDuration: Duration(milliseconds: 500),
+                  decelerationCurve: Curves.easeOut,
+                ),
+              ),
+            ),
+          ],
         ),
         actions: [
           IconButton(
@@ -176,15 +221,17 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 120,
               data: recommendSongs,
               isShowDifficult: true,
-              onTap: (item, index) {
+              onTap: (item, index) async{
                 final random = DateTime.now().millisecondsSinceEpoch % 2 == 0;
-                Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                await Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
                   song: item,
                   callbackLoadingFailed: (){
                     Navigator.pop(context);
                   },
-                  callbackLoadingCompleted: (song) {
-                    adsProvider.nextScreen(context, random ? LessonsScreen(songCollection: song,) : BeatRunnerScreen(songCollection: song), true);
+                  callbackLoadingCompleted: (song) async {
+                    await adsProvider.nextScreen(context, random ? LessonsScreen(songCollection: song,) : BeatRunnerScreen(songCollection: song), true);
+                    print('NAVIAGTE ===========');
+                    // await backgroundAudioProvider.play();
                   },
                 ),));
               },

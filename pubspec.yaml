@@ -59,6 +59,7 @@ flutter:
   assets:
     - assets/anim/
     - assets/
+    - assets/audio/
     - assets/images/
     - assets/icons/
 
@@ -92,6 +93,9 @@ flutter:
     - family: Ethnocentric
       fonts:
         - asset: assets/fonts/ethnocentric.ttf
+    - family: SF
+      fonts:
+        - asset: assets/fonts/sfprodisplayregular.otf
 
     - family: ShrikhandRegular
       fonts:
