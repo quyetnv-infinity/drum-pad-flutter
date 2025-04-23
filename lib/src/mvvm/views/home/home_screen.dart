@@ -142,16 +142,15 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundType: BackgroundType.gradient,
       appBar: AppBar(
         centerTitle: false,
-        title: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          spacing: 6,
-          children: [
-            Consumer<BackgroundAudioProvider>(
-              builder: (context, provider, child) {
-                return InkWell(
+        title: Consumer<BackgroundAudioProvider>(
+          builder: (context, provider, child) {
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                InkWell(
                   borderRadius: BorderRadius.circular(100),
                   onTap: () {
-                    provider.isPlaying ? provider.pause() : provider.play();
+                    provider.toggle();
                   },
                   child: SvgPicture.asset(
                     provider.isPlaying
@@ -159,31 +158,44 @@ class _HomeScreenState extends State<HomeScreen> {
                         : 'assets/icons/ic_play.svg',
                     width: 30,
                   ),
-                );
-              },
-            ),
-            Expanded(
-              child: SizedBox(
-                height: 24,
-                child: Marquee(
-                  text: '${context.locale.playing}: ${backgroundAudioProvider.playingSong()} ',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20
-                  ),
-                  scrollAxis: Axis.horizontal,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  blankSpace: 50.0,
-                  velocity: 30.0,
-                  startPadding: 10.0,
-                  accelerationDuration: Duration(seconds: 1),
-                  accelerationCurve: Curves.linear,
-                  decelerationDuration: Duration(milliseconds: 500),
-                  decelerationCurve: Curves.easeOut,
                 ),
-              ),
-            ),
-          ],
+                SizedBox(width: 6), // spacing giữa nút và text
+                provider.isPlaying
+                    ? Expanded(
+                  child: SizedBox(
+                    height: 24,
+                    child: Marquee(
+                      text: '${context.locale.playing}: ${provider.playingSong()} ',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                      scrollAxis: Axis.horizontal,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      blankSpace: 50.0,
+                      velocity: 30.0,
+                      startPadding: 10.0,
+                      accelerationDuration: Duration(seconds: 1),
+                      accelerationCurve: Curves.linear,
+                      decelerationDuration: Duration(milliseconds: 500),
+                      decelerationCurve: Curves.easeOut,
+                    ),
+                  ),
+                )
+                    : Expanded(
+                  child: Text(
+                    '${provider.playingSong()} ',
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                )
+              ],
+            );
+          },
         ),
         actions: [
           IconButton(
@@ -263,8 +275,9 @@ class _HomeScreenState extends State<HomeScreen> {
               title: context.locale.beat_runner,
               content: context.locale.sub_button_beat_runner,
               imageBackground: ResImage.imgBgButtonBeatRunner,
-              onPressed: () {
-                adsProvider.nextScreen(context, BeatRunnerScreen(), false);
+              onPressed: ()async {
+                await adsProvider.nextScreen(context, BeatRunnerScreen(), false);
+                if(backgroundAudioProvider.isPlaying) await backgroundAudioProvider.play();
               },
             ),
             HorizontalList(
@@ -287,8 +300,9 @@ class _HomeScreenState extends State<HomeScreen> {
               title: context.locale.drum_learn,
               content: context.locale.sub_button_drum_learn,
               imageBackground: ResImage.imgBgButtonBeatRunner,
-              onPressed: () {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) => DrumLearnScreen(),));
+              onPressed: () async{
+               await Navigator.push(context, CupertinoPageRoute(builder: (context) => DrumLearnScreen(),));
+               if(backgroundAudioProvider.homePlaying) await backgroundAudioProvider.play();
               },
             ),
             HorizontalList(

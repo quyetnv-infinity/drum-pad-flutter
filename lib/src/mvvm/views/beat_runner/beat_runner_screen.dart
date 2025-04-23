@@ -269,7 +269,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                     onTap: () {
                       Navigator.pop(context);
                       context.read<DrumLearnProvider>().resetPerfectPoint();
-                      Provider.of<BackgroundAudioProvider>(context, listen: false).play();
+                      if(Provider.of<BackgroundAudioProvider>(context, listen: false).homePlaying) Provider.of<BackgroundAudioProvider>(context, listen: false).play();
                     },
                     child: Row(
                       children: [

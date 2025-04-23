@@ -13,8 +13,8 @@ class BackgroundAudioProvider extends ChangeNotifier {
   ];
   List<String> _remainingTracks = [];
 
-  bool _isPlaying = false;
-  bool _homePlaying = false;
+  bool _isPlaying = true;
+  bool _homePlaying = true;
 
   bool get isPlaying => _isPlaying;
   bool get homePlaying => _homePlaying;
@@ -46,7 +46,7 @@ class BackgroundAudioProvider extends ChangeNotifier {
       final nextTrack = _remainingTracks.removeAt(index);
 
       await _audioPlayer!.setAsset(nextTrack);
-      await _audioPlayer!.play();
+      // await _audioPlayer!.play();
 
       _isPlaying = true;
       notifyListeners();
@@ -66,17 +66,22 @@ class BackgroundAudioProvider extends ChangeNotifier {
     if (_isPlaying) {
       _isPlaying = false;
       notifyListeners();
-      await _audioPlayer!.pause();}
+      await _audioPlayer!.pause();
+    }
   }
 
   Future<void> toggle() async {
     if (_isPlaying) {
       await pause();
+      _homePlaying = false;
     } else {
       await play();
+      _homePlaying = true;
     }
     notifyListeners();
+    print(_homePlaying);
   }
+
   void stopAndResetAudio() {
     _audioPlayer!.stop();
     _audioPlayer!.dispose();

@@ -39,7 +39,8 @@ void main() async {
   await ServiceLocator.instance.initialise();
   final purchaseProvider = PurchaseProvider();
   final AppSettingsProvider appSettingsProvider = AppSettingsProvider();
-  final adsProvider = AdsProvider(appSettingsProvider: appSettingsProvider);
+  final BackgroundAudioProvider backgroundAudioProvider = BackgroundAudioProvider();
+  final adsProvider = AdsProvider(appSettingsProvider: appSettingsProvider, backgroundAudioProvider: backgroundAudioProvider);
   final songService = SongService();
   final categoryProvider = CategoryProvider(songService);
 
@@ -50,7 +51,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => appSettingsProvider),
         ChangeNotifierProvider(create: (_) => RateAppProvider()),
         ChangeNotifierProvider(create: (_) => NetworkProvider()),
-        ChangeNotifierProvider(create: (_) => BackgroundAudioProvider()),
+        ChangeNotifierProvider(create: (_) => backgroundAudioProvider),
         ChangeNotifierProvider(create: (_) => categoryProvider, lazy: false,),
         ChangeNotifierProvider(create: (_) => TutorialProvider(), lazy: false,),
         ChangeNotifierProvider(create: (_) => DrumLearnProvider(songService), lazy: false,),
