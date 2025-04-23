@@ -95,13 +95,13 @@ class BackgroundAudioProvider extends ChangeNotifier {
         case 'hypnus':
           return 'Hypnus - Cee Qui Ell';
         case 'money':
-          return 'Money - Cee qui Ell';
+          return 'Money - Cee Qui Ell';
         case 'hypnus_a':
-          return 'Hypnus2 - Cee qui Ell';
+          return 'Hypnus2 - Cee Qui Ell';
         case 'mortals':
           return 'Mortals - Warriyo';
         case 'warriors':
-          return 'Warriors - Cee qui Ell';
+          return 'Warriors - Cee Qui Ell';
         default:
           return fileName;
       }
