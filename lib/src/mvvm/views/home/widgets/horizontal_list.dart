@@ -53,7 +53,7 @@ class HorizontalList extends StatelessWidget {
               child: Consumer<PurchaseProvider>(
                 builder: (context, purchaseProvider, _) {
                   bool songUnlock = context.watch<UnlockedSongsProvider>().isSongUnlocked(item.id);
-                  bool isUnlocked = songUnlock || context.read<DrumLearnProvider>().data.indexWhere((song) => song.id == item.id) < unlockSongQuantity || purchaseProvider.isSubscribed;
+                  bool isUnlocked = songUnlock || purchaseProvider.isSubscribed;
                   return InkWell(
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,

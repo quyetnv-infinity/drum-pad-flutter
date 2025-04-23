@@ -1,13 +1,14 @@
-import 'package:drumpad_flutter/core/res/drawer/image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
-import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
+import 'package:drumpad_flutter/src/service/api_service/api_service.dart';
 import 'package:drumpad_flutter/src/widgets/blur_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class ItemCategorySong extends StatelessWidget {
   final SongCollection model;
-  const ItemCategorySong({super.key, required this.model});
+  final bool isUnlocked;
+  const ItemCategorySong({super.key, required this.model, required this.isUnlocked});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,18 @@ class ItemCategorySong extends StatelessWidget {
             width: height,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              image: DecorationImage(image: AssetImage(model.image ?? ResImage.imgRose), fit: BoxFit.cover))
+              image: DecorationImage(image: CachedNetworkImageProvider('${ApiService.BASEURL}${model.image}'), fit: BoxFit.cover)
+            ),
+            child: !isUnlocked ? Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                gradient: LinearGradient(colors: [
+                  Color(0xFF5936C2).withValues(alpha: 0.7), Color(0xFF150C31).withValues(alpha: 0.7)
+                ], begin: Alignment.topCenter, end: Alignment.bottomCenter)
+              ),
+              child: SvgPicture.asset('assets/icons/ic_lock.svg', width: height * 0.5,),
+            ) : SizedBox.shrink()
           ),
           Expanded(
             child: Column(

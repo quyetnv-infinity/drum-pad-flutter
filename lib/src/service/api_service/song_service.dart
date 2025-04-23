@@ -9,7 +9,7 @@ class SongService extends ApiService {
   /// get category
   Future<ApiResponse<List<Category>>> fetchCategories() async {
     try {
-      final jsonResponse = await getRequest('/api/ios-drumpad/home');
+      final jsonResponse = await getRequest('/api/ios-drumpad-categories');
       return ApiResponse.fromJson(jsonResponse.data, (data) {
         return (data as List)
             .map((item) => Category.fromJson(item))
@@ -21,9 +21,9 @@ class SongService extends ApiService {
   }
 
   /// home page
-  Future<ApiResponse<List<Category>>> fetchCategoriesWithNumbers({required int numberOfItem}) async {
+  Future<ApiResponse<List<Category>>> fetchCategoryDataHome() async {
     try {
-      final jsonResponse = await getRequest('/api/ios-drumpad/home?numberOfItem=$numberOfItem');
+      final jsonResponse = await getRequest('/api/ios-drumpad/home?numberOfItem=5');
       return ApiResponse.fromJson(jsonResponse.data, (data) {
         return (data as List)
             .map((item) => Category.fromJson(item))

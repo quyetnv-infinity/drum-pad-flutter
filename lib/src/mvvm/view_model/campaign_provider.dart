@@ -1,10 +1,12 @@
 import 'package:drumpad_flutter/core/constants/mock_up_data.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/category_provider.dart';
 import 'package:drumpad_flutter/src/service/song_collection_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CampaignProvider with ChangeNotifier {
+  CategoryProvider _categoryProvider;
   int _easyUnlocked = 0;
   int _mediumUnlocked = 0;
   int _hardUnlocked = 0;
@@ -33,8 +35,13 @@ class CampaignProvider with ChangeNotifier {
   List<SongCollection> get hardCampaign => _hardCampaign;
   List<SongCollection> get demonicCampaign => _demonicCampaign;
 
-  CampaignProvider(){
+  CampaignProvider(this._categoryProvider){
     initUnlocked();
+  }
+
+  void updateDependencies(CategoryProvider categoryProvider) {
+    _categoryProvider = categoryProvider;
+    notifyListeners();
   }
 
   Future<void> initUnlocked() async {
@@ -65,15 +72,27 @@ class CampaignProvider with ChangeNotifier {
   }
 
   Future<void> fetchCampaignSong({bool isEasy = false, bool isMedium = false, bool isHard = false, bool isDemonic = false}) async {
-    if(isEasy) _easyCampaign = mergeLists(dataSongCollections.where((song) => song.difficulty == DifficultyMode.easy,).toList(), await getListSongByDifficulty(DifficultyMode.easy));
-    if(isMedium) _mediumCampaign = mergeLists(dataSongCollections.where((song) => song.difficulty == DifficultyMode.medium,).toList(), await getListSongByDifficulty(DifficultyMode.medium));
-    if(isHard) _hardCampaign = mergeLists(dataSongCollections.where((song) => song.difficulty == DifficultyMode.hard,).toList(), await getListSongByDifficulty(DifficultyMode.hard));
-    if(isDemonic) _demonicCampaign = mergeLists(dataSongCollections.where((song) => song.difficulty == DifficultyMode.demonic,).toList(), await getListSongByDifficulty(DifficultyMode.demonic));
+    if(isEasy) _easyCampaign = mergeLists(await _getSongsByDifficulty(DifficultyMode.easy,), await _getListSongByDifficulty(DifficultyMode.easy));
+    if(isMedium) _mediumCampaign = mergeLists(await _getSongsByDifficulty(DifficultyMode.medium,), await _getListSongByDifficulty(DifficultyMode.medium));
+    if(isHard) _hardCampaign = mergeLists(await _getSongsByDifficulty(DifficultyMode.hard,), await _getListSongByDifficulty(DifficultyMode.hard));
+    if(isDemonic) _demonicCampaign = mergeLists(await _getSongsByDifficulty(DifficultyMode.demonic,), await _getListSongByDifficulty(DifficultyMode.demonic));
     notifyListeners();
   }
 
+  Future<List<SongCollection>> _getSongsByDifficulty(String difficulty) async {
+    final categories = _categoryProvider.categories;
+    if(categories.isEmpty) await _categoryProvider.fetchCategories();
+    List<SongCollection> result = [];
+    for(var category in categories){
+      if(category.items == null || category.items!.isEmpty) continue;
+      final songs = category.items?.where((song) => song.difficulty == difficulty,).toList();
+      if(songs != null && songs.isNotEmpty) result.addAll(songs);
+    }
+    return result;
+  }
+
   /// get list in database
-  Future<List<SongCollection>> getListSongByDifficulty(String difficulty) async {
+  Future<List<SongCollection>> _getListSongByDifficulty(String difficulty) async {
     return await SongCollectionService.getListSongByDifficultyMode(difficulty);
   }
 
@@ -96,17 +115,12 @@ class CampaignProvider with ChangeNotifier {
     await prefs.setInt('${isEasy? 'easy' : (isMedium ? 'medium' : (isHard ? 'hard' : 'demonic'))}Unlocked', value);
   }
 
-  Future<SongCollection> getSong(String id) async {
-    return await SongCollectionService.getSongById(id) ?? await getSongFromServer(id);
+  Future<SongCollection?> getSong(String id) async {
+    return await SongCollectionService.getSongById(id);
   }
 
   Future<void> updateSong(String id, SongCollection songCollection) async {
     await SongCollectionService.updateSong(id, songCollection);
-  }
-
-  Future<SongCollection> getSongFromServer(String id) async {
-    /// call api get song by id
-    return dataSongCollections.firstWhere((element) => element.id == id, orElse: () => dataSongCollections.last,);
   }
 
 }

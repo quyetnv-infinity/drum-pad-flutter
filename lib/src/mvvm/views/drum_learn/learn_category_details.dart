@@ -1,7 +1,9 @@
 import 'package:ads_tracking_plugin/collapsible_banner_ad/collapsible_banner_ad_widget.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
+import 'package:drumpad_flutter/src/mvvm/models/category_model.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/category_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/item_category_song.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/list_category_song_widget.dart';
@@ -14,7 +16,8 @@ import 'package:provider/provider.dart';
 class LearnCategoryDetails extends StatefulWidget {
   final String category;
   final bool isChooseSong;
-  const LearnCategoryDetails({super.key, required this.category, required this.isChooseSong});
+  final String categoryCode;
+  const LearnCategoryDetails({super.key, required this.category, required this.isChooseSong, required this.categoryCode});
 
   @override
   State<LearnCategoryDetails> createState() => _LearnCategoryDetailsState();
@@ -28,13 +31,22 @@ class _LearnCategoryDetailsState extends State<LearnCategoryDetails> {
   @override
   void initState() {
     super.initState();
-    _loadSongs();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _loadSongs();
+    },);
   }
 
-  void _loadSongs() {
-    final provider = context.read<DrumLearnProvider>();
-    _allSongs = provider.data;
+  Future<void> _loadSongs() async {
+    final categoryProvider = Provider.of<CategoryProvider>(context, listen: false);
+    _allSongs = categoryProvider.categories.firstWhere((element) => element.code == widget.categoryCode, orElse: () => Category(code: '', name: '', items: [])).items ?? [];
+    if(_allSongs.length <= 5) {
+      await categoryProvider.fetchItemByCategory(categoryCode: widget.categoryCode);
+      _allSongs = categoryProvider.categories.firstWhere((element) => element.code == widget.categoryCode, orElse: () => Category(code: '', name: '', items: [])).items ?? [];
+    }
     _filteredSongs = List.from(_allSongs);
+    setState(() {
+
+    });
   }
 
   void _onSearch(String query) {

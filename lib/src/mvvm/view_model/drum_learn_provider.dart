@@ -1,4 +1,3 @@
-
 import 'package:drumpad_flutter/core/constants/mock_up_data.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/service/api_service/song_service.dart';
@@ -6,11 +5,9 @@ import 'package:drumpad_flutter/src/service/song_collection_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 class DrumLearnProvider extends ChangeNotifier {
   final SongService _songService;
-  List<SongCollection> data = dataSongCollections;
-  Map<String, List<SongCollection>> _categoryCache = {};
-  bool _isLoadingCategories = false;
   /// path to get audio file
   String pathDir = '';
 
@@ -114,7 +111,7 @@ class DrumLearnProvider extends ChangeNotifier {
     try {
       final res = await _songService.fetchRecommend();
       _listRecommend = res.data ?? [];
-      print("trending: $_listRecommend");
+      print("recommend: $_listRecommend");
     } catch (e, stackTrace) {
 
       print('Error fetching trending: $e $stackTrace');
@@ -173,16 +170,16 @@ class DrumLearnProvider extends ChangeNotifier {
     _listSongResume =  listSong;
     notifyListeners();
   }
-
-  Future<List<SongCollection>> getSongsByCategory(String category) async {
-    return mergeLists(data, await SongCollectionService.getAll());
-  }
-
-  List<SongCollection> mergeLists(List<SongCollection> listFromServer, List<SongCollection> listFromDB) {
-    Map<String, SongCollection> mapB = {for (var item in listFromDB) item.id: item};
-
-    return listFromServer.map((item) => mapB.containsKey(item.id) ? mapB[item.id]! : item).toList();
-  }
+  //
+  // Future<List<SongCollection>> getSongsByCategory(String category) async {
+  //   return mergeLists(data, await SongCollectionService.getAll());
+  // }
+  //
+  // List<SongCollection> mergeLists(List<SongCollection> listFromServer, List<SongCollection> listFromDB) {
+  //   Map<String, SongCollection> mapB = {for (var item in listFromDB) item.id: item};
+  //
+  //   return listFromServer.map((item) => mapB.containsKey(item.id) ? mapB[item.id]! : item).toList();
+  // }
 
   ///runner
   Future<void> getBeatRunnerSongComplete() async {
@@ -263,50 +260,5 @@ class DrumLearnProvider extends ChangeNotifier {
     print(totalStar);
     notifyListeners();
   }
-  // Future<void> getBeatRunnerStars() async{
-  //   _beatRunnerStar = await SongCollectionService.getLessonStarsByIndexFromAllSongCollections(0);
-  //   print(_beatRunnerStar);
-  //   notifyListeners();
-  // }
 
-  void updateChooseSong(){
-    _isChooseSong = !_isChooseSong;
-    notifyListeners();
-  }
-
-  Future<List<SongCollection>> getCategoryData(String category) async {
-    // Return cached data if available
-    if (_categoryCache.containsKey(category)) {
-      return _categoryCache[category]!;
-    }
-
-    // Wait if another category is being loaded
-    while (_isLoadingCategories) {
-      await Future.delayed(Duration(milliseconds: 100));
-    }
-
-    _isLoadingCategories = true;
-    try {
-      final songs = data; // await loadCategoryData(category); // call api
-      _categoryCache[category] = songs;
-      _isLoadingCategories = false;
-      return songs;
-    } catch (e) {
-      _isLoadingCategories = false;
-      rethrow;
-    }
-  }
-
-  Future<void> preloadCategories(List<String> categories) async {
-    for (final category in categories) {
-      if (!_categoryCache.containsKey(category)) {
-        await getCategoryData(category);
-      }
-    }
-  }
-
-  void clearCache() {
-    _categoryCache.clear();
-    notifyListeners();
-  }
 }

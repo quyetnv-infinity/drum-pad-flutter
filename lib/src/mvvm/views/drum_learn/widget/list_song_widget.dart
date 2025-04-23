@@ -2,8 +2,10 @@ import 'package:drumpad_flutter/core/constants/unlock_song_quantity.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/dialog_unlock_song.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
+import 'package:drumpad_flutter/src/mvvm/models/category_model.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/category_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/unlock_provider.dart';
@@ -22,8 +24,9 @@ class ListSongWidget extends StatefulWidget {
   final String title;
   final bool isMore;
   final bool isChooseSong;
+  final String? categoryCode;
   final List<SongCollection> listSongData;
-  const ListSongWidget({super.key, required this.title, required this.isMore, required this.isChooseSong, required this.listSongData});
+  const ListSongWidget({super.key, required this.title, required this.isMore, required this.isChooseSong, required this.listSongData, this.categoryCode});
 
   @override
   State<ListSongWidget> createState() => _ListSongWidgetState();
@@ -53,9 +56,9 @@ class _ListSongWidgetState extends State<ListSongWidget> {
         _listSongData = widget.listSongData;
       });
     } else {
-      final list = await Provider.of<DrumLearnProvider>(context, listen: false).getSongsByCategory('category');
+      final categoryProvider = Provider.of<CategoryProvider>(context, listen: false);
       setState(() {
-        _listSongData = list;
+        _listSongData = (categoryProvider.categories.firstWhere((element) => element.code == widget.categoryCode, orElse: () => Category(code: '', name: '', items: [])).items ?? []).take(5).toList();
       });
     }
   }
@@ -81,9 +84,9 @@ class _ListSongWidgetState extends State<ListSongWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(widget.title, style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600),),
-              if(widget.isMore)InkWell(
+              if(widget.isMore) InkWell(
                 onTap: () async {
-                  final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => LearnCategoryDetails(category: widget.title, isChooseSong: widget.isChooseSong,),));
+                  final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => LearnCategoryDetails(category: widget.title, isChooseSong: widget.isChooseSong, categoryCode: widget.categoryCode ?? '',),));
                   if(result != null && widget.isChooseSong){
                     setState(() {
                       _currentSongSelected = result;
@@ -114,7 +117,7 @@ class _ListSongWidgetState extends State<ListSongWidget> {
               return Consumer<PurchaseProvider>(
                 builder: (context, purchaseProvider, _) {
                   bool songUnlock = context.watch<UnlockedSongsProvider>().isSongUnlocked(song.id);
-                  bool isUnlocked = songUnlock || context.read<DrumLearnProvider>().data.indexWhere((item) => song.id == item.id) < unlockSongQuantity || purchaseProvider.isSubscribed || !widget.isMore;
+                  bool isUnlocked = songUnlock || purchaseProvider.isSubscribed || !widget.isMore;
                   return GestureDetector(
                     onTap: (){
                       if(!isUnlocked) {

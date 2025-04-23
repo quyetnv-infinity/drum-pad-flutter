@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:drumpad_flutter/config/ads_config.dart';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/service/api_service/api_service.dart';
 import 'package:drumpad_flutter/src/widgets/overlay_loading/overlay_loading.dart';
 import 'package:drumpad_flutter/src/widgets/unlock_dialog.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +60,7 @@ class DialogUnlockSong extends StatelessWidget {
         children: [
           Stack(
             children: [
-              ClipRRect(borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),child: Image.asset(song.image, fit: BoxFit.cover, width: MediaQuery.of(context).size.width - 56, height: MediaQuery.of(context).size.width - 56,)),
+              ClipRRect(borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),child: CachedNetworkImage(imageUrl: '${ApiService.BASEURL}${song.image}', fit: BoxFit.cover, width: MediaQuery.of(context).size.width - 56, height: MediaQuery.of(context).size.width - 56,)),
               Positioned(
                 right: 10,
                 top: 10,

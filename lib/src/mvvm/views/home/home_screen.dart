@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:ads_tracking_plugin/collapsible_banner_ad/collapsible_banner_ad_widget.dart';
 import 'package:ads_tracking_plugin/utils/network_checking.dart';
+import 'package:drumpad_flutter/core/constants/unlock_song_quantity.dart';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/res/style/text_style.dart';
@@ -9,8 +10,10 @@ import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/network_checking.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/network_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/unlock_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/button_action.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/horizontal_list.dart';
 import 'package:drumpad_flutter/src/mvvm/views/iap/iap_screen.dart';
@@ -34,7 +37,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late List<SongCollection> _data;
+  List<SongCollection> _dataBeatRunner = [];
+  List<SongCollection> _dataDrumLearn = [];
   List<SongCollection> recommendSongs = [];
   late NetworkProvider networkProvider;
   late AdsProvider adsProvider;
@@ -66,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void checkNetwork(){
-    if(_data.isNotEmpty) {
+    if(_dataBeatRunner.isNotEmpty || _dataDrumLearn.isNotEmpty) {
       print('data exist');
       return;
     }
@@ -92,17 +96,33 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> fetchData() async {
-    _data = context.read<DrumLearnProvider>().data;
+    final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
+    final unlockProvider = Provider.of<UnlockedSongsProvider>(context, listen: false);
+    await campaignProvider.fetchCampaignSong(isEasy: true);
+    final easyCampaign = campaignProvider.easyCampaign;
+
+    _dataDrumLearn = easyCampaign.take(3).toList();
+
+    if (easyCampaign.length > 3) {
+      _dataBeatRunner = easyCampaign.skip(3).take(3).toList();
+    } else {
+      _dataBeatRunner = [];
+    }
+    final songsToUnlock = easyCampaign.take(unlockSongQuantity*2).toList();
+    for (var song in songsToUnlock) {
+      unlockProvider.unlockSong(song.id);
+    }
+    setState(() {});
   }
 
   Future<void> fetchRecommendSongs() async {
     final drumLearnProvider = Provider.of<DrumLearnProvider>(context, listen: false);
     if(drumLearnProvider.listRecommend.isEmpty) {
       await context.read<DrumLearnProvider>().getRecommend();
-      setState(() {
-        recommendSongs = drumLearnProvider.listRecommend;
-      });
     }
+    setState(() {
+      recommendSongs = drumLearnProvider.listRecommend;
+    });
   }
 
   @override
@@ -203,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
             HorizontalList(
               width: 180,
               height: 240,
-              data: _data,
+              data: _dataBeatRunner,
               onTap: (item, index) {
                 Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
                   song: item,
@@ -227,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
             HorizontalList(
               width: 180,
               height: 240,
-              data: _data,
+              data: _dataDrumLearn,
               isShowDifficult: true,
               onTap: (item, index) {
                 Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(

@@ -302,7 +302,7 @@ class _ModeCampaignScreenState extends State<ModeCampaignScreen> {
   }
 
   Future<void> updateStar(CampaignProvider provider, SongCollection song, double star) async {
-    SongCollection updatedSong = (await provider.getSong(song.id)).copyWith(campaignStar: star);
+    SongCollection updatedSong = (await provider.getSong(song.id) ?? song).copyWith(campaignStar: star);
     await provider.updateSong(song.id, updatedSong);
   }
 

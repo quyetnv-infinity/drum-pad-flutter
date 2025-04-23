@@ -32,11 +32,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void fetchData() async {
     final drumLearnProvider = Provider.of<DrumLearnProvider>(context, listen: false);
     if(drumLearnProvider.listRecommend.isEmpty) {
-      await context.read<DrumLearnProvider>().getRecommend();
-      setState(() {
-        randomSongs = drumLearnProvider.listRecommend;
-      });
+      await drumLearnProvider.getRecommend();
     }
+    setState(() {
+      randomSongs = drumLearnProvider.listRecommend;
+    });
   }
 
   Future<void> _refreshData() async {
@@ -90,11 +90,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 12),
+                SizedBox(height: 12, width: double.infinity,),
                 HorizontalList(
                   width: 120,
                   height: 120,
                   data: randomSongs,
+                  isShowDifficult: true,
                   onTap: (item, index) {
                     Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
                       song: item,
