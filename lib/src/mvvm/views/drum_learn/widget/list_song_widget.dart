@@ -61,6 +61,24 @@ class _ListSongWidgetState extends State<ListSongWidget> {
         _listSongData = (categoryProvider.categories.firstWhere((element) => element.code == widget.categoryCode, orElse: () => Category(code: '', name: '', items: [])).items ?? []).take(5).toList();
       });
     }
+    setState(() {
+      if(widget.isMore) _listSongData = sortByDifficulty(_listSongData);
+    });
+  }
+
+  List<SongCollection> sortByDifficulty(List<SongCollection> songs){
+    final difficultyOrder = {
+      DifficultyMode.easy: 0,
+      DifficultyMode.medium: 1,
+      DifficultyMode.hard: 2,
+      DifficultyMode.demonic: 3,
+    };
+
+    return List<SongCollection>.from(songs)..sort((a, b) {
+      final aOrder = difficultyOrder[a.difficulty] ?? 4;
+      final bOrder = difficultyOrder[b.difficulty] ?? 4;
+      return aOrder.compareTo(bOrder);
+    });
   }
 
   @override

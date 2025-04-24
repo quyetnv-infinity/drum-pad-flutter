@@ -251,14 +251,14 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
+              child: recommendSongs.isNotEmpty ? Text(
                 context.locale.recommend,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
                 ),
-              ),
+              ) : SizedBox.shrink(),
             ),
             SizedBox(height: 12),
             HorizontalList(
