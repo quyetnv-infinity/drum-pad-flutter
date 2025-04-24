@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:just_audio/just_audio.dart';
 
-class BackgroundAudioProvider extends ChangeNotifier {
+class BackgroundAudioProvider extends ChangeNotifier with WidgetsBindingObserver {
   AudioPlayer? _audioPlayer = AudioPlayer();
   final List<String> _musicList = [
     'assets/audio/hypnus.mp3',
@@ -23,7 +23,18 @@ class BackgroundAudioProvider extends ChangeNotifier {
     _init();
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      pause();
+    }
+    // else if (state == AppLifecycleState.resumed) {
+    //   play();
+    // }
+  }
+
   Future<void> _init() async {
+    WidgetsBinding.instance.addObserver(this);
     _audioPlayer!.setLoopMode(LoopMode.off);
 
     _audioPlayer!.playerStateStream.listen((state) {
@@ -117,6 +128,7 @@ class BackgroundAudioProvider extends ChangeNotifier {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     if (_isPlaying) {
       _audioPlayer!.stop();
     }
