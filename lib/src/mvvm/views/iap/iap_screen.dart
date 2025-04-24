@@ -9,7 +9,6 @@ import 'package:drumpad_flutter/src/widgets/overlay_loading/overlay_loading.dart
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -122,7 +121,7 @@ class _IapScreenState extends State<IapScreen> with WidgetsBindingObserver {
                                 final sub = entry.value;
                                 return _buildSubscriptionItem(
                                   text: sub.title,
-                                  price: sub.price,
+                                  price: sub.priceString,
                                   index: index
                                 );
                               }).toList()
@@ -131,7 +130,7 @@ class _IapScreenState extends State<IapScreen> with WidgetsBindingObserver {
                             _buildContinueButton(
                               onTapPurchase: () {
                                 if(purchaseProvider.products.isEmpty) return;
-                                purchaseProvider.purchaseSubscription(purchaseProvider.products[selectedIndex].id);
+                                purchaseProvider.purchaseSubscription(purchaseProvider.products[selectedIndex]);
                               },
                             ),
                             _buildPolicyRow(
