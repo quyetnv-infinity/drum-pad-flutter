@@ -35,20 +35,15 @@ class _SongItemState extends State<SongItem> {
             child: Container(
               width: MediaQuery.sizeOf(context).width * 0.42,
               decoration: BoxDecoration(
-                color: Colors.red,
+                color: Color(0xFF5936C2).withValues(alpha: 0.7),
                 borderRadius: BorderRadius.circular(8),
-                  image: DecorationImage(image: isErrorLoading?
-                  AssetImage(ResImage.imgBackgoundScreen) :
-                  CachedNetworkImageProvider('${ApiService.BASEURL}${widget.model.image}'),
-                    onError: (exception, stackTrace) {
-                      setState(() {
-                        isErrorLoading = true;
-                      });
-                    },
-                    fit: BoxFit.cover)
               ),
               child: Stack(
                 children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: CachedNetworkImage(imageUrl: '${ApiService.BASEURL}${widget.model.image}', fit: BoxFit.cover, errorWidget: (context, url, error) => const Icon(Icons.image_not_supported_outlined), width: double.infinity, height: double.infinity,),
+                  ),
                   Positioned(
                     top: 10,
                     left: 10,
