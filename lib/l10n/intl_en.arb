@@ -128,5 +128,7 @@
   "watch_ads": "Watch Ads",
   "please_connect_internet_and_try_again": "Oh no, something went wrong! Please check the connection then try again.",
   "something_went_wrong": "Something went wrong.",
-  "go_to_settings": "Go to settings"
+  "go_to_settings": "Go to settings",
+  "day": "Day",
+  "week": "Week"
 }

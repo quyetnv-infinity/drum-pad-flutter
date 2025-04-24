@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 
 class IapScreen extends StatefulWidget {
   const IapScreen({super.key});
@@ -118,10 +119,9 @@ class _IapScreenState extends State<IapScreen> with WidgetsBindingObserver {
                               spacing: 16,
                               children: purchaseProvider.products.asMap().entries.map((entry) {
                                 int index = entry.key;
-                                final sub = entry.value;
+                                final product = entry.value;
                                 return _buildSubscriptionItem(
-                                  text: sub.title,
-                                  price: sub.priceString,
+                                  product: product,
                                   index: index
                                 );
                               }).toList()
@@ -189,7 +189,8 @@ class _IapScreenState extends State<IapScreen> with WidgetsBindingObserver {
       ),
     );
   }
-  Widget _buildSubscriptionItem({required String text, required String price, required int index}){
+
+  Widget _buildSubscriptionItem({required StoreProduct product, required int index}){
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -213,8 +214,8 @@ class _IapScreenState extends State<IapScreen> with WidgetsBindingObserver {
               spacing: 4,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(text, style: TextStyle(color: selectedIndex == index ? Colors.black : Colors.white, fontSize: 16, fontWeight: FontWeight.w500),),
-                Text(price, style: TextStyle(color: selectedIndex == index ? Colors.black : Colors.white, fontSize: 18, fontWeight: FontWeight.w700),),
+                Text(product.title, style: TextStyle(color: selectedIndex == index ? Colors.black : Colors.white, fontSize: 16, fontWeight: FontWeight.w500),),
+                Text("${product.priceString} / ${_parseIso8601Period(product.subscriptionPeriod ?? "P1W")}", style: TextStyle(color: selectedIndex == index ? Colors.black : Colors.white, fontSize: 18, fontWeight: FontWeight.w700),),
               ],
             )
           ],
@@ -266,5 +267,28 @@ class _IapScreenState extends State<IapScreen> with WidgetsBindingObserver {
         ],
       ),
     );
+  }
+
+
+  String _parseIso8601Period(String iso8601) {
+    final regex = RegExp(r'^P(\d+)([DWMY])$');
+    final match = regex.firstMatch(iso8601);
+
+    if (match == null) return 'Unknown';
+
+    final unit = match.group(2);
+
+    switch (unit) {
+      case 'D':
+        return context.locale.day.toLowerCase();
+      case 'W':
+        return context.locale.week.toLowerCase();
+      case 'M':
+        return context.locale.month.toLowerCase();
+      case 'Y':
+        return context.locale.year.toLowerCase();
+      default:
+        return 'Unknown';
+    }
   }
 }
