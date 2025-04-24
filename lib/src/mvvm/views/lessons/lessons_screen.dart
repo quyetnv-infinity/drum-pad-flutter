@@ -119,7 +119,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
           leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
-              Provider.of<BackgroundAudioProvider>(context, listen: false).play();
+              if(Provider.of<BackgroundAudioProvider>(context, listen: false).homePlaying) Provider.of<BackgroundAudioProvider>(context, listen: false).play();
             },
             child: Padding(
               padding: const EdgeInsets.only(left: 16),

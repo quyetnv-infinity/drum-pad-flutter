@@ -63,7 +63,7 @@ class ListCategorySongWidget extends StatelessWidget {
                   );
                   return;
                 }
-                Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
                   song: song,
                   callbackLoadingFailed: (){
                     Navigator.pop(context);
@@ -73,7 +73,7 @@ class ListCategorySongWidget extends StatelessWidget {
                       Navigator.pop(context, songData);
                       Navigator.pop(context, songData);
                     } else {
-                      Provider.of<AdsProvider>(context, listen: false).nextScreen(context, LessonsScreen(songCollection: songData,), false);
+                      Provider.of<AdsProvider>(context, listen: false).nextScreen(context, LessonsScreen(songCollection: songData,), true);
                     }
                   },
                 ),));

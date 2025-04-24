@@ -127,7 +127,7 @@ class _ModeCampaignScreenState extends State<ModeCampaignScreen> {
           highlightColor: Colors.transparent,
           onTap: () {
             Navigator.maybePop(context);
-            Provider.of<BackgroundAudioProvider>(context, listen: false).play();
+            if(Provider.of<BackgroundAudioProvider>(context, listen: false).homePlaying) Provider.of<BackgroundAudioProvider>(context, listen: false).play();
           },
           child: Row(
             mainAxisSize: MainAxisSize.min,

@@ -60,7 +60,10 @@ class DialogUnlockSong extends StatelessWidget {
         children: [
           Stack(
             children: [
-              ClipRRect(borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),child: CachedNetworkImage(imageUrl: '${ApiService.BASEURL}${song.image}', fit: BoxFit.cover, width: MediaQuery.of(context).size.width - 56, height: MediaQuery.of(context).size.width - 56,)),
+              ClipRRect(borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+                  child: CachedNetworkImage(imageUrl: '${ApiService.BASEURL}${song.image}',
+                    errorWidget: (context, url, error) => const Icon(Icons.image_not_supported_outlined),
+                    fit: BoxFit.cover, width: MediaQuery.of(context).size.width - 56, height: MediaQuery.of(context).size.width - 56,)),
               Positioned(
                 right: 10,
                 top: 10,
