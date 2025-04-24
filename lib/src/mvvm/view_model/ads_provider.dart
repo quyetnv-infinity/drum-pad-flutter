@@ -70,6 +70,7 @@ class AdsProvider with ChangeNotifier {
       showInterAd(
         name: "inter_home",
         callback: () async => await _navigate(context, screen, isReplacement),
+        indicator: true
       );
     }
   }
@@ -82,6 +83,7 @@ class AdsProvider with ChangeNotifier {
       showInterAd(
         name: "inter_home",
         callback: () => callback(),
+        indicator: true
       );
     }
   }

@@ -288,7 +288,7 @@ class _ResultScreenState extends State<ResultScreen>
                         !(widget.isCompleteCampaign && widget.isCompleted) ?
                         GradientButton(
                           onPressed: () {
-                            Provider.of<AdsProvider>(context, listen: false).showInterAd(name: 'inter_result', callback: () {
+                            Provider.of<AdsProvider>(context, listen: false).showInterAd(name: 'inter_result', indicator: true, callback: () {
                               Navigator.pop(context, 'play_again');
                             },);
                           },
@@ -323,17 +323,16 @@ class _ResultScreenState extends State<ResultScreen>
                         GradientButton(
                           onPressed: () async {
                             if(checkNotLastCampaign()){
-                              if(widget.isFromLearn) {
-                                Provider.of<AdsProvider>(context, listen: false).showInterAd(name: 'inter_result', callback: () {
+                              Provider.of<AdsProvider>(context, listen: false).showInterAd(name: 'inter_result', indicator: true, callback: () async {
+                                if(widget.isFromLearn) {
                                   Navigator.pop(context, widget.currentLesson + 1);
-                                },);
-                              }
-                              if(widget.isFromCampaign) {
-                                final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
-                                final currentCampaignIndex = campaignProvider.currentSongCampaign + 1;
-                                campaignProvider.setCurrentSongCampaign(currentCampaignIndex);
-                                final song = campaignProvider.currentCampaign[currentCampaignIndex];
-                                await Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
+                                }
+                                if(widget.isFromCampaign) {
+                                  final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
+                                  final currentCampaignIndex = campaignProvider.currentSongCampaign + 1;
+                                  campaignProvider.setCurrentSongCampaign(currentCampaignIndex);
+                                  final song = campaignProvider.currentCampaign[currentCampaignIndex];
+                                  await Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
                                     callbackLoadingCompleted: (songData) {
                                       Navigator.pop(context, songData);
                                       Navigator.pop(context, songData);
@@ -343,12 +342,12 @@ class _ResultScreenState extends State<ResultScreen>
                                       Navigator.pop(context);
                                     },
                                     song: song),
-                                ));
-                              }
-                            }else{
+                                  ));
+                                }
+                              },);
+                            } else{
                               Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
                             }
-                            // Navigator.popUntil(context, (route) => route.isFirst);
                           },
                           shape: BoxShape.circle,
                           padding: EdgeInsets.all(14),
