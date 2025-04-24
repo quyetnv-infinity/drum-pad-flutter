@@ -1,11 +1,9 @@
 import 'dart:ui';
 
 import 'package:ads_tracking_plugin/collapsible_banner_ad/collapsible_banner_ad_widget.dart';
-import 'package:ads_tracking_plugin/utils/network_checking.dart';
 import 'package:drumpad_flutter/core/constants/unlock_song_quantity.dart';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
-import 'package:drumpad_flutter/core/res/style/text_style.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/network_checking.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';

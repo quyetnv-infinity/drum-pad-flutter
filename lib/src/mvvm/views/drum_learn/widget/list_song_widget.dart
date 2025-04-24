@@ -1,5 +1,3 @@
-import 'package:drumpad_flutter/core/constants/unlock_song_quantity.dart';
-import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/dialog_unlock_song.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/category_model.dart';
@@ -9,8 +7,6 @@ import 'package:drumpad_flutter/src/mvvm/view_model/category_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/unlock_provider.dart';
-import 'package:drumpad_flutter/src/mvvm/views/beat_runner/beat_runner_screen.dart';
-import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_category_details.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/song_item.dart';
 import 'package:drumpad_flutter/src/mvvm/views/iap/iap_screen.dart';

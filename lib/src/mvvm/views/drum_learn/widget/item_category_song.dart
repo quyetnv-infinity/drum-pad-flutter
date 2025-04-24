@@ -58,8 +58,8 @@ class _ItemCategorySongState extends State<ItemCategorySong> {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 4,
               children: [
-                Text(widget.model.name ?? '', maxLines: 1,overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600)),
-                Text(widget.model.author ?? "Null", style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w400)),
+                Text(widget.model.name, maxLines: 1,overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600)),
+                Text(widget.model.author, style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w400)),
                 IntrinsicWidth(
                   child: BlurWidget(text: widget.model.difficulty,)),
               ],

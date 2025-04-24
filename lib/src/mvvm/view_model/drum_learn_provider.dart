@@ -1,4 +1,3 @@
-import 'package:drumpad_flutter/core/constants/mock_up_data.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/service/api_service/song_service.dart';
 import 'package:drumpad_flutter/src/service/song_collection_service.dart';

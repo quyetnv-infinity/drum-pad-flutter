@@ -1,13 +1,10 @@
 import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
 import 'package:ads_tracking_plugin/native_ad/native_ad_widget.dart';
-import 'package:ads_tracking_plugin/onboarding/base_onboarding_view.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
-import 'package:drumpad_flutter/main.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_setting_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_state_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/home_screen.dart';
-import 'package:drumpad_flutter/src/mvvm/views/drum_learn/drum_learn_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/onboarding/widgets/onboarding_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

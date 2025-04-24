@@ -1,8 +1,6 @@
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:drumpad_flutter/core/res/drawer/icon.dart';
-import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/marquee_text.dart';
@@ -82,8 +80,8 @@ class _SongItemState extends State<SongItem> {
           SizedBox(
             width: MediaQuery.sizeOf(context).width * 0.42 ,
             height: 26,
-            child: MarqueeText(text: widget.model.name ?? "", width: MediaQuery.sizeOf(context).width * 0.42, style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),)),
-          Text(widget.model.author ??" haha", style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w400),)
+            child: MarqueeText(text: widget.model.name, width: MediaQuery.sizeOf(context).width * 0.42, style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),)),
+          Text(widget.model.author, style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w400),)
         ],
       ),
     );

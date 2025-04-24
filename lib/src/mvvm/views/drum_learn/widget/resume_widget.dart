@@ -1,20 +1,13 @@
-import 'dart:convert';
-
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
-import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/campaign_screen.dart';
-import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/learn_from_song_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/list_song_widget.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/options_widget.dart';
-import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/song_item.dart';
-import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class ResumeWidget extends StatefulWidget {

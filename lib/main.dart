@@ -3,7 +3,6 @@ import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
 import 'package:ads_tracking_plugin/analyze/analytics_tracker.dart';
 import 'package:drumpad_flutter/config/ads_config.dart';
 import 'package:drumpad_flutter/core/constants/hive_table.dart';
-import 'package:drumpad_flutter/core/utils/network_checking.dart';
 import 'package:drumpad_flutter/hive/hive_registrar.g.dart';
 import 'package:drumpad_flutter/service_locator/service_locator.dart';
 import 'package:drumpad_flutter/src/application/my_application.dart';

@@ -1,6 +1,5 @@
 import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_setting_provider.dart';
-import 'package:drumpad_flutter/src/mvvm/view_model/app_state_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/background_audio_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

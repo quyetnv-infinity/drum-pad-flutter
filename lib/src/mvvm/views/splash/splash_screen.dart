@@ -3,7 +3,6 @@ import 'package:drumpad_flutter/core/constants/app_info.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_setting_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_state_provider.dart';
-import 'package:drumpad_flutter/src/mvvm/views/drum_learn/drum_learn_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/home_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/language/language_screen.dart';
 import 'package:flutter/cupertino.dart';

@@ -1,26 +1,17 @@
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:drumpad_flutter/config/ads_config.dart';
-import 'package:drumpad_flutter/core/constants/unlock_song_quantity.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/dialog_unlock_song.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
-import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
-import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/unlock_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/marquee_text.dart';
 import 'package:drumpad_flutter/src/mvvm/views/iap/iap_screen.dart';
-import 'package:drumpad_flutter/src/mvvm/views/lessons/lessons_screen.dart';
-import 'package:drumpad_flutter/src/mvvm/views/loading_data/loading_data_screen.dart';
 import 'package:drumpad_flutter/src/service/api_service/api_service.dart';
-import 'package:drumpad_flutter/src/widgets/overlay_loading/overlay_loading.dart';
-import 'package:drumpad_flutter/src/widgets/unlock_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 
 class HorizontalList extends StatefulWidget {

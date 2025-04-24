@@ -4,13 +4,10 @@ import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/category_model.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/category_provider.dart';
-import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
-import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/item_category_song.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/list_category_song_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
@@ -53,8 +50,8 @@ class _LearnCategoryDetailsState extends State<LearnCategoryDetails> {
   void _onSearch(String query) {
     setState(() {
       _filteredSongs = _allSongs.where((song) =>
-      (song.name!.toLowerCase().trim().contains(query.toLowerCase()) ||
-          song.author!.toLowerCase().trim().contains(query.toLowerCase()))
+      (song.name.toLowerCase().trim().contains(query.toLowerCase()) ||
+          song.author.toLowerCase().trim().contains(query.toLowerCase()))
       ).toList();
     });
     if(query.length >= 50) {
