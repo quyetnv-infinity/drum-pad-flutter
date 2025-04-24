@@ -104,7 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       },
                       callbackLoadingCompleted: (song) async {
                         await Provider.of<AdsProvider>(context, listen: false).nextScreenFuture(context, () {
-                          Navigator.push(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: song,)));
+                          Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LessonsScreen(songCollection: song,)));
                         },);
                         _refreshData();
                       },

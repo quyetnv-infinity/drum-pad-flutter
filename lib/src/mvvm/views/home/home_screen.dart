@@ -168,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       text: '${context.locale.playing}: ${provider.playingSong()} ',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
+                        fontSize: 18,
                       ),
                       scrollAxis: Axis.horizontal,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     maxLines: 1,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 20,
+                      fontSize: 18,
                     ),
                   ),
                 )
