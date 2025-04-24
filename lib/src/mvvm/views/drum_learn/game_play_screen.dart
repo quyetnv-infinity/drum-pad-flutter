@@ -539,15 +539,15 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
     );
   }
   Future<void> handleOnTogglePhotosAddOnlyPermission() async {
-    final permissionStatus = await Permission.photos.status;
+    final permissionStatus = await Permission.photosAddOnly.status;
     print(permissionStatus);
     if (!permissionStatus.isGranted) {
-      await Permission.photos.request();
-      if(await Permission.photos.status.isPermanentlyDenied || await Permission.photos.status.isDenied ){
+      await Permission.photosAddOnly.request();
+      if(await Permission.photosAddOnly.status.isPermanentlyDenied || await Permission.photosAddOnly.status.isDenied ){
         if(!mounted) return;
         PermissionUtil.showRequestPhotosPermissionDialog(context);
         return;
-      } else if (await Permission.photos.status.isGranted){
+      } else if (await Permission.photosAddOnly.status.isGranted){
         return;
       }
     }
