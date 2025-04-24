@@ -10,6 +10,7 @@ import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/background_audio_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart';
 import 'package:drumpad_flutter/src/widgets/scaffold/custom_scaffold.dart';
 import 'package:flutter/cupertino.dart';
@@ -111,7 +112,11 @@ class _LessonsScreenState extends State<LessonsScreen> {
       // backgroundType: BackgroundType.gradient,
       backgroundImage: ResImage.imgBackgroundScreen,
       backgroundFit: BoxFit.cover,
-      bottomNavigationBar: const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")),
+      bottomNavigationBar: Consumer<PurchaseProvider>(
+        builder: (context, purchaseProvider, _) {
+          return !purchaseProvider.isSubscribed ? const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")) : const SizedBox.shrink();
+        }
+      ),
       appBar: AppBar(
           leadingWidth: 100,
           toolbarHeight: 50,

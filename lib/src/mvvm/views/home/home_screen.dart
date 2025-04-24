@@ -14,6 +14,7 @@ import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/background_audio_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/network_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/unlock_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/button_action.dart';
 import 'package:drumpad_flutter/src/mvvm/views/home/widgets/horizontal_list.dart';
@@ -138,7 +139,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
 
     return CustomScaffold(
-      bottomNavigationBar: const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")),
+      bottomNavigationBar: Consumer<PurchaseProvider>(
+        builder: (context, purchaseProvider, _) {
+          return !purchaseProvider.isSubscribed ? const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")) : const SizedBox.shrink();
+        }
+      ),
       backgroundType: BackgroundType.gradient,
       appBar: AppBar(
         centerTitle: false,
@@ -198,16 +203,21 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => IapScreen()
-                ),
+          Consumer<PurchaseProvider>(
+            builder: (context, purchaseProvider, _) {
+              if (purchaseProvider.isSubscribed) return SizedBox.shrink();
+              return IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => IapScreen()
+                    ),
+                  );
+                },
+                icon: SvgPicture.asset(ResIcon.icIAP),
               );
-            },
-            icon: SvgPicture.asset(ResIcon.icIAP),
+            }
           ),
           IconButton(
             onPressed: () {

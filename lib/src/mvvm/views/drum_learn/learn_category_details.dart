@@ -5,6 +5,7 @@ import 'package:drumpad_flutter/src/mvvm/models/category_model.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/category_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/item_category_song.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/list_category_song_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -86,7 +87,11 @@ class _LearnCategoryDetailsState extends State<LearnCategoryDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")),
+      bottomNavigationBar: Consumer<PurchaseProvider>(
+        builder: (context, purchaseProvider, _) {
+          return !purchaseProvider.isSubscribed ? const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")) : const SizedBox.shrink();
+        }
+      ),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leadingWidth: 100,

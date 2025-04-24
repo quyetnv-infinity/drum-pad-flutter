@@ -6,6 +6,7 @@ import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/background_audio_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/beat_runner/beat_runner_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/game_play_screen.dart';
 import 'package:drumpad_flutter/src/mvvm/views/loading_data/loading_data_screen.dart';
@@ -116,7 +117,11 @@ class _ModeCampaignScreenState extends State<ModeCampaignScreen> {
 
     return CustomScaffold(
       // backgroundType: BackgroundType.gradient,
-      bottomNavigationBar: const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")),
+      bottomNavigationBar: Consumer<PurchaseProvider>(
+        builder: (context, purchaseProvider, _) {
+          return !purchaseProvider.isSubscribed ? const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")) : const SizedBox.shrink();
+        }
+      ),
       backgroundImage: ResImage.imgBackgroundScreen,
       backgroundFit: BoxFit.cover,
       appBar: AppBar(

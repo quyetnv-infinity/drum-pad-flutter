@@ -4,6 +4,7 @@ import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/category_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/category_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/list_song_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,11 @@ class _LearnFromSongScreenState extends State<LearnFromSongScreen> {
   Widget build(BuildContext context) {
     final provider = Provider.of<DrumLearnProvider>(context, listen: true);
     return Scaffold(
-      bottomNavigationBar: const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")),
+      bottomNavigationBar: Consumer<PurchaseProvider>(
+        builder: (context, purchaseProvider, _) {
+          return !purchaseProvider.isSubscribed ? const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")) : const SizedBox.shrink();
+        }
+      ),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leadingWidth: 100,

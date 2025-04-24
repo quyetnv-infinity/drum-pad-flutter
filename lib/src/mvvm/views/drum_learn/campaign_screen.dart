@@ -3,9 +3,11 @@ import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/views/drum_learn/widget/campaign_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class CampaignScreen extends StatefulWidget {
   const CampaignScreen({super.key});
@@ -20,7 +22,11 @@ class _CampaignScreenState extends State<CampaignScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")),
+      bottomNavigationBar: Consumer<PurchaseProvider>(
+        builder: (context, purchaseProvider, _) {
+          return !purchaseProvider.isSubscribed ? const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")) : const SizedBox.shrink();
+        }
+      ),
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
