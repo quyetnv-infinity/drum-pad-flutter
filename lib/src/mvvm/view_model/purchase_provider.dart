@@ -1,26 +1,21 @@
 import 'package:ads_tracking_plugin/ads_controller.dart';
-import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
 import 'package:flutter/material.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// sub
-const String weeklySubscription = "sub.weekly.drumpad.infinity";
-const String yearlySubscription = "sub.yearly.drumpad.infinity";
 
 class PurchaseProvider with ChangeNotifier {
-  final InAppPurchase _inAppPurchase = InAppPurchase.instance;
-  List<ProductDetails> _products = [];
+  List<StoreProduct> _products = [];
   bool _isSubscribed = false;
   bool _isLoading = false;
 
-  List<ProductDetails> get products => _products;
+  List<StoreProduct> get products => _products;
   bool get isSubscribed => _isSubscribed;
   bool get isLoading => _isLoading;
 
   PurchaseProvider() {
     _initRevenueCat().then((_) {
+      fetchProducts();
       _checkSubscriptionStatus();
     });
   }
@@ -37,30 +32,26 @@ class PurchaseProvider with ChangeNotifier {
   }
 
   Future<void> fetchProducts() async {
-    final bool available = await _inAppPurchase.isAvailable();
-    if (!available) {
-      // Store không khả dụng
-      print('Store is not available');
-      return;
-    }
+    try {
+      Offerings offerings = await Purchases.getOfferings();
+      debugPrint("fetchProducts: offerings => ${offerings.all.keys}");
 
-    const Set<String> ids = {yearlySubscription, weeklySubscription};
-    final ProductDetailsResponse response = await _inAppPurchase.queryProductDetails(ids);
-    if (response.error != null) {
-      print('Error: ${response.error!.message}');
-      return;
-    }
+      final packages = offerings.current?.availablePackages ?? [];
 
-    _products = response.productDetails;
-    notifyListeners();
+      _products = packages.map((pkg) => pkg.storeProduct).toList();
+      debugPrint(_products.toString());
+      notifyListeners();
+    } catch (e) {
+      debugPrint("fetchProducts (RevenueCat) failed: $e");
+    }
   }
 
   Future<void> _initRevenueCat() async {
     try {
       Purchases.setLogLevel(LogLevel.verbose);
-      await Purchases.configure(PurchasesConfiguration('appl_EBXatlNPISrhWcwJkQIOaTPfedU'));
+      await Purchases.configure(PurchasesConfiguration('appl_DqcHsuneCoTsCJDbrLdaKUzxgDv'));
     } catch(e) {
-      print("_initRevenueCat: $e");
+      debugPrint("_initRevenueCat: $e");
     }
   }
 
@@ -75,46 +66,25 @@ class PurchaseProvider with ChangeNotifier {
       // Cập nhật lại trạng thái đăng ký sau khi khôi phục
       await _checkSubscriptionStatus();
     } catch (e) {
-      print("Restore failed: $e");
+      debugPrint("Restore failed: $e");
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
 
-  Future<void> purchaseSubscription(String subID) async {
+  Future<void> purchaseSubscription(StoreProduct product) async {
     try {
       _isLoading = true;
       notifyListeners();
 
-      // Fetch offerings from RevenueCat
-      Offerings offerings = await Purchases.getOfferings();
-
-      // Duyệt qua tất cả các Offering và Package để tìm StoreProduct
-      StoreProduct? targetProduct;
-      for (var offering in offerings.all.values) {
-        for (var package in offering.availablePackages) {
-          if (package.storeProduct.identifier == subID) {
-            targetProduct = package.storeProduct;
-            break;
-          }
-        }
-      }
-
-      // Kiểm tra xem sản phẩm có tồn tại không
-      if (targetProduct == null) {
-        throw Exception("Product with identifier '$subID' not found.");
-      }
-
-      // Thực hiện mua gói
-      await Purchases.purchaseStoreProduct(targetProduct);
-      print("Subscription successful!");
+      await Purchases.purchaseStoreProduct(product);
+      debugPrint("Subscription successful!");
 
       // Cập nhật trạng thái đăng ký
       await _checkSubscriptionStatus();
-      AnalyticsUtil.logEvent("sub_purchase");
     } catch (e) {
-      print("Purchase failed: $e");
+      debugPrint("Purchase failed: $e");
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -123,19 +93,18 @@ class PurchaseProvider with ChangeNotifier {
 
   Future<void> _checkSubscriptionStatus() async {
     try {
+      await Purchases.syncPurchases();
       // Lấy thông tin người dùng
       final customerInfo = await Purchases.getCustomerInfo();
-      print("_checkSubscriptionStatus: ${customerInfo.activeSubscriptions}");
+      debugPrint("_checkSubscriptionStatus: ${customerInfo.entitlements.active}");
 
-      if (customerInfo.activeSubscriptions.contains(yearlySubscription)
-          || customerInfo.activeSubscriptions.contains(weeklySubscription)
-      ) {
+      if (customerInfo.entitlements.active.isNotEmpty) {
         _isSubscribed = true;
       } else {
         _isSubscribed = false;
       }
     } catch (e) {
-      print('Lỗi khi kiểm tra subscription: $e');
+      debugPrint('Lỗi khi kiểm tra subscription: $e');
     }
     notifyListeners();
     _saveSubscribed();
