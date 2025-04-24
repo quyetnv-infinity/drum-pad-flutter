@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:drumpad_flutter/config/ads_config.dart';
 import 'package:drumpad_flutter/core/constants/unlock_song_quantity.dart';
+import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/dialog_unlock_song.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
@@ -22,7 +23,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 
-class HorizontalList extends StatelessWidget {
+class HorizontalList extends StatefulWidget {
   final double width;
   final double height;
   final bool isShowDifficult;
@@ -38,18 +39,24 @@ class HorizontalList extends StatelessWidget {
       required this.onTap});
 
   @override
+  State<HorizontalList> createState() => _HorizontalListState();
+}
+
+class _HorizontalListState extends State<HorizontalList> {
+  bool isErrorLoading = false;
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: List.generate(
-          data.length,
+          widget.data.length,
           (index) {
-            SongCollection item = data[index];
+            SongCollection item = widget.data[index];
             return Padding(
               padding: EdgeInsets.only(
                   left: index == 0 ? 16 : 0,
-                  right: index == data.length - 1 ? 16 : 12),
+                  right: index == widget.data.length - 1 ? 16 : 12),
               child: Consumer<PurchaseProvider>(
                 builder: (context, purchaseProvider, _) {
                   bool songUnlock = context.watch<UnlockedSongsProvider>().isSongUnlocked(item.id);
@@ -69,33 +76,38 @@ class HorizontalList extends StatelessWidget {
                           onTapWatchAds: () {
                             showRequestRewardUnlockSongDialog(context: context, onUserEarnedReward: () {
                               context.read<UnlockedSongsProvider>().unlockSong(item.id);
-                              onTap(item, index);
+                              widget.onTap(item, index);
                             },);
                           },
                         );
                       } else {
-                        onTap(item, index);
+                        widget.onTap(item, index);
                       }
                     },
                     child: SizedBox(
-                      width: width,
+                      width: widget.width,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Stack(
                             children: [
                               Container(
-                                width: width,
-                                height: height,
+                                width: widget.width,
+                                height: widget.height,
                                 alignment: Alignment.topLeft,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
-                                  image: DecorationImage(
-                                    image: CachedNetworkImageProvider('${ApiService.BASEURL}${item.image}'),
-                                    fit: BoxFit.cover,
-                                  ),
+                                    image: DecorationImage(image: isErrorLoading?
+                                    AssetImage(ResImage.imgBackgoundScreen) :
+                                    CachedNetworkImageProvider('${ApiService.BASEURL}${item.image}'),
+                                      onError: (exception, stackTrace) {
+                                        setState(() {
+                                          isErrorLoading = true;
+                                        });
+                                      },
+                                      fit: BoxFit.cover)
                                 ),
-                                child: (isShowDifficult && item.difficulty != DifficultyMode.unknown) ?
+                                child: (widget.isShowDifficult && item.difficulty != DifficultyMode.unknown) ?
                                   Container(
                                     margin: EdgeInsets.all(10),
                                     child: ClipRRect(
@@ -142,8 +154,8 @@ class HorizontalList extends StatelessWidget {
                                   ) : SizedBox.shrink(),
                               ),
                               if(!isUnlocked) Container(
-                                width: width,
-                                height: height,
+                                width: widget.width,
+                                height: widget.height,
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
@@ -157,9 +169,9 @@ class HorizontalList extends StatelessWidget {
                           ),
                           SizedBox(height: 4),
                           SizedBox(
-                            width: width,
+                            width: widget.width,
                             height: 20,
-                            child: MarqueeText(text: "${item.name}" ?? "", width: width, style: TextStyle(
+                            child: MarqueeText(text: "${item.name}" ?? "", width: widget.width, style: TextStyle(
                               color: Colors.white,
                               fontSize: 14,
                               fontWeight: FontWeight.w600,

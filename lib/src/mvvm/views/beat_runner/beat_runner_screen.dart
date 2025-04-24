@@ -323,7 +323,9 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with SingleTickerPr
                           :
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: CachedNetworkImage(imageUrl: '${ApiService.BASEURL}${_currentSong!.image}', fit: BoxFit.cover, width: double.infinity, height: double.infinity,)
+                            child: CachedNetworkImage(imageUrl: '${ApiService.BASEURL}${_currentSong!.image}',
+                              errorWidget: (context, url, error) => const Icon(Icons.image_not_supported_outlined),
+                              fit: BoxFit.cover, width: double.infinity, height: double.infinity,)
                           ),
                         ),
                       ),

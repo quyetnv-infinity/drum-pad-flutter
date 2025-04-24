@@ -416,7 +416,9 @@ class _GamePlayScreenState extends State<GamePlayScreen> with SingleTickerProvid
                               borderRadius: BorderRadius.circular(8),
                               child: Stack(
                                 children: [
-                                  CachedNetworkImage(imageUrl: '${ApiService.BASEURL}${widget.songCollection.image}', fit: BoxFit.cover, width: double.infinity, height: double.infinity,),
+                                  CachedNetworkImage(imageUrl: '${ApiService.BASEURL}${widget.songCollection.image}',
+                                    errorWidget: (context, url, error) => const Icon(Icons.image_not_supported_outlined),
+                                    fit: BoxFit.cover, width: double.infinity, height: double.infinity,),
                                   Positioned(
                                     top: 10,
                                     left: 10,

@@ -1,14 +1,22 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/service/api_service/api_service.dart';
 import 'package:drumpad_flutter/src/widgets/blur_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class ItemCategorySong extends StatelessWidget {
+class ItemCategorySong extends StatefulWidget {
   final SongCollection model;
   final bool isUnlocked;
   const ItemCategorySong({super.key, required this.model, required this.isUnlocked});
+
+  @override
+  State<ItemCategorySong> createState() => _ItemCategorySongState();
+}
+
+class _ItemCategorySongState extends State<ItemCategorySong> {
+  bool isErrorLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +31,17 @@ class ItemCategorySong extends StatelessWidget {
             width: height,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              image: DecorationImage(image: CachedNetworkImageProvider('${ApiService.BASEURL}${model.image}'), fit: BoxFit.cover)
+              image: DecorationImage(image: isErrorLoading?
+              AssetImage(ResImage.imgBackgoundScreen) :
+              CachedNetworkImageProvider('${ApiService.BASEURL}${widget.model.image}'),
+                onError: (exception, stackTrace) {
+                  setState(() {
+                    isErrorLoading = true;
+                  });
+                },
+                fit: BoxFit.cover)
             ),
-            child: !isUnlocked ? Container(
+            child: !widget.isUnlocked ? Container(
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
@@ -42,10 +58,10 @@ class ItemCategorySong extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 4,
               children: [
-                Text(model.name ?? '', maxLines: 1,overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600)),
-                Text(model.author ?? "Null", style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w400)),
+                Text(widget.model.name ?? '', maxLines: 1,overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600)),
+                Text(widget.model.author ?? "Null", style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w400)),
                 IntrinsicWidth(
-                  child: BlurWidget(text: model.difficulty,)),
+                  child: BlurWidget(text: widget.model.difficulty,)),
               ],
             ),
           )
