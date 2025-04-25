@@ -1052,7 +1052,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
                                 child: Text(context.locale.wait, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: Colors.white))),
                           ],
                         ),
-                      if (padProgress.containsKey(sound) && hasSound && widget.practiceMode != 'practice' && !widget.isFromLearnScreen)
+                      if (padProgress.containsKey(sound) && hasSound && widget.practiceMode != 'practice' && _isFromBeatRunner)
                         Positioned.fill(
                           child: CustomPaint(
                             painter: SquareProgressPainter(
@@ -1063,7 +1063,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
                             ),
                           ),
                         ),
-                      if (padProgress.containsKey(sound) && hasSound && widget.practiceMode != 'practice' && widget.isFromLearnScreen)
+                      if (padProgress.containsKey(sound) && hasSound && widget.practiceMode != 'practice' && !_isFromBeatRunner)
                         Align(
                           alignment: Alignment.center,
                           child:  SizedBox(
