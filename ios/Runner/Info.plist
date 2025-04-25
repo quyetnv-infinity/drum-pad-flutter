@@ -60,5 +60,26 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>learn.drumpad.djdrum.app</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>fb1201591847491939</string>
+            </array>
+        </dict>
+    </array>
+    <key>FacebookAdvertiserIDCollectionEnabled</key>
+    <true/>
+    <key>FacebookAppID</key>
+    <string>1201591847491939</string>
+    <key>FacebookClientToken</key>
+    <string>3cec778afc9a4fe1f5e8a7f1f5ce7188</string>
+    <key>FacebookDisplayName</key>
+    <string>Learn Drum: DJ Drum Pad</string>
 </dict>
 </plist>
