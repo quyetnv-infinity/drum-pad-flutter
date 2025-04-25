@@ -1,5 +1,6 @@
 import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
+import 'package:ads_tracking_plugin/analyze/analytics_tracker.dart';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/setting_funcs.dart';
@@ -80,7 +81,7 @@ class _IapScreenState extends State<IapScreen> with WidgetsBindingObserver {
   }
 
   void _subscriptionTracking() {
-    AnalyticsUtil.logEvent("sub_display");
+    AnalyticsTracker.logEvent("sub_display");
   }
 
   @override
