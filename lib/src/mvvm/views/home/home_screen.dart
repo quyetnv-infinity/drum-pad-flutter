@@ -10,6 +10,7 @@ import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/campaign_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/background_audio_provider.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/category_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/drum_learn_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/network_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
@@ -106,19 +107,31 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> fetchData() async {
     final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
     final unlockProvider = Provider.of<UnlockedSongsProvider>(context, listen: false);
+    final categoryProvider = Provider.of<CategoryProvider>(context, listen: false);
     await campaignProvider.fetchCampaignSong(isEasy: true);
     final easyCampaign = campaignProvider.easyCampaign;
+    final totalSongs = categoryProvider.getAllSong();
 
-    _dataDrumLearn = easyCampaign.take(3).toList();
+    final firstSixIds = easyCampaign.take(unlockSongQuantity * 2)
+        .map((song) => song.id)
+        .toSet();
 
-    if (easyCampaign.length > 3) {
-      _dataBeatRunner = easyCampaign.skip(3).take(3).toList();
+    final remainingSongs = totalSongs
+        .where((song) => !firstSixIds.contains(song.id))
+        .toList();
+
+    _dataDrumLearn = [...easyCampaign.take(unlockSongQuantity), ...remainingSongs];
+
+    if (easyCampaign.length > unlockSongQuantity) {
+      _dataBeatRunner = [...easyCampaign.skip(unlockSongQuantity).take(unlockSongQuantity), ...remainingSongs];
     } else {
-      _dataBeatRunner = [];
+      _dataBeatRunner = [...remainingSongs];
     }
     final songsToUnlock = easyCampaign.take(unlockSongQuantity*2).toList();
-    for (var song in songsToUnlock) {
-      unlockProvider.unlockSong(song.id);
+    if(songsToUnlock.isNotEmpty && !unlockProvider.isSongUnlocked(songsToUnlock.first.id)) {
+      for (var song in songsToUnlock) {
+        unlockProvider.unlockSong(song.id);
+      }
     }
     setState(() {});
   }

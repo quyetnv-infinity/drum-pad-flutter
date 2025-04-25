@@ -1,4 +1,5 @@
 import 'package:drumpad_flutter/src/mvvm/models/category_model.dart';
+import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
 import 'package:drumpad_flutter/src/service/api_service/song_service.dart';
 import 'package:flutter/material.dart';
 
@@ -52,5 +53,32 @@ class CategoryProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  List<SongCollection> getAllSong() {
+    List<SongCollection> result = [];
+    if(_categories.isEmpty) return result;
+    for(var category in _categories){
+      if(category.items == null || category.items!.isEmpty) continue;
+      result.addAll(category.items!);
+    }
+    result = _sortByDifficulty(result);
+    return result;
+  }
+
+  List<SongCollection> _sortByDifficulty(List<SongCollection> songs){
+    if(songs.isEmpty) return songs;
+    final difficultyOrder = {
+      DifficultyMode.easy: 0,
+      DifficultyMode.medium: 1,
+      DifficultyMode.hard: 2,
+      DifficultyMode.demonic: 3,
+    };
+
+    return List<SongCollection>.from(songs)..sort((a, b) {
+      final aOrder = difficultyOrder[a.difficulty] ?? 4;
+      final bOrder = difficultyOrder[b.difficulty] ?? 4;
+      return aOrder.compareTo(bOrder);
+    });
   }
 }
