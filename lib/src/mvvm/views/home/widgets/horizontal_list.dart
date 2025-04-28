@@ -162,7 +162,7 @@ class _HorizontalListState extends State<HorizontalList> {
                           SizedBox(
                             width: widget.width,
                             height: 20,
-                            child: MarqueeText(text: "${item.name}" ?? "", width: widget.width, style: TextStyle(
+                            child: MarqueeText(text: item.name, width: widget.width, style: TextStyle(
                               color: Colors.white,
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -170,7 +170,7 @@ class _HorizontalListState extends State<HorizontalList> {
                             )
                           ),
                           Text(
-                            "${item.author}",
+                            item.author,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(

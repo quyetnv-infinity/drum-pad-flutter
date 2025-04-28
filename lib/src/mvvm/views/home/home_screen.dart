@@ -142,7 +142,22 @@ class _HomeScreenState extends State<HomeScreen> {
       await context.read<DrumLearnProvider>().getRecommend();
     }
     setState(() {
-      recommendSongs = drumLearnProvider.listRecommend;
+      recommendSongs = sortByDifficulty(drumLearnProvider.listRecommend);
+    });
+  }
+
+  List<SongCollection> sortByDifficulty(List<SongCollection> songs){
+    final difficultyOrder = {
+      DifficultyMode.easy: 0,
+      DifficultyMode.medium: 1,
+      DifficultyMode.hard: 2,
+      DifficultyMode.demonic: 3,
+    };
+
+    return List<SongCollection>.from(songs)..sort((a, b) {
+      final aOrder = difficultyOrder[a.difficulty] ?? 4;
+      final bOrder = difficultyOrder[b.difficulty] ?? 4;
+      return aOrder.compareTo(bOrder);
     });
   }
 

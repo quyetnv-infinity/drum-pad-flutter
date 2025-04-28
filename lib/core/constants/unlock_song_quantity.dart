@@ -1,1 +1,1 @@
-final int unlockSongQuantity = 3;
+final int unlockSongQuantity = 2;
