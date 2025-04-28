@@ -111,13 +111,13 @@ class BackgroundAudioProvider extends ChangeNotifier with WidgetsBindingObserver
         case 'hypnus':
           return 'Hypnus - Cee Qui Ell';
         case 'money':
-          return 'Money - Cee Qui Ell';
+          return 'Money - Drake';
         case 'hypnus_a':
           return 'Hypnus2 - Cee Qui Ell';
         case 'mortals':
-          return 'Mortals - Warriyo';
+          return 'Mortals - Kinchana';
         case 'warriors':
-          return 'Warriors - Cee Qui Ell';
+          return 'Warriors - Worry Boy';
         default:
           return fileName;
       }
