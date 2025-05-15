@@ -1,6 +1,6 @@
 import 'package:ads_tracking_plugin/ads_controller.dart';
-import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
 import 'package:ads_tracking_plugin/native_ad/native_ad_widget.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_setting_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_state_provider.dart';

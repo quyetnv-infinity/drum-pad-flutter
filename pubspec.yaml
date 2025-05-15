@@ -19,6 +19,8 @@ dependencies:
   flutter_svg: ^2.0.17
   ads_tracking_plugin:
     path: ../base-flutter-refactor
+  base_ui_flutter_v1:
+    path: ../base_ui_flutter_v1
   intl: any
   flutter_localization: ^0.3.1
   shared_preferences: ^2.3.4
