@@ -3,10 +3,10 @@ import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:flutter/material.dart';
 
 Widget customPage({required BuildContext context, required String backgroundAsset, required String title, required String subtitle}){
-  return ItemOnboarding(
+  return OnboardingItem(
     imageAsset: backgroundAsset,
     fit: BoxFit.cover,
-    paddingImage: EdgeInsets.zero,
+    imagePadding: EdgeInsets.zero,
     title: Container(
       color: Colors.transparent,
       width: double.infinity,
