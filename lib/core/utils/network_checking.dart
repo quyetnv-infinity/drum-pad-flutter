@@ -23,7 +23,7 @@ class NetworkChecking {
           Navigator.pop(context);
           navigateToWiFiSettings(context);
         }
-      );
+      ).onShow(context);
     }
     return isConnected;
   }
