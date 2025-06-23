@@ -288,9 +288,9 @@ class _ResultScreenState extends State<ResultScreen>
                         !(widget.isCompleteCampaign && widget.isCompleted) ?
                         GradientButton(
                           onPressed: () {
-                            Provider.of<AdsProvider>(context, listen: false).showInterAd(name: 'inter_result', indicator: true, callback: () {
+                            // Provider.of<AdsProvider>(context, listen: false).showInterAd(name: 'inter_result', indicator: true, callback: () {
                               Navigator.pop(context, 'play_again');
-                            },);
+                            // },);
                           },
                           padding: EdgeInsets.symmetric(horizontal: 28, vertical: 16),
                           borderRadius: BorderRadius.circular(32),
@@ -323,7 +323,7 @@ class _ResultScreenState extends State<ResultScreen>
                         GradientButton(
                           onPressed: () async {
                             if(checkNotLastCampaign()){
-                              Provider.of<AdsProvider>(context, listen: false).showInterAd(name: 'inter_result', indicator: true, callback: () async {
+                              // Provider.of<AdsProvider>(context, listen: false).showInterAd(name: 'inter_result', indicator: true, callback: () async {
                                 if(widget.isFromLearn) {
                                   Navigator.pop(context, widget.currentLesson + 1);
                                 }
@@ -344,7 +344,7 @@ class _ResultScreenState extends State<ResultScreen>
                                     song: song),
                                   ));
                                 }
-                              },);
+                              // },);
                             } else{
                               Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
                             }

@@ -1,5 +1,5 @@
-import 'package:ads_tracking_plugin/ads_controller.dart';
-import 'package:ads_tracking_plugin/tracking/analytics_tracker.dart';
+// import 'package:ads_tracking_plugin/ads_controller.dart';
+// import 'package:ads_tracking_plugin/tracking/analytics_tracker.dart';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/core/utils/setting_funcs.dart';
@@ -31,7 +31,7 @@ class _IapScreenState extends State<IapScreen> with WidgetsBindingObserver {
     _purchaseProvider.fetchProducts();
     _purchaseProvider.addListener(_showSuccessAnimation);
 
-    AdController.shared.setResumeAdState(true);
+    // AdController.shared.setResumeAdState(true);
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -69,7 +69,7 @@ class _IapScreenState extends State<IapScreen> with WidgetsBindingObserver {
   void dispose() {
     _purchaseProvider.removeListener(_showSuccessAnimation);
     WidgetsBinding.instance.removeObserver(this);
-    AdController.shared.setResumeAdState(false);
+    // AdController.shared.setResumeAdState(false);
     super.dispose();
   }
 
@@ -80,7 +80,7 @@ class _IapScreenState extends State<IapScreen> with WidgetsBindingObserver {
   }
 
   void _subscriptionTracking() {
-    AnalyticsTracker.logEvent("sub_display");
+    // AnalyticsTracker.logEvent("sub_display");
   }
 
   @override
@@ -130,12 +130,12 @@ class _IapScreenState extends State<IapScreen> with WidgetsBindingObserver {
                             _buildContinueButton(
                               onTapPurchase: () {
                                 if(purchaseProvider.products.isEmpty) return;
-                                purchaseProvider.purchaseSubscription(purchaseProvider.products[selectedIndex]);
+                                // purchaseProvider.purchaseSubscription(purchaseProvider.products[selectedIndex]);
                               },
                             ),
                             _buildPolicyRow(
                               onTapRestore: () {
-                                purchaseProvider.restorePurchases();
+                                // purchaseProvider.restorePurchases();
                               },
                             )
                           ],

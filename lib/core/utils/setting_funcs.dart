@@ -1,4 +1,4 @@
-import 'package:ads_tracking_plugin/ads_controller.dart';
+// import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:drumpad_flutter/core/constants/app_info.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_setting_provider.dart';
@@ -92,7 +92,7 @@ class SettingFuncs {
     }
   }
   static void launchURL(String url) async {
-    AdController.shared.setResumeAdState(true);
+    // AdController.shared.setResumeAdState(true);
     final Uri uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);

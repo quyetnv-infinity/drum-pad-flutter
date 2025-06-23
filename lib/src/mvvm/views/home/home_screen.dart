@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:ads_tracking_plugin/collapsible_banner_ad/collapsible_banner_ad_widget.dart';
+// import 'package:ads_tracking_plugin/collapsible_banner_ad/collapsible_banner_ad_widget.dart';
 import 'package:drumpad_flutter/core/constants/unlock_song_quantity.dart';
 import 'package:drumpad_flutter/core/res/drawer/icon.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
@@ -165,11 +165,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
 
     return CustomScaffold(
-      bottomNavigationBar: Consumer<PurchaseProvider>(
-        builder: (context, purchaseProvider, _) {
-          return !purchaseProvider.isSubscribed ? const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")) : const SizedBox.shrink();
-        }
-      ),
+      // bottomNavigationBar: Consumer<PurchaseProvider>(
+      //   builder: (context, purchaseProvider, _) {
+      //     return !purchaseProvider.isSubscribed ? const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")) : const SizedBox.shrink();
+      //   }
+      // ),
       backgroundType: BackgroundType.gradient,
       appBar: AppBar(
         centerTitle: false,

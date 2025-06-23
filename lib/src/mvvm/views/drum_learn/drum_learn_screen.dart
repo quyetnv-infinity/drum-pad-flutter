@@ -1,4 +1,4 @@
-import 'package:ads_tracking_plugin/collapsible_banner_ad/collapsible_banner_ad_widget.dart';
+// import 'package:ads_tracking_plugin/collapsible_banner_ad/collapsible_banner_ad_widget.dart';
 import 'package:drumpad_flutter/core/res/drawer/image.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
@@ -14,11 +14,11 @@ class DrumLearnScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Consumer<PurchaseProvider>(
-        builder: (context, purchaseProvider, _) {
-          return !purchaseProvider.isSubscribed ? const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")) : const SizedBox.shrink();
-        }
-      ),
+      // bottomNavigationBar: Consumer<PurchaseProvider>(
+      //   builder: (context, purchaseProvider, _) {
+      //     return !purchaseProvider.isSubscribed ? const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_collap_all")) : const SizedBox.shrink();
+      //   }
+      // ),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leadingWidth: 100,

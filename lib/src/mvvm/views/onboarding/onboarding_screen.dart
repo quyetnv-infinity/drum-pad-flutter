@@ -1,6 +1,6 @@
-import 'package:ads_tracking_plugin/ads_controller.dart';
-import 'package:ads_tracking_plugin/native_ad/native_ad_widget.dart';
-import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
+// import 'package:ads_tracking_plugin/ads_controller.dart';
+// import 'package:ads_tracking_plugin/native_ad/native_ad_widget.dart';
+// import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_setting_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_state_provider.dart';
@@ -18,7 +18,9 @@ class OnboardingScreen extends StatefulWidget {
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBindingObserver, ScreenLogger<OnboardingScreen> {
+class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBindingObserver
+    // ScreenLogger<OnboardingScreen>
+{
   Color selectedDotColor = Color(0xFF4F4CFF);
   Color unselectedDotColor = Color(0xFFD1D5DB);
   PageController pageController = PageController();
@@ -35,10 +37,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
     super.didChangeAppLifecycleState(state);
 
     if (state == AppLifecycleState.paused) {
-      AdController.shared.setResumeAdState(true);
+      // AdController.shared.setResumeAdState(true);
     }
     if (state == AppLifecycleState.resumed) {
-      AdController.shared.setResumeAdState(false);
+      // AdController.shared.setResumeAdState(false);
     }
   }
 
@@ -124,30 +126,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
               ],
             ),
           ),
-          Consumer<AppStateProvider>(
-            builder: (context, appStateProvider, _) {
-              return Stack(
-                children: [
-                  Offstage(
-                    offstage: currentPage != 0 || !appStateProvider.shouldShowAds,
-                    child: NativeAdWidget(
-                      adName: 'native_onboarding_1_1',
-                      color: Color(0xFF5A2CE4).withAlpha(30),
-                      padding: const EdgeInsets.only(bottom: 16),
-                    )
-                  ),
-                  Offstage(
-                    offstage: currentPage != 3 || !appStateProvider.shouldShowAds,
-                    child: NativeAdWidget(
-                      adName: 'native_onboarding_1_4',
-                      color: Color(0xFF5A2CE4).withAlpha(30),
-                      padding: const EdgeInsets.only(bottom: 16),
-                    )
-                  )
-                ],
-              );
-            }
-          )
+          // Consumer<AppStateProvider>(
+          //   builder: (context, appStateProvider, _) {
+          //     return Stack(
+          //       children: [
+          //         Offstage(
+          //           offstage: currentPage != 0 || !appStateProvider.shouldShowAds,
+          //           child: NativeAdWidget(
+          //             adName: 'native_onboarding_1_1',
+          //             color: Color(0xFF5A2CE4).withAlpha(30),
+          //             padding: const EdgeInsets.only(bottom: 16),
+          //           )
+          //         ),
+          //         Offstage(
+          //           offstage: currentPage != 3 || !appStateProvider.shouldShowAds,
+          //           child: NativeAdWidget(
+          //             adName: 'native_onboarding_1_4',
+          //             color: Color(0xFF5A2CE4).withAlpha(30),
+          //             padding: const EdgeInsets.only(bottom: 16),
+          //           )
+          //         )
+          //       ],
+          //     );
+          //   }
+          // )
         ]
       )
     );

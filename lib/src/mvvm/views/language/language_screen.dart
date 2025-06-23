@@ -1,4 +1,4 @@
-import 'package:ads_tracking_plugin/ads_controller.dart';
+// import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:base_ui_flutter_v1/base_ui_flutter_v1.dart';
 import 'package:drumpad_flutter/core/enum/language_enum.dart';
 import 'package:drumpad_flutter/core/extension/language_extension.dart';
@@ -12,7 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:ads_tracking_plugin/native_ad/native_ad_widget.dart';
+// import 'package:ads_tracking_plugin/native_ad/native_ad_widget.dart';
 
 class LanguageScreen extends StatefulWidget {
   final bool fromSetting;
@@ -41,10 +41,10 @@ class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObse
     super.didChangeAppLifecycleState(state);
     if(widget.fromSetting) return;
     if (state == AppLifecycleState.paused) {
-      AdController.shared.setResumeAdState(true);
+      // AdController.shared.setResumeAdState(true);
     }
     if (state == AppLifecycleState.resumed) {
-      AdController.shared.setResumeAdState(false);
+      // AdController.shared.setResumeAdState(false);
     }
   }
 
@@ -70,7 +70,7 @@ class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObse
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: LanguageWidget<LanguageEnum>(
-                    itemMargin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                    // itemMargin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
                     itemDecorationBuilder: (item, isSelected) {
                       return BoxDecoration(
                         borderRadius: const BorderRadius.all(Radius.circular(18)),
@@ -102,19 +102,19 @@ class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObse
                   ),
                 ),
               ),
-              if (!widget.fromSetting)
-                Consumer<AppStateProvider>(
-                  builder: (context, appStateProvider, _) {
-                    return NativeAdWidget(
-                      adName: "native_language",
-                      disabled: !appStateProvider.shouldShowAds,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withValues(alpha: 0.1),
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-                      ),
-                    );
-                  }
-                )
+              // if (!widget.fromSetting)
+              //   Consumer<AppStateProvider>(
+              //     builder: (context, appStateProvider, _) {
+              //       return NativeAdWidget(
+              //         adName: "native_language",
+              //         disabled: !appStateProvider.shouldShowAds,
+              //         decoration: BoxDecoration(
+              //           color: Colors.grey.withValues(alpha: 0.1),
+              //           borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+              //         ),
+              //       );
+              //     }
+              //   )
             ],
           ),
         ),

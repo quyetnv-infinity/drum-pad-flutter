@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
-import 'package:ads_tracking_plugin/att_permission.dart';
-import 'package:ads_tracking_plugin/tracking/analytics_tracker.dart';
+// import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
+// import 'package:ads_tracking_plugin/att_permission.dart';
+// import 'package:ads_tracking_plugin/tracking/analytics_tracker.dart';
 import 'package:drumpad_flutter/config/ads_config.dart';
 import 'package:drumpad_flutter/core/constants/hive_table.dart';
 import 'package:drumpad_flutter/hive/hive_registrar.g.dart';
@@ -31,15 +31,17 @@ import 'package:provider/provider.dart';
 void main() async {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    await initTrackingPermission();
-    await Firebase.initializeApp();
-    await Future.wait([
-      AnalyticsTracker.setupCrashlytics(),
-      RemoteConfig.initializeRemoteConfig(adConfigs: getAdConfigurations(false), devMode: AdUnitId.devMode),
-      AnalyticsTracker.trackAppOpens(),
-      _initHive(),
-      ServiceLocator.instance.initialise(),
-    ].toList());
+    // await initTrackingPermission();
+    // await Firebase.initializeApp();
+    // await Future.wait([
+    //   AnalyticsTracker.setupCrashlytics(),
+    //   RemoteConfig.initializeRemoteConfig(adConfigs: getAdConfigurations(false), devMode: AdUnitId.devMode),
+    //   AnalyticsTracker.trackAppOpens(),
+    //   _initHive(),
+    //   ServiceLocator.instance.initialise(),
+    // ].toList());
+    ServiceLocator.instance.initialise();
+    _initHive();
     final purchaseProvider = PurchaseProvider();
     final AppSettingsProvider appSettingsProvider = AppSettingsProvider();
     final BackgroundAudioProvider backgroundAudioProvider = BackgroundAudioProvider();
@@ -84,7 +86,7 @@ void main() async {
     );
     configLoading();
   }, (error, stackTrace) {
-    AnalyticsTracker.logError(error, stackTrace);
+    // AnalyticsTracker.logError(error, stackTrace);
   });
 }
 

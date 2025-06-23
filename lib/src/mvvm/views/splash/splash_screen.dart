@@ -1,5 +1,5 @@
-import 'package:ads_tracking_plugin/ads_controller.dart';
-import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
+// import 'package:ads_tracking_plugin/ads_controller.dart';
+// import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
 import 'package:drumpad_flutter/core/constants/app_info.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/app_setting_provider.dart';
@@ -34,27 +34,28 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if(state == AppLifecycleState.paused) {
-      AdController.shared.setResumeAdState(true);
+      // AdController.shared.setResumeAdState(true);
     }
     if(state == AppLifecycleState.resumed) {
-      AdController.shared.setResumeAdState(false);
+      // AdController.shared.setResumeAdState(false);
     }
   }
 
   void _onLoadingEnd() {
-    EUConsent().requestConsent(() {
-      final adsProvider = Provider.of<AdsProvider>(context, listen: false);
-      adsProvider.showInterAd(
-        name: "inter_splash",
-        callback: () {
-          _navigateToHome();
-        }
-      );
-    });
+    _navigateToHome();
+    // EUConsent().requestConsent(() {
+    //   final adsProvider = Provider.of<AdsProvider>(context, listen: false);
+    //   adsProvider.showInterAd(
+    //     name: "inter_splash",
+    //     callback: () {
+    //       _navigateToHome();
+    //     }
+    //   );
+    // });
   }
 
   Future<void> _navigateToHome() async {
-    AdController.shared.setResumeAdState(false);
+    // AdController.shared.setResumeAdState(false);
     final isFirstOpenApp = Provider.of<AppStateProvider>(context, listen: false).isFirstOpenApp;
 
     if (isFirstOpenApp) {

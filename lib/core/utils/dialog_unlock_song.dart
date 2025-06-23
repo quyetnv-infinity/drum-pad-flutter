@@ -25,16 +25,16 @@ void showRequestRewardUnlockSongDialog({required BuildContext context, required 
         onConfirm: () {
           Navigator.pop(dialogContext);
           Navigator.pop(dialogContext);
-          showRewardAd(
-            context: context,
-            adId: "reward_choose_song",
-            onUserEarnedReward: () async {
-              print("onUserEarnedReward");
-              OverlayLoading.show(context);
-              onUserEarnedReward();
-              OverlayLoading.hide();
-            },
-          );
+          // showRewardAd(
+          //   context: context,
+          //   adId: "reward_choose_song",
+          //   onUserEarnedReward: () async {
+          //     print("onUserEarnedReward");
+          //     OverlayLoading.show(context);
+          //     onUserEarnedReward();
+          //     OverlayLoading.hide();
+          //   },
+          // );
         },
         onCancel: () {
           Navigator.pop(dialogContext);

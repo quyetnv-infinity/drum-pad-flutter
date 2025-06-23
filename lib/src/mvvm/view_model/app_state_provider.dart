@@ -1,6 +1,6 @@
-import 'package:ads_tracking_plugin/ads_controller.dart';
-import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
-import 'package:ads_tracking_plugin/tracking/analytics_tracker.dart';
+// import 'package:ads_tracking_plugin/ads_controller.dart';
+// import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
+// import 'package:ads_tracking_plugin/tracking/analytics_tracker.dart';
 import 'package:drumpad_flutter/config/ads_config.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
 import 'package:drumpad_flutter/src/mvvm/view_model/purchase_provider.dart';
@@ -14,18 +14,21 @@ class AppStateProvider with ChangeNotifier {
 
 
   bool get isFirstOpenApp => _isFirstOpenApp;
-  bool get shouldShowAds => adsProvider.adsEnabled && !purchaseProvider.isSubscribed;
+  // bool get shouldShowAds => adsProvider.adsEnabled && !purchaseProvider.isSubscribed;
+  bool get shouldShowAds => false;
 
-  AppStateProvider(this.adsProvider, this.purchaseProvider) {
+  AppStateProvider(this.adsProvider,
+      this.purchaseProvider
+      ) {
     getFirstOpenApp().then((value) {
       _isFirstOpenApp = value;
       notifyListeners();
-      purchaseProvider.loadSubscription().then((_) {
+      // purchaseProvider.loadSubscription().then((_) {
         initializeAds();
-      });
+      // });
 
       if (_isFirstOpenApp) {
-        AnalyticsTracker.trackInstallEvent();
+        // AnalyticsTracker.trackInstallEvent();
       }
     });
   }
@@ -46,7 +49,9 @@ class AppStateProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateDependencies(AdsProvider adsProvider, PurchaseProvider purchaseProvider) {
+  void updateDependencies(AdsProvider adsProvider,
+      PurchaseProvider purchaseProvider
+      ) {
     adsProvider = adsProvider;
     purchaseProvider = purchaseProvider;
     notifyListeners();
@@ -63,11 +68,11 @@ class AppStateProvider with ChangeNotifier {
   }
 
   void initializeAds() {
-    AdController.shared.initialize(
-      isAdDisabled: !shouldShowAds,
-      configurations: getAdConfigurations(_isFirstOpenApp),
-      adjustConfig: AdjustConfig("s7auhvppayv4", AdjustEnvironment.production),
-    );
+    // AdController.shared.initialize(
+    //   isAdDisabled: !shouldShowAds,
+    //   configurations: getAdConfigurations(_isFirstOpenApp),
+    //   adjustConfig: AdjustConfig("s7auhvppayv4", AdjustEnvironment.production),
+    // );
   }
 
   Future<bool> getFirstOpenApp() async {

@@ -17,8 +17,6 @@ dependencies:
   just_audio: ^0.9.46
   lottie: ^3.3.1
   flutter_svg: ^2.0.17
-  ads_tracking_plugin:
-    path: ../base-flutter-refactor
   base_ui_flutter_v1:
     path: ../base_ui_flutter_v1
   intl: any
@@ -46,6 +44,7 @@ dependencies:
   marquee: ^2.3.0
   open_settings_plus: ^0.4.0
   cached_network_image: ^3.4.1
+  share_plus: ^11.0.0
 
 dev_dependencies:
   flutter_test:
