@@ -3,10 +3,12 @@ import 'dart:ui';
 class AppFonts {
   AppFonts._();
 
-  static const String sfProDisplay = 'SFProDisplay';
-  static const String ethnocentric = 'Ethnocentric';
-  static const String shrikhandRegular = 'ShrikhandRegular';
-  static const String sF = 'SF';
+  // static const String sfProDisplay = 'SFProDisplay';
+  // static const String ethnocentric = 'Ethnocentric';
+  // static const String shrikhandRegular = 'ShrikhandRegular';
+  // static const String sF = 'SF';
+  static const String commando = 'Commando';
+  static const String poppins = 'Poppins';
 
   static const double h1 = 32.0;
   static const double h2 = 24.0;
