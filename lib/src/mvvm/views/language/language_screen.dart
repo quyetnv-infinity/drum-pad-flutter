@@ -71,6 +71,7 @@ class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObse
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: LanguageWidget<LanguageEnum>(
                     // itemMargin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                    spacingItem: 4,
                     itemDecorationBuilder: (item, isSelected) {
                       return BoxDecoration(
                         borderRadius: const BorderRadius.all(Radius.circular(18)),

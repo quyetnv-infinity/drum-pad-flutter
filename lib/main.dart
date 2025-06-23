@@ -33,15 +33,13 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
     // await initTrackingPermission();
     // await Firebase.initializeApp();
-    // await Future.wait([
-    //   AnalyticsTracker.setupCrashlytics(),
-    //   RemoteConfig.initializeRemoteConfig(adConfigs: getAdConfigurations(false), devMode: AdUnitId.devMode),
-    //   AnalyticsTracker.trackAppOpens(),
-    //   _initHive(),
-    //   ServiceLocator.instance.initialise(),
-    // ].toList());
-    ServiceLocator.instance.initialise();
-    _initHive();
+    await Future.wait([
+      // AnalyticsTracker.setupCrashlytics(),
+      // RemoteConfig.initializeRemoteConfig(adConfigs: getAdConfigurations(false), devMode: AdUnitId.devMode),
+      // AnalyticsTracker.trackAppOpens(),
+      _initHive(),
+      ServiceLocator.instance.initialise(),
+    ].toList());
     final purchaseProvider = PurchaseProvider();
     final AppSettingsProvider appSettingsProvider = AppSettingsProvider();
     final BackgroundAudioProvider backgroundAudioProvider = BackgroundAudioProvider();

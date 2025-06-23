@@ -1,6 +1,6 @@
 class ResImage {
   ResImage._();
-  static const String basePath = 'assets/images/';
+  static const String basePath = 'assets/images';
   static const String imgBG = '$basePath/img_bg.png';
   static const String imgRose = '$basePath/rose.png';
   static const String imgLearnFromSong = '$basePath/learn_from_song.png';
