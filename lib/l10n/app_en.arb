@@ -33,5 +33,9 @@
   "title_onboarding_3": "Music Experience",
   "subtitle_onboarding_3": "Enjoy a stylish, smooth music player",
   "title_onboarding_4": "Create Wallpaper",
-  "subtitle_onboarding_4": "Easily and quickly make dynamic live wallpapers!"
+  "subtitle_onboarding_4": "Easily and quickly make dynamic live wallpapers!",
+  "runner": "Runner",
+  "learn": "Learn",
+  "themes": "Themes",
+  "settings": "Settings"
 }

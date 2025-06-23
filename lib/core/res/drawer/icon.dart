@@ -18,6 +18,10 @@ class ResIcon {
   static const String icSelectCheckBoxCircle = '${basePath}ic_select_checkbox.svg';
   static const String icUnselectCheckBoxCircle = '${basePath}ic_unselect_checkbox.svg';
   static const String dropdown = '${basePath}ic_dropdown.svg';
+  static const String icBeatRunner = '${basePath}ic_beat_runner.svg';
+  static const String icBeatLearn = '${basePath}ic_beat_learn.svg';
+  static const String icTheme = '${basePath}ic_theme.svg';
+  static const String icSetting = '${basePath}ic_setting.svg';
 
   //star
   static const String icStar0 = '$basePath/ic_star_0.svg';
