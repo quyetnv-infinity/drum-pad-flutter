@@ -23,7 +23,7 @@ class BeatRunnerScreen extends StatelessWidget {
         ),
         actionsPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
         actions: [
-          IconButtonCustom(iconAsset: ResIcon.french, onTap: () {
+          IconButtonCustom(iconAsset: ResIcon.icSetting, onTap: () {
           },)
         ],
       ),

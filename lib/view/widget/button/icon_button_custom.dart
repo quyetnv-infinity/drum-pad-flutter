@@ -17,7 +17,7 @@ class IconButtonCustom extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.white.withValues(alpha: 0.1),
-          border: Border.all(color: Colors.white, width: 1)
+          border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 1)
         ),
         child: SvgPicture.asset(iconAsset),
       ),
