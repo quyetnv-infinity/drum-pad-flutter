@@ -1,17 +1,19 @@
+import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
+import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.blue,
+    return Scaffold(
+      body: Column(
+        children: [
+          Text('context.locale.beat_runner', style: TextStyle(fontFamily: AppFonts.commando) )
+        ],
+      ),
     );
   }
 }
