@@ -92,13 +92,13 @@ class BottomNavigation extends StatelessWidget {
                       BottomNavigationBarItem(
                           icon: Padding(
                               padding: const EdgeInsets.only(bottom: 4, top: 8),
-                              child: SvgPicture.asset(ResIcon.icSetting, width: 24, height: 24, colorFilter: const ColorFilter.mode(Color(0xFF7A6E73), BlendMode.srcIn))
+                              child: SvgPicture.asset(ResIcon.icProfile, width: 24, height: 24, colorFilter: const ColorFilter.mode(Color(0xFF7A6E73), BlendMode.srcIn))
                           ),
                           activeIcon: Padding(
                             padding: const EdgeInsets.only(bottom: 4, top: 8),
-                            child: SvgPicture.asset(ResIcon.icSetting, width: 24, height: 24, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+                            child: SvgPicture.asset(ResIcon.icProfile, width: 24, height: 24, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
                           ),
-                          label: context.locale.settings
+                          label: context.locale.profile
                       ),
                     ],
                   ),

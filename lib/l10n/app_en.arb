@@ -37,5 +37,6 @@
   "runner": "Runner",
   "learn": "Learn",
   "themes": "Themes",
-  "settings": "Settings"
+  "settings": "Settings",
+  "profile": "Profile"
 }
