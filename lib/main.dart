@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/data/service/api_service/song_service.dart';
 import 'package:and_drum_pad_flutter/hive/hive_registrar.g.dart';
 import 'package:and_drum_pad_flutter/service_locator/service_locator.dart';
@@ -118,6 +119,7 @@ class MyApp extends StatelessWidget {
       builder: (context, locale, child) => MaterialApp(
         theme: ThemeData(
           brightness: Brightness.dark,
+          fontFamily: AppFonts.poppins,
           appBarTheme: AppBarTheme(
             color: Colors.transparent,
             elevation: 0,
