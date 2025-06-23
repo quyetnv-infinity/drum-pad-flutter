@@ -15,28 +15,9 @@ class ResIcon {
   static const String southAfrican = '${basePath}south_african.svg';
   static const String unitedKingdom = '${basePath}united_kingdom.svg';
 
-  static const String doneIcon = '${basePath}charm_tick.svg';
-  static const String icLock = '$basePath/ic_lock.svg';
-  static const String icLineLeft = '$basePath/ic_line_left.svg';
-  static const String icLineRight = '$basePath/ic_line_right.svg';
-  static const String icSettingOutline = '$basePath/ic_setting_outline.svg';
-  static const String icX = '$basePath/ic_x.svg';
-  static const String icDoneIAP = '$basePath/ic_done_iap.svg';
-  static const String icRadioSelected = '$basePath/ic_radio_selected.svg';
-  static const String icRadio = '$basePath/ic_radio.svg';
-  static const String icIAP = '$basePath/ic_iap.svg';
-
-  static const String icExpand = '$basePath/ic_expand.svg';
-  static const String icArrowLeftCircleSolid = "$basePath/ic_arrow_left_circle_solid.svg";
-
-  static const String icHome = '$basePath/ic_home.svg';
-  static const String icList = '$basePath/ic_list.svg';
-  static const String icNext = '$basePath/ic_next.svg';
-  static const String icMusic = '$basePath/ic_music.svg';
-  static const String icProfile = '$basePath/ic_profile.svg';
-  static const String icStarProfile = '$basePath/ic_star_profile.svg';
-  static const String icAccuracyProfile = '$basePath/ic_accuracy.svg';
-  static const String icMusicProfile = '$basePath/ic_profile_music.svg';
+  static const String icSelectCheckBoxCircle = '${basePath}ic_select_checkbox.svg';
+  static const String icUnselectCheckBoxCircle = '${basePath}ic_unselect_checkbox.svg';
+  static const String dropdown = '${basePath}ic_dropdown.svg';
 
   //star
   static const String icStar0 = '$basePath/ic_star_0.svg';

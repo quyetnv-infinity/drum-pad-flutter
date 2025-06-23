@@ -25,5 +25,13 @@
   "tap_to_exit": "Tap to Exit",
   "congratulation": "Congratulation!",
   "congratulation_title" : "You have finished Campaign Mode.",
-  "wait": "Wait"
+  "wait": "Wait",
+  "title_onboarding_1": "Widget Quick start",
+  "subtitle_onboarding_1": "Open all applications on a single screen only.",
+  "title_onboarding_2": "Personalize widgets",
+  "subtitle_onboarding_2": "Easily access and customize your favorite tools all in one place.",
+  "title_onboarding_3": "Music Experience",
+  "subtitle_onboarding_3": "Enjoy a stylish, smooth music player",
+  "title_onboarding_4": "Create Wallpaper",
+  "subtitle_onboarding_4": "Easily and quickly make dynamic live wallpapers!"
 }

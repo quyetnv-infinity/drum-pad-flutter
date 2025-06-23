@@ -15,3 +15,5 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 # and_drum_pad_flutter
+## hive_ce
+# run this command line when change hive object model: "dart pub run build_runner build --delete-conflicting-outputs"

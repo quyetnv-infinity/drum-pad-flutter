@@ -143,17 +143,7 @@ class _ResultScreenState extends State<ResultScreen>
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      child: CustomScaffold(
-        backgroundType: BackgroundType.gradient,
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF5A2CE4),
-            Color(0xFF141414),
-          ],
-          stops: [0.2, 0.9],
-        ),
+      child: AppScaffold(
         // body: AnimatedBuilder(
         //   animation: _animationController,
         //   builder: (context, child) {

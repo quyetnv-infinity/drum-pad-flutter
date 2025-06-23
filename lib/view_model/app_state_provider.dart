@@ -16,13 +16,13 @@ class AppStateProvider with ChangeNotifier {
     getFirstOpenApp().then((value) {
       _isFirstOpenApp = value;
       notifyListeners();
-      purchaseProvider.loadSubscription().then((_) {
-        initializeAds();
-      });
-
-      if (_isFirstOpenApp) {
-        AnalyticsTracker.trackInstallEvent();
-      }
+      // purchaseProvider.loadSubscription().then((_) {
+      //   initializeAds();
+      // });
+      //
+      // if (_isFirstOpenApp) {
+      //   AnalyticsTracker.trackInstallEvent();
+      // }
     });
   }
 
@@ -59,11 +59,11 @@ class AppStateProvider with ChangeNotifier {
   }
 
   void initializeAds() {
-    AdController.shared.initialize(
-      isAdDisabled: !shouldShowAds,
-      configurations: getAdConfigurations(_isFirstOpenApp),
-      adjustConfig: AdjustConfig("s7auhvppayv4", AdjustEnvironment.production),
-    );
+    // AdController.shared.initialize(
+    //   isAdDisabled: !shouldShowAds,
+    //   configurations: getAdConfigurations(_isFirstOpenApp),
+    //   adjustConfig: AdjustConfig("s7auhvppayv4", AdjustEnvironment.production),
+    // );
   }
 
   Future<bool> getFirstOpenApp() async {
