@@ -3,6 +3,7 @@ import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/data/service/api_service/song_service.dart';
 import 'package:and_drum_pad_flutter/hive/hive_registrar.g.dart';
 import 'package:and_drum_pad_flutter/service_locator/service_locator.dart';
+import 'package:and_drum_pad_flutter/view/screen/beat_runner/beat_runner_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/splash/splash_screen.dart';
 import 'package:and_drum_pad_flutter/view_model/ads_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/app_setting_provider.dart';
@@ -132,7 +133,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const SplashScreen(),
+        home: const BeatRunnerScreen(),
         builder: EasyLoading.init(),
       ),
     );

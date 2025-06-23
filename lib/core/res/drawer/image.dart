@@ -1,6 +1,6 @@
 class ResImage {
   ResImage._();
-  static const String basePath = 'assets/images/';
+  static const String basePath = 'assets/images';
   static const String imgBG = '$basePath/img_bg.png';
   static const String imgRose = '$basePath/rose.png';
   static const String imgLearnFromSong = '$basePath/learn_from_song.png';
@@ -19,4 +19,8 @@ class ResImage {
 
   static const String imgBgButtonDrumLearn = '$basePath/img_bg_button_drum_learn.png';
   static const String imgBgButtonBeatRunner = '$basePath/img_bg_button_beat_runner.png';
+  static const String imgBgLearnMaterial = '$basePath/img_bg_learn_material.png';
+  static const String imgBgCampaign = '$basePath/img_bg_campaign.png';
+  static const String imgBgPadDrum = '$basePath/img_bg_pad_drum.png';
+  static const String iconNextBtn = '$basePath/icon_nextbtn.png';
 }

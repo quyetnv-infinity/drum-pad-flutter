@@ -11,7 +11,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          Text('context.locale.beat_runner', style: TextStyle(fontFamily: AppFonts.commando) )
+          // Text('context.locale.beat_runner', style: TextStyle(fontFamily: AppFonts.commando) )
         ],
       ),
     );
