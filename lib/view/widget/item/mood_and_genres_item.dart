@@ -58,6 +58,7 @@ class _MoodAndGenresItemState extends State<MoodAndGenresItem> {
           child: Container(
             height: screenW * 0.3,
             width: screenW * 0.45,
+            clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               color: Colors.white.withValues(alpha: 0.3),
