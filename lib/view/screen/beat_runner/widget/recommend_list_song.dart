@@ -26,7 +26,7 @@ class RecommendListSong extends StatelessWidget {
             itemBuilder: (context, index) {
               final song = listSongs[index];
               return SongItem(
-                songCollection: SongCollection(),
+                songCollection: song,
                 onTap: () {
 
                 },
