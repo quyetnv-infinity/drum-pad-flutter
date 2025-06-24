@@ -6,7 +6,9 @@ import 'package:and_drum_pad_flutter/view/screen/beat_runner/widget/recommend_li
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/item/mode_play_item.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
+import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BeatRunnerScreen extends StatelessWidget {
   const BeatRunnerScreen({super.key});
@@ -23,7 +25,7 @@ class BeatRunnerScreen extends StatelessWidget {
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
             child: IconButtonCustom(iconAsset: ResIcon.icSetting, onTap: () {
             },),
           )
@@ -34,8 +36,18 @@ class BeatRunnerScreen extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: [
-              Flexible(
-                child: RecommendListSong()
+              Consumer<DrumLearnProvider>(
+                builder: (context, drumLearnProvider, _) {
+                  return drumLearnProvider.listRecommend.isEmpty ? Container() : Flexible(
+                    child: RecommendListSong(
+                      title: context.locale.recommend_list_songs,
+                      listSongs: drumLearnProvider.listRecommend,
+                      onTapItem: () {
+
+                      },
+                    )
+                  );
+                }
               ),
               ModePlayItem(asset: ResImage.imgBgLearnMaterial, title: context.locale.learn_material, description: context.locale.learn_material_des,
                 onTap: () {

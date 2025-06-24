@@ -4,7 +4,10 @@ import 'package:and_drum_pad_flutter/view/widget/item/song_item.dart';
 import 'package:flutter/material.dart';
 
 class RecommendListSong extends StatelessWidget {
-  const RecommendListSong({super.key});
+  final String title;
+  final Function() onTapItem;
+  final List<SongCollection> listSongs;
+  const RecommendListSong({super.key, required this.title, required this.onTapItem, required this.listSongs});
 
   @override
   Widget build(BuildContext context) {
@@ -13,14 +16,15 @@ class RecommendListSong extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 12,
       children: [
-        Text(context.locale.recent_list_song, style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white.withValues(alpha: 0.8))),
+        Text(title, style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white.withValues(alpha: 0.8))),
         SizedBox(
           height: MediaQuery.sizeOf(context).width * 0.53,
           child: ListView.builder(
             padding: EdgeInsets.zero,
-            itemCount: 6,
+            itemCount: listSongs.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
+              final song = listSongs[index];
               return SongItem(
                 songCollection: SongCollection(),
                 onTap: () {

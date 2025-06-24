@@ -52,6 +52,7 @@ class DrumLearnProvider extends ChangeNotifier {
     // getBeatRunnerStars();
     getBeatRunnerStar();
     _setPathDir();
+    getRecommend();
   }
 
   Future<void> _setPathDir() async {
