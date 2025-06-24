@@ -1,0 +1,2 @@
+/Users/pqlnh/Documents/dev/and_drum_pad_flutter/android/app/.cxx/Debug/276h1h2y/x86_64/CMakeFiles/edit_cache.dir
+/Users/pqlnh/Documents/dev/and_drum_pad_flutter/android/app/.cxx/Debug/276h1h2y/x86_64/CMakeFiles/rebuild_cache.dir
