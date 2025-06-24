@@ -1,9 +1,11 @@
+import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/data/service/api_service/api_service.dart';
 import 'package:and_drum_pad_flutter/view/widget/blur_widget.dart';
+import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -109,7 +111,7 @@ class _AddNewSongState extends State<AddNewSong> with SingleTickerProviderStateM
                 ),
               ),
               Positioned(
-                left: screenW * 0.45,
+                left:  widget.songCollection == null? screenW * 0.45 : screenW * 0.38,
                 top: 0,
                 bottom: 0,
                 child: Align(
@@ -127,7 +129,18 @@ class _AddNewSongState extends State<AddNewSong> with SingleTickerProviderStateM
                     ],
                   ): _buildSongInformation(),
                 ),
-              )
+              ),
+              if(widget.songCollection != null)
+               Positioned(
+                 right: 10,
+                 top: 10,
+                 child: Transform.scale(
+                   scale: 0.8,
+                   child: IconButtonCustom(iconAsset: ResIcon.icClose, onTap: () {
+
+                   },),
+                 ),
+               )
             ],
           )
         ),
@@ -135,35 +148,42 @@ class _AddNewSongState extends State<AddNewSong> with SingleTickerProviderStateM
     );
   }
   Widget _buildSongInformation(){
-    return Column(
-      children: [
-        BlurWidget(text: widget.songCollection!.difficulty),
-        Text(
-          widget.songCollection!.author,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontWeight: FontWeight.w500),
-        ),
-        Text(
-          widget.songCollection!.name,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 12,
-            color: Colors.white.withValues(alpha: 0.6),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Column(
+        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BlurWidget(text: widget.songCollection!.difficulty),
+          Text(
+            widget.songCollection!.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
           ),
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 7),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            gradient: LinearGradient(colors: [Color(0xffD796FF), Color(0xffA005ff)]
-            )
+          SizedBox(height: 8),
+          Text(
+            widget.songCollection!.author,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
+              color: Colors.white.withValues(alpha: 0.6),
+            ),
           ),
-          child: Text(context.locale.choose_songs, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),),
-        )
-      ],
+          SizedBox(height: 16),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              gradient: LinearGradient(colors: [Color(0xffA005ff), Color(0xffD796FF)]
+              )
+            ),
+            child: Text(context.locale.choose_songs, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),),
+          )
+        ],
+      ),
     );
   }
 }
