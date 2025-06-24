@@ -61,5 +61,6 @@
   "mood_and_genres" : "Mood and Genres",
   "accuracy_all_songs": "Accuracy All Songs",
   "completed_songs": "Completed Songs",
-  "view_all": "View All"
+  "view_all": "View All",
+  "replay": "Replay"
 }

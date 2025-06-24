@@ -2,6 +2,8 @@ import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/view/screen/beat_runner/widget/recommend_list_song.dart';
+import 'package:and_drum_pad_flutter/view/screen/completed_songs/completed_songs_screen.dart';
+import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/pick_song_bottom_sheet.dart';
 import 'package:and_drum_pad_flutter/view/screen/profile/widget/completed_songs.dart';
 import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
@@ -82,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   print('onTapSong: ${song.name}');
                 },
                 onTapViewAll: () {
-                  print('onTapViewAll');
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => CompletedSongsScreen(songs: drumLearnProvider.listRecommend,),));
                 },
               ),
             ),

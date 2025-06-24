@@ -29,7 +29,7 @@ Widget completedSongs(BuildContext context, List<SongCollection> list, {required
         child: ListView.builder(
             shrinkWrap: true,
             padding: EdgeInsets.zero,
-            itemCount: list.length,
+            itemCount: list.length > 3 ? 3 : list.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               final song = list[index];
