@@ -3,6 +3,7 @@ import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/view/screen/beat_runner/widget/recommend_list_song.dart';
+import 'package:and_drum_pad_flutter/view/screen/category/category_details_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/item/mode_play_item.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
@@ -49,11 +50,9 @@ class BeatRunnerScreen extends StatelessWidget {
                   );
                 }
               ),
-              ModePlayItem(asset: ResImage.imgBgLearnMaterial, title: context.locale.learn_material, description: context.locale.learn_material_des,
-                onTap: () {
-                  print('hakhcshjkasfbcas');
-                },
-              )
+              IconButton(onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryDetailsScreen(),));
+              }, icon: Icon(Icons.next_plan))
             ],
           ),
         ),

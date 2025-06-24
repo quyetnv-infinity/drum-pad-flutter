@@ -23,6 +23,8 @@ class ResIcon {
   static const String icTheme = '${basePath}ic_theme.svg';
   static const String icSetting = '${basePath}ic_setting.svg';
   static const String icProfile = '${basePath}ic_profile.svg';
+  static const String icBack = '${basePath}ic_back.svg';
+  static const String icIap = '${basePath}ic_iap.svg';
 
   //star
   static const String icStar0 = '$basePath/ic_star_0.svg';
