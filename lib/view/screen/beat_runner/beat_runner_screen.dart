@@ -35,7 +35,7 @@ class BeatRunnerScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: 16).copyWith(right: 0),
           child: Column(
             children: [
               Consumer<DrumLearnProvider>(

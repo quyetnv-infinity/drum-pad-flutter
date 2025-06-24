@@ -79,7 +79,7 @@ class _SongItemState extends State<SongItem> {
                         bottomRight: Radius.circular(12),
                       ),
                       child: CachedNetworkImage(imageUrl:
-                        "${ApiService.BASEURL}${widget.songCollection.image}",
+                        '${ApiService.BASEURL}${widget.songCollection.image}',
                         height: screenW * 0.4,
                         fit: BoxFit.cover,
                       ),
