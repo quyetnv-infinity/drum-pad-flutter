@@ -47,5 +47,7 @@
   "themes": "Themes",
   "settings": "Settings",
   "profile": "Profile",
-  "recommend_list_songs": "Recommend List Songs"
+  "recommend_list_songs": "Recommend List Songs",
+  "beat_learn": "Bear Learn",
+  "mode_play": "Mode Play"
 }

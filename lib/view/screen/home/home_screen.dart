@@ -1,5 +1,6 @@
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
+import 'package:and_drum_pad_flutter/view/screen/beat_learn/beat_learn_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/beat_runner/beat_runner_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/bottom_navigation/bottom_navigation.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
@@ -18,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   final List<Widget> _pages = [
     BeatRunnerScreen(),
-    Container(color: Colors.yellow,),
+    BeatLearnScreen(),
     Container(color: Colors.blue,),
     Container(color: Colors.orange,),
   ];
