@@ -110,3 +110,6 @@ flutter:
         - asset: assets/fonts/Poppins-BlackItalic.otf
           weight: 900
           style: italic
+    - family: ShrikhandRegular
+      fonts:
+        - asset: assets/fonts/shrikhand_regular.ttf

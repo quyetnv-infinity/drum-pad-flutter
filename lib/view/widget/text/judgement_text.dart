@@ -17,11 +17,11 @@ class JudgementText {
       blendMode: BlendMode.srcIn,
       shaderCallback: (bounds) => LinearGradient(
         colors: [
-          Color(0xFFFF0509), // Hồng đậm
-          Color(0xFFD93EF4), // Hồng nhạt
+          Color(0xFFFF0099), // Hồng đậm
+          Color(0xFFFF7474), // Hồng nhạt
         ],
-        begin: Alignment.bottomLeft,
-        end: Alignment.bottomCenter,
+        begin: Alignment.centerRight,
+        end: Alignment.centerLeft,
       ).createShader(bounds),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -48,23 +48,25 @@ class JudgementText {
     double fontSize = 37,
     FontWeight fontWeight = FontWeight.w400,
     bool italic = true,
+    bool underline = false,
     TextAlign? textAlign,
   }) {
     return ShaderMask(
       blendMode: BlendMode.srcIn,
       shaderCallback: (bounds) => LinearGradient(
         colors: [
-          Color(0xFFFF0509), // Cam nhạt
-          Color(0xFFF9EC31), // Cam đậm
+          Color(0xFFFFFB00), // Cam nhạt
+          Color(0xFFFFA600), // Cam đậm
         ],
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
+        begin: Alignment.centerRight,
+        end: Alignment.centerLeft,
       ).createShader(bounds),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Text(
           text,
           style: TextStyle(
+            decoration: underline ? TextDecoration.underline : TextDecoration.none,
             fontSize: fontSize,
             fontWeight: fontWeight,
             fontFamily: AppFonts.shrikhandRegular,
@@ -82,17 +84,18 @@ class JudgementText {
     double fontSize = 37,
     FontWeight fontWeight = FontWeight.w400,
     bool italic = true,
+    bool underline = false,
     TextAlign? textAlign,
   }) {
     return ShaderMask(
       blendMode: BlendMode.srcIn,
       shaderCallback: (bounds) => LinearGradient(
         colors: [
-          Color(0xFF41F931),
-          Color(0xFF27931D),
+          Color(0xFF00FF37),
+          Color(0xFFB9FF74),
         ],
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
+        begin: Alignment.centerRight,
+        end: Alignment.centerLeft,
       ).createShader(bounds),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -100,6 +103,7 @@ class JudgementText {
           text,
           style: TextStyle(
             fontSize: fontSize,
+            decoration: underline ? TextDecoration.underline : TextDecoration.none,
             fontWeight: fontWeight,
             fontFamily: AppFonts.shrikhandRegular,
             fontStyle: italic ? FontStyle.italic : FontStyle.normal,
@@ -116,18 +120,18 @@ class JudgementText {
     double fontSize = 37,
     FontWeight fontWeight = FontWeight.w400,
     bool italic = true,
+    bool underline = false,
     TextAlign? textAlign,
   }) {
     return ShaderMask(
       blendMode: BlendMode.srcIn,
       shaderCallback: (bounds) => LinearGradient(
         colors: [
-          Color(0xFF26BAF5),
-          Color(0xFF1E94C2),
-          Color(0xFFF4FAFD),
+          Color(0xFF00FFE0),
+          Color(0xFF00A3FF),
         ],
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
+        begin: Alignment.centerRight,
+        end: Alignment.centerLeft,
       ).createShader(bounds),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -135,6 +139,7 @@ class JudgementText {
           text,
           style: TextStyle(
             fontSize: fontSize,
+            decoration: underline ? TextDecoration.underline : TextDecoration.none,
             fontWeight: fontWeight,
             fontFamily: AppFonts.shrikhandRegular,
             fontStyle: italic ? FontStyle.italic : FontStyle.normal,
@@ -151,6 +156,7 @@ class JudgementText {
     double fontSize = 37,
     FontWeight fontWeight = FontWeight.w400,
     bool italic = true,
+    bool underline = false,
     TextAlign? textAlign,
   }) {
     return ShaderMask(
@@ -160,8 +166,8 @@ class JudgementText {
           Colors.white,
           Color(0xFF999999),
         ],
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
+        begin: Alignment.centerRight,
+        end: Alignment.centerLeft,
       ).createShader(bounds),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -169,6 +175,7 @@ class JudgementText {
           text,
           style: TextStyle(
             fontSize: fontSize,
+            decoration: underline ? TextDecoration.underline : TextDecoration.none,
             fontWeight: fontWeight,
             fontFamily: AppFonts.shrikhandRegular,
             fontStyle: italic ? FontStyle.italic : FontStyle.normal,

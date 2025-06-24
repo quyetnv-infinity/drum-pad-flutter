@@ -5,7 +5,7 @@ class AppFonts {
 
   // static const String sfProDisplay = 'SFProDisplay';
   // static const String ethnocentric = 'Ethnocentric';
-  // static const String shrikhandRegular = 'ShrikhandRegular';
+  static const String shrikhandRegular = 'ShrikhandRegular';
   // static const String sF = 'SF';
   static const String commando = 'Commando';
   static const String poppins = 'Poppins';

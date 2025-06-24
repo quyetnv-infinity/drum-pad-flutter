@@ -4,7 +4,6 @@ import 'package:and_drum_pad_flutter/view/screen/language/language_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view_model/app_setting_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/app_state_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -56,9 +55,9 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     final isFirstOpenApp = Provider.of<AppStateProvider>(context, listen: false).isFirstOpenApp;
 
     if (isFirstOpenApp) {
-      Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => const LanguageScreen(fromSetting: false,)));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LanguageScreen(fromSetting: false,)));
     } else {
-      Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => const HomeScreen()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
       Provider.of<AppSettingsProvider>(context, listen: false).increaseTimeOpenApp();
       print('time open appppp${Provider.of<AppSettingsProvider>(context, listen: false).timeOpenApp}');
     }
