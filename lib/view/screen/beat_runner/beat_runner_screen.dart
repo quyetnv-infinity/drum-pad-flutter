@@ -21,10 +21,12 @@ class BeatRunnerScreen extends StatelessWidget {
           child: Text(context.locale.beat_runner, maxLines: 1, overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize:20, fontFamily: AppFonts.commando)),
         ),
-        actionsPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
         actions: [
-          IconButtonCustom(iconAsset: ResIcon.icSetting, onTap: () {
-          },)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+            child: IconButtonCustom(iconAsset: ResIcon.icSetting, onTap: () {
+            },),
+          )
         ],
       ),
       body: SafeArea(

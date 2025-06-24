@@ -1,4 +1,5 @@
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
+import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/view/widget/item/song_item.dart';
 import 'package:flutter/material.dart';
 
@@ -20,8 +21,14 @@ class RecommendListSong extends StatelessWidget {
             itemCount: 6,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
-            return SongItem();
-          },),
+              return SongItem(
+                songCollection: SongCollection(),
+                onTap: () {
+
+                },
+              );
+            }
+          ),
         )
       ],
     );
