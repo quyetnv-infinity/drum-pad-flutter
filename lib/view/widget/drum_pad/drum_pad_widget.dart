@@ -976,13 +976,13 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
               }
             },
             child: GridView.builder(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(16.0),
               shrinkWrap: true,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 childAspectRatio: 1.0,
-                crossAxisSpacing: 4,
-                mainAxisSpacing: 4,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
               ),
               physics: NeverScrollableScrollPhysics(),
               itemCount: 12,
@@ -1105,20 +1105,20 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
               },
             )
           ),
-          if(isLoading && widget.currentSong != null)
-            Positioned.fill(child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.black.withValues(alpha: 0.5),
-              ),
-              child: Center(
-                child: SizedBox(
-                  width: 100, height: 100,
-                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 10,)
-                )
-              )
-            )
-          ),
+          // if(isLoading && widget.currentSong != null)
+          //   Positioned.fill(child: Container(
+          //     decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.circular(20),
+          //       color: Colors.black.withValues(alpha: 0.5),
+          //     ),
+          //     child: Center(
+          //       child: SizedBox(
+          //         width: 100, height: 100,
+          //         child: CircularProgressIndicator(color: Colors.white, strokeWidth: 10,)
+          //       )
+          //     )
+          //   )
+          // ),
         ],
       ),
     );

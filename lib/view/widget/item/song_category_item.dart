@@ -28,7 +28,7 @@ class _SongCategoryItemState extends State<SongCategoryItem> {
     setState(() {
       _isPressed = false;
     });
-    widget.onTap;
+    widget.onTap();
   }
 
   void _onTapCancel() {
@@ -58,39 +58,42 @@ class _SongCategoryItemState extends State<SongCategoryItem> {
           curve: Curves.easeOut,
           child: Padding(
             padding: const EdgeInsets.all(8.0).copyWith(bottom: 0),
-            child: Row(
-              spacing: 12,
-              children: [
-                ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: CachedNetworkImage(imageUrl: "${ApiService.BASEURL}${widget.songCollection.image}", height: 64, width: 64, fit: BoxFit.cover,)),
-                Column(
-                  spacing: 2,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.songCollection.author,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    Text(
-                      widget.songCollection.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12,
-                        color: Colors.white.withValues(alpha: 0.6),
+            child: Container(
+              color: Colors.transparent,
+              child: Row(
+                spacing: 12,
+                children: [
+                  ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: CachedNetworkImage(imageUrl: "${ApiService.BASEURL}${widget.songCollection.image}", height: 64, width: 64, fit: BoxFit.cover,)),
+                  Column(
+                    spacing: 2,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.songCollection.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontWeight: FontWeight.w500),
                       ),
-                    ),
-                    BlurWidget(text: widget.songCollection.difficulty,)
-                  ],
-                ),
-                Spacer(),
-                IconButtonCustom(iconAsset: ResIcon.icPlay, onTap:  widget.onTap)
-              ],
+                      Text(
+                        widget.songCollection.author,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: Colors.white.withValues(alpha: 0.6),
+                        ),
+                      ),
+                      BlurWidget(text: widget.songCollection.difficulty,)
+                    ],
+                  ),
+                  Spacer(),
+                  IconButtonCustom(iconAsset: ResIcon.icPlay, onTap:  widget.onTap)
+                ],
+              ),
             ),
           )
         ),

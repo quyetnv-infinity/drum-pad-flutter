@@ -4,6 +4,7 @@ import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/drum_pad_play_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/app_bar/search_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/item/song_category_item.dart';
+import 'package:and_drum_pad_flutter/view/widget/loading_dialog/loading_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view_model/category_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -115,7 +116,17 @@ class _PickSongScreenState extends State<PickSongScreen> {
                 itemBuilder: (context, index) {
                   final song = _filteredSongs[index];
                   return SongCategoryItem(songCollection: song, onTap: () {
-                    Navigator.pop(context, song);
+                    showDialog(context: context, builder: (context) => LoadingDataScreen(
+                      callbackLoadingCompleted: (song) {
+                        Navigator.pop(context);
+                        Navigator.pop(context, song);
+                      },
+                      callbackLoadingFailed: () {
+                        Navigator.pop(context);
+                      },
+                      song: song,
+                    ),);
+                    // Navigator.pop(context, song);
                   },);
                 },
               ) : Center(
