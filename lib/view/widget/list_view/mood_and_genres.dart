@@ -29,7 +29,7 @@ class MoodAndGenres extends StatelessWidget {
               ),
               itemBuilder: (context, index) {
                 final category = provider.categories[index];
-                return  MoodAndGenresItem(category: category);
+                return  MoodAndGenresItem(category: category, onTap: () {  },);
               }
             );
           },
