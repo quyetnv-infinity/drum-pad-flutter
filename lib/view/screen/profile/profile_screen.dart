@@ -68,7 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: RecommendListSong(
                 title: context.locale.recommend_list_songs,
                 listSongs: drumLearnProvider.listRecommend,
-                onTapItem: () {
+                onTapItem: (song) {
 
                 },
               ),
