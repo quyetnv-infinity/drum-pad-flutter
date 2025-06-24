@@ -12,14 +12,21 @@ class CategoryDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text("funkl"),
-        leadingWidth: 44,
+        leadingWidth: 48,
         leading: Padding(
-          padding: EdgeInsets.symmetric(vertical: 13).copyWith(left: 16),
+          padding: EdgeInsets.symmetric(vertical: 12).copyWith(left: 16),
           child: IconButtonCustom(iconAsset: ResIcon.icBack, onTap: () {
             Navigator.pop(context);
           },),
         ),
-        actions: [],
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: IconButtonCustom(iconAsset: ResIcon.icIap, onTap: () {
+              Navigator.pop(context);
+            },),
+          ),
+        ],
       ),
       body: IconButtonCustom(iconAsset: ResIcon.icBack, onTap: () {
         Navigator.pop(context);

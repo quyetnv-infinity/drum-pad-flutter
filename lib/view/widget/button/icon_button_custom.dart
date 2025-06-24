@@ -13,8 +13,8 @@ class IconButtonCustom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 28,
-      width: 28,
+      height: 34,
+      width: 34,
       child: Material(
         color: Colors.transparent,
         child: InkWell(
