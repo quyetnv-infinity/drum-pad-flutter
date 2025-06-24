@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
+import 'package:and_drum_pad_flutter/data/service/api_service/api_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +79,7 @@ class _SongItemState extends State<SongItem> {
                         bottomRight: Radius.circular(12),
                       ),
                       child: CachedNetworkImage(imageUrl:
-                        widget.songCollection.image,
+                        "${ApiService.BASEURL}${widget.songCollection.image}",
                         height: screenW * 0.4,
                         fit: BoxFit.cover,
                       ),
