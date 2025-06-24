@@ -25,6 +25,7 @@ class _MoodAndGenresItemState extends State<MoodAndGenresItem> {
     setState(() {
       _isPressed = false;
     });
+    Future.delayed(Duration(milliseconds: 200));
     widget.onTap(); // Gọi callback khi tap xong
   }
 

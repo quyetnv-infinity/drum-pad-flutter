@@ -1,6 +1,8 @@
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
+import 'package:and_drum_pad_flutter/view/screen/category/category_details_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/item/mood_and_genres_item.dart';
 import 'package:and_drum_pad_flutter/view_model/category_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +31,9 @@ class MoodAndGenres extends StatelessWidget {
               ),
               itemBuilder: (context, index) {
                 final category = provider.categories[index];
-                return  MoodAndGenresItem(category: category, onTap: () {  },);
+                return  MoodAndGenresItem(category: category, onTap: () {
+                  Navigator.push(context, CupertinoPageRoute(builder: (context) => CategoryDetailsScreen(),));
+                },);
               }
             );
           },
