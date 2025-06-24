@@ -43,7 +43,6 @@ class RatingStars extends StatelessWidget {
       state: StarState.fromValue(
         value: value,
         nullThreshold: 15,
-        halfThreshold: 30,
         fullThreshold: 45,
       ),
     );
@@ -54,7 +53,6 @@ class RatingStars extends StatelessWidget {
       state: StarState.fromValue(
         value: value,
         nullThreshold: 45,
-        halfThreshold: 60,
         fullThreshold: 75,
       ),
     );
@@ -65,7 +63,6 @@ class RatingStars extends StatelessWidget {
       state: StarState.fromValue(
         value: value,
         nullThreshold: 75,
-        halfThreshold: 90,
         fullThreshold: 100,
       ),
     );
@@ -76,7 +73,6 @@ class RatingStars extends StatelessWidget {
       state: StarState.fromValue(
         value: value,
         nullThreshold: 15,
-        halfThreshold: 30,
         fullThreshold: 45,
       ),
     );
@@ -87,7 +83,6 @@ class RatingStars extends StatelessWidget {
       state: StarState.fromValue(
         value: value,
         nullThreshold: 45,
-        halfThreshold: 60,
         fullThreshold: 75,
       ),
     );
@@ -98,7 +93,6 @@ class RatingStars extends StatelessWidget {
       state: StarState.fromValue(
         value: value,
         nullThreshold: 75,
-        halfThreshold: 90,
         fullThreshold: 100,
       ),
     );
@@ -106,6 +100,7 @@ class RatingStars extends StatelessWidget {
     return isFlatStar! ? Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
       children: [
         leftStar.build(),
         middleStar.build(),
@@ -114,6 +109,7 @@ class RatingStars extends StatelessWidget {
     ): Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
       children: [
         flatLeftStar.build(),
         flatMiddleStar.build(),
@@ -126,22 +122,18 @@ class RatingStars extends StatelessWidget {
 /// Enum cho trạng thái ngôi sao
 enum StarState {
   empty,
-  half,
   full;
 
   /// Chuyển đổi từ giá trị số thành trạng thái sao
   static StarState fromValue({
     required double value,
     required double nullThreshold,
-    required double halfThreshold,
     required double fullThreshold,
   }) {
     if (value < nullThreshold) {
       return StarState.empty;
-    } else if (value < halfThreshold) {
-      return StarState.half;
     } else if (value < fullThreshold) {
-      return StarState.full;
+      return StarState.empty;
     } else {
       return StarState.full;
     }
@@ -152,8 +144,6 @@ enum StarState {
     switch (this) {
       case StarState.empty:
         return ResIcon.icStarNull;
-      case StarState.half:
-        return ResIcon.icStarHalf;
       case StarState.full:
         return ResIcon.icStarFull;
     }

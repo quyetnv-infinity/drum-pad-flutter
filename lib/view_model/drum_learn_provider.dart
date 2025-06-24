@@ -19,6 +19,9 @@ class DrumLearnProvider extends ChangeNotifier {
   List<SongCollection> _listRecommend = [];
   List<SongCollection> get listRecommend => _listRecommend;
 
+  List<SongCollection> _completedSongs = [];
+  List<SongCollection> get completedSongs => _completedSongs;
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -210,7 +213,18 @@ class DrumLearnProvider extends ChangeNotifier {
   Future<void> getLearnSongComplete() async {
     final prefs = await SharedPreferences.getInstance();
     int? savedValue = prefs.getInt('learnComplete');
+    List<String> completedIds = prefs.getStringList('learnSongCompleteIds') ?? [];
+    final List<SongCollection> listSong = [];
+    for (final id in completedIds) {
+      try {
+        final song = await getSong(id);
+        if(song != null) listSong.add(song);
+      } catch (e) {
+        print('Error fetching song with id $id: $e');
+      }
+    }
     print('learn song count $savedValue');
+    _completedSongs = listSong;
     _learnSongComplete = savedValue ?? 0;
     notifyListeners();
   }
@@ -225,7 +239,8 @@ class DrumLearnProvider extends ChangeNotifier {
 
     completedIds.add(id);
     await prefs.setStringList('learnSongCompleteIds', completedIds);
-
+    final song = await getSong(id);
+    if(song != null) _completedSongs.add(song);
     _learnSongComplete++;
     await prefs.setInt('learnSongComplete', _learnSongComplete);
     print('add count $_learnSongComplete');

@@ -51,5 +51,8 @@
   "recommend_list_songs": "Recommend List Songs",
   "beat_learn": "Bear Learn",
   "mode_play": "Mode Play",
-  "mood_and_genres" : "Mood and Genres"
+  "mood_and_genres" : "Mood and Genres",
+  "accuracy_all_songs": "Accuracy All Songs",
+  "completed_songs": "Completed Songs",
+  "view_all": "View All"
 }
