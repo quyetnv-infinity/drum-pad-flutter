@@ -62,5 +62,6 @@
   "accuracy_all_songs": "Accuracy All Songs",
   "completed_songs": "Completed Songs",
   "loading": "Loading",
-  "view_all": "View All"
+  "view_all": "View All",
+  "replay": "Replay"
 }
