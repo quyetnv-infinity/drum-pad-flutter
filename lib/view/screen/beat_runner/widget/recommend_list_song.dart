@@ -20,6 +20,7 @@ class RecommendListSong extends StatelessWidget {
         SizedBox(
           height: MediaQuery.sizeOf(context).width * 0.53,
           child: ListView.builder(
+            shrinkWrap: true,
             padding: EdgeInsets.zero,
             itemCount: listSongs.length,
             scrollDirection: Axis.horizontal,

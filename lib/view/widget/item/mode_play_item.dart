@@ -59,6 +59,7 @@ class _ModePlayItemState extends State<ModePlayItem> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 24),
             width: double.infinity,
             decoration: BoxDecoration(
+              border: Border.all(color: Colors.white.withValues(alpha: 0.13), width: 1.5),
               borderRadius: BorderRadius.circular(12),
               image: DecorationImage(
                 image: AssetImage(widget.asset),
@@ -73,14 +74,14 @@ class _ModePlayItemState extends State<ModePlayItem> {
                     children: [
                       Text(
                         widget.title.toUpperCase(),
-                        style: const TextStyle(fontFamily: AppFonts.commando),
+                        style: const TextStyle(fontFamily: AppFonts.commando, fontSize: 16),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         widget.description,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.white.withOpacity(0.6)),
+                        style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 12),
                       ),
                     ],
                   ),

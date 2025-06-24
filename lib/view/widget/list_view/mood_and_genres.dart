@@ -1,3 +1,4 @@
+import 'package:and_drum_pad_flutter/view/widget/item/mood_and_genres_item.dart';
 import 'package:flutter/material.dart';
 
 class MoodAndGenres extends StatelessWidget {
@@ -5,6 +6,12 @@ class MoodAndGenres extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return GridView.builder(
+      shrinkWrap: true,
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 2),
+      itemBuilder: (context, index) {
+        return MoodAndGenresItem();
+      },
+    );
   }
 }
