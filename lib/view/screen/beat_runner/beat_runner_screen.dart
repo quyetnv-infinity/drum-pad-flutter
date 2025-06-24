@@ -36,29 +36,33 @@ class BeatRunnerScreen extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16).copyWith(right: 0),
-          child: Column(
-            children: [
-              Consumer<DrumLearnProvider>(
-                builder: (context, drumLearnProvider, _) {
-                  return drumLearnProvider.listRecommend.isEmpty ? Container() : Flexible(
-                    child: RecommendListSong(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Consumer<DrumLearnProvider>(
+                  builder: (context, drumLearnProvider, _) {
+                    return drumLearnProvider.listRecommend.isEmpty ? Container() : RecommendListSong(
                       title: context.locale.recommend_list_songs,
                       listSongs: drumLearnProvider.listRecommend,
                       onTapItem: () {
 
                       },
-                    )
-                  );
-                }
-              ),
-              SizedBox(height: 16),
-              ModePlayItem(asset: ResImage.imgBgPadDrum, title: context.locale.freestyle_pad_drum, description: context.locale.pad_drum_des,
-                onTap: () {
+                    );
+                  }
+                ),
+                SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: ModePlayItem(asset: ResImage.imgBgPadDrum, title: context.locale.freestyle_pad_drum, description: context.locale.pad_drum_des,
+                    onTap: () {
 
-                },
-              ),
-              Expanded(child: MoodAndGenres())
-            ],
+                    },
+                  ),
+                ),
+                SizedBox(height: 16),
+                MoodAndGenres()
+              ],
+            ),
           ),
         ),
       ),
