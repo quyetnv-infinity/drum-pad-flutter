@@ -12,7 +12,7 @@ class BlurWidget extends StatelessWidget {
       alignment: Alignment.center,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.4),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(4),
       ),
       child: BackdropFilter(
@@ -20,10 +20,10 @@ class BlurWidget extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.only(top: 3, bottom: 3, left: 8, right: 8),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.4),
+            color: Colors.white.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(4),
           ),
-          child: Text(text.toUpperCase(), style: TextStyle(fontSize: 10, color: Colors.black, fontWeight: FontWeight.w700),),
+          child: Text(text, style: TextStyle(fontSize: 10, color: Colors.white.withValues(alpha: 0.6), fontWeight: FontWeight.w500),),
         )
       )
     );

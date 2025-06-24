@@ -22,5 +22,8 @@ class ResImage {
   static const String imgBgLearnMaterial = '$basePath/img_bg_learn_material.png';
   static const String imgBgCampaign = '$basePath/img_bg_campaign.png';
   static const String imgBgPadDrum = '$basePath/img_bg_pad_drum.png';
+  static const String imgBgAdd1 = '$basePath/img_bg_add1.png';
+  static const String imgBgAdd2 = '$basePath/img_bg_add2.png';
   static const String iconNextBtn = '$basePath/icon_nextbtn.png';
+  static const String iconEmpty = '$basePath/img_empty.png';
 }

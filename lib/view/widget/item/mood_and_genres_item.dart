@@ -65,15 +65,15 @@ class _MoodAndGenresItemState extends State<MoodAndGenresItem> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                CachedNetworkImage(
-                  ///*NOTE: CHANGE TO IMAGE
-                  imageUrl: '${ApiService.BASEURL}${widget.category.name}',
-                  fit: BoxFit.cover,
-                ),
+                // CachedNetworkImage(
+                //   ///*NOTE: CHANGE TO IMAGE
+                //   imageUrl: '${ApiService.BASEURL}${widget.category.name}',
+                //   fit: BoxFit.cover,
+                // ),
                 Positioned(
-                    top: 12,
-                    left: 12,
-                    child: Text(widget.category.name, style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black),)
+                  top: 12,
+                  left: 12,
+                  child: Text(widget.category.name, style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black),)
                 )
               ],
             ),

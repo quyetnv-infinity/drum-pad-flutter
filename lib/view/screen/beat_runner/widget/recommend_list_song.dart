@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class RecommendListSong extends StatelessWidget {
   final String title;
-  final Function() onTapItem;
+  final Function(SongCollection song) onTapItem;
   final List<SongCollection> listSongs;
   const RecommendListSong({super.key, required this.title, required this.onTapItem, required this.listSongs});
 
@@ -18,7 +18,7 @@ class RecommendListSong extends StatelessWidget {
       children: [
         Text(title, style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white.withValues(alpha: 0.8))),
         SizedBox(
-          height: MediaQuery.sizeOf(context).width * 0.53,
+          height: MediaQuery.sizeOf(context).width * 0.56,
           child: ListView.builder(
             shrinkWrap: true,
             padding: EdgeInsets.zero,
@@ -29,7 +29,7 @@ class RecommendListSong extends StatelessWidget {
               return SongItem(
                 songCollection: song,
                 onTap: () {
-
+                  onTapItem(song);
                 },
               );
             }

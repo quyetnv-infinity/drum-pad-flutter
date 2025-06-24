@@ -44,8 +44,7 @@ class BeatRunnerScreen extends StatelessWidget {
                     return drumLearnProvider.listRecommend.isEmpty ? Container() : RecommendListSong(
                       title: context.locale.recommend_list_songs,
                       listSongs: drumLearnProvider.listRecommend,
-                      onTapItem: () {
-
+                      onTapItem: (song) {
                       },
                     );
                   }

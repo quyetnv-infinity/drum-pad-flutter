@@ -51,5 +51,12 @@
   "recommend_list_songs": "Recommend List Songs",
   "beat_learn": "Bear Learn",
   "mode_play": "Mode Play",
-  "mood_and_genres" : "Mood and Genres"
+  "mood_and_genres" : "Mood and Genres",
+  "no_song_found" : "No songs found",
+  "no_song_found_des" : "Try a different name or check your song name",
+  "add_new_song" : "Add new song",
+  "choose_songs" : "Choose Songs",
+  "choose_a_song_to_play" : "Choose a song to play",
+  "maximum_length_reached" : "Maximum length reached",
+  "find_your_song_here" : "Find your song here"
 }

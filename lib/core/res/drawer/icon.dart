@@ -25,6 +25,11 @@ class ResIcon {
   static const String icProfile = '${basePath}ic_profile.svg';
   static const String icBack = '${basePath}ic_back.svg';
   static const String icIap = '${basePath}ic_iap.svg';
+  static const String icPlay = '${basePath}ic_play.svg';
+  static const String icPause = '${basePath}ic_pause.svg';
+  static const String icTutorial = '${basePath}ic_tutorial.svg';
+  static const String icAdd = '${basePath}ic_add.svg';
+  static const String icSearch = '${basePath}ic_search.svg';
 
   //star
   static const String icStar0 = '$basePath/ic_star_0.svg';

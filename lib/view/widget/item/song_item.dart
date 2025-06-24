@@ -60,7 +60,7 @@ class _SongItemState extends State<SongItem> {
           curve: Curves.easeOut,
           child: Container(
             height: screenW * 0.6,
-            width: screenW * 0.35,
+            width: screenW * 0.42,
             margin: const EdgeInsets.only(right: 8),
             padding: const EdgeInsets.only(bottom: 8),
             clipBehavior: Clip.antiAlias,
@@ -80,7 +80,8 @@ class _SongItemState extends State<SongItem> {
                       ),
                       child: CachedNetworkImage(imageUrl:
                         '${ApiService.BASEURL}${widget.songCollection.image}',
-                        height: screenW * 0.4,
+                        width: screenW * 0.42,
+                        height: screenW * 0.42,
                         fit: BoxFit.cover,
                       ),
                     ),

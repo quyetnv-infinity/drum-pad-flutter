@@ -5,15 +5,15 @@ import 'package:flutter/material.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String iconLeading;
   final Function() onTapLeading;
-  final String title;
+  final String? title;
   final List<Widget>? action;
-  const CustomAppBar({super.key, required this.iconLeading, required this.onTapLeading, required this.title, this.action});
+  const CustomAppBar({super.key, required this.iconLeading, required this.onTapLeading, this.title, this.action});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       centerTitle: true,
-      title: Text(title, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: Colors.white)),
+      title: Text(title ?? "", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: Colors.white)),
       leadingWidth: 48,
       leading: Padding(
         padding: EdgeInsets.symmetric(vertical: 12).copyWith(left: 16),

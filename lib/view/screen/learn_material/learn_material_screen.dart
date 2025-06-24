@@ -38,7 +38,7 @@ class _LearnMaterialScreenState extends State<LearnMaterialScreen> {
                     child: RecommendListSong(
                       title: context.locale.recommend_list_songs,
                       listSongs: drumLearnProvider.listRecommend,
-                      onTapItem: () {
+                      onTapItem: (song) {
 
                       },
                     )

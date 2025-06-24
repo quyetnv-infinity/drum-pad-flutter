@@ -50,7 +50,7 @@ class _BeatLearnScreenState extends State<BeatLearnScreen> {
                         child: RecommendListSong(
                           title: context.locale.recent_list_song,
                           listSongs: drumLearnProvider.listSongResume,
-                          onTapItem: () {
+                          onTapItem: (song) {
 
                           },
                         )

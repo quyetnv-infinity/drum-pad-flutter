@@ -32,7 +32,7 @@ class MoodAndGenres extends StatelessWidget {
               itemBuilder: (context, index) {
                 final category = provider.categories[index];
                 return  MoodAndGenresItem(category: category, onTap: () {
-                  Navigator.push(context, CupertinoPageRoute(builder: (context) => CategoryDetailsScreen(),));
+                  Navigator.push(context, CupertinoPageRoute(builder: (context) => CategoryDetailsScreen(category: category,),));
                 },);
               }
             );
