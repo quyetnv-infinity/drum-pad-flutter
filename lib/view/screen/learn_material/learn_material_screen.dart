@@ -1,7 +1,9 @@
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
+import 'package:and_drum_pad_flutter/view/screen/beat_learn_category_detail/beat_learn_category_detail_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/beat_runner/widget/recommend_list_song.dart';
 import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
+import 'package:and_drum_pad_flutter/view/widget/list_view/mood_and_genres.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +47,11 @@ class _LearnMaterialScreenState extends State<LearnMaterialScreen> {
                   );
                 }
               ),
+              MoodAndGenres(
+                onTapCategory: (category) {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => BeatLearnCategoryDetailScreen(category: category,),));
+                },
+              )
             ],
           ),
         ),

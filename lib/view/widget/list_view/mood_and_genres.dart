@@ -1,4 +1,5 @@
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
+import 'package:and_drum_pad_flutter/data/model/category_model.dart';
 import 'package:and_drum_pad_flutter/view/screen/category/category_details_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/item/mood_and_genres_item.dart';
 import 'package:and_drum_pad_flutter/view_model/category_provider.dart';
@@ -7,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MoodAndGenres extends StatelessWidget {
-  const MoodAndGenres({super.key});
+  final Function(Category category)? onTapCategory;
+  const MoodAndGenres({super.key, this.onTapCategory});
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +33,16 @@ class MoodAndGenres extends StatelessWidget {
               ),
               itemBuilder: (context, index) {
                 final category = provider.categories[index];
-                return  MoodAndGenresItem(category: category, onTap: () {
-                  Navigator.push(context, CupertinoPageRoute(builder: (context) => CategoryDetailsScreen(category: category,),));
-                },);
+                return MoodAndGenresItem(
+                  category: category,
+                  onTap: () {
+                    if(onTapCategory != null) {
+                      onTapCategory?.call(category);
+                    } else {
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => CategoryDetailsScreen(category: category,),));
+                    }
+                  },
+                );
               }
             );
           },
