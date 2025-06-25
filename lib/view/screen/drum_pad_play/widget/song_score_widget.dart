@@ -214,7 +214,7 @@ class _SongScoreWidgetState extends State<SongScoreWidget> with TickerProviderSt
           ScaleTransition(
             scale: _starScaleAnimation,
             child: RatingStars.custom(value: widget.starPercent, paddingMiddle: 20, smallStarWidth: 38, smallStarHeight: 38, bigStarWidth: 38, bigStarHeight: 38, isFlatStar: true)),
-          Text(context.locale.score, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
+          Text(context.locale.score_string, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
           ScaleTransition(
             scale: _scoreScaleAnimation,
             child: Text(widget.score.toString(), style: TextStyle(fontSize: 40, fontWeight: FontWeight.w700),))

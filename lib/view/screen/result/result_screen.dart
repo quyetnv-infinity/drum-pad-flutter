@@ -161,7 +161,7 @@ class _ResultScreenState extends State<ResultScreen>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   RatingStars.custom(value: _starAnimation.value, paddingMiddle: 20, smallStarWidth: 60, smallStarHeight: 60, bigStarWidth: 84, bigStarHeight: 84, isFlatStar: true, isPaddingBottom: true,),
-                  Text(widget.isContinue == false ? context.locale.final_score : context.locale.score, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
+                  Text(widget.isContinue == false ? context.locale.final_score : context.locale.score_string, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
                   Text(
                     "${_scoreAnimation.value.toInt()}",
                       style: TextStyle(fontSize: 40, fontWeight: FontWeight.w700)

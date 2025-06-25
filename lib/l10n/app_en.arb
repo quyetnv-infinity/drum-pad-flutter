@@ -64,7 +64,7 @@
   "completed_songs": "Completed Songs",
   "loading": "Loading",
   "view_all": "View All",
-  "score": "Score",
+  "score_string": "Score",
   "final_score": "Final Score",
   "replay": "Replay",
   "list_songs": "List Songs",
