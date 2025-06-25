@@ -1,6 +1,7 @@
 import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/data/model/category_model.dart';
+import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/drum_pad_play_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/item/song_category_item.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,8 +9,9 @@ import 'package:flutter/material.dart';
 
 class ListCategoryDetails extends StatelessWidget {
   final Category category;
+  final Function(SongCollection song) onTapItem;
 
-  const ListCategoryDetails({super.key, required this.category});
+  const ListCategoryDetails({super.key, required this.category, required this.onTapItem});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class ListCategoryDetails extends StatelessWidget {
       itemBuilder: (context, index) {
         final song = category.items![index];
         return SongCategoryItem(songCollection: song, onTap: () {
-          Navigator.push(context, CupertinoPageRoute(builder: (context) => DrumPadPlayScreen(),));
+          onTapItem(song);
         },);
       },
     );

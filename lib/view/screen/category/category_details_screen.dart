@@ -38,7 +38,12 @@ class _CategoryDetailsScreenState extends State<CategoryDetailsScreen> {
       ),
       body: Consumer<CategoryProvider>(
         builder: (context, provider, _) {
-          return ListCategoryDetails(category: provider.categories.firstWhere((element) => element.code == widget.category.code,),);
+          return ListCategoryDetails(
+            category: provider.categories.firstWhere((element) => element.code == widget.category.code,),
+            onTapItem: (song) {
+
+            },
+          );
         }
       )
     );
