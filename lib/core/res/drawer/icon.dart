@@ -32,7 +32,17 @@ class ResIcon {
   static const String icSearch = '${basePath}ic_search.svg';
   static const String icClose = '${basePath}ic_close.svg';
 
+  // theme
   static const String icGridPad = '${basePath}ic_grid_pad.svg';
+  static const String icFlash = '${basePath}ic_flash.svg';
+  static const String icFlower = '${basePath}ic_flower.svg';
+  static const String icCloud = '${basePath}ic_cloud.svg';
+  static const String icFlowerTree = '${basePath}ic_flower_tree.svg';
+  static const String icGhost = '${basePath}ic_ghost.svg';
+  static const String icMusicNote = '${basePath}ic_music_note.svg';
+  static const String icPanFlower = '${basePath}ic_pan_flower.svg';
+  static const String icStar = '${basePath}ic_star.svg';
+  static const String icSun = '${basePath}ic_sun.svg';
 
   //star
   static const String icStar0 = '$basePath/ic_star_0.svg';

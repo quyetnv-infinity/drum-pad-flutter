@@ -15,6 +15,7 @@ import 'package:and_drum_pad_flutter/view_model/network_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/purchase_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/rate_app_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/result_information_provider.dart';
+import 'package:and_drum_pad_flutter/view_model/theme_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/tutorial_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/unlock_provider.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +53,7 @@ void main() {
           ChangeNotifierProvider(create: (_) => appSettingsProvider),
           ChangeNotifierProvider(create: (_) => RateAppProvider()),
           ChangeNotifierProvider(create: (_) => NetworkProvider()),
+          ChangeNotifierProvider(create: (_) => ThemeProvider(), lazy: false,),
           ChangeNotifierProvider(create: (_) => categoryProvider, lazy: false,),
           ChangeNotifierProvider(create: (_) => TutorialProvider(), lazy: false,),
           ChangeNotifierProvider(create: (_) => DrumLearnProvider(songService), lazy: false,),

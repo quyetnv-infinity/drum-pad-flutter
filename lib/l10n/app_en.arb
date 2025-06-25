@@ -49,7 +49,7 @@
   "settings": "Settings",
   "profile": "Profile",
   "recommend_list_songs": "Recommend List Songs",
-  "beat_learn": "Bear Learn",
+  "beat_learn": "Beat Learn",
   "mode_play": "Mode Play",
   "no_song_found" : "No songs found",
   "no_song_found_des" : "Try a different name or check your song name",
@@ -64,5 +64,14 @@
   "loading": "Loading",
   "view_all": "View All",
   "replay": "Replay",
-  "list_songs": "List Songs"
+  "list_songs": "List Songs",
+  "drum_theme": "Drum Theme",
+  "list_themes": "List Themes",
+  "get_theme": "Get Theme",
+  "theme_detail": "Theme Detail",
+  "apply_theme": "Apply Theme",
+  "theme_applied": "Theme Applied",
+  "theme_applied_successfully": "Theme Applied Successfully",
+  "theme_applied_successfully_description": "Your theme has been applied. Take a look around and enjoy the new vibe.",
+  "ok": "Ok"
 }

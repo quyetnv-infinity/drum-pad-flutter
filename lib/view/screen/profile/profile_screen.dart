@@ -34,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         leading: Padding(
           padding: const EdgeInsets.only(left: 16, top: 10),
           child: Text(context.locale.profile, maxLines: 1, overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize:20, fontFamily: AppFonts.commando)),
+              style: TextStyle(fontSize:20, fontFamily: AppFonts.commando, color: Colors.white)),
         ),
         actions: [
           Container(
