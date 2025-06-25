@@ -63,5 +63,10 @@
   "completed_songs": "Completed Songs",
   "loading": "Loading",
   "view_all": "View All",
-  "replay": "Replay"
+  "replay": "Replay",
+  "easy_campaign": "Fundamental 1",
+  "medium_campaign": "Fundamental 2",
+  "hard_campaign": "Fundamental 3",
+  "demonic_campaign": "Fundamental 4",
+  "score": "Score: {score}"
 }

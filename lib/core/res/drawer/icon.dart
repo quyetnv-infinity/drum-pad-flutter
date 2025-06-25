@@ -31,6 +31,7 @@ class ResIcon {
   static const String icAdd = '${basePath}ic_add.svg';
   static const String icSearch = '${basePath}ic_search.svg';
   static const String icClose = '${basePath}ic_close.svg';
+  static const String icOvalArrowRight = '${basePath}oval_arrow_right.svg';
 
   //star
 
@@ -44,4 +45,5 @@ class ResIcon {
   static const String icStarFull = '${basePath}ic_radial_star.svg';
   static const String icStarNull = '${basePath}ic_star_null.svg';
   static const String icStarHalf = '${basePath}ic_star_null.svg';
+
 }

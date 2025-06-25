@@ -3,6 +3,7 @@ import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/view/screen/beat_runner/widget/recommend_list_song.dart';
+import 'package:and_drum_pad_flutter/view/screen/campaign/campaign_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/learn_material/learn_material_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/item/mode_play_item.dart';
@@ -65,7 +66,7 @@ class _BeatLearnScreenState extends State<BeatLearnScreen> {
               ),
               ModePlayItem(asset: ResImage.imgBgCampaign, title: context.locale.campaign, description: context.locale.campaign_des,
                 onTap: () {
-                  print('onTapCampaign');
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => CampaignScreen(),));
                 },
               )
             ],

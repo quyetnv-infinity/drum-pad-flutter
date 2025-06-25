@@ -26,4 +26,5 @@ class ResImage {
   static const String imgBgAdd2 = '$basePath/img_bg_add2.png';
   static const String iconNextBtn = '$basePath/icon_nextbtn.png';
   static const String iconEmpty = '$basePath/img_empty.png';
+  static const String imgPads = "$basePath/img_pads.png";
 }

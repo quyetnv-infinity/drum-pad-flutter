@@ -28,13 +28,14 @@ class SongCollectionAdapter extends TypeAdapter<SongCollection> {
           fields[7] == null ? DifficultyMode.unknown : fields[7] as String,
       image: fields[9] == null ? '' : fields[9] as String,
       campaignStar: fields[8] == null ? 0 : (fields[8] as num).toDouble(),
+      campaignScore: fields[10] == null ? 0 : (fields[10] as num).toDouble(),
     );
   }
 
   @override
   void write(BinaryWriter writer, SongCollection obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -54,7 +55,9 @@ class SongCollectionAdapter extends TypeAdapter<SongCollection> {
       ..writeByte(8)
       ..write(obj.campaignStar)
       ..writeByte(9)
-      ..write(obj.image);
+      ..write(obj.image)
+      ..writeByte(10)
+      ..write(obj.campaignScore);
   }
 
   @override
