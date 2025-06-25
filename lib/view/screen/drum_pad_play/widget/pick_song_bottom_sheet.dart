@@ -1,7 +1,7 @@
 import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
-import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/drum_pad_play_screen.dart';
+import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/free_style/free_style_play_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/app_bar/search_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/item/song_category_item.dart';
 import 'package:and_drum_pad_flutter/view/widget/loading_dialog/loading_dialog.dart';

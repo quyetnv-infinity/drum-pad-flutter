@@ -1,5 +1,6 @@
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/data/model/category_model.dart';
+import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/runner_play/drum_pad_play_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/list_view/list_category_details.dart';
@@ -41,7 +42,7 @@ class _CategoryDetailsScreenState extends State<CategoryDetailsScreen> {
           return ListCategoryDetails(
             category: provider.categories.firstWhere((element) => element.code == widget.category.code,),
             onTapItem: (song) {
-
+              Navigator.push(context, MaterialPageRoute(builder: (context) => DrumPadPlayScreen(songCollection: song,)));
             },
           );
         }

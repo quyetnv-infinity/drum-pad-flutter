@@ -1,3 +1,4 @@
+import 'package:and_drum_pad_flutter/core/utils/category_background.dart';
 import 'package:and_drum_pad_flutter/data/model/category_model.dart';
 import 'package:and_drum_pad_flutter/data/service/api_service/api_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -66,11 +67,12 @@ class _MoodAndGenresItemState extends State<MoodAndGenresItem> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                CachedNetworkImage(
-                  ///*NOTE: CHANGE TO IMAGE
-                  imageUrl: 'https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg',
-                  fit: BoxFit.cover,
-                ),
+                // CachedNetworkImage(
+                //   ///*NOTE: CHANGE TO IMAGE
+                //   imageUrl: 'https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg',
+                //   fit: BoxFit.cover,
+                // ),
+                Image.asset(CategoryBackground.getCategoryImage(widget.category), fit: BoxFit.cover,),
                 Positioned(
                   top: 12,
                   left: 12,

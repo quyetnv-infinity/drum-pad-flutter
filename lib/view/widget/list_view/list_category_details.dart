@@ -2,7 +2,7 @@ import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/data/model/category_model.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
-import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/drum_pad_play_screen.dart';
+import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/free_style/free_style_play_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/item/song_category_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

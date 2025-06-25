@@ -9,14 +9,14 @@ import 'package:and_drum_pad_flutter/view/widget/drum_pad/drum_pad_widget.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:flutter/material.dart';
 
-class DrumPadPlayScreen extends StatefulWidget {
-  const DrumPadPlayScreen({super.key});
+class FreeStylePlayScreen extends StatefulWidget {
+  const FreeStylePlayScreen({super.key});
 
   @override
-  State<DrumPadPlayScreen> createState() => _DrumPadPlayScreenState();
+  State<FreeStylePlayScreen> createState() => _FreeStylePlayScreenState();
 }
 
-class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> with SingleTickerProviderStateMixin {
+class _FreeStylePlayScreenState extends State<FreeStylePlayScreen> with SingleTickerProviderStateMixin {
   final GlobalKey _widgetPadKey = GlobalKey();
   SongCollection? _songCollection ;
   @override

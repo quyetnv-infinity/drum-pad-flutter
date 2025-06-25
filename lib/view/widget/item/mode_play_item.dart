@@ -67,6 +67,7 @@ class _ModePlayItemState extends State<ModePlayItem> {
               ),
             ),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
                   child: Column(
@@ -86,7 +87,6 @@ class _ModePlayItemState extends State<ModePlayItem> {
                     ],
                   ),
                 ),
-                const SizedBox(width: 12),
                 Image.asset(ResImage.iconNextBtn)
               ],
             ),

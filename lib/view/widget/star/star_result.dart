@@ -9,7 +9,7 @@ class RatingStars extends StatelessWidget {
   final double bigStarWidth;
   final double bigStarHeight;
   final bool? isFlatStar;
-
+  final double? paddingMiddle;
   /// Widget hiển thị đánh giá bằng hệ thống 3 sao
   /// [value]: Giá trị đánh giá (0-100)
   /// Sử dụng [RatingStars.custom] để tùy chỉnh kích thước
@@ -19,6 +19,7 @@ class RatingStars extends StatelessWidget {
     this.isFlatStar = false,
   }) :
         smallStarWidth = 55.25,
+        paddingMiddle = 0,
         smallStarHeight = 52,
         bigStarWidth = 93.5,
         bigStarHeight = 88,
@@ -32,7 +33,7 @@ class RatingStars extends StatelessWidget {
     required this.smallStarHeight,
     required this.bigStarWidth,
     required this.bigStarHeight,
-  this.isFlatStar,
+  this.isFlatStar, this.paddingMiddle,
   }) : super(key: key);
 
   @override
@@ -50,6 +51,8 @@ class RatingStars extends StatelessWidget {
     final StarConfig middleStar = StarConfig.big(
       width: bigStarWidth,
       height: bigStarHeight,
+      isFlat: isFlatStar,
+      paddingMiddle: paddingMiddle,
       state: StarState.fromValue(
         value: value,
         nullThreshold: 45,
@@ -98,6 +101,7 @@ class RatingStars extends StatelessWidget {
     );
 
     return isFlatStar! ? Row(
+      spacing: 10,
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
@@ -155,12 +159,16 @@ class StarConfig {
   final double width;
   final double height;
   final StarState state;
+  final bool? isFlat;
+  final double? paddingMiddle;
 
-  /// Constructor chung
+  /// Constructor chính
   const StarConfig({
     required this.width,
     required this.height,
     required this.state,
+    this.isFlat,
+    this.paddingMiddle,
   });
 
   /// Constructor cho sao nhỏ
@@ -168,33 +176,46 @@ class StarConfig {
     required StarState state,
     required double width,
     required double height,
+    double? paddingMiddle,
+    bool? isFlat,
   }) {
     return StarConfig(
       state: state,
       width: width,
       height: height,
+      paddingMiddle: paddingMiddle,
+      isFlat: isFlat,
     );
   }
 
   /// Constructor cho sao lớn
   factory StarConfig.big({
     required StarState state,
+    double? paddingMiddle,
     required double width,
     required double height,
+    bool? isFlat,
   }) {
     return StarConfig(
       state: state,
       width: width,
       height: height,
+      isFlat: isFlat,
+      paddingMiddle: paddingMiddle,
     );
   }
 
   /// Tạo widget cho ngôi sao
   Widget build() {
-    return SvgPicture.asset(
-      state.assetPath,
-      width: width,
-      height: height,
+    return Column(
+      children: [
+        SvgPicture.asset(
+          state.assetPath,
+          width: width,
+          height: height,
+        ),
+        SizedBox(height: isFlat ?? false ? paddingMiddle : 0)
+      ],
     );
   }
 }

@@ -5,11 +5,15 @@ import 'package:and_drum_pad_flutter/data/service/api_service/api_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
-
 class SongItem extends StatefulWidget {
   final SongCollection songCollection;
   final Function() onTap;
-  const SongItem({super.key, required this.songCollection, required this.onTap});
+
+  const SongItem({
+    super.key,
+    required this.songCollection,
+    required this.onTap,
+  });
 
   @override
   State<SongItem> createState() => _SongItemState();
@@ -19,28 +23,20 @@ class _SongItemState extends State<SongItem> {
   bool _isPressed = false;
 
   void _onTapDown(TapDownDetails details) {
-    setState(() {
-      _isPressed = true;
-    });
+    setState(() => _isPressed = true);
   }
 
   void _onTapUp(TapUpDetails details) {
-    setState(() {
-      _isPressed = false;
-    });
+    setState(() => _isPressed = false);
     widget.onTap();
   }
 
   void _onTapCancel() {
-    setState(() {
-      _isPressed = false;
-    });
+    setState(() => _isPressed = false);
   }
 
   void _onHover(bool isHovering) {
-    setState(() {
-      _isPressed = isHovering;
-    });
+    setState(() => _isPressed = isHovering);
   }
 
   @override
@@ -77,7 +73,7 @@ class _SongItemState extends State<SongItem> {
                         bottomRight: Radius.circular(12),
                       ),
                       child: CachedNetworkImage(imageUrl:
-                        '${ApiService.BASEURL}${widget.songCollection.image}',
+                      '${ApiService.BASEURL}${widget.songCollection.image}',
                         width: screenW * 0.42,
                         height: screenW * 0.42,
                         fit: BoxFit.cover,
@@ -124,6 +120,7 @@ class _SongItemState extends State<SongItem> {
     );
   }
 }
+
 
 
 class BlurWidget extends StatelessWidget {
