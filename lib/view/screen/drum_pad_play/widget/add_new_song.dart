@@ -12,7 +12,8 @@ import 'package:flutter/material.dart';
 class AddNewSong extends StatefulWidget {
   final SongCollection? songCollection;
   final Function() onTap;
-  const AddNewSong({super.key, required this.onTap, this.songCollection});
+  final Function() onTapClearSong;
+  const AddNewSong({super.key, required this.onTap, this.songCollection, required this.onTapClearSong});
 
   @override
   State<AddNewSong> createState() => _AddNewSongState();
@@ -136,9 +137,8 @@ class _AddNewSongState extends State<AddNewSong> with SingleTickerProviderStateM
                  top: 10,
                  child: Transform.scale(
                    scale: 0.8,
-                   child: IconButtonCustom(iconAsset: ResIcon.icClose, onTap: () {
-
-                   },),
+                   child: IconButtonCustom(iconAsset: ResIcon.icClose, onTap: widget.onTapClearSong
+                   ),
                  ),
                )
             ],
