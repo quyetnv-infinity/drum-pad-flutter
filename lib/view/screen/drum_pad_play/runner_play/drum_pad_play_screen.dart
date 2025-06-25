@@ -4,6 +4,7 @@ import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/add_new_so
 import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/song_score_widget.dart';
 import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
+import 'package:and_drum_pad_flutter/view/widget/drum_pad/drum_pad_widget.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,7 +19,7 @@ class DrumPadPlayScreen extends StatefulWidget {
 
 class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
   double _starPercent = 0;
-  double _score = 0;
+  int _score = 0;
   int _perfectPoint = 0;
   @override
   Widget build(BuildContext context) {
@@ -37,20 +38,45 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16).copyWith(top: 16),
-        child: Column(
-          children: [
-            SongScoreWidget(songCollection: widget.songCollection, starPercent: _starPercent, score: _score, perfectPoint: _perfectPoint,),
-            IconButton(onPressed: () {
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16).copyWith(top: 16),
+            child: SongScoreWidget(songCollection: widget.songCollection, starPercent: _starPercent, score: _score, perfectPoint: _perfectPoint,),
+          ),
+          IconButton(onPressed: () {
+            setState(() {
+              _starPercent += 10;
+              _score += 10;
+              _perfectPoint += 1;
+            });
+          }, icon: Icon(Icons.ac_unit)),
+          DrumPadScreen(
+            onChangePerfectPoint: (perfectPoint) {
               setState(() {
-                _starPercent += 10;
-                _score += 10;
-                _perfectPoint += 1;
+                _perfectPoint = perfectPoint;
               });
-            }, icon: Icon(Icons.ac_unit))
-          ],
-        ),
+              if(_perfectPoint == 0){
+                print('perfectPoint =00000000');
+              }
+              print(perfectPoint);
+              print('perfectPoint');
+            },
+            currentSong: widget.songCollection,
+            onChangeStarLearn:(star) {
+            setState(() {
+              _starPercent = star;
+            });
+            },
+            onChangeScore: (score) {
+              setState(() {
+                _score = score;
+              });
+            },
+            isFromLearnScreen: false,
+            isFromCampaign: false
+          )
+        ],
       ),
     );
   }

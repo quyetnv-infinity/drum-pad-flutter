@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
@@ -10,7 +12,7 @@ import 'package:flutter/material.dart';
 class SongScoreWidget extends StatefulWidget {
   final SongCollection songCollection;
   final double starPercent;
-  final double score;
+  final int score;
   final int perfectPoint;
   const SongScoreWidget({super.key, required this.songCollection, required this.starPercent, required this.score, required this.perfectPoint});
 
@@ -28,6 +30,8 @@ class _SongScoreWidgetState extends State<SongScoreWidget> with TickerProviderSt
   late Animation<double> _scoreScaleAnimation;
 
   double _oldStarPercent = 0;
+  bool showPerfect = false;
+  Timer? _hidePerfectTimer;
 
   @override
   void initState() {
@@ -66,6 +70,10 @@ class _SongScoreWidgetState extends State<SongScoreWidget> with TickerProviderSt
       TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.5).chain(CurveTween(curve: Curves.easeOut)), weight: 50),
       TweenSequenceItem(tween: Tween(begin: 1.5, end: 1.0).chain(CurveTween(curve: Curves.bounceOut)), weight: 50),
     ]).animate(_perfectBounceController);
+    if (widget.perfectPoint >= 3) {
+      showPerfect = true;
+      _perfectBounceController.forward();
+    }
   }
 
   @override
@@ -87,8 +95,22 @@ class _SongScoreWidgetState extends State<SongScoreWidget> with TickerProviderSt
     if (widget.score != oldWidget.score) {
       _scoreBounceController.forward(from: 0);
     }
-    if (widget.perfectPoint != oldWidget.perfectPoint && widget.perfectPoint >= 3) {
+    if (widget.perfectPoint >= 3) {
+      setState(() {
+        showPerfect = true;
+      });
+
       _perfectBounceController.forward(from: 0);
+
+      // Huỷ timer cũ nếu có, rồi đặt lại timer mới 2s
+      _hidePerfectTimer?.cancel();
+      _hidePerfectTimer = Timer(const Duration(seconds: 2), () {
+        if (mounted) {
+          setState(() {
+            showPerfect = false;
+          });
+        }
+      });
     }
 
     _oldStarPercent = newPercent;
@@ -165,6 +187,7 @@ class _SongScoreWidgetState extends State<SongScoreWidget> with TickerProviderSt
           bottom: 10,
           child: _buildScore(),
         ),
+        if(showPerfect)
         Positioned(
           right: screenW * 0.12,
           top: 10,

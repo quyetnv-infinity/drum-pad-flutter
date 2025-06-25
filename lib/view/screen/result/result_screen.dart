@@ -1,6 +1,8 @@
 import 'package:and_drum_pad_flutter/core/res/dimen/spacing.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
+import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
+import 'package:and_drum_pad_flutter/view/screen/home/home_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/result/widget/congratulations_widget.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/gradient_button.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
@@ -26,6 +28,7 @@ class ResultScreen extends StatefulWidget {
   final int maxLesson;
   final bool isCompleted;
   final bool isCompleteCampaign;
+  final bool? isContinue;
 
   const ResultScreen({
     super.key,
@@ -33,7 +36,7 @@ class ResultScreen extends StatefulWidget {
     required this.goodScore,
     required this.earlyScore,
     required this.lateScore,
-    required this.missScore, required this.totalScore, required this.totalNotes, required this.isFromLearn, required this.currentLesson, required this.maxLesson, required this.isFromCampaign, required this.isCompleted, required this.isCompleteCampaign,
+    required this.missScore, required this.totalScore, required this.totalNotes, required this.isFromLearn, required this.currentLesson, required this.maxLesson, required this.isFromCampaign, required this.isCompleted, required this.isCompleteCampaign, this.isContinue =false,
   });
 
   @override
@@ -63,6 +66,7 @@ class _ResultScreenState extends State<ResultScreen>
     print('15teiugdsfkjvc ${widget.lateScore}');
     print('15teiugdsfkjvc ${widget.earlyScore}');
     print('15teiugdsfkjvc ${widget.missScore}');
+    print('scoreeeeee ${widget.totalScore}');
     super.initState();
     isShowCongratulations = widget.isCompleteCampaign;
     _calculateTotalNotes();
@@ -143,210 +147,180 @@ class _ResultScreenState extends State<ResultScreen>
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      child: AppScaffold(
-        // body: AnimatedBuilder(
-        //   animation: _animationController,
-        //   builder: (context, child) {
-        //     return Stack(
-        //       children: [
-        //         Column(
-        //           crossAxisAlignment: CrossAxisAlignment.center,
-        //           mainAxisAlignment: MainAxisAlignment.center,
-        //           children: [
-        //             Row(
-        //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //               children: [
-        //                 checkNotLastCampaign() && (widget.isFromCampaign || widget.isFromLearn) || widget.isCompleteCampaign ? Container(
-        //                   margin: EdgeInsets.only(left: 16),
-        //                   child: IconButton(
-        //                     onPressed: (){
-        //                       Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
-        //                     },
-        //                     icon: SvgPicture.asset(ResIcon.icHome, width: 32,)
-        //                   ),
-        //                 ) : SizedBox(width: 58,),
-        //                 Expanded(
-        //                   child: Text(
-        //                     context.locale.congratulation,
-        //                     textAlign: TextAlign.center,
-        //                     style: TextStyle(
-        //                       color: Colors.white,
-        //                       fontSize: 28,
-        //                       fontWeight: FontWeight.w600,
-        //                     ),
-        //                   ),
-        //                 ),
-        //                 SizedBox(width: 58,)
-        //               ],
-        //             ),
-        //             SizedBox(height: 16,),
-        //             // Sử dụng giá trị animation cho RatingStars
-        //             RatingStars(value: _starAnimation.value, isFlatStar: true,),
-        //             SizedBox(height: 32,),
-        //             Text(
-        //               context.locale.final_score,
-        //               style: TextStyle(
-        //                   color: Colors.white,
-        //                   fontWeight: FontWeight.w500,
-        //                   fontSize: 27),
-        //             ),
-        //             // Sử dụng giá trị animation cho điểm
-        //             Text(
-        //               "${_scoreAnimation.value.toInt()}",
-        //               style: TextStyle(
-        //                 color: Colors.white,
-        //                 fontWeight: FontWeight.w700,
-        //                 fontSize: 60,
-        //               ),
-        //             ),
-        //             SizedBox(height: 18),
-        //             _rowScore(
-        //               title: JudgementText.perfect(
-        //                 context.locale.perfect,
-        //                 textAlign: TextAlign.center,
-        //               ),
-        //               value: _perfectPercentAnimation.value,
-        //               count: widget.perfectScore,
-        //             ),
-        //             _rowScore(
-        //               title: JudgementText.good(
-        //                 context.locale.good,
-        //                 textAlign: TextAlign.center,
-        //               ),
-        //               value: _goodPercentAnimation.value,
-        //               count: widget.goodScore,
-        //             ),
-        //             _rowScore(
-        //               title: JudgementText.early(
-        //                 context.locale.early,
-        //                 textAlign: TextAlign.center,
-        //               ),
-        //               value: _earlyPercentAnimation.value,
-        //               count: widget.earlyScore,
-        //             ),
-        //             _rowScore(
-        //               title: JudgementText.late(
-        //                 context.locale.late,
-        //                 textAlign: TextAlign.center,
-        //               ),
-        //               value: _latePercentAnimation.value,
-        //               count: widget.lateScore,
-        //             ),
-        //             _rowScore(
-        //               title: JudgementText.miss(
-        //                 context.locale.miss,
-        //                 textAlign: TextAlign.center,
-        //               ),
-        //               value: _missPercentAnimation.value,
-        //               count: widget.missScore,
-        //             ),
-        //             ResSpacing.h48,
-        //             Row(
-        //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //               children: [
-        //                 GradientButton(
-        //                   onPressed: () async {
-        //                     if(widget.isFromLearn || widget.isFromCampaign){
-        //                       Navigator.pop(context);
-        //                       Navigator.pop(context);
-        //                     }else{
-        //                       final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => LearnFromSongScreen(isChooseSong: true),));
-        //                       if(result != null){
-        //                         final loadingResult = await Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
-        //                             callbackLoadingCompleted: (song) {
-        //                               Navigator.pop(context, song);
-        //                             },
-        //                             callbackLoadingFailed: () {
-        //                               Navigator.pop(context);
-        //                             },
-        //                             song: result),
-        //                         ));
-        //                         print('=======$loadingResult');
-        //                         Navigator.pop(context, loadingResult);
-        //                       }
-        //                     }
-        //                   },
-        //                   shape: BoxShape.circle,
-        //                   padding: EdgeInsets.all(14),
-        //                   child: widget.isFromLearn || widget.isFromCampaign ? SvgPicture.asset(ResIcon.icList) :SvgPicture.asset(ResIcon.icMusic),
-        //                 ),
-        //                 !(widget.isCompleteCampaign && widget.isCompleted) ?
-        //                 GradientButton(
-        //                   onPressed: () {
-        //                     Navigator.pop(context, 'play_again');
-        //                   },
-        //                   padding: EdgeInsets.symmetric(horizontal: 28, vertical: 16),
-        //                   borderRadius: BorderRadius.circular(32),
-        //                   child: Text(
-        //                     context.locale.play_again,
-        //                     style: TextStyle(
-        //                       color: Colors.white,
-        //                       fontWeight: FontWeight.w700,
-        //                       fontSize: 16,
-        //                     ),
-        //                   ),
-        //                 ):GradientButton(
-        //                   onPressed: () {
-        //                     Navigator.pop(context,);
-        //                     Navigator.pop(context,);
-        //                     Navigator.pop(context,);
-        //                   },
-        //                   padding: EdgeInsets.symmetric(horizontal: 28, vertical: 16),
-        //                   borderRadius: BorderRadius.circular(32),
-        //                   child: Text(
-        //                     context.locale.choose_song,
-        //                     style: TextStyle(
-        //                       color: Colors.white,
-        //                       fontWeight: FontWeight.w700,
-        //                       fontSize: 16,
-        //                     ),
-        //                   ),
-        //                 ),
-        //                 !(widget.isCompleteCampaign && widget.isCompleted) ?
-        //                 GradientButton(
-        //                   onPressed: () async {
-        //                     if(checkNotLastCampaign()){
-        //                       if(widget.isFromLearn) {
-        //                         Navigator.pop(context, widget.currentLesson + 1);
-        //                       }
-        //                       if(widget.isFromCampaign) {
-        //                         final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
-        //                         final currentCampaignIndex = campaignProvider.currentSongCampaign + 1;
-        //                         campaignProvider.setCurrentSongCampaign(currentCampaignIndex);
-        //                         final song = campaignProvider.currentCampaign[currentCampaignIndex];
-        //                         await Navigator.push(context, CupertinoPageRoute(builder: (context) => LoadingDataScreen(
-        //                           callbackLoadingCompleted: (songData) {
-        //                             Navigator.pop(context, songData);
-        //                             Navigator.pop(context, songData);
-        //                           },
-        //                           callbackLoadingFailed: () {
-        //                             Navigator.pop(context);
-        //                             Navigator.pop(context);
-        //                           },
-        //                           song: song),
-        //                         ));
-        //                       }
-        //                     } else{
-        //                       Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
-        //                     }
-        //                   },
-        //                   shape: BoxShape.circle,
-        //                   padding: EdgeInsets.all(14),
-        //                   child: checkNotLastCampaign() ? SvgPicture.asset(ResIcon.icNext) : SvgPicture.asset(ResIcon.icHome),
-        //                 ) : SizedBox.shrink(),
-        //               ],
-        //             )
-        //           ],
-        //         ),
-        //         if(isShowCongratulations && widget.isCompleted) CongratulationsWidget(onTapExit: () {
-        //           setState(() {
-        //             isShowCongratulations = false;
-        //           });
-        //         },)
-        //       ],
-        //     );
-        //   },
-        // ),
+      child: SafeArea(
+        child: Container(
+          padding: EdgeInsets.all(12).copyWith(top: 20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(32),
+            gradient: RadialGradient(colors: [Color(0xff33114d), Color(0xff7727b3)], center: Alignment.bottomCenter)
+          ),
+          child: AnimatedBuilder(
+            animation: _animationController,
+            builder: (context, snapshot) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RatingStars.custom(value: _starAnimation.value, paddingMiddle: 20, smallStarWidth: 60, smallStarHeight: 60, bigStarWidth: 84, bigStarHeight: 84, isFlatStar: true, isPaddingBottom: true,),
+                  Text(widget.isContinue == false ? context.locale.final_score : context.locale.score, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
+                  Text(
+                    "${_scoreAnimation.value.toInt()}",
+                      style: TextStyle(fontSize: 40, fontWeight: FontWeight.w700)
+                  ),
+                  SizedBox(height: 20),
+                  accuracyAllSongs(),
+                  SizedBox(height: 36),
+                  Row(
+                    spacing: 8,
+                    children: [
+                      _buildIconButton(asset: ResIcon.icMusic,
+                        onTap: () {
+                        Navigator.pop(context);
+                        }),
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context, 'play_again');
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              gradient: LinearGradient(colors: [Color(0xffa005ff), Color(0xffd796ff)])
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              spacing: 8,
+                              children: [
+                                if(widget.isContinue == false)
+                                SvgPicture.asset(ResIcon.icRefresh),
+
+                                Text(widget.isContinue == false ? context.locale.play_again : context.locale.continue_text, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      _buildIconButton(asset: ResIcon.icHome,
+                        onTap: () {
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
+                        }
+                      ),
+                    ],
+                  )
+                ],
+              );
+            }
+          )),
+      ),
+    );
+  }
+  Widget _buildIconButton({required String asset, required Function() onTap}){
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Color(0xffc84bff).withValues(alpha: 0.1)
+        ),
+        child: SvgPicture.asset(asset)
+      ),
+    );
+  }
+
+  Widget accuracyAllSongs() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white.withValues(alpha: 0.1)
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 4).copyWith(left: 40),
+            decoration: BoxDecoration(
+                color: Color(0xFF38154D),
+                borderRadius: BorderRadius.circular(12)
+            ),
+            child: Column(
+              spacing: 8,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                JudgementText.perfect(context.locale.perfect, underline: true, fontSize: 24, fontWeight: FontWeight.w400, italic: false),
+                JudgementText.good(context.locale.good, underline: true, fontSize: 24, fontWeight: FontWeight.w400, italic: false),
+                JudgementText.early(context.locale.early, underline: true, fontSize: 24, fontWeight: FontWeight.w400, italic: false),
+                JudgementText.late(context.locale.late, underline: true, fontSize: 24, fontWeight: FontWeight.w400, italic: false),
+                JudgementText.miss(context.locale.miss, underline: true, fontSize: 24, fontWeight: FontWeight.w400, italic: false),
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 4).copyWith(left: 16),
+            child: Column(
+              spacing: 8,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// perfect
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(_perfectPercentAnimation.value.toStringAsFixed(0).toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.shrikhandRegular, color: Colors.white, height: 0.9),),
+                      Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.shrikhandRegular, color: Colors.white),),
+                    ],
+                  ),
+                ),
+                /// good
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(_goodPercentAnimation.value.toStringAsFixed(0).toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.shrikhandRegular, color: Colors.white, height: 0.9),),
+                      Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.shrikhandRegular, color: Colors.white),),
+                    ],
+                  ),
+                ),
+                /// early
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(_earlyPercentAnimation.value.toStringAsFixed(0).toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.shrikhandRegular, color: Colors.white, height: 0.9),),
+                      Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.shrikhandRegular, color: Colors.white),),
+                    ],
+                  ),
+                ),
+                /// late
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(_latePercentAnimation.value.toStringAsFixed(0).toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.shrikhandRegular, color: Colors.white, height: 0.9),),
+                      Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.shrikhandRegular, color: Colors.white),),
+                    ],
+                  ),
+                ),
+                /// miss
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(_missPercentAnimation.value.toStringAsFixed(0).toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.shrikhandRegular, color: Colors.white, height: 0.9),),
+                      Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.shrikhandRegular, color: Colors.white),),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
@@ -361,31 +335,4 @@ class _ResultScreenState extends State<ResultScreen>
     return false;
   }
 
-  Widget _rowScore(
-      {required Widget title, double value = 0, required int count}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Row(
-        children: [
-          Expanded(flex: 2, child: title),
-          Expanded(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  "${value.toStringAsFixed(0)}%",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

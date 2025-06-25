@@ -9,6 +9,7 @@ class RatingStars extends StatelessWidget {
   final double bigStarWidth;
   final double bigStarHeight;
   final bool? isFlatStar;
+  final bool? isPaddingBottom;
   final double? paddingMiddle;
   /// Widget hiển thị đánh giá bằng hệ thống 3 sao
   /// [value]: Giá trị đánh giá (0-100)
@@ -17,6 +18,7 @@ class RatingStars extends StatelessWidget {
     Key? key,
     required this.value,
     this.isFlatStar = false,
+    this.isPaddingBottom = false,
   }) :
         smallStarWidth = 55.25,
         paddingMiddle = 0,
@@ -33,7 +35,7 @@ class RatingStars extends StatelessWidget {
     required this.smallStarHeight,
     required this.bigStarWidth,
     required this.bigStarHeight,
-  this.isFlatStar, this.paddingMiddle,
+  this.isFlatStar, this.paddingMiddle, this.isPaddingBottom,
   }) : super(key: key);
 
   @override
@@ -53,6 +55,7 @@ class RatingStars extends StatelessWidget {
       height: bigStarHeight,
       isFlat: isFlatStar,
       paddingMiddle: paddingMiddle,
+      isPaddingBottom: isPaddingBottom,
       state: StarState.fromValue(
         value: value,
         nullThreshold: 45,
@@ -103,7 +106,7 @@ class RatingStars extends StatelessWidget {
     return isFlatStar! ? Row(
       spacing: 10,
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: isPaddingBottom == false ? CrossAxisAlignment.start : CrossAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: [
         leftStar.build(),
@@ -160,6 +163,7 @@ class StarConfig {
   final double height;
   final StarState state;
   final bool? isFlat;
+  final bool? isPaddingBottom;
   final double? paddingMiddle;
 
   /// Constructor chính
@@ -168,6 +172,7 @@ class StarConfig {
     required this.height,
     required this.state,
     this.isFlat,
+    this.isPaddingBottom,
     this.paddingMiddle,
   });
 
@@ -178,6 +183,7 @@ class StarConfig {
     required double height,
     double? paddingMiddle,
     bool? isFlat,
+    bool? isPaddingBottom,
   }) {
     return StarConfig(
       state: state,
@@ -185,6 +191,7 @@ class StarConfig {
       height: height,
       paddingMiddle: paddingMiddle,
       isFlat: isFlat,
+      isPaddingBottom: isPaddingBottom
     );
   }
 
@@ -195,6 +202,7 @@ class StarConfig {
     required double width,
     required double height,
     bool? isFlat,
+    bool? isPaddingBottom,
   }) {
     return StarConfig(
       state: state,
@@ -202,6 +210,7 @@ class StarConfig {
       height: height,
       isFlat: isFlat,
       paddingMiddle: paddingMiddle,
+      isPaddingBottom: isPaddingBottom
     );
   }
 
@@ -209,6 +218,8 @@ class StarConfig {
   Widget build() {
     return Column(
       children: [
+        if(isPaddingBottom == false)
+        SizedBox(height: paddingMiddle),
         SvgPicture.asset(
           state.assetPath,
           width: width,
