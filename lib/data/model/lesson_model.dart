@@ -68,6 +68,7 @@ class SongCollection extends HiveObject{
   String pathZipFile;
   String difficulty;
   double campaignStar;
+  double campaignScore;
   String image;
 
   SongCollection({
@@ -80,7 +81,8 @@ class SongCollection extends HiveObject{
     this.pathZipFile = '',
     this.difficulty = DifficultyMode.unknown,
     this.image = '',
-    this.campaignStar = 0
+    this.campaignStar = 0,
+    this.campaignScore = 0,
   }) :  id = id ?? const Uuid().v4(),
         lessons = lessons ?? [],
         beatRunnerLessons = beatRunnerLessons ?? [];
@@ -187,6 +189,21 @@ class DifficultyMode {
         return context.locale.demonic;
       default:
         return context.locale.unknown;
+    }
+  }
+
+  static String getCampaignName(BuildContext context, String mode) {
+    switch (mode) {
+      case DifficultyMode.easy:
+        return context.locale.easy_campaign;
+      case DifficultyMode.medium:
+        return context.locale.medium_campaign;
+      case DifficultyMode.hard:
+        return context.locale.hard_campaign;
+      case DifficultyMode.demonic:
+        return context.locale.demonic_campaign;
+      default:
+        return "";
     }
   }
 }
