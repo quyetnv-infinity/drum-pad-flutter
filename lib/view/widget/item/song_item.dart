@@ -59,8 +59,6 @@ class _SongItemState extends State<SongItem> {
           duration: const Duration(milliseconds: 150),
           curve: Curves.easeOut,
           child: Container(
-            height: screenW * 0.6,
-            width: screenW * 0.42,
             margin: const EdgeInsets.only(right: 8),
             padding: const EdgeInsets.only(bottom: 8),
             clipBehavior: Clip.antiAlias,
@@ -95,7 +93,7 @@ class _SongItemState extends State<SongItem> {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 8),
+                  padding: const EdgeInsets.only(left: 8, top: 8, bottom: 8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
