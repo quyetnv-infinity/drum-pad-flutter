@@ -22,7 +22,9 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> with SingleTicker
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      appBar: CustomAppBar(iconLeading: ResIcon.icBack, onTapLeading: () { },
+      appBar: CustomAppBar(iconLeading: ResIcon.icBack, onTapLeading: () {
+        Navigator.pop(context);
+      },
         action: [
           Padding(
             padding: const EdgeInsets.only(right: 16),
@@ -41,18 +43,24 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> with SingleTicker
               child: AddNewSong(
                 songCollection: _songCollection,
                 onTap: () async {
-                final result = await showModalBottomSheet<SongCollection>(
-                  isScrollControlled: true,
-                  barrierColor: Colors.black.withValues(alpha: 0.8),
-                  context: context,
-                  builder: (context) => PickSongScreen(),
-                );
-                if (result != null) {
+                  final result = await showModalBottomSheet<SongCollection>(
+                    isScrollControlled: true,
+                    barrierColor: Colors.black.withValues(alpha: 0.8),
+                    context: context,
+                    builder: (context) => PickSongScreen(),
+                  );
+                  if (result != null) {
+                    setState(() {
+                      _songCollection = result;
+                    });
+                    print('Selected song: ${result.lessons.length}');
+                  }
+                },
+                onTapClearSong: () {
+                  print('asdasdsa');
                   setState(() {
-                    _songCollection = result;
+                    _songCollection = null;
                   });
-                  print('Selected song: ${result.lessons.length}');
-                }
               },
             ),
           ),
