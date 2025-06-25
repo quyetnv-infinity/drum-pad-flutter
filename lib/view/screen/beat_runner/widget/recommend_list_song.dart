@@ -17,24 +17,14 @@ class RecommendListSong extends StatelessWidget {
       spacing: 12,
       children: [
         Text(title, style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white.withValues(alpha: 0.8))),
-        SizedBox(
-          height: MediaQuery.sizeOf(context).width * 0.56,
-          child: ListView.builder(
-            shrinkWrap: true,
-            padding: EdgeInsets.zero,
-            itemCount: listSongs.length,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              final song = listSongs[index];
-              return SongItem(
-                songCollection: song,
-                onTap: () {
-                  onTapItem(song);
-                },
-              );
-            }
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: List.generate(listSongs.length, (index) {
+              return SongItem(songCollection: listSongs[index], onTap: () => onTapItem(listSongs[index]),);
+            },),
           ),
-        )
+        ),
       ],
     );
   }

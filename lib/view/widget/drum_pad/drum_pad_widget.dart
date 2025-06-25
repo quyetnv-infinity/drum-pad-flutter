@@ -835,7 +835,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   }
 
   List<Color> getPadColor(bool isHighlighted, bool hasSound, bool isActive, String soundId){
-    if(widget.currentSong == null || widget.currentSong!.lessons.isEmpty) return [Color(0xFF919191), Color(0xFF5E5E5E)];
+    if(widget.currentSong == null || widget.currentSong!.lessons.isEmpty) return [Color(0xFFe099ff).withValues(alpha: 0.4), Color(0xFFc84bff).withValues(alpha: 0.4)];
     return isHighlighted && widget.practiceMode != 'practice' ? [Color(0xFFEDC78C), Colors.orange] : (hasSound ? PadUtil.getPadGradientColor(isActive, soundId) : [Color(0xFF919191), Color(0xFF5E5E5E)]);
   }
 
