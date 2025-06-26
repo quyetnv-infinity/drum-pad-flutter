@@ -5,6 +5,7 @@ import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/song_score
 import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/drum_pad/drum_pad_widget.dart';
+import 'package:and_drum_pad_flutter/view/widget/loading_dialog/exit_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -25,8 +26,22 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
   Widget build(BuildContext context) {
     return AppScaffold(
       appBar: CustomAppBar(iconLeading: ResIcon.icPause, onTapLeading: () {
-        Navigator.pop(context);
-        },
+        showDialog(context: context, barrierDismissible: false, barrierColor: Colors.black.withValues(alpha: 0.9),
+          builder: (context) => Dialog(
+            backgroundColor: Colors.transparent,
+            child: ExitDialog(
+              onTapCancel: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              onTapContinue: () {
+                Navigator.pop(context);
+              },
+            )
+          )
+        );
+        // Navigator.pop(context);
+      },
         titleWidget: _buildTitle(),
         action: [
           Padding(
@@ -40,17 +55,13 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16).copyWith(top: 16),
-            child: SongScoreWidget(songCollection: widget.songCollection, starPercent: _starPercent, score: _score, perfectPoint: _perfectPoint,),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SongScoreWidget(songCollection: widget.songCollection, starPercent: _starPercent, score: _score, perfectPoint: _perfectPoint,),
+            ),
           ),
-          IconButton(onPressed: () {
-            setState(() {
-              _starPercent += 10;
-              _score += 10;
-              _perfectPoint += 1;
-            });
-          }, icon: Icon(Icons.ac_unit)),
+          // Spacer(),
           DrumPadScreen(
             onChangePerfectPoint: (perfectPoint) {
               setState(() {

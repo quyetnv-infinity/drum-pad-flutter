@@ -65,6 +65,8 @@
   "loading": "Loading",
   "view_all": "View All",
   "score_string": "Score",
+  "leaving_so_soon": "Leaving so soon?",
+  "you_lose_your_progress": "You'll lose your progress. Still want to go?",
   "final_score": "Final Score",
   "replay": "Replay",
   "list_songs": "List Songs",
@@ -81,5 +83,6 @@
   "theme_applied": "Theme Applied",
   "theme_applied_successfully": "Theme Applied Successfully",
   "theme_applied_successfully_description": "Your theme has been applied. Take a look around and enjoy the new vibe.",
-  "ok": "Ok"
+  "ok": "Ok",
+  "cancel" : "Cancel"
 }

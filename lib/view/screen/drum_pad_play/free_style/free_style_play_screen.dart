@@ -36,35 +36,35 @@ class _FreeStylePlayScreenState extends State<FreeStylePlayScreen> with SingleTi
         ],
       ),
       body: Column(
-        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16).copyWith(top: 28),
-              child: AddNewSong(
-                songCollection: _songCollection,
-                onTap: () async {
-                  final result = await showModalBottomSheet<SongCollection>(
-                    isScrollControlled: true,
-                    barrierColor: Colors.black.withValues(alpha: 0.8),
-                    context: context,
-                    builder: (context) => PickSongScreen(),
-                  );
-                  if (result != null) {
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: AddNewSong(
+                  songCollection: _songCollection,
+                  onTap: () async {
+                    final result = await showModalBottomSheet<SongCollection>(
+                      isScrollControlled: true,
+                      barrierColor: Colors.black.withValues(alpha: 0.8),
+                      context: context,
+                      builder: (context) => PickSongScreen(),
+                    );
+                    if (result != null) {
+                      setState(() {
+                        _songCollection = result;
+                      });
+                      print('Selected song: ${result.lessons.length}');
+                    }
+                  },
+                  onTapClearSong: () {
+                    print('asdasdsa');
                     setState(() {
-                      _songCollection = result;
+                      _songCollection = null;
                     });
-                    print('Selected song: ${result.lessons.length}');
-                  }
                 },
-                onTapClearSong: () {
-                  print('asdasdsa');
-                  setState(() {
-                    _songCollection = null;
-                  });
-              },
+              ),
             ),
           ),
-          Spacer(),
           DrumPadScreen(
             key: _widgetPadKey,
             lessonIndex: (_songCollection?.lessons.length ?? 0) - 1,
@@ -94,7 +94,7 @@ class _FreeStylePlayScreenState extends State<FreeStylePlayScreen> with SingleTi
               // });
             },
           ),
-          ResSpacing.h48
+
         ],
       ),
     );

@@ -28,6 +28,7 @@ class ResImage {
   static const String imgBgEDM = '$basePath/img_bg_edm.png';
   static const String imgBgHipHop = '$basePath/img_bg_hiphop.png';
   static const String imgBgPop = '$basePath/img_bg_pop.png';
+  static const String imgBgExit = '$basePath/img_bg_exit.png';
   static const String imgBgSongScore = '$basePath/img_bg_song_score.png';
   static const String iconNextBtn = '$basePath/icon_nextbtn.png';
   static const String iconEmpty = '$basePath/img_empty.png';

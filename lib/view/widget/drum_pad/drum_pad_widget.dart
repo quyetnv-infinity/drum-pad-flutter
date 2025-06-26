@@ -32,9 +32,8 @@ class DrumPadScreen extends StatefulWidget {
   final void Function(VoidCallback pauseHandler)? onRegisterPauseHandler;
   final void Function(bool isPlaying)? onChangePlayState;
   final void Function(int perfectPoint)? onChangePerfectPoint;
-  final bool? isNavigate;
 
-  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onResetRecordingToggle, this.onRegisterPauseHandler, this.onChangePlayState, this.onChangePerfectPoint, this.isNavigate});
+  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onResetRecordingToggle, this.onRegisterPauseHandler, this.onChangePlayState, this.onChangePerfectPoint});
 
   @override
   State<DrumPadScreen> createState() => _DrumPadScreenState();
@@ -162,6 +161,14 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
       });
     }
     checkModeChange(oldWidget);
+    // if(oldWidget.isNavigate != widget.isNavigate){
+    //   print(widget.isNavigate);
+    //
+    //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //     _navigateToNextScreen();
+    //   },);
+    //   print('-------------------------');
+    // }
   }
 
   @override
@@ -315,6 +322,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   }
 
   void _navigateToNextScreen() async {
+    // print('navigate $isNavigatedToResult');
     if(isNavigatedToResult) return;
     setState(() {
       isNavigatedToResult = true;
@@ -352,6 +360,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         barrierDismissible: false,
         barrierColor: Colors.black.withValues(alpha: 0.9),
         builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
         child: ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() > 1, isCompleteCampaign: checkLastCampaign,)));
 
     setState(() {
@@ -481,7 +490,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
 
         provider.resetPerfectPoint();
         widget.onChangePerfectPoint!(0);
-        perfectPoint = 0;
         print('reset perfect');
         break;
       default:
@@ -1094,12 +1102,12 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
                             ),
                           ),
                         ),
-                      if (isActive)
-                        Lottie.asset('assets/anim/lightning_button.json', fit: BoxFit.cover, controller: _controller),
-                      if(!padProgress.containsKey(sound) && isHighlighted && widget.practiceMode != 'practice')
-                        Align(
-                            alignment: Alignment.center,
-                            child: Lottie.asset('assets/anim/click_here.json', height: MediaQuery.sizeOf(context).width /3 - 50)),
+                      // if (isActive)
+                      //   Lottie.asset('assets/anim/lightning_button.json', fit: BoxFit.cover, controller: _controller),
+                      // if(!padProgress.containsKey(sound) && isHighlighted && widget.practiceMode != 'practice')
+                      //   Align(
+                      //       alignment: Alignment.center,
+                      //       child: Lottie.asset('assets/anim/click_here.json', height: MediaQuery.sizeOf(context).width /3 - 50)),
                       if (_colorAnimations.containsKey(index) &&
                           _colorAnimations[index] != null &&
                           _colorControllers[index] != null &&

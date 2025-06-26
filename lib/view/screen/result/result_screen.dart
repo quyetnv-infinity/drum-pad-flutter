@@ -1,11 +1,7 @@
-import 'package:and_drum_pad_flutter/core/res/dimen/spacing.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/view/screen/home/home_screen.dart';
-import 'package:and_drum_pad_flutter/view/screen/result/widget/congratulations_widget.dart';
-import 'package:and_drum_pad_flutter/view/widget/button/gradient_button.dart';
-import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view/widget/star/star_result.dart';
 import 'package:and_drum_pad_flutter/view/widget/text/judgement_text.dart';
 import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
