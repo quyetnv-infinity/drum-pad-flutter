@@ -76,7 +76,7 @@ class _DrumPadItemState extends State<DrumPadItem> with SingleTickerProviderStat
           // Circle progress indicator for non-practice mode
           if (widget.shouldShowCircleProgress && !widget.isPracticeMode)
             _buildCircleProgress(context),
-          if (!widget.shouldShowCircleProgress && widget.theme.assetIcon != null)
+          if ((!widget.shouldShowCircleProgress && widget.theme.assetIcon != null && !widget.shouldShowSquareProgress) || widget.isPracticeMode)
             Center(
               child: SvgPicture.asset(widget.theme.assetIcon!, colorFilter: ColorFilter.mode(widget.isActive ? widget.theme.activeIconColor : Colors.white, BlendMode.srcIn),),
             ),
