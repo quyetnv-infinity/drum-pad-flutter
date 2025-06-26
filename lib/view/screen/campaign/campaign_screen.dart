@@ -32,8 +32,10 @@ class CampaignScreen extends StatelessWidget {
         child: Consumer<CampaignProvider>(
           builder: (context, value, child) {
             return ListView.separated(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               shrinkWrap: true,
+              // Thêm cacheExtent để tối ưu hiệu suất
+              cacheExtent: 200.0,
               separatorBuilder: (context, index) => ResSpacing.h8,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: value.campaigns.length,
@@ -42,44 +44,28 @@ class CampaignScreen extends StatelessWidget {
                 return InkWell(
                   borderRadius: BorderRadius.circular(12),
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => CampaignDetailScreen(difficulty: campaign.difficulty,),),);
+                    Navigator.push(
+                      context, 
+                      MaterialPageRoute(
+                        builder: (context) => CampaignDetailScreen(
+                          difficulty: campaign.difficulty,
+                        ),
+                      ),
+                    );
                   },
                   child: CampaignItem(
-                    name: Row(
-                      spacing: 8,
-                      children: [
-                        Text(
-                          DifficultyMode.getCampaignName( context, campaign.difficulty),
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white.withValues(alpha: 0.8),
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                            color: Colors.white10,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                            child: Text(
-                              DifficultyMode.getString(context, campaign.difficulty),
-                              style: TextStyle(
-                                color: Colors.white60,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                    name: _buildCampaignName(context, campaign),
+                    score: CalculateFunc.sumScore(
+                      campaign.data.map((e) => e.campaignScore).toList()
                     ),
-                    score: CalculateFunc.sumScore(campaign.data.map((e) => e.campaignScore,).toList()),
-                    star: CalculateFunc.avgStar(campaign.data.map((e) => e.campaignStar,).toList()),
-                    trailingWidget: SvgPicture.asset(ResIcon.icOvalArrowRight),
+                    star: CalculateFunc.avgStar(
+                      campaign.data.map((e) => e.campaignStar).toList()
+                    ),
+                    trailingWidget: SvgPicture.asset(
+                      ResIcon.icOvalArrowRight,
+                      width: 24,
+                      height: 24,
+                    ),
                   ),
                 );
               },
@@ -87,6 +73,42 @@ class CampaignScreen extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+
+  // Tách widget để tránh rebuild không cần thiết
+  Widget _buildCampaignName(BuildContext context, dynamic campaign) {
+    return Row(
+      spacing: 8,
+      children: [
+        Text(
+          DifficultyMode.getCampaignName(context, campaign.difficulty),
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Color.fromRGBO(255, 255, 255, 0.8), // Dùng Color cố định thay vì withValues
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            color: Colors.white10,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+            child: Text(
+              DifficultyMode.getString(context, campaign.difficulty),
+              style: const TextStyle(
+                color: Colors.white60,
+                fontSize: 10,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
