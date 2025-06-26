@@ -251,6 +251,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   void _startTimer() {
     _pauseTimer?.cancel();
     _pauseTimer = Timer(Duration(seconds: 5), () {
+      print('start timer $mounted ${widget.practiceMode != 'practice'}');
       if (mounted && widget.practiceMode != 'practice') {
         _navigateToNextScreen();
       }
@@ -292,7 +293,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         _startSequence();
         widget.onChangeStarLearn?.call(0);
         context.read<DrumLearnProvider>().resetPerfectPoint();
-        widget.onChangePerfectPoint!(0);
+        widget.onChangePerfectPoint?.call(0);
       });
     }else if(oldWidget.practiceMode != widget.practiceMode && widget.practiceMode != "practice"){
       setState(() {
@@ -306,7 +307,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         _startSequence();
         widget.onChangeStarLearn?.call(0);
         context.read<DrumLearnProvider>().resetPerfectPoint();
-        widget.onChangePerfectPoint!(0);
+        widget.onChangePerfectPoint?.call(0);
       });
     }
   }
@@ -320,10 +321,11 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
     /// check is last for a song or for a campaign
     final checkLastCampaign = (campaignProvider.currentSongCampaign >= campaignProvider.currentCampaign.length - 1 && widget.isFromCampaign) || (currentLesson >= lessons.length - 1 && widget.isFromLearnScreen);
-
     _pauseTimer?.cancel();
     provider.resetPerfectPoint();
-    widget.onChangePerfectPoint!(0);
+    print('=++++++++-3');
+    widget.onChangePerfectPoint?.call(0);
+    print('=++++++++0');
     /// 👀 check stop record
     if (provider.isRecording) {
       await ScreenRecorderService().stopRecording(context);
@@ -466,7 +468,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         perfectPoint++;
         provider.increasePerfectPoint();
         /// PERFECT POINT
-        widget.onChangePerfectPoint!(perfectPoint);
+        widget.onChangePerfectPoint?.call(perfectPoint);
         break;
       case PadStateEnum.good:
       case PadStateEnum.late:
@@ -477,7 +479,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         if (state == PadStateEnum.early) earlyPoint++;
 
         provider.resetPerfectPoint();
-        widget.onChangePerfectPoint!(0);
+        widget.onChangePerfectPoint?.call(0);
         perfectPoint = 0;
         print('reset perfect');
         break;
@@ -819,7 +821,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         highlightedSounds.clear();
         padProgress.clear();
         context.read<DrumLearnProvider>().resetPerfectPoint();
-        widget.onChangePerfectPoint!(0);
+        widget.onChangePerfectPoint?.call(0);
         _pauseTimer?.cancel();
         await Future.delayed(Duration(seconds: 1));
         _navigateToNextScreen();

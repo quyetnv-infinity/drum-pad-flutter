@@ -6,6 +6,7 @@ import 'package:and_drum_pad_flutter/view/screen/learn_drum_pad/learn_drum_pad_s
 import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/list_item/campaign_item.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
+import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -74,7 +75,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
                     CampaignItem(
                       trailingWidget: isLocked ? SizedBox.shrink() : _buildTrailingWidget(lesson, index),
                       score: (lesson.perfectScore ?? 0) + (lesson.goodScore ?? 0) + (lesson.earlyScore ?? 0) + (lesson.lateScore ?? 0),
-                      star: lesson.star == 3 ? 100 : (lesson.star == 2 ? 75 : (lesson.star == 1 ? 45 : 0)),
+                      star: lesson.star >= 3 ? 100 : (lesson.star >= 2 ? 75 : (lesson.star >= 1 ? 45 : 0)),
                       name: Text('${context.locale.step} ${index + 1}', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),)
                     ),
                     if(isLocked) Positioned.fill(
@@ -105,10 +106,12 @@ class _LessonsScreenState extends State<LessonsScreen> {
     );
   }
 
-  Future<void> _onTapToPlay() async {
-    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => LearnDrumPadScreen(songCollection: widget.song.copyWith(lessons: _lessons),),));
-    /// check result condition to fetch dataSong
-    // await fetchLessonData();
+  Future<void> _onTapToPlay(int index) async {
+    await context.read<DrumLearnProvider>().addToResume(widget.song.id);
+    Provider.of<CampaignProvider>(context, listen: false).setCurrentLessonCampaign(index);
+    await Navigator.push(context, MaterialPageRoute(builder: (context) => LearnDrumPadScreen(songCollection: widget.song.copyWith(lessons: _lessons), lessonIndex: index,)));
+    print('FETCH LESSON DATA ------------------');
+    await fetchLessonData();
   }
 
   Widget _buildTrailingWidget(LessonSequence lesson, int index) {
@@ -116,7 +119,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
       return InkWell(
         borderRadius: BorderRadius.circular(30),
         onTap: () async {
-          await _onTapToPlay();
+          await _onTapToPlay(index);
         },
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 14, vertical: 4),
@@ -131,10 +134,10 @@ class _LessonsScreenState extends State<LessonsScreen> {
     return InkWell(
       borderRadius: BorderRadius.circular(30),
       onTap: () async {
-        await _onTapToPlay();
+        await _onTapToPlay(index);
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 4),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           gradient: LinearGradient(colors: [Color(0xFFA005FF), Color(0xFFD796FF)])
