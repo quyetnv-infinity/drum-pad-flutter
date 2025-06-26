@@ -164,6 +164,12 @@ class SongCollection extends HiveObject{
     );
   }
 
+
+  @override
+  String toString() {
+    return 'SongCollection{id: $id, lessons: $lessons, beatRunnerLessons: $beatRunnerLessons, stepQuantity: $stepQuantity, author: $author, name: $name, pathZipFile: $pathZipFile, difficulty: $difficulty, campaignStar: $campaignStar, campaignScore: $campaignScore, image: $image}';
+  }
+
   double getTotalStars() {
     return lessons.fold(0.0, (total, lesson) => total + lesson.star);
   }
