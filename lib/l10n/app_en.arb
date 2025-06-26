@@ -81,5 +81,8 @@
   "theme_applied": "Theme Applied",
   "theme_applied_successfully": "Theme Applied Successfully",
   "theme_applied_successfully_description": "Your theme has been applied. Take a look around and enjoy the new vibe.",
-  "ok": "Ok"
+  "ok": "Ok",
+  "step": "Step",
+  "play": "Play",
+  "need_2_stars_to_unlock": "Need 2 stars to unlock"
 }
