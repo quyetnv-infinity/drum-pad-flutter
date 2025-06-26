@@ -78,6 +78,9 @@ class _BeatLearnBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    print("Building BeatLearnBody");
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8,

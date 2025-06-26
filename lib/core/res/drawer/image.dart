@@ -42,4 +42,5 @@ class ResImage {
   static const String img3 = '$basePath/img_3.png';
   static const String img4 = '$basePath/img_4.png';
   static const String img5 = '$basePath/img_5.png';
+  static const String img6 = '$basePath/img_6.png';
 }

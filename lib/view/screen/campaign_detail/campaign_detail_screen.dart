@@ -27,6 +27,14 @@ class _CampaignConstants {
   static const double rightSidePosition = contentWidth - (itemSize + itemPadding);
   static const double leftLineHorizontalPosition = contentWidth / leftLineHorizontalDivisor;
   static const double rightLineHorizontalPosition = contentWidth / rightLineHorizontalDivisor;
+
+  static const List<String> images = [
+    ResImage.img1,
+    ResImage.img2,
+    ResImage.img3,
+    ResImage.img4,
+    ResImage.img5,
+  ];
 }
 
 class CampaignDetailScreen extends StatefulWidget {
@@ -54,6 +62,7 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
     ResImage.img3,
     ResImage.img4,
     ResImage.img5,
+    ResImage.img6,
   ];
 
   @override
@@ -225,13 +234,34 @@ class _CampaignLevelMap extends StatelessWidget {
     // Define a small offset increment for each line
     const double lineOffsetIncrement = 2.0; // Adjust this value to control the offset increase
 
+    // Calculate vertical positions for levels, ensuring double type
+    List<double> levelPositions = List.generate(songs.length, (index) {
+      return (100.0 - index.toDouble()) + index * _CampaignConstants.verticalSpacing;
+    });
+
+    // Get position for a specific level
+    double getLevelPosition(int level) {
+      int index = songs.length - level; // e.g., level 1 -> index N-1
+      if (index >= 0 && index < songs.length) {
+        return levelPositions[index].toDouble();
+      }
+      return 0.0; // Fallback if level doesn't exist
+    }
+
+    // Image positions (same vertical position as corresponding level, opposite horizontal side)
+    final double img6Position = songs.length >= 2 ? getLevelPosition(2) : 0.0; // Opposite level 2
+    final double img1Position = songs.length >= 3 ? getLevelPosition(3) : 0.0; // Opposite level 3
+    final double img2Position = songs.length >= 4 ? getLevelPosition(4) : 0.0; // Opposite level 4
+    final double img3Position = songs.length >= 5 ? getLevelPosition(5) : 0.0; // Opposite level 5
+    final double img5Position = songs.length >= 6 ? getLevelPosition(6) : 0.0; // Opposite level 6
+    final double img4Position = songs.length >= 6 ? getLevelPosition(7) : 0.0; // Opposite level 7
+
     return Stack(
       children: [
         // Connecting lines
         ...List.generate(songs.isNotEmpty ? songs.length - 1 : 0, (index) {
-          // Add incremental offset based on index
-          final lineVerticalPosition = (100.0 - index + 5) + index * _CampaignConstants.verticalSpacing + (index * lineOffsetIncrement);
-          final isEvenIndex = (songs.length - index) % 2 == 1;
+          final double lineVerticalPosition = (100.0 - index + 5.0) + index * _CampaignConstants.verticalSpacing + (index * lineOffsetIncrement);
+          final bool isEvenIndex = (songs.length - index) % 2 == 1;
 
           return Positioned(
             top: lineVerticalPosition,
@@ -249,8 +279,8 @@ class _CampaignLevelMap extends StatelessWidget {
         ...List.generate(songs.length, (index) {
           final item = songs[index];
           final levelNumber = songs.length - index;
-          final verticalPosition = (100 - index) + index * _CampaignConstants.verticalSpacing;
-          final horizontalPosition = (songs.length - index) % 2 == 1
+          final double verticalPosition = levelPositions[index];
+          final double horizontalPosition = (songs.length - index) % 2 == 1
               ? _CampaignConstants.rightSidePosition
               : _CampaignConstants.leftSidePosition;
 
@@ -264,12 +294,89 @@ class _CampaignLevelMap extends StatelessWidget {
             ),
           );
         }),
+
+        // Image 6: Opposite level 2, requires levels 1 and 2
+        if (songs.length >= 2)
+          Positioned(
+            top: img6Position,
+            right: 0,
+            child: CachedImageWidget(
+              imagePath: ResImage.img6,
+              width: 150.0,
+              height: 150.0,
+              fit: BoxFit.cover,
+            ),
+          ),
+
+        // Image 1: Opposite level 3, requires levels 1, 2, 3
+        if (songs.length >= 3)
+          Positioned(
+            top: img1Position,
+            left: 0,
+            child: CachedImageWidget(
+              imagePath: ResImage.img1,
+              width: 150.0,
+              height: 150.0,
+              fit: BoxFit.cover,
+            ),
+          ),
+
+        // Image 2: Opposite level 4, requires levels 1, 2, 3, 4
+        if (songs.length >= 4)
+          Positioned(
+            top: img2Position,
+            right: 0,
+            child: CachedImageWidget(
+              imagePath: ResImage.img2,
+              width: 100.0,
+              height: 100.0,
+              fit: BoxFit.cover,
+            ),
+          ),
+
+        // Image 3: Opposite level 5, requires levels 1, 2, 3, 4, 5
+        if (songs.length >= 5)
+          Positioned(
+            top: img3Position,
+            left: 0,
+            child: CachedImageWidget(
+              imagePath: ResImage.img3,
+              width: 100.0,
+              height: 100.0,
+              fit: BoxFit.cover,
+            ),
+          ),
+
+        // Image 5: Opposite level 6, requires levels 1, 2, 3, 4, 5, 6
+        if (songs.length >= 6)
+          Positioned(
+            top: img5Position,
+            right: 0,
+            child: CachedImageWidget(
+              imagePath: ResImage.img5,
+              width: 100.0,
+              height: 100.0,
+              fit: BoxFit.cover,
+            ),
+          ),
+
+        // Image 4: Opposite level 7, requires levels 1, 2, 3, 4, 5, 6
+        if (songs.length >= 6)
+          Positioned(
+            top: img4Position,
+            left: 0,
+            child: CachedImageWidget(
+              imagePath: ResImage.img4,
+              width: 100.0,
+              height: 100.0,
+              fit: BoxFit.cover,
+            ),
+          ),
       ],
     );
   }
 }
 
-// Widget riêng cho từng level item
 class _LevelItem extends StatelessWidget {
   final SongCollection song;
   final int levelNumber;
