@@ -5,10 +5,12 @@ import 'package:and_drum_pad_flutter/core/enum/sound_type_enum.dart';
 import 'package:and_drum_pad_flutter/core/utils/note.util.dart';
 import 'package:and_drum_pad_flutter/core/utils/pad_util.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
+import 'package:and_drum_pad_flutter/data/model/theme_model.dart';
 import 'package:and_drum_pad_flutter/data/service/screen_record_service.dart';
 import 'package:and_drum_pad_flutter/view/screen/result/result_screen.dart';
 import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
+import 'package:and_drum_pad_flutter/view_model/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
@@ -95,6 +97,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
 
   List<Map<String, dynamic>> _futureNotes = [];
 
+  late ThemeModel currentTheme;
+
   List<Map<String, dynamic>> getFutureNotes(LessonSequence data) {
     List<Map<String, dynamic>> futureNotes = [];
     List<NoteEvent> events = widget.currentSong?.lessons[currentLesson].events ?? [];
@@ -114,6 +118,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   @override
   void initState() {
     super.initState();
+    currentTheme = Provider.of<ThemeProvider>(context, listen: false).currentTheme;
     _isFromBeatRunner = !widget.isFromCampaign && !widget.isFromLearnScreen;
     if(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty) {
       setState(() {
@@ -136,7 +141,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     )..repeat();
     if(widget.currentSong != null) context.read<DrumLearnProvider>().addBeatRunnerSongComplete(widget.currentSong!.id);
     widget.onRegisterPauseHandler?.call(pause);
-
+    print('currentEventIndex: $currentEventIndex');
   }
 
   @override
@@ -679,7 +684,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     double delay = currentTime - prevTime;
 
     // Nếu nốt đầu tiên có thời gian là 0, thì bỏ qua progress cho nốt này
-    if (currentEventIndex == 0 && currentTime == 0) return;
+    // if (currentEventIndex == 0 && currentTime == 0) return;
 
     for (var note in event.notes) {
       padProgress[note] = 0.0;
@@ -851,7 +856,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
 
   List<Color> getPadColor(bool isHighlighted, bool hasSound, bool isActive, String soundId){
     if(widget.currentSong == null || widget.currentSong!.lessons.isEmpty) return [Color(0xFFe099ff).withValues(alpha: 0.4), Color(0xFFc84bff).withValues(alpha: 0.4)];
-    return isHighlighted && widget.practiceMode != 'practice' ? [Color(0xFFEDC78C), Colors.orange] : (hasSound ? PadUtil.getPadGradientColor(isActive, soundId) : [Color(0xFF919191), Color(0xFF5E5E5E)]);
+    return isHighlighted && widget.practiceMode != 'practice' ? [Color(0xFFEDC78C), Colors.orange] : (hasSound ? PadUtil.getPadGradientColor(isActive, soundId, currentTheme) : [Color(0xFF919191), Color(0xFF5E5E5E)]);
   }
 
   void checkPointsExceed() {
@@ -1012,6 +1017,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
                   child: DrumPadItem(
                     colors: getPadColor(isHighlighted, hasSound, isActive, soundId),
                     sound: sound,
+                    theme: currentTheme,
                     isHighlighted: isHighlighted,
                     isActive: isActive,
                     onTap: () => _onPadPressed(sound, index),
