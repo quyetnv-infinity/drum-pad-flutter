@@ -87,7 +87,7 @@ class _ModePlayItemState extends State<ModePlayItem> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                Image.asset(ResImage.iconNextBtn)
+                Image.asset(ResImage.iconNextBtn, width: 40,height: 40,)
               ],
             ),
           ),
