@@ -1,4 +1,5 @@
 import 'package:and_drum_pad_flutter/constant/app_info.dart';
+import 'package:and_drum_pad_flutter/core/utils/image_preloader.dart';
 import 'package:and_drum_pad_flutter/view/screen/home/home_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/language/language_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
@@ -15,16 +16,39 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver {
+  bool _isPreloadingComplete = false;
 
   @override
   void initState() {
     super.initState();
+    // Bắt đầu preload images ngay khi widget được tạo
+    _preloadImages();
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  Future<void> _preloadImages() async {
+    try {
+      // Preload critical images trong background
+      await ImagePreloader.preloadCriticalImages(context);
+      if (mounted) {
+        setState(() {
+          _isPreloadingComplete = true;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error preloading images: $e');
+      // Vẫn tiếp tục nếu có lỗi
+      if (mounted) {
+        setState(() {
+          _isPreloadingComplete = true;
+        });
+      }
+    }
   }
 
   @override
@@ -39,15 +63,18 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   }
 
   void _onLoadingEnd() {
-    // EUConsent().requestConsent(() {
-    //   final adsProvider = Provider.of<AdsProvider>(context, listen: false);
-    //   adsProvider.showInterAd(
-    //       name: "inter_splash",
-    //       callback: () {
-            _navigateToHome();
-    //       }
-    //   );
-    // });
+    // Chỉ navigate khi preloading hoàn thành
+    if (_isPreloadingComplete) {
+      // EUConsent().requestConsent(() {
+      //   final adsProvider = Provider.of<AdsProvider>(context, listen: false);
+      //   adsProvider.showInterAd(
+      //       name: "inter_splash",
+      //       callback: () {
+              _navigateToHome();
+      //       }
+      //   );
+      // });
+    }
   }
 
   Future<void> _navigateToHome() async {

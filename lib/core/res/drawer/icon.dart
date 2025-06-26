@@ -36,6 +36,8 @@ class ResIcon {
   static const String icHome = '${basePath}ic_home.svg';
   static const String icRefresh = '${basePath}ic_refresh.svg';
   static const String icOvalArrowRight = '${basePath}oval_arrow_right.svg';
+  static const String icRecord = '${basePath}ic_record.svg';
+  static const String icLock = '${basePath}ic_lock.svg';
 
   // theme
   static const String icGridPad = '${basePath}ic_grid_pad.svg';

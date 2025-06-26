@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
+import 'package:and_drum_pad_flutter/core/utils/image_preloader.dart';
 import 'package:and_drum_pad_flutter/data/service/api_service/song_service.dart';
 import 'package:and_drum_pad_flutter/hive/hive_registrar.g.dart';
 import 'package:and_drum_pad_flutter/service_locator/service_locator.dart';
@@ -31,6 +32,10 @@ import 'data/model/lesson_model.dart';
 void main() {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    
+    // Warm up image cache trước khi khởi tạo app
+    await ImagePreloader.warmUpImageCache();
+    
     // await initTrackingPermission();
     // await Firebase.initializeApp();
     await Future.wait([

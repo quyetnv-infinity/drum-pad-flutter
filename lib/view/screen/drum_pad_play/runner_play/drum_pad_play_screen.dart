@@ -83,7 +83,7 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
 
   Widget _buildTitle(){
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 4),
+      padding: EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.1),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1), width: 1),
@@ -94,7 +94,7 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SvgPicture.asset(ResIcon.icWaveForm),
-          Text("${widget.songCollection.name}-${widget.songCollection.author}", style: TextStyle(fontSize: 16),)
+          Expanded(child: Text("${widget.songCollection.name} - ${widget.songCollection.author}", style: TextStyle(fontSize: 16),))
         ],
       ),
     );
