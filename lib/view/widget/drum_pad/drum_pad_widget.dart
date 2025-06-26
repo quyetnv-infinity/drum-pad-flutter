@@ -2,20 +2,17 @@ import 'dart:async';
 import 'dart:math';
 import 'package:and_drum_pad_flutter/core/enum/pad_state_enum.dart';
 import 'package:and_drum_pad_flutter/core/enum/sound_type_enum.dart';
-import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/core/utils/note.util.dart';
 import 'package:and_drum_pad_flutter/core/utils/pad_util.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/data/service/screen_record_service.dart';
 import 'package:and_drum_pad_flutter/view/screen/result/result_screen.dart';
-import 'package:and_drum_pad_flutter/view/widget/drum_pad/border_anim.dart';
 import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'drum_pad_item.dart';
 
 class DrumPadScreen extends StatefulWidget {
   final SongCollection? currentSong;
@@ -1008,114 +1005,33 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
                 final bool isHighlighted = highlightedSounds.contains(soundId);
                 final sound = lessonSounds.length == 12 ? lessonSounds[index] : '';
                 bool isActive = _padPressedIndex.isNotEmpty && _padPressedIndex.contains(index) && widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty;
-                return GestureDetector(
-                  onTapDown: (details) {
-                    _onPadPressed(sound, index);
-                  },
-                  child: Stack(
-                    children: [
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 150),
-                        curve: Curves.easeInOut,
-                        padding: EdgeInsets.all(isActive ? 8 : 0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.0),
-                              gradient: RadialGradient(colors: getPadColor(isHighlighted, hasSound, isActive, soundId))
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: TweenAnimationBuilder(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          tween: Tween<double>(begin: 1.0, end: isActive ? 2.5 : 1.0),
-                          builder: (context, scale, child) {
-                            return Transform.scale(
-                              scale: scale,
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 100),
-                                curve: Curves.easeInOut,
-                                transform: Matrix4.translationValues(0, padStates[sound] != null ? -80 : 0, 0),
-                                child: (padStates[sound] ?? PadStateEnum.none).getDisplayWidget(context),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      // (padStates[sound] ?? PadStateEnum.none).getDisplayWidget(context),
-                      if (_futureNotes.isNotEmpty
-                          && (_futureNotes[0]["notes"] as List).contains(sound)
-                          && currentEventIndex != 0
-                          && !padProgress.containsKey(sound)
-                          && !sound.contains("drum")
-                          && _futureNotes[0]["index"] - currentEventIndex < 4
-                      )
-                        if(widget.practiceMode !='practice')
-                        Stack(
-                          children: [
-                            Align(
-                              alignment: Alignment.center,
-                              child:
-                              CircularProgressIndicator(
-                                value: _calculateProgressValue(currentEventIndex, _futureNotes[0]["index"]),
-                                strokeWidth: 5,
-                                backgroundColor: Colors.white24,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                              ),
-                            ),
-                            Align(
-                                alignment: Alignment.center,
-                                child: Text(context.locale.wait, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: Colors.white))),
-                          ],
-                        ),
-                      if (padProgress.containsKey(sound) && hasSound && widget.practiceMode != 'practice' && _isFromBeatRunner)
-                        Positioned.fill(
-                          child: CustomPaint(
-                            painter: SquareProgressPainter(
-                              progress: padProgress[sound] ?? 0,
-                              color: Colors.white,
-                              strokeWidth: 4,
-                              borderRadius: 10,
-                            ),
-                          ),
-                        ),
-                      if (padProgress.containsKey(sound) && hasSound && widget.practiceMode != 'practice' && !_isFromBeatRunner)
-                        Align(
-                          alignment: Alignment.center,
-                          child:  SizedBox(
-                            width: 36,
-                            height: 36,
-                            child: CircularProgressIndicator(
-                              value: padProgress[sound],
-                              strokeWidth: 5,
-                              backgroundColor: Colors.white24,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                            ),
-                          ),
-                        ),
-                      if (isActive)
-                        Lottie.asset('assets/anim/lightning_button.json', fit: BoxFit.cover, controller: _controller),
-                      if(!padProgress.containsKey(sound) && isHighlighted && widget.practiceMode != 'practice')
-                        Align(
-                            alignment: Alignment.center,
-                            child: Lottie.asset('assets/anim/click_here.json', height: MediaQuery.sizeOf(context).width /3 - 50)),
-                      if (_colorAnimations.containsKey(index) &&
-                          _colorAnimations[index] != null &&
-                          _colorControllers[index] != null &&
-                          _colorControllers[index]!.isAnimating)
-                        AnimatedBuilder(
-                          animation: _colorAnimations[index]!,
-                          builder: (context, child) {
-                            return Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.0),
-                                color: _colorAnimations[index]?.value ?? Colors.transparent,
-                              ),
-                            );
-                          },
-                        ),
-                    ],
+                return RepaintBoundary(
+                  key: ValueKey(soundId),
+                  child: DrumPadItem(
+                    colors: getPadColor(isHighlighted, hasSound, isActive, soundId),
+                    sound: sound,
+                    isHighlighted: isHighlighted,
+                    isActive: isActive,
+                    onTap: () => _onPadPressed(sound, index),
+                    isPracticeMode: widget.practiceMode == 'practice',
+                    isFromBeatRunner: _isFromBeatRunner,
+                    shouldShowCircleProgress: (_futureNotes.isNotEmpty
+                      && (_futureNotes[0]["notes"] as List).contains(sound)
+                      && currentEventIndex != 0
+                      && !padProgress.containsKey(sound)
+                      && !sound.contains("drum")
+                      && _futureNotes[0]["index"] - currentEventIndex < 4
+                    ),
+                    circleProgressValue: _futureNotes.isNotEmpty ? _calculateProgressValue(currentEventIndex, _futureNotes[0]["index"]) : 0,
+                    hasSound: hasSound,
+                    padState: padStates[sound],
+                    shouldShowSquareProgress: padProgress.containsKey(sound),
+                    squareProgressValue: padProgress[sound] ?? 0,
+                    shouldShowColorAnimation: (_colorAnimations.containsKey(index) &&
+                      _colorAnimations[index] != null &&
+                      _colorControllers[index] != null &&
+                      _colorControllers[index]!.isAnimating),
+                    colorAnimation: _colorAnimations[index] ?? AlwaysStoppedAnimation<Color>(Colors.transparent),
                   ),
                 );
               },
