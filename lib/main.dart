@@ -133,6 +133,7 @@ class MyApp extends StatelessWidget {
             centerTitle: true,
             surfaceTintColor: Colors.transparent,
           ),
+          splashFactory: NoSplash.splashFactory,
         ),
         themeMode: ThemeMode.dark,
         locale: locale,

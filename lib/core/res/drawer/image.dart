@@ -36,4 +36,10 @@ class ResImage {
   static const String imgUnlockLevel = "$basePath/img_unlock_level.png";
   static const String imgLineToLeft = "$basePath/img_line_to_left.png";
   static const String imgLineToRight = "$basePath/img_line_to_right.png";
+
+  static const String img1 = '$basePath/img_1.png';
+  static const String img2 = '$basePath/img_2.png';
+  static const String img3 = '$basePath/img_3.png';
+  static const String img4 = '$basePath/img_4.png';
+  static const String img5 = '$basePath/img_5.png';
 }
