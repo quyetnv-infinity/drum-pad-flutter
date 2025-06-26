@@ -4,7 +4,7 @@ import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/view/screen/beat_runner/widget/recommend_list_song.dart';
 import 'package:and_drum_pad_flutter/view/screen/category/category_details_screen.dart';
-import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/drum_pad_play_screen.dart';
+import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/free_style/free_style_play_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/item/mode_play_item.dart';
 import 'package:and_drum_pad_flutter/view/widget/list_view/mood_and_genres.dart';
@@ -25,7 +25,7 @@ class BeatRunnerScreen extends StatelessWidget {
         leading: Padding(
           padding: const EdgeInsets.only(left: 16, top: 10),
           child: Text(context.locale.beat_runner, maxLines: 1, overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize:20, fontFamily: AppFonts.commando)),
+              style: TextStyle(fontSize:20, fontFamily: AppFonts.commando, color: Colors.white)),
         ),
         actions: [
           Padding(
@@ -56,7 +56,7 @@ class BeatRunnerScreen extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 16),
                   child: ModePlayItem(asset: ResImage.imgBgPadDrum, title: context.locale.freestyle_pad_drum, description: context.locale.pad_drum_des,
                     onTap: () {
-                      Navigator.push(context, CupertinoPageRoute(builder: (context) => DrumPadPlayScreen()));
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => FreeStylePlayScreen()));
                     },
                   ),
                 ),

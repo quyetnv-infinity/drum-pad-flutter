@@ -67,6 +67,7 @@ class _ModePlayItemState extends State<ModePlayItem> {
               ),
             ),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
                   child: Column(

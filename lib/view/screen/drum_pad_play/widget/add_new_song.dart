@@ -112,7 +112,7 @@ class _AddNewSongState extends State<AddNewSong> with SingleTickerProviderStateM
                 ),
               ),
               Positioned(
-                left:  widget.songCollection == null? screenW * 0.45 : screenW * 0.38,
+                left:  widget.songCollection == null? screenW * 0.42 : screenW * 0.38,
                 top: 0,
                 bottom: 0,
                 child: Align(
@@ -124,7 +124,7 @@ class _AddNewSongState extends State<AddNewSong> with SingleTickerProviderStateM
                     children: [
                       Text(context.locale.add_new_song, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 20, fontFamily: AppFonts.commando)),
                       SizedBox(
-                        width: 180,
+                        width: 160,
                         child: Text(context.locale.choose_a_song_to_play, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white.withValues(alpha: 0.6)))
                       ),
                     ],

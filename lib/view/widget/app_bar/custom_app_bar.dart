@@ -6,14 +6,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String iconLeading;
   final Function() onTapLeading;
   final String? title;
+  final Widget? titleWidget;
   final List<Widget>? action;
-  const CustomAppBar({super.key, required this.iconLeading, required this.onTapLeading, this.title, this.action});
+  const CustomAppBar({super.key, required this.iconLeading, required this.onTapLeading, this.title, this.action, this.titleWidget});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       centerTitle: true,
-      title: Text(title ?? "", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: Colors.white)),
+      title: titleWidget ?? Text(title ?? "", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: Colors.white)),
       leadingWidth: 48,
       leading: Padding(
         padding: EdgeInsets.symmetric(vertical: 12).copyWith(left: 16),

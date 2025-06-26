@@ -97,7 +97,6 @@ class SongCollection extends HiveObject{
       var lesson = LessonSequence.fromJson(lessonJson);
 
       if (i == 0) {
-        lesson.isCompleted = true;
         lesson.star = 0.0;
       }
 
