@@ -231,30 +231,26 @@ class _CampaignLevelMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Define a small offset increment for each line
-    const double lineOffsetIncrement = 2.0; // Adjust this value to control the offset increase
+    const double lineOffsetIncrement = 5.0;
 
-    // Calculate vertical positions for levels, ensuring double type
     List<double> levelPositions = List.generate(songs.length, (index) {
       return (100.0 - index.toDouble()) + index * _CampaignConstants.verticalSpacing;
     });
 
-    // Get position for a specific level
     double getLevelPosition(int level) {
-      int index = songs.length - level; // e.g., level 1 -> index N-1
+      int index = songs.length - level;
       if (index >= 0 && index < songs.length) {
         return levelPositions[index].toDouble();
       }
-      return 0.0; // Fallback if level doesn't exist
+      return 0.0;
     }
 
-    // Image positions (same vertical position as corresponding level, opposite horizontal side)
-    final double img6Position = songs.length >= 2 ? getLevelPosition(2) : 0.0; // Opposite level 2
-    final double img1Position = songs.length >= 3 ? getLevelPosition(3) : 0.0; // Opposite level 3
-    final double img2Position = songs.length >= 4 ? getLevelPosition(4) : 0.0; // Opposite level 4
-    final double img3Position = songs.length >= 5 ? getLevelPosition(5) : 0.0; // Opposite level 5
-    final double img5Position = songs.length >= 6 ? getLevelPosition(6) : 0.0; // Opposite level 6
-    final double img4Position = songs.length >= 6 ? getLevelPosition(7) : 0.0; // Opposite level 7
+    final double img6Position = songs.length >= 2 ? getLevelPosition(2) : 0.0;
+    final double img1Position = songs.length >= 3 ? getLevelPosition(3) : 0.0;
+    final double img2Position = songs.length >= 4 ? getLevelPosition(4) : 0.0;
+    final double img3Position = songs.length >= 5 ? getLevelPosition(5) : 0.0;
+    final double img5Position = songs.length >= 6 ? getLevelPosition(6) : 0.0;
+    final double img4Position = songs.length >= 6 ? getLevelPosition(7) : 0.0;
 
     return Stack(
       children: [
@@ -275,7 +271,6 @@ class _CampaignLevelMap extends StatelessWidget {
           );
         }),
 
-        // Level items
         ...List.generate(songs.length, (index) {
           final item = songs[index];
           final levelNumber = songs.length - index;
