@@ -1,4 +1,5 @@
 import 'package:and_drum_pad_flutter/core/enum/sound_type_enum.dart';
+import 'package:and_drum_pad_flutter/data/model/theme_model.dart';
 import 'package:flutter/material.dart';
 
 class PadUtil {
@@ -20,17 +21,17 @@ class PadUtil {
     return SoundType.drum;
   }
 
-  static List<Color> getPadGradientColor(bool isActive, String sound){
+  static List<Color> getPadGradientColor(bool isActive, String sound, ThemeModel theme){
     if(isActive){
       for (var key in soundGradientActiveColors.keys) {
         if (sound.contains(key)) {
-          return soundGradientActiveColors[key]!;
+          return [Colors.white, Colors.white];
         }
       }
     } else {
       for (var key in soundGradientDefaultColors.keys) {
         if (sound.contains(key)) {
-          return soundGradientDefaultColors[key]!;
+          return theme.gradient.colors;
         }
       }
     }

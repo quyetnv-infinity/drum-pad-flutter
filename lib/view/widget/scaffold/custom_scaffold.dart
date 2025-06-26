@@ -8,6 +8,7 @@ class AppScaffold extends StatelessWidget {
   final Widget? floatingActionButton;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
   final bool extendBodyBehindAppBar;
+  final String imagePath;
 
   const AppScaffold({
     super.key,
@@ -18,13 +19,14 @@ class AppScaffold extends StatelessWidget {
     this.floatingActionButton,
     this.floatingActionButtonLocation,
     this.extendBodyBehindAppBar = false,
+    this.imagePath = 'assets/images/gradient_background.png',
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        image: DecorationImage(image: AssetImage('assets/images/gradient_background.png'), fit: BoxFit.fill)
+        image: DecorationImage(image: AssetImage(imagePath), fit: BoxFit.fill)
       ),
       child: Scaffold(
         appBar: appBar,

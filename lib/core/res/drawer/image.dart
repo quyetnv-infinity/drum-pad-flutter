@@ -33,4 +33,15 @@ class ResImage {
   static const String iconNextBtn = '$basePath/icon_nextbtn.png';
   static const String iconEmpty = '$basePath/img_empty.png';
   static const String imgPads = "$basePath/img_pads.png";
+  static const String imgLockLevel = "$basePath/img_lock_level.png";
+  static const String imgUnlockLevel = "$basePath/img_unlock_level.png";
+  static const String imgLineToLeft = "$basePath/img_line_to_left.png";
+  static const String imgLineToRight = "$basePath/img_line_to_right.png";
+
+  static const String img1 = '$basePath/img_1.png';
+  static const String img2 = '$basePath/img_2.png';
+  static const String img3 = '$basePath/img_3.png';
+  static const String img4 = '$basePath/img_4.png';
+  static const String img5 = '$basePath/img_5.png';
+  static const String img6 = '$basePath/img_6.png';
 }

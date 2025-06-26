@@ -97,7 +97,6 @@ class SongCollection extends HiveObject{
       var lesson = LessonSequence.fromJson(lessonJson);
 
       if (i == 0) {
-        lesson.isCompleted = true;
         lesson.star = 0.0;
       }
 
@@ -162,6 +161,12 @@ class SongCollection extends HiveObject{
       campaignStar: campaignStar ?? this.campaignStar,
       image: image ?? this.image,
     );
+  }
+
+
+  @override
+  String toString() {
+    return 'SongCollection{id: $id, lessons: $lessons, beatRunnerLessons: $beatRunnerLessons, stepQuantity: $stepQuantity, author: $author, name: $name, pathZipFile: $pathZipFile, difficulty: $difficulty, campaignStar: $campaignStar, campaignScore: $campaignScore, image: $image}';
   }
 
   double getTotalStars() {

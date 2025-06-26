@@ -2,20 +2,19 @@ import 'dart:async';
 import 'dart:math';
 import 'package:and_drum_pad_flutter/core/enum/pad_state_enum.dart';
 import 'package:and_drum_pad_flutter/core/enum/sound_type_enum.dart';
-import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/core/utils/note.util.dart';
 import 'package:and_drum_pad_flutter/core/utils/pad_util.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
+import 'package:and_drum_pad_flutter/data/model/theme_model.dart';
 import 'package:and_drum_pad_flutter/data/service/screen_record_service.dart';
 import 'package:and_drum_pad_flutter/view/screen/result/result_screen.dart';
-import 'package:and_drum_pad_flutter/view/widget/drum_pad/border_anim.dart';
 import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:and_drum_pad_flutter/view_model/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'drum_pad_item.dart';
 
 class DrumPadScreen extends StatefulWidget {
   final SongCollection? currentSong;
@@ -32,8 +31,9 @@ class DrumPadScreen extends StatefulWidget {
   final void Function(VoidCallback pauseHandler)? onRegisterPauseHandler;
   final void Function(bool isPlaying)? onChangePlayState;
   final void Function(int perfectPoint)? onChangePerfectPoint;
+  final bool? isNavigate;
 
-  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onResetRecordingToggle, this.onRegisterPauseHandler, this.onChangePlayState, this.onChangePerfectPoint});
+  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onResetRecordingToggle, this.onRegisterPauseHandler, this.onChangePlayState, this.onChangePerfectPoint, this.isNavigate});
 
   @override
   State<DrumPadScreen> createState() => _DrumPadScreenState();
@@ -97,6 +97,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
 
   List<Map<String, dynamic>> _futureNotes = [];
 
+  late ThemeModel currentTheme;
+
   List<Map<String, dynamic>> getFutureNotes(LessonSequence data) {
     List<Map<String, dynamic>> futureNotes = [];
     List<NoteEvent> events = widget.currentSong?.lessons[currentLesson].events ?? [];
@@ -116,6 +118,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   @override
   void initState() {
     super.initState();
+    currentTheme = Provider.of<ThemeProvider>(context, listen: false).currentTheme;
     _isFromBeatRunner = !widget.isFromCampaign && !widget.isFromLearnScreen;
     if(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty) {
       setState(() {
@@ -161,14 +164,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
       });
     }
     checkModeChange(oldWidget);
-    // if(oldWidget.isNavigate != widget.isNavigate){
-    //   print(widget.isNavigate);
-    //
-    //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //     _navigateToNextScreen();
-    //   },);
-    //   print('-------------------------');
-    // }
   }
 
   @override
@@ -302,7 +297,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         _startSequence();
         widget.onChangeStarLearn?.call(0);
         context.read<DrumLearnProvider>().resetPerfectPoint();
-        widget.onChangePerfectPoint!(0);
+        widget.onChangePerfectPoint?.call(0);
       });
     }else if(oldWidget.practiceMode != widget.practiceMode && widget.practiceMode != "practice"){
       setState(() {
@@ -316,13 +311,12 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         _startSequence();
         widget.onChangeStarLearn?.call(0);
         context.read<DrumLearnProvider>().resetPerfectPoint();
-        widget.onChangePerfectPoint!(0);
+        widget.onChangePerfectPoint?.call(0);
       });
     }
   }
 
   void _navigateToNextScreen() async {
-    // print('navigate $isNavigatedToResult');
     if(isNavigatedToResult) return;
     setState(() {
       isNavigatedToResult = true;
@@ -331,7 +325,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
     /// check is last for a song or for a campaign
     final checkLastCampaign = (campaignProvider.currentSongCampaign >= campaignProvider.currentCampaign.length - 1 && widget.isFromCampaign) || (currentLesson >= lessons.length - 1 && widget.isFromLearnScreen);
-
     _pauseTimer?.cancel();
     provider.resetPerfectPoint();
     widget.onChangePerfectPoint!(0);
@@ -478,7 +471,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         perfectPoint++;
         provider.increasePerfectPoint();
         /// PERFECT POINT
-        widget.onChangePerfectPoint!(perfectPoint);
+        widget.onChangePerfectPoint?.call(perfectPoint);
         break;
       case PadStateEnum.good:
       case PadStateEnum.late:
@@ -489,7 +482,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         if (state == PadStateEnum.early) earlyPoint++;
 
         provider.resetPerfectPoint();
-        widget.onChangePerfectPoint!(0);
+        widget.onChangePerfectPoint?.call(0);
         print('reset perfect');
         break;
       default:
@@ -688,7 +681,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     double delay = currentTime - prevTime;
 
     // Nếu nốt đầu tiên có thời gian là 0, thì bỏ qua progress cho nốt này
-    if (currentEventIndex == 0 && currentTime == 0) return;
+    // if (currentEventIndex == 0 && currentTime == 0) return;
 
     for (var note in event.notes) {
       padProgress[note] = 0.0;
@@ -830,7 +823,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         highlightedSounds.clear();
         padProgress.clear();
         context.read<DrumLearnProvider>().resetPerfectPoint();
-        widget.onChangePerfectPoint!(0);
+        widget.onChangePerfectPoint?.call(0);
         _pauseTimer?.cancel();
         await Future.delayed(Duration(seconds: 1));
         _navigateToNextScreen();
@@ -860,7 +853,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
 
   List<Color> getPadColor(bool isHighlighted, bool hasSound, bool isActive, String soundId){
     if(widget.currentSong == null || widget.currentSong!.lessons.isEmpty) return [Color(0xFFe099ff).withValues(alpha: 0.4), Color(0xFFc84bff).withValues(alpha: 0.4)];
-    return isHighlighted && widget.practiceMode != 'practice' ? [Color(0xFFEDC78C), Colors.orange] : (hasSound ? PadUtil.getPadGradientColor(isActive, soundId) : [Color(0xFF919191), Color(0xFF5E5E5E)]);
+    return isHighlighted && widget.practiceMode != 'practice' ? [Color(0xFFEDC78C), Colors.orange] : (hasSound ? PadUtil.getPadGradientColor(isActive, soundId, currentTheme) : [Color(0xFF919191), Color(0xFF5E5E5E)]);
   }
 
   void checkPointsExceed() {
@@ -1016,114 +1009,34 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
                 final bool isHighlighted = highlightedSounds.contains(soundId);
                 final sound = lessonSounds.length == 12 ? lessonSounds[index] : '';
                 bool isActive = _padPressedIndex.isNotEmpty && _padPressedIndex.contains(index) && widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty;
-                return GestureDetector(
-                  onTapDown: (details) {
-                    _onPadPressed(sound, index);
-                  },
-                  child: Stack(
-                    children: [
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 150),
-                        curve: Curves.easeInOut,
-                        padding: EdgeInsets.all(isActive ? 8 : 0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.0),
-                              gradient: RadialGradient(colors: getPadColor(isHighlighted, hasSound, isActive, soundId))
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: TweenAnimationBuilder(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          tween: Tween<double>(begin: 1.0, end: isActive ? 2.5 : 1.0),
-                          builder: (context, scale, child) {
-                            return Transform.scale(
-                              scale: scale,
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 100),
-                                curve: Curves.easeInOut,
-                                transform: Matrix4.translationValues(0, padStates[sound] != null ? -80 : 0, 0),
-                                child: (padStates[sound] ?? PadStateEnum.none).getDisplayWidget(context),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      // (padStates[sound] ?? PadStateEnum.none).getDisplayWidget(context),
-                      if (_futureNotes.isNotEmpty
-                          && (_futureNotes[0]["notes"] as List).contains(sound)
-                          && currentEventIndex != 0
-                          && !padProgress.containsKey(sound)
-                          && !sound.contains("drum")
-                          && _futureNotes[0]["index"] - currentEventIndex < 4
-                      )
-                        if(widget.practiceMode !='practice')
-                        Stack(
-                          children: [
-                            Align(
-                              alignment: Alignment.center,
-                              child:
-                              CircularProgressIndicator(
-                                value: _calculateProgressValue(currentEventIndex, _futureNotes[0]["index"]),
-                                strokeWidth: 5,
-                                backgroundColor: Colors.white24,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                              ),
-                            ),
-                            Align(
-                                alignment: Alignment.center,
-                                child: Text(context.locale.wait, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: Colors.white))),
-                          ],
-                        ),
-                      if (padProgress.containsKey(sound) && hasSound && widget.practiceMode != 'practice' && _isFromBeatRunner)
-                        Positioned.fill(
-                          child: CustomPaint(
-                            painter: SquareProgressPainter(
-                              progress: padProgress[sound] ?? 0,
-                              color: Colors.white,
-                              strokeWidth: 4,
-                              borderRadius: 10,
-                            ),
-                          ),
-                        ),
-                      if (padProgress.containsKey(sound) && hasSound && widget.practiceMode != 'practice' && !_isFromBeatRunner)
-                        Align(
-                          alignment: Alignment.center,
-                          child:  SizedBox(
-                            width: 36,
-                            height: 36,
-                            child: CircularProgressIndicator(
-                              value: padProgress[sound],
-                              strokeWidth: 5,
-                              backgroundColor: Colors.white24,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                            ),
-                          ),
-                        ),
-                      // if (isActive)
-                      //   Lottie.asset('assets/anim/lightning_button.json', fit: BoxFit.cover, controller: _controller),
-                      // if(!padProgress.containsKey(sound) && isHighlighted && widget.practiceMode != 'practice')
-                      //   Align(
-                      //       alignment: Alignment.center,
-                      //       child: Lottie.asset('assets/anim/click_here.json', height: MediaQuery.sizeOf(context).width /3 - 50)),
-                      if (_colorAnimations.containsKey(index) &&
-                          _colorAnimations[index] != null &&
-                          _colorControllers[index] != null &&
-                          _colorControllers[index]!.isAnimating)
-                        AnimatedBuilder(
-                          animation: _colorAnimations[index]!,
-                          builder: (context, child) {
-                            return Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.0),
-                                color: _colorAnimations[index]?.value ?? Colors.transparent,
-                              ),
-                            );
-                          },
-                        ),
-                    ],
+                return RepaintBoundary(
+                  key: ValueKey(soundId),
+                  child: DrumPadItem(
+                    colors: getPadColor(isHighlighted, hasSound, isActive, soundId),
+                    sound: sound,
+                    theme: currentTheme,
+                    isHighlighted: isHighlighted,
+                    isActive: isActive,
+                    onTap: () => _onPadPressed(sound, index),
+                    isPracticeMode: widget.practiceMode == 'practice',
+                    isFromBeatRunner: _isFromBeatRunner,
+                    shouldShowCircleProgress: (_futureNotes.isNotEmpty
+                      && (_futureNotes[0]["notes"] as List).contains(sound)
+                      && currentEventIndex != 0
+                      && !padProgress.containsKey(sound)
+                      && !sound.contains("drum")
+                      && _futureNotes[0]["index"] - currentEventIndex < 4
+                    ),
+                    circleProgressValue: _futureNotes.isNotEmpty ? _calculateProgressValue(currentEventIndex, _futureNotes[0]["index"]) : 0,
+                    hasSound: hasSound,
+                    padState: padStates[sound],
+                    shouldShowSquareProgress: padProgress.containsKey(sound),
+                    squareProgressValue: padProgress[sound] ?? 0,
+                    shouldShowColorAnimation: (_colorAnimations.containsKey(index) &&
+                      _colorAnimations[index] != null &&
+                      _colorControllers[index] != null &&
+                      _colorControllers[index]!.isAnimating),
+                    colorAnimation: _colorAnimations[index] ?? AlwaysStoppedAnimation<Color>(Colors.transparent),
                   ),
                 );
               },

@@ -16,24 +16,27 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
-  int _selectedIndex = 0;
+class _HomeScreenState extends State<HomeScreen>
+    with WidgetsBindingObserver, AutomaticKeepAliveClientMixin<HomeScreen> {
+  int _currentIndex = 0;
 
-  final List<Widget> _pages = [
-    BeatRunnerScreen(),
-    BeatLearnScreen(),
-    ThemeScreen(),
-    ProfileScreen(),
+  final List<Widget Function()> _screenBuilders = [
+        () => const BeatRunnerScreen(),
+        () => const BeatLearnScreen(),
+        () => const ThemeScreen(),
+        () => const ProfileScreen(),
   ];
+
+  late final List<Widget?> _screens =
+  List<Widget?>.filled(_screenBuilders.length, null);
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    // Khởi tạo màn hình đầu tiên
+    _screens[_currentIndex] = _screenBuilders[_currentIndex]();
   }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {}
 
   @override
   void dispose() {
@@ -41,14 +44,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  void _onItemTapped(index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBody: true,
@@ -57,12 +59,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: null,
       bottomNavigationBar: BottomNavigation(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            // Khởi tạo nếu chưa được tạo
+            _screens[index] ??= _screenBuilders[index]();
+            _currentIndex = index;
+          });
+        },
       ),
       body: IndexedStack(
-        index: _selectedIndex,
-        children: _pages,
+        index: _currentIndex,
+        children: List.generate(_screenBuilders.length, (index) {
+          return _screens[index] ?? const Center(child: CircularProgressIndicator());
+        }),
       ),
     );
   }
