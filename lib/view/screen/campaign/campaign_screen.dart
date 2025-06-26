@@ -34,7 +34,6 @@ class CampaignScreen extends StatelessWidget {
             return ListView.separated(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               shrinkWrap: true,
-              // Thêm cacheExtent để tối ưu hiệu suất
               cacheExtent: 200.0,
               separatorBuilder: (context, index) => ResSpacing.h8,
               physics: const NeverScrollableScrollPhysics(),
@@ -86,7 +85,7 @@ class CampaignScreen extends StatelessWidget {
           style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: Color.fromRGBO(255, 255, 255, 0.8), // Dùng Color cố định thay vì withValues
+            color: Color.fromRGBO(255, 255, 255, 0.8),
           ),
         ),
         Container(

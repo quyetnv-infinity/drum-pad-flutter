@@ -34,11 +34,10 @@ class CampaignItem extends StatelessWidget with OptimizedWidgetMixin {
           child: Row(
             spacing: 12,
             children: [
-              // Sử dụng cached image widget để tối ưu hiệu suất
               CachedImageWidget(
                 imagePath: ResImage.imgPads,
                 width: 60,
-                height: 60,
+                height: 80,
                 fit: BoxFit.cover,
                 cacheWidth: 120,
                 cacheHeight: 120,

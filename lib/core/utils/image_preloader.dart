@@ -10,6 +10,7 @@ class ImagePreloader {
     ResImage.imgBackgroundScreen,
     ResImage.imgCampaign,
     ResImage.imgLearnFromSong,
+    "assets/images/img_bg_campaign_detail.png"
     // Thêm các ảnh quan trọng khác
   ];
 
