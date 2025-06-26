@@ -10,6 +10,25 @@ import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// Constants class để chia sẻ giữa các widgets
+class _CampaignConstants {
+  static const double itemSize = 56.0;
+  static const double extraHeight = 200.0;
+  static const double contentWidth = 318.5840707964602;
+  static const double itemPadding = 5.0;
+  static const double verticalSpacingDivisor1 = 1.2;
+  static const double verticalSpacingDivisor2 = 1.5;
+  static const double leftLineHorizontalDivisor = 17.0;
+  static const double rightLineHorizontalDivisor = 15.0;
+
+  // Content-width based calculations
+  static const double verticalSpacing = (contentWidth / verticalSpacingDivisor1) / verticalSpacingDivisor2;
+  static const double leftSidePosition = 0.0;
+  static const double rightSidePosition = contentWidth - (itemSize + itemPadding);
+  static const double leftLineHorizontalPosition = contentWidth / leftLineHorizontalDivisor;
+  static const double rightLineHorizontalPosition = contentWidth / rightLineHorizontalDivisor;
+}
+
 class CampaignDetailScreen extends StatefulWidget {
   final String difficulty;
   const CampaignDetailScreen({super.key, required this.difficulty});
@@ -18,29 +37,11 @@ class CampaignDetailScreen extends StatefulWidget {
   State<CampaignDetailScreen> createState() => _CampaignDetailScreenState();
 }
 
-const double contentWidth = 318.5840707964602;
-
 class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
-  // Constants
-  static const double _itemSize = 56.0;
-  static const double _extraHeight = 200.0;
-  static const double _contentWidthDivisor = 1.13;
-  static const double _verticalSpacingDivisor1 = 1.2;
-  static const double _verticalSpacingDivisor2 = 1.5;
-  static const double _leftLineHorizontalDivisor = 17.0;
-  static const double _rightLineHorizontalDivisor = 15.0;
-  static const double _itemPadding = 5.0;
-
-
-  // Cache các giá trị tính toán để tránh rebuild
-  late final double _verticalSpacing;
-  late final double _leftSidePosition;
-  late final double _rightSidePosition;
-  late final double _leftLineHorizontalPosition;
-  late final double _rightLineHorizontalPosition;
-
-  // Preload state
+  // Loading states
   bool _imagesPreloaded = false;
+  bool _dataLoaded = false;
+  List<SongCollection> _currentSongs = [];
 
   // Danh sách ảnh cần preload cho campaign detail
   static final List<String> _campaignImages = [
@@ -48,21 +49,26 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
     ResImage.imgLineToLeft,
     ResImage.imgLockLevel,
     "assets/images/img_bg_campaign_detail.png",
+    ResImage.img1,
+    ResImage.img2,
+    ResImage.img3,
+    ResImage.img4,
+    ResImage.img5,
   ];
 
   @override
   void initState() {
     super.initState();
-    _preloadCampaignImages();
-    
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<CampaignProvider>(context, listen: false).fetchCampaignSong(
-        isEasy: widget.difficulty == DifficultyMode.easy,
-        isMedium: widget.difficulty == DifficultyMode.medium,
-        isHard: widget.difficulty == DifficultyMode.hard,
-        isDemonic: widget.difficulty == DifficultyMode.demonic,
-      );
-    });
+    _initializeScreen();
+  }
+
+  // Khởi tạo đồng thời cả data và ảnh
+  Future<void> _initializeScreen() async {
+    // Khởi tạo đồng thời
+    await Future.wait([
+      _preloadCampaignImages(),
+      _loadCampaignData(),
+    ]);
   }
 
   // Preload ảnh sử dụng ImagePreloader
@@ -85,21 +91,36 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
     }
   }
 
-  @override
-  void dispose() {
-    // Cleanup khi không cần thiết
-    // CachedImageWidget sẽ tự động manage cache
-    super.dispose();
-  }
+  // Load campaign data
+  Future<void> _loadCampaignData() async {
+    try {
+      final provider = Provider.of<CampaignProvider>(context, listen: false);
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _verticalSpacing = (contentWidth / _verticalSpacingDivisor1) / _verticalSpacingDivisor2;
-    _leftSidePosition = 0.0;
-    _rightSidePosition = contentWidth - (_itemSize + _itemPadding);
-    _leftLineHorizontalPosition = contentWidth / _leftLineHorizontalDivisor;
-    _rightLineHorizontalPosition = contentWidth / _rightLineHorizontalDivisor;
+      // Fetch data
+      await provider.fetchCampaignSong(
+        isEasy: widget.difficulty == DifficultyMode.easy,
+        isMedium: widget.difficulty == DifficultyMode.medium,
+        isHard: widget.difficulty == DifficultyMode.hard,
+        isDemonic: widget.difficulty == DifficultyMode.demonic,
+      );
+
+      // Lấy data sau khi load xong
+      final songs = _getSongsByDifficulty(provider);
+
+      if (mounted) {
+        setState(() {
+          _currentSongs = songs;
+          _dataLoaded = true;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading campaign data: $e');
+      if (mounted) {
+        setState(() {
+          _dataLoaded = true; // Vẫn cho phép hiển thị với data rỗng
+        });
+      }
+    }
   }
 
   // Selector để chỉ rebuild khi campaign data thay đổi
@@ -118,6 +139,9 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
     }
   }
 
+  // Check xem đã ready để hiển thị chưa
+  bool get _isReadyToShow => _imagesPreloaded && _dataLoaded;
+
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -126,70 +150,94 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
         iconLeading: ResIcon.icClose,
         onTapLeading: () => Navigator.pop(context),
       ),
-      body: !_imagesPreloaded
-          ? const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
-            )
-          : Selector<CampaignProvider, List<SongCollection>>(
-              selector: (context, provider) => _getSongsByDifficulty(provider),
-              builder: (context, songs, child) {
-                final reversedSongs = songs.reversed.toList();
-                final totalHeight = reversedSongs.length * contentWidth / 2 + _extraHeight;
-
-                return SingleChildScrollView(
-                  reverse: true,
-                  child: Center(
-                    child: SizedBox(
-                      width: contentWidth,
-                      height: totalHeight,
-                      child: _CampaignLevelMap(
-                        songs: reversedSongs,
-                        verticalSpacing: _verticalSpacing,
-                        leftSidePosition: _leftSidePosition,
-                        rightSidePosition: _rightSidePosition,
-                        leftLineHorizontalPosition: _leftLineHorizontalPosition,
-                        rightLineHorizontalPosition: _rightLineHorizontalPosition,
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
+      body: !_isReadyToShow
+          ? _buildLoadingWidget()
+          : _buildCampaignContent(),
     );
+  }
+
+  // Widget hiển thị loading
+  Widget _buildLoadingWidget() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Loading campaign...',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Widget hiển thị nội dung campaign
+  Widget _buildCampaignContent() {
+    // Sử dụng Consumer để theo dõi thay đổi data real-time
+    return Consumer<CampaignProvider>(
+      builder: (context, provider, child) {
+        // Cập nhật songs từ provider nếu có thay đổi
+        final latestSongs = _getSongsByDifficulty(provider);
+        final songsToDisplay = latestSongs.isNotEmpty ? latestSongs : _currentSongs;
+
+        final reversedSongs = songsToDisplay.reversed.toList();
+        final totalHeight = reversedSongs.length * _CampaignConstants.contentWidth / 2 + _CampaignConstants.extraHeight;
+
+        return SingleChildScrollView(
+          reverse: true,
+          child: Center(
+            child: SizedBox(
+              width: _CampaignConstants.contentWidth,
+              height: totalHeight,
+              child: _CampaignLevelMap(
+                songs: reversedSongs,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    // Cleanup khi không cần thiết
+    super.dispose();
   }
 }
 
 class _CampaignLevelMap extends StatelessWidget {
   final List<SongCollection> songs;
-  final double verticalSpacing;
-  final double leftSidePosition;
-  final double rightSidePosition;
-  final double leftLineHorizontalPosition;
-  final double rightLineHorizontalPosition;
 
   const _CampaignLevelMap({
     required this.songs,
-    required this.verticalSpacing,
-    required this.leftSidePosition,
-    required this.rightSidePosition,
-    required this.leftLineHorizontalPosition,
-    required this.rightLineHorizontalPosition,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Define a small offset increment for each line
+    const double lineOffsetIncrement = 2.0; // Adjust this value to control the offset increase
+
     return Stack(
       children: [
         // Connecting lines
         ...List.generate(songs.isNotEmpty ? songs.length - 1 : 0, (index) {
-          final lineVerticalPosition = (100.0 - index +5) + index * verticalSpacing;
+          // Add incremental offset based on index
+          final lineVerticalPosition = (100.0 - index + 5) + index * _CampaignConstants.verticalSpacing + (index * lineOffsetIncrement);
           final isEvenIndex = (songs.length - index) % 2 == 1;
 
           return Positioned(
             top: lineVerticalPosition,
-            left: isEvenIndex ? leftLineHorizontalPosition: rightLineHorizontalPosition,
+            left: isEvenIndex
+                ? _CampaignConstants.leftLineHorizontalPosition
+                : _CampaignConstants.rightLineHorizontalPosition,
             child: CachedImageWidget(
               imagePath: isEvenIndex ? ResImage.imgLineToRight : ResImage.imgLineToLeft,
               fit: BoxFit.contain,
@@ -197,16 +245,14 @@ class _CampaignLevelMap extends StatelessWidget {
           );
         }),
 
-
-
         // Level items
         ...List.generate(songs.length, (index) {
           final item = songs[index];
           final levelNumber = songs.length - index;
-          final verticalPosition = (100 - index) + index * verticalSpacing;
+          final verticalPosition = (100 - index) + index * _CampaignConstants.verticalSpacing;
           final horizontalPosition = (songs.length - index) % 2 == 1
-              ? rightSidePosition
-              : leftSidePosition;
+              ? _CampaignConstants.rightSidePosition
+              : _CampaignConstants.leftSidePosition;
 
           return Positioned(
             top: verticalPosition,
@@ -223,6 +269,7 @@ class _CampaignLevelMap extends StatelessWidget {
   }
 }
 
+// Widget riêng cho từng level item
 class _LevelItem extends StatelessWidget {
   final SongCollection song;
   final int levelNumber;
@@ -242,17 +289,17 @@ class _LevelItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            width: 56.0,
-            height: 56.0,
+            width: _CampaignConstants.itemSize,
+            height: _CampaignConstants.itemSize,
             child: Stack(
               alignment: Alignment.center,
               children: [
                 CachedImageWidget(
                   imagePath: ResImage.imgLockLevel,
-                  width: 56.0,
-                  height: 56.0,
-                  cacheWidth: 56,
-                  cacheHeight: 56,
+                  width: _CampaignConstants.itemSize,
+                  height: _CampaignConstants.itemSize,
+                  cacheWidth: _CampaignConstants.itemSize.toInt(),
+                  cacheHeight: _CampaignConstants.itemSize.toInt(),
                   fit: BoxFit.cover,
                 ),
                 Text(
