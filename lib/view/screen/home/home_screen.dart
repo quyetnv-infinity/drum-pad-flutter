@@ -19,21 +19,41 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    BeatRunnerScreen(),
-    BeatLearnScreen(),
-    ThemeScreen(),
-    ProfileScreen(),
-  ];
+  final Map<int, Widget> _loadedPages = {};
+
+  Widget _getPage(int index) {
+    if (_loadedPages.containsKey(index)) {
+      return _loadedPages[index]!;
+    }
+
+    late final Widget page;
+    switch (index) {
+      case 0:
+        page = BeatRunnerScreen();
+        break;
+      case 1:
+        page = BeatLearnScreen();
+        break;
+      case 2:
+        page = ThemeScreen();
+        break;
+      case 3:
+        page = ProfileScreen();
+        break;
+      default:
+        page = const SizedBox();
+    }
+
+    _loadedPages[index] = page;
+    return page;
+  }
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _loadedPages[0] = BeatRunnerScreen(); // preload trang đầu
   }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {}
 
   @override
   void dispose() {
@@ -62,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       ),
       body: IndexedStack(
         index: _selectedIndex,
-        children: _pages,
+        children: List.generate(4, (index) => _getPage(index)),
       ),
     );
   }
