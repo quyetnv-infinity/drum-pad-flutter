@@ -1,7 +1,10 @@
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
+import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
+import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/pick_song_bottom_sheet.dart';
 import 'package:and_drum_pad_flutter/view/screen/home/home_screen.dart';
+import 'package:and_drum_pad_flutter/view/widget/loading_dialog/loading_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/star/star_result.dart';
 import 'package:and_drum_pad_flutter/view/widget/text/judgement_text.dart';
 import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
@@ -24,7 +27,6 @@ class ResultScreen extends StatefulWidget {
   final int maxLesson;
   final bool isCompleted;
   final bool isCompleteCampaign;
-  final bool? isContinue;
 
   const ResultScreen({
     super.key,
@@ -32,7 +34,7 @@ class ResultScreen extends StatefulWidget {
     required this.goodScore,
     required this.earlyScore,
     required this.lateScore,
-    required this.missScore, required this.totalScore, required this.totalNotes, required this.isFromLearn, required this.currentLesson, required this.maxLesson, required this.isFromCampaign, required this.isCompleted, required this.isCompleteCampaign, this.isContinue =false,
+    required this.missScore, required this.totalScore, required this.totalNotes, required this.isFromLearn, required this.currentLesson, required this.maxLesson, required this.isFromCampaign, required this.isCompleted, required this.isCompleteCampaign,
   });
 
   @override
@@ -157,7 +159,7 @@ class _ResultScreenState extends State<ResultScreen>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   RatingStars.custom(value: _starAnimation.value, paddingMiddle: 20, smallStarWidth: 60, smallStarHeight: 60, bigStarWidth: 84, bigStarHeight: 84, isFlatStar: true, isPaddingBottom: true,),
-                  Text(widget.isContinue == false ? context.locale.final_score : context.locale.score_string, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
+                  Text(!checkNotLastCampaign() ? context.locale.final_score : context.locale.score_string, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
                   Text(
                     "${_scoreAnimation.value.toInt()}",
                       style: TextStyle(fontSize: 40, fontWeight: FontWeight.w700)
@@ -168,14 +170,55 @@ class _ResultScreenState extends State<ResultScreen>
                   Row(
                     spacing: 8,
                     children: [
-                      _buildIconButton(asset: ResIcon.icMusic,
-                        onTap: () {
-                        Navigator.pop(context);
-                        }),
+                      Opacity(
+                        opacity: widget.isFromCampaign ? 0 : 1,
+                        child: _buildIconButton(asset: ResIcon.icMusic,
+                          onTap: () async {
+                            if(widget.isFromCampaign) return;
+                            final result = await showModalBottomSheet<SongCollection>(
+                              isScrollControlled: true,
+                              barrierColor: Colors.black.withValues(alpha: 0.8),
+                              context: context,
+                              builder: (context) => PickSongScreen(),
+                            );
+                            if(!widget.isFromCampaign && !widget.isFromLearn) {
+                              Navigator.pop(context, result);
+                            } else if(widget.isFromLearn) {
+                              Navigator.pop(context, result);
+                              Navigator.pop(context, result);
+                            }
+                          }),
+                      ),
                       Expanded(
                         child: InkWell(
                           onTap: () {
-                            Navigator.pop(context, 'play_again');
+                            if(!checkNotLastCampaign()) {
+                              Navigator.pop(context, 'play_again');
+                            } else {
+                              if(widget.isFromLearn) {
+                                Navigator.pop(context, widget.currentLesson + 1);
+                              }
+                              if(widget.isFromCampaign) {
+                                final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
+                                final nextCampaignIndex = campaignProvider.currentSongCampaign + 1;
+                                campaignProvider.setCurrentSongCampaign(nextCampaignIndex);
+                                final song = campaignProvider.currentCampaign[nextCampaignIndex];
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => LoadingDataScreen(
+                                    callbackLoadingCompleted: (songResult) {
+                                      Navigator.pop(context, songResult);
+                                      Navigator.pop(context, songResult);
+                                    },
+                                    callbackLoadingFailed: () {
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    },
+                                    song: song
+                                  ),
+                                );
+                              }
+                            }
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(vertical: 18, horizontal: 16),
@@ -187,10 +230,10 @@ class _ResultScreenState extends State<ResultScreen>
                               mainAxisAlignment: MainAxisAlignment.center,
                               spacing: 8,
                               children: [
-                                if(widget.isContinue == false)
+                                if(!checkNotLastCampaign())
                                 SvgPicture.asset(ResIcon.icRefresh),
 
-                                Text(widget.isContinue == false ? context.locale.play_again : context.locale.continue_text, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),),
+                                Expanded(child: Text(!checkNotLastCampaign() ? context.locale.play_again : context.locale.continue_text, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16), textAlign: TextAlign.center,)),
                               ],
                             ),
                           ),

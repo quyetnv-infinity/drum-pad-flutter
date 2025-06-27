@@ -22,24 +22,26 @@ class LessonsScreen extends StatefulWidget {
 
 class _LessonsScreenState extends State<LessonsScreen> {
   List<LessonSequence> _lessons = [];
+  late SongCollection _song;
 
   @override
   void initState() {
     super.initState();
+    _song = widget.song;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      fetchLessonData();
+      fetchLessonData(song: _song);
     },);
   }
 
-  Future<void> fetchLessonData() async {
+  Future<void> fetchLessonData({required SongCollection song}) async {
     final drumLearnProvider = Provider.of<DrumLearnProvider>(context, listen: false);
     if(_lessons.isEmpty) {
       setState(() {
-        _lessons = widget.song.lessons;
+        _lessons = _song.lessons;
       });
       return;
     }
-    final song = await drumLearnProvider.getSong(widget.song.id);
+    final song = await drumLearnProvider.getSong(_song.id);
     if(song != null && song.lessons.isNotEmpty) {
       setState(() {
         _lessons = song.lessons;
@@ -55,7 +57,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
         onTapLeading: () {
           Navigator.pop(context);
         },
-        title: widget.song.name,
+        title: _song.name,
       ),
       body: Column(
         children: [
@@ -107,11 +109,16 @@ class _LessonsScreenState extends State<LessonsScreen> {
   }
 
   Future<void> _onTapToPlay(int index) async {
-    await context.read<DrumLearnProvider>().addToResume(widget.song.id);
+    await context.read<DrumLearnProvider>().addToResume(_song.id);
     Provider.of<CampaignProvider>(context, listen: false).setCurrentLessonCampaign(index);
-    await Navigator.push(context, MaterialPageRoute(builder: (context) => LearnDrumPadScreen(songCollection: widget.song.copyWith(lessons: _lessons), lessonIndex: index,)));
-    print('FETCH LESSON DATA ------------------');
-    await fetchLessonData();
+    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => LearnDrumPadScreen(songCollection: _song.copyWith(lessons: _lessons), lessonIndex: index,)));
+    print('FETCH LESSON DATA ------------------$result');
+    setState(() {
+      if(result != null && result is SongCollection) {
+        _song = result;
+      }
+    });
+    await fetchLessonData(song: _song);
   }
 
   Widget _buildTrailingWidget(LessonSequence lesson, int index) {

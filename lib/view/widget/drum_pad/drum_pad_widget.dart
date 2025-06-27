@@ -340,10 +340,11 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
       widget.onChangeUnlockedModeCampaign?.call();
     }
     /// 📖 save learn from song and beat runner count for information at profile screen
-    if (!widget.isFromLearnScreen)
-      {
-        provider.addBeatRunnerStar(widget.currentSong!.id, getStar());
-      }
+    if (!widget.isFromLearnScreen) {
+      provider.addBeatRunnerStar(widget.currentSong!.id, getStar());
+    } else {
+
+    }
     if (currentLesson >= lessons.length - 1 && widget.isFromLearnScreen) provider.addLearnSongComplete(widget.currentSong!.id);
     /// push navigation and check cases
     checkPointsExceed();
@@ -354,7 +355,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         barrierColor: Colors.black.withValues(alpha: 0.9),
         builder: (context) => Dialog(
         backgroundColor: Colors.transparent,
-        child: ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() > 1, isCompleteCampaign: checkLastCampaign,)));
+        child: ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() >= 2, isCompleteCampaign: checkLastCampaign,)));
 
     setState(() {
       isNavigatedToResult = false;

@@ -1,5 +1,6 @@
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
+import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/song_score_widget.dart';
 import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/drum_pad/drum_pad_widget.dart';
@@ -88,8 +89,9 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
           child: Column(
             children: [
               Expanded(
-                child: Container(
-                  color: Colors.greenAccent,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: SongScoreWidget(songCollection: widget.songCollection, starPercent: _percentStar, score: _currentScore, perfectPoint: _perfectPoint,),
                 ),
               ),
               DrumPadScreen(
