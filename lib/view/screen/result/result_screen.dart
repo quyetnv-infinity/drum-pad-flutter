@@ -4,6 +4,7 @@ import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/pick_song_bottom_sheet.dart';
 import 'package:and_drum_pad_flutter/view/screen/home/home_screen.dart';
+import 'package:and_drum_pad_flutter/view/screen/result/widget/congratulations_widget.dart';
 import 'package:and_drum_pad_flutter/view/widget/loading_dialog/loading_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/star/star_result.dart';
 import 'package:and_drum_pad_flutter/view/widget/text/judgement_text.dart';
@@ -66,7 +67,17 @@ class _ResultScreenState extends State<ResultScreen>
     print('15teiugdsfkjvc ${widget.missScore}');
     print('scoreeeeee ${widget.totalScore}');
     super.initState();
-    isShowCongratulations = widget.isCompleteCampaign;
+    isShowCongratulations = widget.isCompleteCampaign && widget.isCompleted;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if(isShowCongratulations) {
+        showDialog(context: context, builder: (context) => CongratulationsWidget(
+            onTapExit: () {
+              Navigator.pop(context);
+            },
+          ),
+        );
+      }
+    },);
     _calculateTotalNotes();
     _animationController = AnimationController(
       duration: Duration(milliseconds: 1500),
