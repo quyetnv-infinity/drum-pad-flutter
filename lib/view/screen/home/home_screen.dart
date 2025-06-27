@@ -16,43 +16,26 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
-  int _selectedIndex = 0;
+class _HomeScreenState extends State<HomeScreen>
+    with WidgetsBindingObserver, AutomaticKeepAliveClientMixin<HomeScreen> {
+  int _currentIndex = 0;
 
-  final Map<int, Widget> _loadedPages = {};
+  final List<Widget Function()> _screenBuilders = [
+        () => const BeatRunnerScreen(),
+        () => const BeatLearnScreen(),
+        () => const ThemeScreen(),
+        () => const ProfileScreen(),
+  ];
 
-  Widget _getPage(int index) {
-    if (_loadedPages.containsKey(index)) {
-      return _loadedPages[index]!;
-    }
-
-    late final Widget page;
-    switch (index) {
-      case 0:
-        page = BeatRunnerScreen();
-        break;
-      case 1:
-        page = BeatLearnScreen();
-        break;
-      case 2:
-        page = ThemeScreen();
-        break;
-      case 3:
-        page = ProfileScreen();
-        break;
-      default:
-        page = const SizedBox();
-    }
-
-    _loadedPages[index] = page;
-    return page;
-  }
+  late final List<Widget?> _screens =
+  List<Widget?>.filled(_screenBuilders.length, null);
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _loadedPages[0] = BeatRunnerScreen(); // preload trang đầu
+    // Khởi tạo màn hình đầu tiên
+    _screens[_currentIndex] = _screenBuilders[_currentIndex]();
   }
 
   @override
@@ -61,14 +44,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  void _onItemTapped(index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBody: true,
@@ -77,12 +59,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: null,
       bottomNavigationBar: BottomNavigation(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            // Khởi tạo nếu chưa được tạo
+            _screens[index] ??= _screenBuilders[index]();
+            _currentIndex = index;
+          });
+        },
       ),
       body: IndexedStack(
-        index: _selectedIndex,
-        children: List.generate(4, (index) => _getPage(index)),
+        index: _currentIndex,
+        children: List.generate(_screenBuilders.length, (index) {
+          return _screens[index] ?? const Center(child: CircularProgressIndicator());
+        }),
       ),
     );
   }

@@ -28,6 +28,7 @@ class ResImage {
   static const String imgBgEDM = '$basePath/img_bg_edm.png';
   static const String imgBgHipHop = '$basePath/img_bg_hiphop.png';
   static const String imgBgPop = '$basePath/img_bg_pop.png';
+  static const String imgBgExit = '$basePath/img_bg_exit.png';
   static const String imgBgSongScore = '$basePath/img_bg_song_score.png';
   static const String iconNextBtn = '$basePath/icon_nextbtn.png';
   static const String iconEmpty = '$basePath/img_empty.png';
@@ -42,4 +43,5 @@ class ResImage {
   static const String img3 = '$basePath/img_3.png';
   static const String img4 = '$basePath/img_4.png';
   static const String img5 = '$basePath/img_5.png';
+  static const String img6 = '$basePath/img_6.png';
 }

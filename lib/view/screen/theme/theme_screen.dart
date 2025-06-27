@@ -14,6 +14,7 @@ class ThemeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("ThemeScreen build");
     return AppScaffold(
       appBar: AppBar(
         leadingWidth: MediaQuery.sizeOf(context).width * 0.5,

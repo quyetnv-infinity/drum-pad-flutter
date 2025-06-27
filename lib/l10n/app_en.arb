@@ -65,6 +65,8 @@
   "loading": "Loading",
   "view_all": "View All",
   "score_string": "Score",
+  "leaving_so_soon": "Leaving so soon?",
+  "you_lose_your_progress": "You'll lose your progress. Still want to go?",
   "final_score": "Final Score",
   "replay": "Replay",
   "list_songs": "List Songs",
@@ -84,5 +86,6 @@
   "ok": "Ok",
   "step": "Step",
   "play": "Play",
-  "need_2_stars_to_unlock": "Need 2 stars to unlock"
+  "need_2_stars_to_unlock": "Need 2 stars to unlock",
+  "cancel" : "Cancel"
 }

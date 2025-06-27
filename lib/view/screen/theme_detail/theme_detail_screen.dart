@@ -71,7 +71,7 @@ class ThemeDetailScreen extends StatelessWidget {
         return Dialog(
           backgroundColor: Colors.transparent,
           child: Container(
-            padding: EdgeInsets.only(bottom: 12, top: 24),
+            padding: EdgeInsets.only(bottom: 12, top: 24, right: 16, left: 16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(32),
               gradient: RadialGradient(colors: [Color(0xFF33114D), Color(0xFF7727B3)], center: Alignment.bottomCenter)

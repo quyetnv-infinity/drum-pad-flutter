@@ -1,6 +1,8 @@
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
+import 'package:and_drum_pad_flutter/data/model/theme_model.dart';
 import 'package:flutter/material.dart';
 import 'package:and_drum_pad_flutter/core/enum/pad_state_enum.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'border_anim.dart';
 
@@ -20,8 +22,9 @@ class DrumPadItem extends StatefulWidget {
   final double squareProgressValue;
   final bool shouldShowColorAnimation;
   final Animation<Color?> colorAnimation;
+  final ThemeModel theme;
 
-  const DrumPadItem({super.key, required this.sound, required this.isHighlighted, required this.hasSound, required this.isActive, required this.onTap, required this.colors, required this.isPracticeMode, required this.isFromBeatRunner, required this.shouldShowCircleProgress, required this.circleProgressValue, this.padState, required this.shouldShowSquareProgress, required this.squareProgressValue, required this.shouldShowColorAnimation, required this.colorAnimation});
+  const DrumPadItem({super.key, required this.sound, required this.isHighlighted, required this.hasSound, required this.isActive, required this.onTap, required this.colors, required this.isPracticeMode, required this.isFromBeatRunner, required this.shouldShowCircleProgress, required this.circleProgressValue, this.padState, required this.shouldShowSquareProgress, required this.squareProgressValue, required this.shouldShowColorAnimation, required this.colorAnimation, required this.theme});
 
   @override
   State<DrumPadItem> createState() => _DrumPadItemState();
@@ -77,11 +80,14 @@ class _DrumPadItemState extends State<DrumPadItem> {
                 },
               ),
             ),
-          
+
           // Circle progress indicator for non-practice mode
           if (widget.shouldShowCircleProgress && !widget.isPracticeMode)
             _buildCircleProgress(context),
-          
+          if ((!widget.shouldShowCircleProgress && widget.theme.assetIcon != null && !widget.shouldShowSquareProgress) || (widget.isPracticeMode  && widget.theme.assetIcon != null) )
+            Center(
+              child: SvgPicture.asset(widget.theme.assetIcon!, colorFilter: ColorFilter.mode(widget.isActive ? widget.theme.activeIconColor : Colors.white, BlendMode.srcIn),),
+            ),
           // Square progress for beat runner mode
           if (widget.shouldShowSquareProgress && widget.hasSound && !widget.isPracticeMode && widget.isFromBeatRunner)
             Positioned.fill(
@@ -96,8 +102,8 @@ class _DrumPadItemState extends State<DrumPadItem> {
                 ),
               ),
             ),
-          
-          // Circle progress for non-beat runner mode
+          //
+          // // Circle progress for non-beat runner mode
           if (widget.shouldShowSquareProgress && widget.hasSound && !widget.isPracticeMode && !widget.isFromBeatRunner)
             _buildNonBeatRunnerProgress(),
           
@@ -132,8 +138,8 @@ class _DrumPadItemState extends State<DrumPadItem> {
           child: Text(
             context.locale.wait,
             style: const TextStyle(
-              fontSize: 10, 
-              fontWeight: FontWeight.w500, 
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
               color: Colors.white
             )
           )
