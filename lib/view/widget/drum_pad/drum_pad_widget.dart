@@ -594,19 +594,21 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   }
 
   Future<void> _playSound(String sound) async {
+    final bool shouldLeadPause = !(audioPlayers[_currentLeadSound] != null && (audioPlayers[_currentLeadSound]!.duration?.inMilliseconds ?? 0) - audioPlayers[_currentLeadSound]!.position.inMilliseconds < 500);
+    final bool shouldBassPause = !(audioPlayers[_currentBassSound] != null && (audioPlayers[_currentBassSound]!.duration?.inMilliseconds ?? 0) - audioPlayers[_currentBassSound]!.position.inMilliseconds < 500);
     if (audioPlayers.containsKey(sound)) {
       if(_isFromBeatRunner){
-        if(_currentLeadSound != null) audioPlayers[_currentLeadSound]?.pause();
+        if(_currentLeadSound != null && shouldLeadPause) audioPlayers[_currentLeadSound]?.pause();
         setState(() {
           _currentLeadSound = sound;
         });
       } else if(PadUtil.getSoundType(sound) == SoundType.lead){
-        if(_currentLeadSound != null) audioPlayers[_currentLeadSound]?.pause();
+        if(_currentLeadSound != null && shouldLeadPause) audioPlayers[_currentLeadSound]?.pause();
         setState(() {
           _currentLeadSound = sound;
         });
       }else if (PadUtil.getSoundType(sound) == SoundType.bass){
-        if(_currentBassSound != null) audioPlayers[_currentBassSound]?.pause();
+        if(_currentBassSound != null && shouldBassPause) audioPlayers[_currentBassSound]?.pause();
         setState(() {
           _currentBassSound = sound;
         });
