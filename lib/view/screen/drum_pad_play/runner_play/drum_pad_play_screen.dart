@@ -22,6 +22,15 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
   double _starPercent = 0;
   int _score = 0;
   int _perfectPoint = 0;
+  late SongCollection _currentSong;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentSong = widget.songCollection;
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -58,7 +67,7 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: SongScoreWidget(songCollection: widget.songCollection, starPercent: _starPercent, score: _score, perfectPoint: _perfectPoint,),
+              child: SongScoreWidget(songCollection: _currentSong, starPercent: _starPercent, score: _score, perfectPoint: _perfectPoint,),
             ),
           ),
           // Spacer(),
@@ -73,15 +82,20 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
               print(perfectPoint);
               print('perfectPoint');
             },
-            currentSong: widget.songCollection,
+            currentSong: _currentSong,
             onChangeStarLearn:(star) {
-            setState(() {
-              _starPercent = star;
-            });
+              setState(() {
+                _starPercent = star;
+              });
             },
             onChangeScore: (score) {
               setState(() {
                 _score = score;
+              });
+            },
+            onTapChooseSong:(song) {
+              setState(() {
+                _currentSong = song;
               });
             },
             isFromLearnScreen: false,

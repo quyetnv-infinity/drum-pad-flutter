@@ -89,6 +89,7 @@ class LessonSequenceAdapter extends TypeAdapter<LessonSequence> {
       earlyScore: (fields[4] as num?)?.toDouble(),
       lateScore: (fields[5] as num?)?.toDouble(),
       missedScore: (fields[6] as num?)?.toDouble(),
+      totalScore: (fields[9] as num?)?.toDouble(),
       star: fields[7] == null ? 0 : (fields[7] as num).toDouble(),
       isCompleted: fields[8] == null ? false : fields[8] as bool,
     );
@@ -97,7 +98,7 @@ class LessonSequenceAdapter extends TypeAdapter<LessonSequence> {
   @override
   void write(BinaryWriter writer, LessonSequence obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.level)
       ..writeByte(1)
@@ -115,7 +116,9 @@ class LessonSequenceAdapter extends TypeAdapter<LessonSequence> {
       ..writeByte(7)
       ..write(obj.star)
       ..writeByte(8)
-      ..write(obj.isCompleted);
+      ..write(obj.isCompleted)
+      ..writeByte(9)
+      ..write(obj.totalScore);
   }
 
   @override

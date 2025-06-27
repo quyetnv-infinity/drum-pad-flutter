@@ -3,17 +3,16 @@ import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/view/screen/completed_songs/widget/completed_song_item.dart';
+import 'package:and_drum_pad_flutter/view/screen/lessons/lessons_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/app_bar/search_bar.dart';
-import 'package:and_drum_pad_flutter/view/widget/item/song_category_item.dart';
+import 'package:and_drum_pad_flutter/view/widget/loading_dialog/loading_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
-import 'package:and_drum_pad_flutter/view_model/category_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class CompletedSongsScreen extends StatefulWidget {
-  final List<SongCollection>? songs;
-  const CompletedSongsScreen({super.key, this.songs});
+  final List<SongCollection> songs;
+  const CompletedSongsScreen({super.key, required this.songs});
 
   @override
   State<CompletedSongsScreen> createState() => _CompletedSongsScreenState();
@@ -32,16 +31,9 @@ class _CompletedSongsScreenState extends State<CompletedSongsScreen> {
   }
 
   Future<void> _loadSongs() async {
-    if(widget.songs != null) {
-      _allSongs = widget.songs!;
-    } else {
-      final categoryProvider = Provider.of<CategoryProvider>(context, listen: false);
-      // Lấy tất cả các bài hát từ tất cả category
-      _allSongs = categoryProvider.getAllSong();
-    }
+    _allSongs = widget.songs;
 
     _filteredSongs = List.from(_allSongs);
-
     setState(() {});
   }
 
@@ -112,7 +104,19 @@ class _CompletedSongsScreenState extends State<CompletedSongsScreen> {
                 return CompletedSongItem(
                   songCollection: song,
                   onTap: () {
-                    print('onTapReplay');
+                    showDialog(
+                      context: context,
+                      builder: (context) => LoadingDataScreen(
+                        callbackLoadingCompleted: (songResult) {
+                          Navigator.pop(context);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => LessonsScreen(song: songResult),));
+                        },
+                        callbackLoadingFailed: () {
+                          Navigator.pop(context);
+                        },
+                        song: song
+                      ),
+                    );
                   },
                 );
               },

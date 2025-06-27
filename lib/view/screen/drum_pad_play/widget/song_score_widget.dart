@@ -90,7 +90,7 @@ class _SongScoreWidgetState extends State<SongScoreWidget> with TickerProviderSt
     final oldPercent = _oldStarPercent;
 
     // Danh sách các mốc cần trigger animation
-    final milestones = [45, 75, 100];
+    final milestones = [30, 60, 90];
 
     for (final milestone in milestones) {
       if (oldPercent < milestone && newPercent >= milestone) {

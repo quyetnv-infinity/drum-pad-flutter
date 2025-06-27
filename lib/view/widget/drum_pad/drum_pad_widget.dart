@@ -316,6 +316,19 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     }
   }
 
+  Future<void> _updateScoreForBeatLearn(DrumLearnProvider provider) async {
+    final song = await provider.getSong(widget.currentSong!.id);
+    if(song != null) {
+      List<LessonSequence> _lessons = song.lessons;
+      LessonSequence _lesson = _lessons[currentLesson];
+      final newLesson = _lesson.copyWith(totalScore: totalPoint*1.0);
+      print('totalScore: $totalPoint');
+      _lessons[currentLesson] = newLesson;
+      print('new score: ${_lessons[currentLesson].totalScore}');
+      await provider.updateSong(widget.currentSong!.id, song.copyWith(lessons: _lessons));
+    }
+  }
+
   void _navigateToNextScreen() async {
     if(isNavigatedToResult) return;
     setState(() {
@@ -336,14 +349,15 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     widget.onChangeCampaignStar?.call(getStar());
     widget.onResetRecordingToggle?.call();
     /// 📌 check condition of result to save unlocked lesson or campaign and save star
-    if(getStar() > 1) {
+    if(getStar() > 2) {
       widget.onChangeUnlockedModeCampaign?.call();
     }
     /// 📖 save learn from song and beat runner count for information at profile screen
-    if (!widget.isFromLearnScreen)
-      {
-        provider.addBeatRunnerStar(widget.currentSong!.id, getStar());
-      }
+    if (!widget.isFromLearnScreen) {
+      provider.addBeatRunnerStar(widget.currentSong!.id, getStar());
+    } else {
+      await _updateScoreForBeatLearn(provider);
+    }
     if (currentLesson >= lessons.length - 1 && widget.isFromLearnScreen) provider.addLearnSongComplete(widget.currentSong!.id);
     /// push navigation and check cases
     checkPointsExceed();
@@ -354,7 +368,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         barrierColor: Colors.black.withValues(alpha: 0.9),
         builder: (context) => Dialog(
         backgroundColor: Colors.transparent,
-        child: ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() > 1, isCompleteCampaign: checkLastCampaign,)));
+        child: ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() >= 2, isCompleteCampaign: checkLastCampaign,)));
 
     setState(() {
       isNavigatedToResult = false;
@@ -440,18 +454,12 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   double getStar(){
     final percent = (totalPoint / (_totalNotes * 100))*100;
     switch(percent){
-      case < 15:
-        return 0;
       case < 30:
-        return 0.5;
-      case < 45:
-        return 1;
+        return 0;
       case < 60:
-        return 1.5;
-      case < 75:
-        return 2;
+        return 1;
       case < 90:
-        return 2.5;
+        return 2;
       default:
         return 3;
     }
@@ -594,19 +602,21 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   }
 
   Future<void> _playSound(String sound) async {
+    final bool shouldLeadPause = !(audioPlayers[_currentLeadSound] != null && (audioPlayers[_currentLeadSound]!.duration?.inMilliseconds ?? 0) - audioPlayers[_currentLeadSound]!.position.inMilliseconds < 500);
+    final bool shouldBassPause = !(audioPlayers[_currentBassSound] != null && (audioPlayers[_currentBassSound]!.duration?.inMilliseconds ?? 0) - audioPlayers[_currentBassSound]!.position.inMilliseconds < 500);
     if (audioPlayers.containsKey(sound)) {
       if(_isFromBeatRunner){
-        if(_currentLeadSound != null) audioPlayers[_currentLeadSound]?.pause();
+        if(_currentLeadSound != null && shouldLeadPause) audioPlayers[_currentLeadSound]?.pause();
         setState(() {
           _currentLeadSound = sound;
         });
       } else if(PadUtil.getSoundType(sound) == SoundType.lead){
-        if(_currentLeadSound != null) audioPlayers[_currentLeadSound]?.pause();
+        if(_currentLeadSound != null && shouldLeadPause) audioPlayers[_currentLeadSound]?.pause();
         setState(() {
           _currentLeadSound = sound;
         });
       }else if (PadUtil.getSoundType(sound) == SoundType.bass){
-        if(_currentBassSound != null) audioPlayers[_currentBassSound]?.pause();
+        if(_currentBassSound != null && shouldBassPause) audioPlayers[_currentBassSound]?.pause();
         setState(() {
           _currentBassSound = sound;
         });
