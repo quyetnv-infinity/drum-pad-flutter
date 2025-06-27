@@ -172,6 +172,29 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
     }
   }
 
+  Widget _buildItemLevel(int level){
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 80,
+          height: 60,
+          decoration: BoxDecoration(
+            image: DecorationImage(image: AssetImage(ResImage.imgLockLevel),),
+          ),
+          alignment: Alignment.center,
+          child: Text("$level", style: TextStyle(
+            fontFamily: AppFonts.commando,
+            fontWeight: FontWeight.normal,
+            color: Color(0xFF4E4337),
+            fontSize: 20,
+          ),),
+        ),
+        Transform.translate(offset: Offset(0, -12), child: RatingStars.custom(value: 100, paddingMiddle: 20, smallStarWidth: 20, smallStarHeight: 20, bigStarWidth: 20, bigStarHeight: 20, isFlatStar: true, isPaddingBottom: false,)),
+      ],
+    );
+  }
+
   Widget _buildCampaignContent() {
     return Consumer<CampaignProvider>(
       builder: (context, provider, child) {
@@ -208,20 +231,7 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
                               left: -27,
                               child: GestureDetector(
                                 onTap: () => _handleSelectLevel(reversedSongs[index]),
-                                child: Container(
-                                  width: 80,
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(image: AssetImage(ResImage.imgLockLevel),),
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: Text("${reversedSongs.length - index}", style: TextStyle(
-                                    fontFamily: AppFonts.commando,
-                                    fontWeight: FontWeight.normal,
-                                    color: Color(0xFF4E4337),
-                                    fontSize: 20,
-                                  ),),
-                                ),
+                                child: _buildItemLevel(reversedSongs.length - index),
                               ),
                             ),
 
@@ -231,20 +241,7 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
                               right: -27,
                               child: GestureDetector(
                                 onTap: () => _handleSelectLevel(reversedSongs[index]),
-                                child: Container(
-                                  width: 80,
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(image: AssetImage(ResImage.imgLockLevel),),
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: Text("${reversedSongs.length - index}", style: TextStyle(
-                                    fontFamily: AppFonts.commando,
-                                    fontWeight: FontWeight.normal,
-                                    color: Color(0xFF4E4337),
-                                    fontSize: 20,
-                                  ),),
-                                ),
+                                child: _buildItemLevel(reversedSongs.length - index),
                               ),
                             ),
 
