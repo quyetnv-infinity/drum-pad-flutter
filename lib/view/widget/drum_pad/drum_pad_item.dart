@@ -27,9 +27,17 @@ class DrumPadItem extends StatefulWidget {
   State<DrumPadItem> createState() => _DrumPadItemState();
 }
 
-class _DrumPadItemState extends State<DrumPadItem> with SingleTickerProviderStateMixin {
+class _DrumPadItemState extends State<DrumPadItem> {
+  Widget? _padDisplayWidget;
+  PadStateEnum? _lastPadState;
+
   @override
   Widget build(BuildContext context) {
+    if (widget.padState != _lastPadState) {
+      _lastPadState = widget.padState;
+      _padDisplayWidget = widget.padState?.getDisplayWidget(context);
+    }
+
     return GestureDetector(
       onTapDown: (details) {
         widget.onTap();
@@ -63,7 +71,7 @@ class _DrumPadItemState extends State<DrumPadItem> with SingleTickerProviderStat
                       duration: const Duration(milliseconds: 100),
                       curve: Curves.easeInOut,
                       transform: Matrix4.translationValues(0, -80, 0),
-                      child: widget.padState!.getDisplayWidget(context),
+                      child: _padDisplayWidget,
                     ),
                   );
                 },
@@ -77,12 +85,14 @@ class _DrumPadItemState extends State<DrumPadItem> with SingleTickerProviderStat
           // Square progress for beat runner mode
           if (widget.shouldShowSquareProgress && widget.hasSound && !widget.isPracticeMode && widget.isFromBeatRunner)
             Positioned.fill(
-              child: CustomPaint(
-                painter: SquareProgressPainter(
-                  progress: widget.squareProgressValue,
-                  color: Colors.white,
-                  strokeWidth: 4,
-                  borderRadius: 10,
+              child: RepaintBoundary(
+                child: CustomPaint(
+                  painter: SquareProgressPainter(
+                    progress: widget.squareProgressValue,
+                    color: Colors.white,
+                    strokeWidth: 4,
+                    borderRadius: 10,
+                  ),
                 ),
               ),
             ),
@@ -120,7 +130,7 @@ class _DrumPadItemState extends State<DrumPadItem> with SingleTickerProviderStat
         Align(
           alignment: Alignment.center,
           child: Text(
-            context.locale.wait, 
+            context.locale.wait,
             style: const TextStyle(
               fontSize: 10, 
               fontWeight: FontWeight.w500, 
