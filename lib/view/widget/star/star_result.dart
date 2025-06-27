@@ -46,7 +46,7 @@ class RatingStars extends StatelessWidget {
       state: StarState.fromValue(
         value: value,
         nullThreshold: 15,
-        fullThreshold: 45,
+        fullThreshold: 30,
       ),
     );
 
@@ -58,8 +58,8 @@ class RatingStars extends StatelessWidget {
       isPaddingBottom: isPaddingBottom,
       state: StarState.fromValue(
         value: value,
-        nullThreshold: 45,
-        fullThreshold: 75,
+        nullThreshold: 30,
+        fullThreshold: 60,
       ),
     );
 
@@ -68,8 +68,8 @@ class RatingStars extends StatelessWidget {
       height: smallStarHeight,
       state: StarState.fromValue(
         value: value,
-        nullThreshold: 75,
-        fullThreshold: 100,
+        nullThreshold: 60,
+        fullThreshold: 90,
       ),
     );
 
@@ -79,7 +79,7 @@ class RatingStars extends StatelessWidget {
       state: StarState.fromValue(
         value: value,
         nullThreshold: 15,
-        fullThreshold: 45,
+        fullThreshold: 30,
       ),
     );
 
@@ -88,8 +88,8 @@ class RatingStars extends StatelessWidget {
       height: smallStarWidth,
       state: StarState.fromValue(
         value: value,
-        nullThreshold: 45,
-        fullThreshold: 75,
+        nullThreshold: 30,
+        fullThreshold: 60,
       ),
     );
 
@@ -98,8 +98,8 @@ class RatingStars extends StatelessWidget {
       height: smallStarHeight,
       state: StarState.fromValue(
         value: value,
-        nullThreshold: 75,
-        fullThreshold: 100,
+        nullThreshold: 60,
+        fullThreshold: 90,
       ),
     );
 

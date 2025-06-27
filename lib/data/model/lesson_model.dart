@@ -32,6 +32,7 @@ class LessonSequence extends HiveObject{
   double? earlyScore;
   double? lateScore;
   double? missedScore;
+  double? totalScore;
   double star;
   bool isCompleted;
 
@@ -43,6 +44,7 @@ class LessonSequence extends HiveObject{
     this.earlyScore,
     this.lateScore,
     this.missedScore,
+    this.totalScore,
     this.star = 0,
     this.isCompleted = false,
   });
@@ -54,6 +56,32 @@ class LessonSequence extends HiveObject{
 
     return LessonSequence(
       events: events,
+    );
+  }
+
+  LessonSequence copyWith({
+    int? level,
+    List<NoteEvent>? events,
+    double? perfectScore,
+    double? goodScore,
+    double? earlyScore,
+    double? lateScore,
+    double? missedScore,
+    double? totalScore,
+    double? star,
+    bool? isCompleted,
+  }) {
+    return LessonSequence(
+      level: level ?? this.level,
+      events: events ?? this.events,
+      perfectScore: perfectScore ?? this.perfectScore,
+      goodScore: goodScore ?? this.goodScore,
+      earlyScore: earlyScore ?? this.earlyScore,
+      lateScore: lateScore ?? this.lateScore,
+      missedScore: missedScore ?? this.missedScore,
+      totalScore: totalScore ?? this.totalScore,
+      star: star ?? this.star,
+      isCompleted: isCompleted ?? this.isCompleted,
     );
   }
 }

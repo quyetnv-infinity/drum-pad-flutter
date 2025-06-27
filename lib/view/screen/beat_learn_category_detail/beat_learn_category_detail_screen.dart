@@ -58,6 +58,19 @@ class _BeatLearnCategoryDetailScreenState extends State<BeatLearnCategoryDetailS
                   title: context.locale.recommend_list_songs,
                   listSongs: drumLearnProvider.listRecommend,
                   onTapItem: (song) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => LoadingDataScreen(
+                        callbackLoadingCompleted: (songResult) {
+                          Navigator.pop(context);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => LessonsScreen(song: songResult),));
+                        },
+                        callbackLoadingFailed: () {
+                          Navigator.pop(context);
+                        },
+                        song: song
+                      ),
+                    );
                   },
                 );
               }

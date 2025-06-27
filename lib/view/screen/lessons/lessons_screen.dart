@@ -76,8 +76,8 @@ class _LessonsScreenState extends State<LessonsScreen> {
                   children: [
                     CampaignItem(
                       trailingWidget: isLocked ? SizedBox.shrink() : _buildTrailingWidget(lesson, index),
-                      score: (lesson.perfectScore ?? 0) + (lesson.goodScore ?? 0) + (lesson.earlyScore ?? 0) + (lesson.lateScore ?? 0),
-                      star: lesson.star >= 3 ? 100 : (lesson.star >= 2 ? 75 : (lesson.star >= 1 ? 45 : 0)),
+                      score: lesson.totalScore ?? 0,
+                      star: lesson.star >= 3 ? 100 : (lesson.star >= 2 ? 60 : (lesson.star >= 1 ? 30 : 0)),
                       name: Text('${context.locale.step} ${index + 1}', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),)
                     ),
                     if(isLocked) Positioned.fill(

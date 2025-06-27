@@ -316,6 +316,19 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     }
   }
 
+  Future<void> _updateScoreForBeatLearn(DrumLearnProvider provider) async {
+    final song = await provider.getSong(widget.currentSong!.id);
+    if(song != null) {
+      List<LessonSequence> _lessons = song.lessons;
+      LessonSequence _lesson = _lessons[currentLesson];
+      final newLesson = _lesson.copyWith(totalScore: totalPoint*1.0);
+      print('totalScore: $totalPoint');
+      _lessons[currentLesson] = newLesson;
+      print('new score: ${_lessons[currentLesson].totalScore}');
+      await provider.updateSong(widget.currentSong!.id, song.copyWith(lessons: _lessons));
+    }
+  }
+
   void _navigateToNextScreen() async {
     if(isNavigatedToResult) return;
     setState(() {
@@ -336,14 +349,14 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     widget.onChangeCampaignStar?.call(getStar());
     widget.onResetRecordingToggle?.call();
     /// 📌 check condition of result to save unlocked lesson or campaign and save star
-    if(getStar() > 1) {
+    if(getStar() > 2) {
       widget.onChangeUnlockedModeCampaign?.call();
     }
     /// 📖 save learn from song and beat runner count for information at profile screen
     if (!widget.isFromLearnScreen) {
       provider.addBeatRunnerStar(widget.currentSong!.id, getStar());
     } else {
-
+      await _updateScoreForBeatLearn(provider);
     }
     if (currentLesson >= lessons.length - 1 && widget.isFromLearnScreen) provider.addLearnSongComplete(widget.currentSong!.id);
     /// push navigation and check cases
@@ -441,18 +454,12 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   double getStar(){
     final percent = (totalPoint / (_totalNotes * 100))*100;
     switch(percent){
-      case < 15:
-        return 0;
       case < 30:
-        return 0.5;
-      case < 45:
-        return 1;
+        return 0;
       case < 60:
-        return 1.5;
-      case < 75:
-        return 2;
+        return 1;
       case < 90:
-        return 2.5;
+        return 2;
       default:
         return 3;
     }
