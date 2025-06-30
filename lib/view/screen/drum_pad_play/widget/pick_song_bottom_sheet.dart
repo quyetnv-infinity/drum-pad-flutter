@@ -12,7 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PickSongScreen extends StatefulWidget {
-  const PickSongScreen({super.key});
+  final SongCollection? songCollection;
+  const PickSongScreen({super.key, this.songCollection});
 
   @override
   State<PickSongScreen> createState() => _PickSongScreenState();
@@ -33,7 +34,7 @@ class _PickSongScreenState extends State<PickSongScreen> {
   Future<void> _loadSongs() async {
     final categoryProvider = Provider.of<CategoryProvider>(context, listen: false);
     // Lấy tất cả các bài hát từ tất cả category
-    _allSongs = categoryProvider.getAllSong();
+    _allSongs = widget.songCollection != null ? categoryProvider.getAllSongsByDifficulty(widget.songCollection?.difficulty ?? '') : categoryProvider.getAllSong();
 
     _filteredSongs = List.from(_allSongs);
 

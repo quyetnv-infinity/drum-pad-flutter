@@ -65,6 +65,15 @@ class CategoryProvider with ChangeNotifier {
     result = _sortByDifficulty(result);
     return result;
   }
+  List<SongCollection> getAllSongsByDifficulty(String difficulty) {
+    return _categories
+        .expand((category) => category.items ?? [])
+        .where((song) => song.difficulty == difficulty)
+        .cast<SongCollection>()
+        .toList();
+  }
+
+
 
   List<SongCollection> _sortByDifficulty(List<SongCollection> songs){
     if(songs.isEmpty) return songs;
