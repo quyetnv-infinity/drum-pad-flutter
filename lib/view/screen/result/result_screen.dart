@@ -244,7 +244,7 @@ class _ResultScreenState extends State<ResultScreen>
                                 if(!checkNotLastCampaign())
                                 SvgPicture.asset(ResIcon.icRefresh),
 
-                                Expanded(child: Text(!checkNotLastCampaign() ? context.locale.play_again : context.locale.continue_text, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16), textAlign: TextAlign.center,)),
+                                Text(!checkNotLastCampaign() ? context.locale.play_again : context.locale.continue_text, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16), textAlign: TextAlign.center,),
                               ],
                             ),
                           ),

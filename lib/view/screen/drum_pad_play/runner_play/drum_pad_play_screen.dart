@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
+import 'package:and_drum_pad_flutter/core/utils/font_responsive.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/add_new_song.dart';
@@ -72,7 +73,7 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
         tutorialCoachMark.next();
       },
       onFinish: () {
-        _startHandler();
+        // _startHandler();
       },
       onClickTarget: (target) {
         if (target.identify == "change_mode") {
@@ -84,9 +85,6 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
         }
       },
     );
-  }
-  double responsiveFontSize(double screenWidth, double size) {
-    return size * screenWidth / 375;
   }
   List<TargetFocus> _createTargets() {
     return [
@@ -132,7 +130,7 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
                     Transform.translate(
                       offset: Offset(0, -_topViewSize.height * 0.1),
                       child: _buildTutorialStep(
-                        title: context.locale.drum_pad_area, fontSize: responsiveFontSize(_topViewSize.width, 20)))
+                        title: context.locale.drum_pad_area, fontSize: FontResponsive.responsiveFontSize(_topViewSize.width, 20)))
                   ],
                 ),
               ),
@@ -210,7 +208,7 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
                         ),
                       ),
                       _buildTutorialStep(
-                        title: context.locale.drum_pad_area, fontSize: responsiveFontSize(_topViewSize.width, 20))
+                        title: context.locale.drum_pad_area, fontSize: FontResponsive.responsiveFontSize(_topViewSize.width, 20))
                     ],
                   ),
                 ),
@@ -253,7 +251,7 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
                   Transform.translate(
                       offset: Offset(0,-10),
                       child: _buildTutorialStep(
-                          title: context.locale.tap_here_to_change_song, fontSize: responsiveFontSize(_topViewSize.width, 20)))
+                          title: context.locale.tap_here_to_change_song, fontSize: FontResponsive.responsiveFontSize(_topViewSize.width, 20)))
                 ],
               ),
             )
@@ -373,7 +371,7 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SvgPicture.asset(ResIcon.icWaveForm),
-          Expanded(child: Text("${widget.songCollection.name} - ${widget.songCollection.author}", style: TextStyle(fontSize: 16),))
+          Flexible(child: Text("${widget.songCollection.name} - ${widget.songCollection.author}", style: TextStyle(fontSize: 16),))
         ],
       ),
     );
@@ -386,17 +384,6 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
         borderRadius: BorderRadius.circular(8)
       ),
       child: Text(title, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: fontSize ?? 14),),
-    );
-  }
-  Widget _row(){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        IconButtonCustom(iconAsset: ResIcon.icClose, onTap: () {
-
-        },),
-        _buildTutorialStep(title: '1/3')
-      ],
     );
   }
 }

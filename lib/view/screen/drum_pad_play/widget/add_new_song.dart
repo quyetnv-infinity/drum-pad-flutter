@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
+import 'package:and_drum_pad_flutter/core/utils/font_responsive.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/data/service/api_service/api_service.dart';
@@ -10,6 +11,7 @@ import 'package:and_drum_pad_flutter/view/widget/blur_widget.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class AddNewSong extends StatefulWidget {
   final SongCollection? songCollection;
@@ -65,9 +67,6 @@ class _AddNewSongState extends State<AddNewSong> with SingleTickerProviderStateM
   }
   double baseWidth = 375.0;
 
-  double responsiveFontSize(double screenWidth, double size) {
-    return size * screenWidth / baseWidth;
-  }
   @override
   Widget build(BuildContext context) {
 
@@ -157,8 +156,8 @@ class _AddNewSongState extends State<AddNewSong> with SingleTickerProviderStateM
                       ///CÁI NÀY LÀ ẢNH BÀI HÁT
                       Positioned(
                         left: 0,
-                        child: widget.songCollection == null ? Image.asset(
-                          ResImage.imgBgAdd2,
+                        child: widget.songCollection == null ? SvgPicture.asset(
+                          ResIcon.icAddSong,
                           height: size * 0.8,
                           fit: BoxFit.fitWidth,
                         ): RotationTransition(
@@ -196,12 +195,12 @@ class _AddNewSongState extends State<AddNewSong> with SingleTickerProviderStateM
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          BlurWidget(text: widget.songCollection!.difficulty, fontSize: responsiveFontSize(size *2.7, 10),),
+          BlurWidget(text: widget.songCollection!.difficulty, fontSize: FontResponsive.responsiveFontSize(size *2.7, 10),),
           Text(
             widget.songCollection!.name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: responsiveFontSize(size *2.7, 20)),
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: FontResponsive.responsiveFontSize(size *2.7, 20)),
           ),
           Text(
             widget.songCollection!.author,
@@ -209,7 +208,7 @@ class _AddNewSongState extends State<AddNewSong> with SingleTickerProviderStateM
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontWeight: FontWeight.w400,
-              fontSize: responsiveFontSize(size *2.7, 14),
+              fontSize: FontResponsive.responsiveFontSize(size *2.7, 14),
               color: Colors.white.withValues(alpha: 0.6),
             ),
           ),
@@ -220,7 +219,7 @@ class _AddNewSongState extends State<AddNewSong> with SingleTickerProviderStateM
               gradient: LinearGradient(colors: [Color(0xffA005ff), Color(0xffD796FF)]
               )
             ),
-            child: Text(context.locale.choose_songs, style: TextStyle(fontSize:responsiveFontSize(size *2.7, 12), fontWeight: FontWeight.w600),),
+            child: Text(context.locale.choose_songs, style: TextStyle(fontSize: FontResponsive.responsiveFontSize(size *2.7, 12), fontWeight: FontWeight.w600),),
           )
         ],
       ),
