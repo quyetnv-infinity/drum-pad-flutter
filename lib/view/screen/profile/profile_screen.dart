@@ -5,6 +5,7 @@ import 'package:and_drum_pad_flutter/view/screen/beat_runner/widget/recommend_li
 import 'package:and_drum_pad_flutter/view/screen/completed_songs/completed_songs_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/lessons/lessons_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/profile/widget/completed_songs.dart';
+import 'package:and_drum_pad_flutter/view/screen/setting/setting_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/loading_dialog/loading_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
@@ -53,6 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
             child: IconButtonCustom(iconAsset: ResIcon.icSetting, onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SettingScreen()));
             },),
           )
         ],

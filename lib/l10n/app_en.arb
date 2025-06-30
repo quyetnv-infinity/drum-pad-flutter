@@ -87,5 +87,6 @@
   "step": "Step",
   "play": "Play",
   "need_2_stars_to_unlock": "Need 2 stars to unlock",
-  "cancel" : "Cancel"
+  "cancel" : "Cancel",
+  "setting" : "Setting"
 }

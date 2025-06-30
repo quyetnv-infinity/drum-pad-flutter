@@ -7,6 +7,7 @@ import 'package:and_drum_pad_flutter/view/screen/beat_runner/widget/recommend_li
 import 'package:and_drum_pad_flutter/view/screen/campaign/campaign_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/learn_material/learn_material_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/lessons/lessons_screen.dart';
+import 'package:and_drum_pad_flutter/view/screen/setting/setting_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/item/mode_play_item.dart';
 import 'package:and_drum_pad_flutter/view/widget/loading_dialog/loading_dialog.dart';
@@ -69,7 +70,10 @@ class _SettingsButton extends StatelessWidget {
     return IconButtonCustom(
       iconAsset: ResIcon.icSetting,
       onTap: () {
-        // TODO: Implement settings functionality
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SettingScreen()),
+        );
       },
     );
   }
@@ -80,9 +84,6 @@ class _BeatLearnBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-    print("Building BeatLearnBody");
-    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8,

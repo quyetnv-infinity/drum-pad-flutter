@@ -5,6 +5,7 @@ import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/view/screen/beat_runner/widget/recommend_list_song.dart';
 import 'package:and_drum_pad_flutter/view/screen/category/category_details_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/free_style/free_style_play_screen.dart';
+import 'package:and_drum_pad_flutter/view/screen/setting/setting_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/item/mode_play_item.dart';
 import 'package:and_drum_pad_flutter/view/widget/list_view/mood_and_genres.dart';
@@ -31,6 +32,7 @@ class BeatRunnerScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
             child: IconButtonCustom(iconAsset: ResIcon.icSetting, onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SettingScreen()));
             },),
           )
         ],
