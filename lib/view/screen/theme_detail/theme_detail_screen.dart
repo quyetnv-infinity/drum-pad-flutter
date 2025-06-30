@@ -88,6 +88,7 @@ class ThemeDetailScreen extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     Navigator.pop(context);
+                    Navigator.pop(context);
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 100, vertical: 16),

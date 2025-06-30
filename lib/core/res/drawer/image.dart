@@ -37,6 +37,8 @@ class ResImage {
   static const String imgLineToLeft = "$basePath/img_line_to_left.png";
   static const String imgLineToRight = "$basePath/img_line_to_right.png";
 
+  static const String imgNoInternet = "$basePath/img_no_internet.png";
+
   static const String img1 = '$basePath/img_1.png';
   static const String img2 = '$basePath/img_2.png';
   static const String img3 = '$basePath/img_3.png';
