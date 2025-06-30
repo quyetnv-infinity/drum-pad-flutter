@@ -7,7 +7,9 @@ import 'package:and_drum_pad_flutter/view/screen/theme_detail/theme_detail_scree
 import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
+import 'package:and_drum_pad_flutter/view_model/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ThemeScreen extends StatelessWidget {
   const ThemeScreen({super.key});
@@ -95,7 +97,13 @@ class ThemeScreen extends StatelessWidget {
                   Color(0xFFD796FF), Color(0xFFA005FF)
                 ], begin: Alignment.centerRight, end: Alignment.centerLeft)
               ),
-              child: Text(context.locale.get_theme, style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),),
+              child: Selector<ThemeProvider, ThemeModel>(
+                selector: (_, provider) => provider.currentTheme,
+                builder:(_, currentTheme, __) {
+                  return Text(currentTheme.id == theme.id ? context.locale.theme_applied : context.locale.get_theme, style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),);
+
+                },
+              ),
             ),
           )
         ],
