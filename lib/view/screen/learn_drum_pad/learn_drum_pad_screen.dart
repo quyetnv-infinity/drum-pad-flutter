@@ -11,6 +11,7 @@ import 'package:and_drum_pad_flutter/view/widget/drum_pad/drum_pad_widget.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
+import 'package:and_drum_pad_flutter/view_model/tutorial_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -47,6 +48,14 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _measureWidgets();
       _initTutorial();
+      final tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
+      final isFirstTimeShowTutorial = tutorialProvider.isFirstTimeShowTutorialLearn;
+      if(isFirstTimeShowTutorial){
+        Future.delayed(Duration(milliseconds: 200), () {
+          showTutorial();
+          tutorialProvider.setFirstShowTutorialLearn();
+        },);
+      }
     });
   }
 
