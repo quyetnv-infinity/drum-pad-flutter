@@ -1,13 +1,17 @@
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
+import 'package:and_drum_pad_flutter/core/utils/network_checking.dart';
 import 'package:and_drum_pad_flutter/view/screen/beat_learn/beat_learn_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/beat_runner/beat_runner_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/profile/profile_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/theme/theme_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/bottom_navigation/bottom_navigation.dart';
+import 'package:and_drum_pad_flutter/view/widget/loading_dialog/no_internet_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
+import 'package:and_drum_pad_flutter/view_model/network_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,6 +23,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with WidgetsBindingObserver, AutomaticKeepAliveClientMixin<HomeScreen> {
   int _currentIndex = 0;
+  late NoInternetDialog noInternetDialog;
+  bool _wasConnected = true;
 
   final List<Widget Function()> _screenBuilders = [
         () => const BeatRunnerScreen(),
@@ -36,6 +42,13 @@ class _HomeScreenState extends State<HomeScreen>
     WidgetsBinding.instance.addObserver(this);
     // Khởi tạo màn hình đầu tiên
     _screens[_currentIndex] = _screenBuilders[_currentIndex]();
+    noInternetDialog = NoInternetDialog(
+      onTapGoSettings: () {
+        // AdController.shared.setResumeAdState(true);
+        Navigator.pop(context);
+        NetworkChecking.navigateToWiFiSettings(context);
+      },
+    );
   }
 
   @override
@@ -68,11 +81,28 @@ class _HomeScreenState extends State<HomeScreen>
           });
         },
       ),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: List.generate(_screenBuilders.length, (index) {
-          return _screens[index] ?? const Center(child: CircularProgressIndicator());
-        }),
+      body: Selector<NetworkProvider, bool>(
+        selector: (p0, p1) => p1.isConnected,
+        builder: (context, isConnected, _) {
+          if (_wasConnected != isConnected) {
+            if (!isConnected) {
+              print('show==========');
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                noInternetDialog.show(context);
+              });
+            } else {
+              print('hide==========');
+              noInternetDialog.dismiss();
+            }
+            _wasConnected = isConnected;
+          }
+          return IndexedStack(
+            index: _currentIndex,
+            children: List.generate(_screenBuilders.length, (index) {
+              return _screens[index] ?? const Center(child: CircularProgressIndicator());
+            }),
+          );
+        }
       ),
     );
   }
