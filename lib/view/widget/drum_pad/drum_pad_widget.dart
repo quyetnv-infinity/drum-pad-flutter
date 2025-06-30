@@ -481,7 +481,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         perfectPoint++;
         provider.increasePerfectPoint();
         /// PERFECT POINT
-        widget.onChangePerfectPoint?.call(perfectPoint);
+        widget.onChangePerfectPoint?.call(1);
         break;
       case PadStateEnum.good:
       case PadStateEnum.late:

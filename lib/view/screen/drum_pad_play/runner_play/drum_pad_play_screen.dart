@@ -335,7 +335,7 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
             },
             onChangePerfectPoint: (perfectPoint) {
               setState(() {
-                _perfectPoint = perfectPoint;
+                perfectPoint != 0 ? _perfectPoint += perfectPoint : _perfectPoint = 0;
               });
               if(_perfectPoint == 0){
                 print('perfectPoint =00000000');

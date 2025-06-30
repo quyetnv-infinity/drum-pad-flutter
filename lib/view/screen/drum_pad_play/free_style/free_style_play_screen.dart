@@ -194,6 +194,16 @@ class _FreeStylePlayScreenState extends State<FreeStylePlayScreen> with SingleTi
         Navigator.pop(context);
       },
         action: [
+          if(_songCollection != null)
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: IconButtonCustom(
+              iconAsset: ResIcon.icRecord,
+              onTap:() {
+
+              },
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(right: 16),
             child: IconButtonCustom(iconAsset: ResIcon.icTutorial, onTap:() {
