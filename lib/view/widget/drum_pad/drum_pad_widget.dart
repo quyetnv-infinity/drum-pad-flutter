@@ -29,11 +29,12 @@ class DrumPadScreen extends StatefulWidget {
   final Function(SongCollection song)? onTapChooseSong;
   final VoidCallback? onResetRecordingToggle;
   final void Function(VoidCallback pauseHandler)? onRegisterPauseHandler;
+  final void Function(VoidCallback startHandler)? onRegisterStartHandler;
   final void Function(bool isPlaying)? onChangePlayState;
   final void Function(int perfectPoint)? onChangePerfectPoint;
-  final bool? isNavigate;
+  final bool? isPause;
 
-  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onResetRecordingToggle, this.onRegisterPauseHandler, this.onChangePlayState, this.onChangePerfectPoint, this.isNavigate});
+  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onResetRecordingToggle, this.onRegisterPauseHandler, this.onChangePlayState, this.onChangePerfectPoint, this.isPause, this.onRegisterStartHandler});
 
   @override
   State<DrumPadScreen> createState() => _DrumPadScreenState();
@@ -141,7 +142,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     )..repeat();
     if(widget.currentSong != null) context.read<DrumLearnProvider>().addBeatRunnerSongComplete(widget.currentSong!.id);
     widget.onRegisterPauseHandler?.call(pause);
-
+    widget.onRegisterStartHandler?.call(_startTimer);
   }
 
   @override
@@ -329,6 +330,14 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     }
   }
 
+  Future<void> _updateScoreForCampaign(CampaignProvider campaignProvider) async {
+    final song = await campaignProvider.getSong(widget.currentSong!.id);
+    if(song != null) {
+      final updatedSong = song.copyWith(campaignScore: totalPoint*1.0, campaignStar: getStar());
+      await campaignProvider.updateSong(widget.currentSong!.id, updatedSong);
+    }
+  }
+
   void _navigateToNextScreen() async {
     if(isNavigatedToResult) return;
     setState(() {
@@ -349,14 +358,16 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     widget.onChangeCampaignStar?.call(getStar());
     widget.onResetRecordingToggle?.call();
     /// 📌 check condition of result to save unlocked lesson or campaign and save star
-    if(getStar() > 2) {
+    if(getStar() >= 2) {
       widget.onChangeUnlockedModeCampaign?.call();
     }
     /// 📖 save learn from song and beat runner count for information at profile screen
-    if (!widget.isFromLearnScreen) {
+    if (!widget.isFromLearnScreen && !widget.isFromCampaign) {
       provider.addBeatRunnerStar(widget.currentSong!.id, getStar());
-    } else {
+    } else if(widget.isFromLearnScreen){
       await _updateScoreForBeatLearn(provider);
+    } else if (widget.isFromCampaign) {
+      await _updateScoreForCampaign(campaignProvider);
     }
     if (currentLesson >= lessons.length - 1 && widget.isFromLearnScreen) provider.addLearnSongComplete(widget.currentSong!.id);
     /// push navigation and check cases
@@ -367,6 +378,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         barrierDismissible: false,
         barrierColor: Colors.black.withValues(alpha: 0.9),
         builder: (context) => Dialog(
+
         backgroundColor: Colors.transparent,
         child: ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() >= 2, isCompleteCampaign: checkLastCampaign,)));
 
@@ -385,7 +397,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
       });
     }
     /// that case which check for back to Beat Runner screen and choose another song
-    else if(result != null && result is SongCollection){
+    else if(result != null && result is SongCollection && !widget.isFromCampaign && !widget.isFromLearnScreen){
       widget.onTapChooseSong?.call(result);
       widget.onChangeStarLearn?.call(0);
       _resetSequence(isPlayingDrum: true);
@@ -429,6 +441,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
           currentLesson = 0;
         }
       });
+      print('========resutl next campaign ${result.name}');
       widget.onTapChooseSong?.call(result);
       print('========${result.name}');
       widget.onChangeStarLearn?.call(0);
@@ -479,7 +492,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         perfectPoint++;
         provider.increasePerfectPoint();
         /// PERFECT POINT
-        widget.onChangePerfectPoint?.call(perfectPoint);
+        widget.onChangePerfectPoint?.call(1);
         break;
       case PadStateEnum.good:
       case PadStateEnum.late:

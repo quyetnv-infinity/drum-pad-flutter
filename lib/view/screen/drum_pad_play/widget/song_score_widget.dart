@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
+import 'package:and_drum_pad_flutter/core/utils/font_responsive.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/data/service/api_service/api_service.dart';
@@ -79,9 +80,6 @@ class _SongScoreWidgetState extends State<SongScoreWidget> with TickerProviderSt
   }
   double baseWidth = 375.0;
 
-  double responsiveFontSize(double screenWidth, double size) {
-    return size * screenWidth / baseWidth;
-  }
   @override
   void didUpdateWidget(covariant SongScoreWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -241,7 +239,7 @@ class _SongScoreWidgetState extends State<SongScoreWidget> with TickerProviderSt
                             height: size,
                             decoration: const BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Colors.red,
+                              color: Colors.grey,
                             ),
                             clipBehavior: Clip.antiAlias,
                             child: Stack(
@@ -323,7 +321,7 @@ class _SongScoreWidgetState extends State<SongScoreWidget> with TickerProviderSt
                             child: JudgementText.perfect(
                               context.locale.perfect,
                               italic: true,
-                              fontSize: responsiveFontSize(size * 3, 26),
+                              fontSize: FontResponsive.responsiveFontSize(size * 3, 26),
                               underline: true,
                             ),
                           ),
@@ -349,10 +347,10 @@ class _SongScoreWidgetState extends State<SongScoreWidget> with TickerProviderSt
             scale: _starScaleAnimation,
             child: RatingStars.custom(value: widget.starPercent, paddingMiddle: height * 0.1, smallStarWidth: height * 0.2, smallStarHeight: height * 0.2, bigStarWidth: height * 0.25, bigStarHeight: height * 0.25, isFlatStar: true)),
           FittedBox(
-            child: Text(context.locale.score_string, style: TextStyle(fontSize: responsiveFontSize(height * 3,16), fontWeight: FontWeight.w500),)),
+            child: Text(context.locale.score_string, style: TextStyle(fontSize: FontResponsive.responsiveFontSize(height * 3,16), fontWeight: FontWeight.w500),)),
           ScaleTransition(
             scale: _scoreScaleAnimation,
-            child: FittedBox(child: Text(widget.score.toString(), style: TextStyle(fontSize: responsiveFontSize(height * 3,32), fontWeight: FontWeight.w700),)))
+            child: FittedBox(child: Text(widget.score.toString(), style: TextStyle(fontSize: FontResponsive.responsiveFontSize(height * 3,32), fontWeight: FontWeight.w700),)))
         ],
       );
   }

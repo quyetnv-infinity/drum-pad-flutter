@@ -85,8 +85,15 @@
   "theme_applied_successfully_description": "Your theme has been applied. Take a look around and enjoy the new vibe.",
   "ok": "Ok",
   "step": "Step",
+  "drum_pad_area": "Drum-pad Area",
+  "star_score_display": "Star & Score display",
+  "tap_here_to_change_song": "Tap here to change song",
   "play": "Play",
   "need_2_stars_to_unlock": "Need 2 stars to unlock",
   "cancel" : "Cancel",
-  "setting" : "Setting"
+  "setting" : "Setting",
+  "term_of_service" : "Term of Service",
+  "policy" : "Policy",
+  "share" : "Share",
+  "rate" : "Rate"
 }

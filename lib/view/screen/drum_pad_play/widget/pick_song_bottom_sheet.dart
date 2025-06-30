@@ -12,7 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PickSongScreen extends StatefulWidget {
-  const PickSongScreen({super.key});
+  final SongCollection? songCollection;
+  const PickSongScreen({super.key, this.songCollection});
 
   @override
   State<PickSongScreen> createState() => _PickSongScreenState();
@@ -26,14 +27,16 @@ class _PickSongScreenState extends State<PickSongScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _loadSongs();
+      Future.delayed(Duration(milliseconds: 300), () {
+        _loadSongs();
+      },);
     },);
   }
 
   Future<void> _loadSongs() async {
     final categoryProvider = Provider.of<CategoryProvider>(context, listen: false);
     // Lấy tất cả các bài hát từ tất cả category
-    _allSongs = categoryProvider.getAllSong();
+    _allSongs = widget.songCollection != null ? categoryProvider.getAllSongsByDifficulty(widget.songCollection?.difficulty ?? '') : categoryProvider.getAllSong();
 
     _filteredSongs = List.from(_allSongs);
 
@@ -115,7 +118,7 @@ class _PickSongScreenState extends State<PickSongScreen> {
                 itemCount: _filteredSongs.length,
                 itemBuilder: (context, index) {
                   final song = _filteredSongs[index];
-                  return SongCategoryItem(songCollection: song, onTap: () {
+                  return SongCategoryItem(key: ValueKey(song.id), songCollection: song, onTap: () {
                     showDialog(context: context, builder: (context) => LoadingDataScreen(
                       callbackLoadingCompleted: (song) {
                         Navigator.pop(context);

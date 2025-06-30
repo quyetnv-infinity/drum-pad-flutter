@@ -43,6 +43,7 @@ class CampaignScreen extends StatelessWidget {
                 return InkWell(
                   borderRadius: BorderRadius.circular(12),
                   onTap: () {
+                    value.setCurrentCampaign(isEasy: index == 0, isMedium: index == 1, isHard: index == 2, isDemonic: index == 3);
                     Navigator.push(
                       context, 
                       MaterialPageRoute(

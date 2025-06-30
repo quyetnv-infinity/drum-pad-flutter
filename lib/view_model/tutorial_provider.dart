@@ -9,7 +9,7 @@ class TutorialProvider with ChangeNotifier {
   bool get isFirstTimeShowTutorialLearn => _isFirstTimeShowTutorialLearn;
 
   TutorialProvider(){
-    getFirstShowTutorial().then((value) {
+    getFirstShowTutorialFree().then((value) {
       _isFirstTimeShowTutorial = value;
       notifyListeners();
     },);
@@ -19,14 +19,14 @@ class TutorialProvider with ChangeNotifier {
     },);
   }
 
-  Future<bool> getFirstShowTutorial() async {
+  Future<bool> getFirstShowTutorialFree() async {
     final prefs = await SharedPreferences.getInstance();
     bool? savedValue = prefs.getBool('isFirstTimeTutorial');
     print('get first show tutorial');
     return savedValue ?? true;
   }
 
-  Future<void> setFirstShowTutorial() async {
+  Future<void> setFirstShowTutorialFree() async {
     _isFirstTimeShowTutorial = false;
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();

@@ -6,9 +6,11 @@ import 'package:and_drum_pad_flutter/view/screen/beat_runner/widget/recommend_li
 import 'package:and_drum_pad_flutter/view/screen/category/category_details_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/free_style/free_style_play_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/setting/setting_screen.dart';
+import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/runner_play/drum_pad_play_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/item/mode_play_item.dart';
 import 'package:and_drum_pad_flutter/view/widget/list_view/mood_and_genres.dart';
+import 'package:and_drum_pad_flutter/view/widget/loading_dialog/loading_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -49,6 +51,17 @@ class BeatRunnerScreen extends StatelessWidget {
                       title: context.locale.recommend_list_songs,
                       listSongs: drumLearnProvider.listRecommend,
                       onTapItem: (song) {
+                        showDialog(context: context, builder: (context) => LoadingDataScreen(
+                            callbackLoadingCompleted: (song) {
+                              Navigator.pop(context);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => DrumPadPlayScreen(songCollection: song)));
+                            },
+                            callbackLoadingFailed: () {
+                              Navigator.pop(context);
+                            },
+                            song: song
+                        )
+                        );
                       },
                     );
                   }

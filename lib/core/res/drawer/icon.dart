@@ -38,6 +38,12 @@ class ResIcon {
   static const String icOvalArrowRight = '${basePath}oval_arrow_right.svg';
   static const String icRecord = '${basePath}ic_record.svg';
   static const String icLock = '${basePath}ic_lock.svg';
+  static const String icStarColor = '${basePath}ic_star_color.svg';
+  static const String icTermOfService = '${basePath}ic_term_of_service.svg';
+  static const String icShare = '${basePath}ic_share.svg';
+  static const String icShieldSecurity = '${basePath}ic_shield_security.svg';
+  static const String icLanguage = '${basePath}ic_language.svg';
+  static const String icArrowRight = '${basePath}ic_arrow_right.svg';
 
   // theme
   static const String icGridPad = '${basePath}ic_grid_pad.svg';
@@ -50,6 +56,9 @@ class ResIcon {
   static const String icPanFlower = '${basePath}ic_pan_flower.svg';
   static const String icStar = '${basePath}ic_star.svg';
   static const String icSun = '${basePath}ic_sun.svg';
+  static const String icTuto1 = '${basePath}ic_tuto_1.svg';
+  static const String icTuto2 = '${basePath}ic_tuto_2.svg';
+  static const String icAddSong = '${basePath}ic_add_song.svg';
 
   //star
   static const String icStar0 = '$basePath/ic_star_0.svg';
