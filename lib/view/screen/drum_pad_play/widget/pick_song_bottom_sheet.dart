@@ -27,7 +27,9 @@ class _PickSongScreenState extends State<PickSongScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _loadSongs();
+      Future.delayed(Duration(milliseconds: 300), () {
+        _loadSongs();
+      },);
     },);
   }
 
@@ -116,7 +118,7 @@ class _PickSongScreenState extends State<PickSongScreen> {
                 itemCount: _filteredSongs.length,
                 itemBuilder: (context, index) {
                   final song = _filteredSongs[index];
-                  return SongCategoryItem(songCollection: song, onTap: () {
+                  return SongCategoryItem(key: ValueKey(song.id), songCollection: song, onTap: () {
                     showDialog(context: context, builder: (context) => LoadingDataScreen(
                       callbackLoadingCompleted: (song) {
                         Navigator.pop(context);

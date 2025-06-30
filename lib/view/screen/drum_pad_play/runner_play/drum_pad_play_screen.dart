@@ -333,7 +333,7 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
           ),
         ],
       ),
-      body: Column(
+      body:  Column(
         children: [
           Expanded(
             child: Padding(
