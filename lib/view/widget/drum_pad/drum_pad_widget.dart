@@ -29,11 +29,12 @@ class DrumPadScreen extends StatefulWidget {
   final Function(SongCollection song)? onTapChooseSong;
   final VoidCallback? onResetRecordingToggle;
   final void Function(VoidCallback pauseHandler)? onRegisterPauseHandler;
+  final void Function(VoidCallback startHandler)? onRegisterStartHandler;
   final void Function(bool isPlaying)? onChangePlayState;
   final void Function(int perfectPoint)? onChangePerfectPoint;
-  final bool? isNavigate;
+  final bool? isPause;
 
-  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onResetRecordingToggle, this.onRegisterPauseHandler, this.onChangePlayState, this.onChangePerfectPoint, this.isNavigate});
+  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onResetRecordingToggle, this.onRegisterPauseHandler, this.onChangePlayState, this.onChangePerfectPoint, this.isPause, this.onRegisterStartHandler});
 
   @override
   State<DrumPadScreen> createState() => _DrumPadScreenState();
@@ -141,7 +142,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     )..repeat();
     if(widget.currentSong != null) context.read<DrumLearnProvider>().addBeatRunnerSongComplete(widget.currentSong!.id);
     widget.onRegisterPauseHandler?.call(pause);
-
+    widget.onRegisterStartHandler?.call(_startTimer);
   }
 
   @override
@@ -377,6 +378,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         barrierDismissible: false,
         barrierColor: Colors.black.withValues(alpha: 0.9),
         builder: (context) => Dialog(
+
         backgroundColor: Colors.transparent,
         child: ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() >= 2, isCompleteCampaign: checkLastCampaign,)));
 
@@ -490,7 +492,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         perfectPoint++;
         provider.increasePerfectPoint();
         /// PERFECT POINT
-        widget.onChangePerfectPoint?.call(perfectPoint);
+        widget.onChangePerfectPoint?.call(1);
         break;
       case PadStateEnum.good:
       case PadStateEnum.late:

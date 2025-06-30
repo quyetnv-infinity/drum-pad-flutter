@@ -23,7 +23,6 @@ class ResImage {
   static const String imgBgCampaign = '$basePath/img_bg_campaign.png';
   static const String imgBgPadDrum = '$basePath/img_bg_pad_drum.png';
   static const String imgBgAdd1 = '$basePath/img_bg_add1.png';
-  static const String imgBgAdd2 = '$basePath/img_bg_add2.png';
   static const String imgBgPhonk = '$basePath/img_bg_phonk.png';
   static const String imgBgEDM = '$basePath/img_bg_edm.png';
   static const String imgBgHipHop = '$basePath/img_bg_hiphop.png';

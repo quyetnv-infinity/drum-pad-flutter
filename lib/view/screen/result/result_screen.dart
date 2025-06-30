@@ -233,7 +233,7 @@ class _ResultScreenState extends State<ResultScreen>
                             }
                           },
                           child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+                            padding: EdgeInsets.symmetric(vertical: 18, horizontal: 8),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(30),
                               gradient: LinearGradient(colors: [Color(0xffa005ff), Color(0xffd796ff)])
@@ -245,7 +245,7 @@ class _ResultScreenState extends State<ResultScreen>
                                 if(!checkNotLastCampaign())
                                 SvgPicture.asset(ResIcon.icRefresh),
 
-                                Expanded(child: Text(!checkNotLastCampaign() ? context.locale.play_again : context.locale.continue_text, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16), textAlign: TextAlign.center,)),
+                                Text(!checkNotLastCampaign() ? context.locale.play_again : context.locale.continue_text, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16), textAlign: TextAlign.center,),
                               ],
                             ),
                           ),
