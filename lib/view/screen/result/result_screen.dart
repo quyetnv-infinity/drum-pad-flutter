@@ -214,6 +214,7 @@ class _ResultScreenState extends State<ResultScreen>
                                 final nextCampaignIndex = campaignProvider.currentSongCampaign + 1;
                                 campaignProvider.setCurrentSongCampaign(nextCampaignIndex);
                                 final song = campaignProvider.currentCampaign[nextCampaignIndex];
+                                print('song ${song.name} with index $nextCampaignIndex');
                                 showDialog(
                                   context: context,
                                   builder: (context) => LoadingDataScreen(

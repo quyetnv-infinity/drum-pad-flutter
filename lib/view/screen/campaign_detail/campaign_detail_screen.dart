@@ -3,11 +3,15 @@ import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/core/utils/image_preloader.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
+import 'package:and_drum_pad_flutter/view/screen/beat_learn/beat_learn_screen.dart';
+import 'package:and_drum_pad_flutter/view/screen/learn_drum_pad/learn_drum_pad_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/image/cached_image_widget.dart';
+import 'package:and_drum_pad_flutter/view/widget/loading_dialog/loading_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view/widget/star/star_result.dart';
 import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -55,6 +59,7 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
       );
 
       final songs = _getSongsByDifficulty(provider);
+      print('========campaign star: ${songs.first.name} ${songs.first.campaignScore} ${songs.first.campaignStar}');
 
       if (mounted) {
         setState(() {
@@ -87,9 +92,43 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
     }
   }
 
-  void _handleSelectLevel(SongCollection song) {
+  Future<void> updateStar(CampaignProvider provider, SongCollection song, double star) async {
+    SongCollection updatedSong = (await provider.getSong(song.id) ?? song).copyWith(campaignStar: star);
+    print('updated ${updatedSong.name} with ${updatedSong.campaignStar}');
+    await provider.updateSong(song.id, updatedSong);
+  }
+
+  void _handleSelectLevel(int level, SongCollection song, List<SongCollection> reversedList, CampaignProvider provider) {
     // Handle level selection logic here
-    print("Selected level: ${song.name}");
+    print("Selected level $level: ${song.name}");
+    if(_getUnLockedIndex(provider) < level - 1) return;
+    provider.setCurrentSongCampaign(level - 1);
+    showDialog(
+      context: context,
+      builder: (context) => LoadingDataScreen(
+        callbackLoadingCompleted: (songResult) async {
+          Navigator.pop(context);
+          await Navigator.push(context, MaterialPageRoute(builder: (context) => LearnDrumPadScreen(
+            songCollection: songResult,
+            lessonIndex: songResult.lessons.length - 1,
+            isFromCampaign: true,
+            onChangeCampaignStar: (star) async {
+              print('change star index: ${reversedList.length - provider.currentSongCampaign - 1} with $star name: ${reversedList[reversedList.length - provider.currentSongCampaign - 1].name}');
+              await updateStar(provider, reversedList[reversedList.length - provider.currentSongCampaign - 1], star);
+            },
+            onChangeUnlockedModeCampaign: () {
+              provider.setUnlocked(difficult: widget.difficulty, value: provider.currentSongCampaign >= _getUnLockedIndex(provider) ? provider.currentSongCampaign + 1 : _getUnLockedIndex(provider));
+            },
+          ),));
+          print('fetch data campaign');
+          await _loadCampaignData();
+        },
+        callbackLoadingFailed: () {
+          Navigator.pop(context);
+        },
+        song: song
+      ),
+    );
   }
 
   @override
@@ -172,25 +211,50 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
     }
   }
 
-  Widget _buildItemLevel(int level){
+  int _getUnLockedIndex(CampaignProvider campaignProvider) {
+    switch(widget.difficulty) {
+      case DifficultyMode.easy:
+        return campaignProvider.easyUnlocked;
+      case DifficultyMode.medium:
+        return campaignProvider.mediumUnlocked;
+      case DifficultyMode.hard:
+        return campaignProvider.hardUnlocked;
+      case DifficultyMode.demonic:
+        return campaignProvider.demonicUnlocked;
+      case DifficultyMode.unknown:
+        return 0;
+      default:
+        return 0;
+    }
+  }
+
+  Widget _buildItemLevel(int level, SongCollection song, CampaignProvider campaignProvider){
     return Column(
       mainAxisSize: MainAxisSize.min,
+      spacing: _getUnLockedIndex(campaignProvider) + 1 == level ? 8 : 0,
       children: [
-        Container(
-          width: 80,
-          height: 60,
-          decoration: BoxDecoration(
-            image: DecorationImage(image: AssetImage(ResImage.imgLockLevel),),
+        DottedBorder(
+          color: _getUnLockedIndex(campaignProvider) + 1 == level ? Colors.white : Colors.transparent,
+          strokeWidth: 5,
+          borderType: BorderType.Circle,
+          padding: EdgeInsets.all(6),
+          dashPattern: [14],
+          child: Container(
+            width: 80,
+            height: 60,
+            decoration: BoxDecoration(
+              image: DecorationImage(image: AssetImage(ResImage.imgLockLevel),),
+            ),
+            alignment: Alignment.center,
+            child: Text("$level", style: TextStyle(
+              fontFamily: AppFonts.commando,
+              fontWeight: FontWeight.normal,
+              color: Color(0xFF4E4337),
+              fontSize: 20,
+            ),),
           ),
-          alignment: Alignment.center,
-          child: Text("$level", style: TextStyle(
-            fontFamily: AppFonts.commando,
-            fontWeight: FontWeight.normal,
-            color: Color(0xFF4E4337),
-            fontSize: 20,
-          ),),
         ),
-        Transform.translate(offset: Offset(0, -12), child: RatingStars.custom(value: 100, paddingMiddle: 20, smallStarWidth: 20, smallStarHeight: 20, bigStarWidth: 20, bigStarHeight: 20, isFlatStar: true, isPaddingBottom: false,)),
+        if(_getUnLockedIndex(campaignProvider) + 1 >= level && song.campaignScore != 0) Transform.translate(offset: Offset(0, -16), child: RatingStars.custom(value: song.campaignStar >= 3 ? 100 : (song.campaignStar >= 2 ? 60 : (song.campaignStar >= 1 ? 30 : 0)), paddingMiddle: 12, smallStarWidth: 20, smallStarHeight: 20, bigStarWidth: 20, bigStarHeight: 20, isFlatStar: true, isPaddingBottom: false,)),
       ],
     );
   }
@@ -230,8 +294,8 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
                               top: -16,
                               left: -27,
                               child: GestureDetector(
-                                onTap: () => _handleSelectLevel(reversedSongs[index]),
-                                child: _buildItemLevel(reversedSongs.length - index),
+                                onTap: () => _handleSelectLevel(reversedSongs.length - index, reversedSongs[index], reversedSongs, provider),
+                                child: _buildItemLevel(reversedSongs.length - index, reversedSongs[index], provider),
                               ),
                             ),
 
@@ -240,8 +304,8 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
                               top: -20,
                               right: -27,
                               child: GestureDetector(
-                                onTap: () => _handleSelectLevel(reversedSongs[index]),
-                                child: _buildItemLevel(reversedSongs.length - index),
+                                onTap: () => _handleSelectLevel(reversedSongs.length - index, reversedSongs[index], reversedSongs, provider),
+                                child: _buildItemLevel(reversedSongs.length - index, reversedSongs[index], provider),
                               ),
                             ),
 

@@ -330,6 +330,14 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     }
   }
 
+  Future<void> _updateScoreForCampaign(CampaignProvider campaignProvider) async {
+    final song = await campaignProvider.getSong(widget.currentSong!.id);
+    if(song != null) {
+      final updatedSong = song.copyWith(campaignScore: totalPoint*1.0, campaignStar: getStar());
+      await campaignProvider.updateSong(widget.currentSong!.id, updatedSong);
+    }
+  }
+
   void _navigateToNextScreen() async {
     if(isNavigatedToResult) return;
     setState(() {
@@ -350,14 +358,16 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     widget.onChangeCampaignStar?.call(getStar());
     widget.onResetRecordingToggle?.call();
     /// 📌 check condition of result to save unlocked lesson or campaign and save star
-    if(getStar() > 2) {
+    if(getStar() >= 2) {
       widget.onChangeUnlockedModeCampaign?.call();
     }
     /// 📖 save learn from song and beat runner count for information at profile screen
-    if (!widget.isFromLearnScreen) {
+    if (!widget.isFromLearnScreen && !widget.isFromCampaign) {
       provider.addBeatRunnerStar(widget.currentSong!.id, getStar());
-    } else {
+    } else if(widget.isFromLearnScreen){
       await _updateScoreForBeatLearn(provider);
+    } else if (widget.isFromCampaign) {
+      await _updateScoreForCampaign(campaignProvider);
     }
     if (currentLesson >= lessons.length - 1 && widget.isFromLearnScreen) provider.addLearnSongComplete(widget.currentSong!.id);
     /// push navigation and check cases
@@ -387,7 +397,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
       });
     }
     /// that case which check for back to Beat Runner screen and choose another song
-    else if(result != null && result is SongCollection){
+    else if(result != null && result is SongCollection && !widget.isFromCampaign && !widget.isFromLearnScreen){
       widget.onTapChooseSong?.call(result);
       widget.onChangeStarLearn?.call(0);
       _resetSequence(isPlayingDrum: true);
@@ -431,6 +441,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
           currentLesson = 0;
         }
       });
+      print('========resutl next campaign ${result.name}');
       widget.onTapChooseSong?.call(result);
       print('========${result.name}');
       widget.onChangeStarLearn?.call(0);
