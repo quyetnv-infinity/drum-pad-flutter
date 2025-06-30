@@ -5,6 +5,7 @@ import 'package:and_drum_pad_flutter/core/utils/font_responsive.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/add_new_song.dart';
+import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/pick_song_bottom_sheet.dart';
 import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/song_score_widget.dart';
 import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
@@ -280,7 +281,7 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      appBar: CustomAppBar(iconLeading: ResIcon.icPause, onTapLeading: () {
+      appBar: CustomAppBar(iconLeading: ResIcon.icBack, onTapLeading: () {
        _pauseHandler();
         showDialog(context: context, barrierDismissible: false, barrierColor: Colors.black.withValues(alpha: 0.9),
           builder: (context) => Dialog(
@@ -300,7 +301,23 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
         );
         // Navigator.pop(context);
       },
-        titleWidget: _buildTitle(),
+        titleWidget: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () async {
+            final result = await showModalBottomSheet<SongCollection>(
+              isScrollControlled: true,
+              barrierColor: Colors.black.withValues(alpha: 0.8),
+              context: context,
+              builder: (context) => PickSongScreen(),
+            );
+            if (result != null) {
+              setState(() {
+                _currentSong = result;
+              });
+              print('Selected song: ${result.lessons.length}');
+            }
+          },
+          child: _buildTitle()),
         action: [
           Padding(
             padding: const EdgeInsets.only(right: 16),
