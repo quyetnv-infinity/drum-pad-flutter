@@ -50,6 +50,8 @@ class ResIcon {
   static const String icPanFlower = '${basePath}ic_pan_flower.svg';
   static const String icStar = '${basePath}ic_star.svg';
   static const String icSun = '${basePath}ic_sun.svg';
+  static const String icTuto1 = '${basePath}ic_tuto_1.svg';
+  static const String icTuto2 = '${basePath}ic_tuto_2.svg';
 
   //star
   static const String icStar0 = '$basePath/ic_star_0.svg';

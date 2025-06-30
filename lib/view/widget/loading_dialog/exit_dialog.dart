@@ -38,12 +38,12 @@ class ExitDialog extends StatelessWidget {
                     onTap: onTapContinue,
                     child: Container(
                       alignment: Alignment.center,
-                      padding: EdgeInsets.symmetric(vertical: 16),
+                      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      child: Text(context.locale.continue_text, style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white),),
+                      child: Text(context.locale.continue_text,maxLines:1, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white),),
                     ),
                   ),
                 ),
@@ -56,12 +56,12 @@ class ExitDialog extends StatelessWidget {
                     onTap: onTapCancel,
                     child: Container(
                       alignment: Alignment.center,
-                      padding: EdgeInsets.symmetric(vertical: 16),
+                      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
                         gradient: LinearGradient(colors: [Color(0xffa005ff), Color(0xffd796ff)])
                       ),
-                      child: Text(context.locale.cancel, style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white),),
+                      child: Text(context.locale.cancel, maxLines:1, overflow: TextOverflow.ellipsis,style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white),),
                     ),
                   ),
                 ),
