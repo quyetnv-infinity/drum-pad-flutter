@@ -175,6 +175,7 @@ class SongCollection extends HiveObject{
     String? pathZipFile,
     String? difficulty,
     double? campaignStar,
+    double? campaignScore,
     String? image,
   }) {
     return SongCollection(
@@ -187,6 +188,7 @@ class SongCollection extends HiveObject{
       pathZipFile: pathZipFile ?? this.pathZipFile,
       difficulty: difficulty ?? this.difficulty,
       campaignStar: campaignStar ?? this.campaignStar,
+      campaignScore: campaignScore ?? this.campaignScore,
       image: image ?? this.image,
     );
   }

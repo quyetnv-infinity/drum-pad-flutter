@@ -14,7 +14,10 @@ import 'package:provider/provider.dart';
 class LearnDrumPadScreen extends StatefulWidget {
   final SongCollection songCollection;
   final int lessonIndex;
-  const LearnDrumPadScreen({super.key, required this.songCollection, required this.lessonIndex});
+  final bool isFromCampaign;
+  final void Function()? onChangeUnlockedModeCampaign;
+  final void Function(double star)? onChangeCampaignStar;
+  const LearnDrumPadScreen({super.key, required this.songCollection, required this.lessonIndex, this.isFromCampaign = false, this.onChangeUnlockedModeCampaign, this.onChangeCampaignStar});
 
   @override
   State<LearnDrumPadScreen> createState() => _LearnDrumPadScreenState();
@@ -27,11 +30,18 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
   bool _isRecordingSelected = false;
   bool _isPlaying = false;
   int _perfectPoint = 0;
+  late SongCollection _currentSong;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentSong = widget.songCollection;
+  }
 
   Future<void> updateUnlockedLesson() async {
     final drumLearnProvider = Provider.of<DrumLearnProvider>(context, listen: false);
     final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
-    List<LessonSequence> updatedLessons = (await drumLearnProvider.getSong(widget.songCollection.id))!.lessons;
+    List<LessonSequence> updatedLessons = (await drumLearnProvider.getSong(_currentSong.id))!.lessons;
 
     final indexUpdated = campaignProvider.currentLessonCampaign;
     print('unlocked $indexUpdated');
@@ -39,18 +49,18 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
       updatedLessons[indexUpdated].isCompleted = true;
     }
 
-    final newSong = widget.songCollection.copyWith(lessons: updatedLessons);
-    await drumLearnProvider.updateSong(widget.songCollection.id, newSong);
+    final newSong = _currentSong.copyWith(lessons: updatedLessons);
+    await drumLearnProvider.updateSong(_currentSong.id, newSong);
   }
 
   Future<void> updateLessonStar(double star) async {
     final provider = Provider.of<DrumLearnProvider>(context, listen: false);
     final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
-    List<LessonSequence> updatedLessons = (await provider.getSong(widget.songCollection.id))!.lessons;
+    List<LessonSequence> updatedLessons = (await provider.getSong(_currentSong.id))!.lessons;
     updatedLessons[campaignProvider.currentLessonCampaign].star = star;
     print('update star $star at ${campaignProvider.currentLessonCampaign}');
-    final newSong = widget.songCollection.copyWith(lessons: updatedLessons);
-    await provider.updateSong(widget.songCollection.id, newSong);
+    final newSong = _currentSong.copyWith(lessons: updatedLessons);
+    await provider.updateSong(_currentSong.id, newSong);
   }
 
   @override
@@ -91,13 +101,13 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: SongScoreWidget(songCollection: widget.songCollection, starPercent: _percentStar, score: _currentScore, perfectPoint: _perfectPoint,),
+                  child: SongScoreWidget(songCollection: _currentSong, starPercent: _percentStar, score: _currentScore, perfectPoint: _perfectPoint,),
                 ),
               ),
               DrumPadScreen(
                 key: _widgetPadKey,
                 lessonIndex: widget.lessonIndex,
-                currentSong: widget.songCollection,
+                currentSong: _currentSong,
                 onChangeScore: (int score, ) {
                   setState(() {
                     _currentScore = score;
@@ -120,13 +130,21 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
                   print('perfectPoint');
                 },
                 onChangeUnlockedModeCampaign: () async {
-                  await updateUnlockedLesson();
+                  if(widget.isFromCampaign){
+                    widget.onChangeUnlockedModeCampaign?.call();
+                  } else {
+                    await updateUnlockedLesson();
+                  }
                 },
                 onChangeCampaignStar: (star) async {
-                  await updateLessonStar(star);
+                  if(widget.isFromCampaign){
+                    widget.onChangeCampaignStar?.call(star);
+                  } else {
+                    await updateLessonStar(star);
+                  }
                 },
-                isFromLearnScreen: true,
-                isFromCampaign: false,
+                isFromLearnScreen: !widget.isFromCampaign,
+                isFromCampaign: widget.isFromCampaign,
                 onResetRecordingToggle: () {
                   setState(() {
                     _isRecordingSelected = false;
@@ -135,6 +153,11 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
                 onChangePlayState: (isPlaying) {
                   setState(() {
                     _isPlaying = isPlaying;
+                  });
+                },
+                onTapChooseSong: (song) {
+                  setState(() {
+                    _currentSong = song;
                   });
                 },
               )
@@ -158,7 +181,7 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SvgPicture.asset(ResIcon.icWaveForm),
-          Expanded(child: Text("${widget.songCollection.name} - ${widget.songCollection.author}", style: TextStyle(fontSize: 16),))
+          Expanded(child: Text("${_currentSong.name} - ${_currentSong.author}", style: TextStyle(fontSize: 16),))
         ],
       ),
     );
