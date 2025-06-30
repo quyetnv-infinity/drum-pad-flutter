@@ -156,8 +156,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text(calculatePercent(resultProvider.perfectPoint, resultProvider.totalPoint()).toStringAsFixed(0), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.shrikhandRegular, color: Colors.white, height: 0.9),),
-                                Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.shrikhandRegular, color: Colors.white),),
+                                Text(calculatePercent(resultProvider.perfectPoint, resultProvider.totalPoint()).toStringAsFixed(0), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.sigmar, color: Colors.white, height: 0.9),),
+                                Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.sigmar, color: Colors.white),),
                               ],
                             ),
                           ),
@@ -167,8 +167,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text(calculatePercent(resultProvider.goodPoint, resultProvider.totalPoint()).toStringAsFixed(0), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.shrikhandRegular, color: Colors.white, height: 0.9),),
-                                Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.shrikhandRegular, color: Colors.white),),
+                                Text(calculatePercent(resultProvider.goodPoint, resultProvider.totalPoint()).toStringAsFixed(0), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.sigmar, color: Colors.white, height: 0.9),),
+                                Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.sigmar, color: Colors.white),),
                               ],
                             ),
                           ),
@@ -178,8 +178,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text(calculatePercent(resultProvider.earlyPoint, resultProvider.totalPoint()).toStringAsFixed(0), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.shrikhandRegular, color: Colors.white, height: 0.9),),
-                                Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.shrikhandRegular, color: Colors.white),),
+                                Text(calculatePercent(resultProvider.earlyPoint, resultProvider.totalPoint()).toStringAsFixed(0), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.sigmar, color: Colors.white, height: 0.9),),
+                                Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.sigmar, color: Colors.white),),
                               ],
                             ),
                           ),
@@ -189,8 +189,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text(calculatePercent(resultProvider.latePoint, resultProvider.totalPoint()).toStringAsFixed(0), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.shrikhandRegular, color: Colors.white, height: 0.9),),
-                                Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.shrikhandRegular, color: Colors.white),),
+                                Text(calculatePercent(resultProvider.latePoint, resultProvider.totalPoint()).toStringAsFixed(0), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.sigmar, color: Colors.white, height: 0.9),),
+                                Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.sigmar, color: Colors.white),),
                               ],
                             ),
                           ),
@@ -200,8 +200,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text(calculateMissPercent(resultProvider).toStringAsFixed(0), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.shrikhandRegular, color: Colors.white, height: 0.9),),
-                                Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.shrikhandRegular, color: Colors.white),),
+                                Text(calculateMissPercent(resultProvider).toStringAsFixed(0), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.sigmar, color: Colors.white, height: 0.9),),
+                                Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.sigmar, color: Colors.white),),
                               ],
                             ),
                           ),

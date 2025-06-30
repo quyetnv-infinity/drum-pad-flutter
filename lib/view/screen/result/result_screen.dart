@@ -319,8 +319,8 @@ class _ResultScreenState extends State<ResultScreen>
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(_perfectPercentAnimation.value.toStringAsFixed(0).toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.shrikhandRegular, color: Colors.white, height: 0.9),),
-                      Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.shrikhandRegular, color: Colors.white),),
+                      Text(_perfectPercentAnimation.value.toStringAsFixed(0).toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.sigmar, color: Colors.white, height: 0.9),),
+                      Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.sigmar, color: Colors.white),),
                     ],
                   ),
                 ),
@@ -330,8 +330,8 @@ class _ResultScreenState extends State<ResultScreen>
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(_goodPercentAnimation.value.toStringAsFixed(0).toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.shrikhandRegular, color: Colors.white, height: 0.9),),
-                      Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.shrikhandRegular, color: Colors.white),),
+                      Text(_goodPercentAnimation.value.toStringAsFixed(0).toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.sigmar, color: Colors.white, height: 0.9),),
+                      Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.sigmar, color: Colors.white),),
                     ],
                   ),
                 ),
@@ -341,8 +341,8 @@ class _ResultScreenState extends State<ResultScreen>
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(_earlyPercentAnimation.value.toStringAsFixed(0).toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.shrikhandRegular, color: Colors.white, height: 0.9),),
-                      Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.shrikhandRegular, color: Colors.white),),
+                      Text(_earlyPercentAnimation.value.toStringAsFixed(0).toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.sigmar, color: Colors.white, height: 0.9),),
+                      Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.sigmar, color: Colors.white),),
                     ],
                   ),
                 ),
@@ -352,8 +352,8 @@ class _ResultScreenState extends State<ResultScreen>
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(_latePercentAnimation.value.toStringAsFixed(0).toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.shrikhandRegular, color: Colors.white, height: 0.9),),
-                      Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.shrikhandRegular, color: Colors.white),),
+                      Text(_latePercentAnimation.value.toStringAsFixed(0).toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.sigmar, color: Colors.white, height: 0.9),),
+                      Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.sigmar, color: Colors.white),),
                     ],
                   ),
                 ),
@@ -363,8 +363,8 @@ class _ResultScreenState extends State<ResultScreen>
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(_missPercentAnimation.value.toStringAsFixed(0).toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.shrikhandRegular, color: Colors.white, height: 0.9),),
-                      Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.shrikhandRegular, color: Colors.white),),
+                      Text(_missPercentAnimation.value.toStringAsFixed(0).toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24, fontFamily: AppFonts.sigmar, color: Colors.white, height: 0.9),),
+                      Text('%', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily: AppFonts.sigmar, color: Colors.white),),
                     ],
                   ),
                 ),
