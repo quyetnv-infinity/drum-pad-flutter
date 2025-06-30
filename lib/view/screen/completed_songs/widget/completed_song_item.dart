@@ -117,6 +117,6 @@ class _CompletedSongItemState extends State<CompletedSongItem> {
       average = starSum/count;
     }
 
-    return average >= 3 ? 100 : (average >= 2 ? 75 : (average >= 1 ? 45 : 0));
+    return average >= 3 ? 100 : (average >= 2 ? 60 : (average >= 1 ? 30 : 0));
   }
 }

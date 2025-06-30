@@ -6,8 +6,10 @@ import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/view/screen/beat_runner/widget/recommend_list_song.dart';
 import 'package:and_drum_pad_flutter/view/screen/campaign/campaign_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/learn_material/learn_material_screen.dart';
+import 'package:and_drum_pad_flutter/view/screen/lessons/lessons_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/item/mode_play_item.dart';
+import 'package:and_drum_pad_flutter/view/widget/loading_dialog/loading_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
 import 'package:flutter/material.dart';
@@ -98,7 +100,19 @@ class _BeatLearnBody extends StatelessWidget {
                 title: context.locale.recent_list_song,
                 listSongs: listSongResume,
                 onTapItem: (song) {
-                  // TODO: Implement song selection
+                  showDialog(
+                    context: context,
+                    builder: (context) => LoadingDataScreen(
+                      callbackLoadingCompleted: (songResult) {
+                        Navigator.pop(context);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => LessonsScreen(song: songResult),));
+                      },
+                      callbackLoadingFailed: () {
+                        Navigator.pop(context);
+                      },
+                      song: song
+                    ),
+                  );
                 },
               ),
             );

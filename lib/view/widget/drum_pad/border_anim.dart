@@ -91,16 +91,21 @@ class SquareProgressPainter extends CustomPainter {
 
     // Vẽ đường viền giảm dần
     final path = Path()..addRRect(rRect);
-    final totalLength = path.computeMetrics().fold<double>(0, (sum, m) => sum + m.length);
+    final metrics = path.computeMetrics().toList();
 
-    final metric = path.computeMetrics().first;
-
-    // Bắt đầu từ 0, nhưng dừng ở % còn lại (ví dụ progress = 0.8 thì vẽ 20%)
-    final extractPath = metric.extractPath(0, totalLength * (1 - progress));
-    canvas.drawPath(extractPath, foregroundPaint);
+    if (metrics.isNotEmpty) {
+      final metric = metrics.first;
+      final totalLength = metric.length;
+      final extractPath = metric.extractPath(0, totalLength * (1 - progress));
+      canvas.drawPath(extractPath, foregroundPaint);
+    }
   }
 
   @override
-  bool shouldRepaint(covariant SquareProgressPainter oldDelegate) =>
-      oldDelegate.progress != progress;
+  bool shouldRepaint(covariant SquareProgressPainter old) {
+    return old.progress != progress ||
+        old.color != color ||
+        old.strokeWidth != strokeWidth ||
+        old.borderRadius != borderRadius;
+  }
 }
