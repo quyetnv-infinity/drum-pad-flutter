@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:and_drum_pad_flutter/constant/app_info.dart';
 import 'package:and_drum_pad_flutter/view/screen/home/home_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/language/language_screen.dart';
@@ -54,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     // AdController.shared.setResumeAdState(false);
     final isFirstOpenApp = Provider.of<AppStateProvider>(context, listen: false).isFirstOpenApp;
 
-    if (isFirstOpenApp) {
+    if (isFirstOpenApp || Platform.isAndroid) {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LanguageScreen(fromSetting: false,)));
     } else {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
