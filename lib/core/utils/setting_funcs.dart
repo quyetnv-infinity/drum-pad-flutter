@@ -7,7 +7,7 @@ class SettingFuncs {
     SharePlus.instance.share(
         ShareParams(
           text: 'Check out this amazing app! ${AppInfo.appLink}',
-          subject: 'Beat Maker Pro: Drum Pad',
+          subject: 'Drum Pad & DJ Beat Maker Pro',
         )
     );
   }
