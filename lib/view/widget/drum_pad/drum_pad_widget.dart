@@ -34,8 +34,9 @@ class DrumPadScreen extends StatefulWidget {
   final void Function(bool isPlaying)? onChangePlayState;
   final void Function(int perfectPoint)? onChangePerfectPoint;
   final bool? isPause;
+  final bool isFreeStyle;
 
-  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onResetRecordingToggle, this.onRegisterPauseHandler, this.onChangePlayState, this.onChangePerfectPoint, this.isPause, this.onRegisterStartHandler});
+  const DrumPadScreen({super.key, required this.currentSong, required this.onChangeScore, this.lessonIndex = 0, this.onChangeUnlockedModeCampaign, this.practiceMode, this.onChangeCampaignStar, this.onChangeStarLearn, required this.isFromLearnScreen, this.onTapChooseSong, required this.isFromCampaign, this.onResetRecordingToggle, this.onRegisterPauseHandler, this.onChangePlayState, this.onChangePerfectPoint, this.isPause, this.onRegisterStartHandler, this.isFreeStyle = false});
 
   @override
   State<DrumPadScreen> createState() => _DrumPadScreenState();
@@ -136,6 +137,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
           _startSequence();
         }
       });
+    } else if(widget.currentSong == null) {
+      _initFreeStyleSongDefault();
     }
     _controller = AnimationController(
       vsync: this,
@@ -144,6 +147,25 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     if(widget.currentSong != null) context.read<DrumLearnProvider>().addBeatRunnerSongComplete(widget.currentSong!.id);
     widget.onRegisterPauseHandler?.call(pause);
     widget.onRegisterStartHandler?.call(_startTimer);
+  }
+
+  Future<void> _initFreeStyleSongDefault() async {
+    _disposeAudioPlayers();
+    availableSounds = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+    lessonSounds = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+    for (String sound in availableSounds) {
+      if (sound.isEmpty) continue;
+      final player = AudioPlayer();
+      try {
+        await player.setAsset('assets/audio/$sound.wav');
+        audioPlayers[sound] = player;
+      } catch (e) {
+        print('Error loading audio file for $sound: $e at assets/audio/$sound.mp3');
+        // Clean up failed player
+        await player.dispose();
+        continue;
+      }
+    }
   }
 
   @override
@@ -164,6 +186,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         _resetSequence();
         _startSequence();
       });
+    }else if(widget.currentSong == null) {
+      _initFreeStyleSongDefault();
     }
     checkModeChange(oldWidget);
   }
@@ -719,15 +743,15 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   }
 
   Future<void> _onPadPressed(String sound, int index) async {
-    if(currentEventIndex >= events.length) return;
-    if(widget.currentSong == null || widget.currentSong!.lessons.isEmpty) return;
-    if(!PadUtil.getPadEnable(sound)) return;
+    if(currentEventIndex >= events.length && !widget.isFreeStyle) return;
+    if((widget.currentSong == null || widget.currentSong!.lessons.isEmpty) && !widget.isFreeStyle) return;
+    if(!PadUtil.getPadEnable(sound) && !widget.isFreeStyle) return;
     _startColorAnimation(index, sound);
     _startTimer();
 
-    List<String> requiredNotes = events[currentEventIndex].notes;
+    List<String> requiredNotes = !widget.isFreeStyle ? events[currentEventIndex].notes : [];
     // Add this check to prevent duplicate activations
-    if (_padPressedIndex.contains(index)) return;
+    if (_padPressedIndex.contains(index) && !widget.isFreeStyle) return;
 
     setState(() {
       _padPressedIndex.add(index);
@@ -869,6 +893,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   }
 
   List<Color> getPadColor(bool isHighlighted, bool hasSound, bool isActive, String soundId){
+    if(widget.isFreeStyle) return PadUtil.getPadGradientColor(isActive, soundId, currentTheme, isFreeStyle: true);
     if(widget.currentSong == null || widget.currentSong!.lessons.isEmpty) return [Color(0xFFe099ff).withValues(alpha: 0.4), Color(0xFFc84bff).withValues(alpha: 0.4)];
     return isHighlighted && widget.practiceMode != 'practice' ? [Color(0xFFEDC78C), Colors.orange] : (hasSound ? PadUtil.getPadGradientColor(isActive, soundId, currentTheme) : [Color(0xFF919191), Color(0xFF5E5E5E)]);
   }
@@ -938,13 +963,13 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return IgnorePointer(
-      ignoring: currentEventIndex >= events.length,
+      ignoring: currentEventIndex >= events.length && !widget.isFreeStyle,
       child: Stack(
         children: [
           Listener(
             behavior: HitTestBehavior.translucent,
             onPointerDown: (event) {
-              if(!(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty)) return;
+              if(!(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty) && !widget.isFreeStyle) return;
               // Track new pointer
               RenderBox box = context.findRenderObject() as RenderBox;
               Offset localPosition = box.globalToLocal(event.position);
@@ -966,14 +991,14 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
             },
 
             onPointerUp: (event) {
-              if(!(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty)) return;
+              if(!(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty) && !widget.isFreeStyle) return;
               // Clean up when pointer is released
               _pointerToPadIndex.remove(event.pointer);
               _pointerToSound.remove(event.pointer);
               _lastPointerPositions.remove(event.pointer);
             },
             onPointerMove: (event) async {
-              if(!(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty)) return;
+              if(!(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty) && !widget.isFreeStyle) return;
               RenderBox box = context.findRenderObject() as RenderBox;
               Offset localPosition = box.globalToLocal(event.position);
 
@@ -1025,7 +1050,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
                 final String soundId = hasSound && lessonSounds.length == 12 ? lessonSounds[index] : '';
                 final bool isHighlighted = highlightedSounds.contains(soundId);
                 final sound = lessonSounds.length == 12 ? lessonSounds[index] : '';
-                bool isActive = _padPressedIndex.isNotEmpty && _padPressedIndex.contains(index) && widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty;
+                bool isActive = _padPressedIndex.isNotEmpty && _padPressedIndex.contains(index) && ((widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty) || widget.isFreeStyle);
                 return RepaintBoundary(
                   key: ValueKey(soundId),
                   child: DrumPadItem(

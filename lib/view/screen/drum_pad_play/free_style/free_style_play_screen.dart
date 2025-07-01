@@ -279,6 +279,7 @@ class _FreeStylePlayScreenState extends State<FreeStylePlayScreen> with SingleTi
             onChangeCampaignStar: (star) async {
 
             },
+            isFreeStyle: true,
             isFromLearnScreen: true,
             isFromCampaign: false,
             onResetRecordingToggle: () {
