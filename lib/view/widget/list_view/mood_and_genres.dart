@@ -39,7 +39,7 @@ class MoodAndGenres extends StatelessWidget {
                     if(onTapCategory != null) {
                       onTapCategory?.call(category);
                     } else {
-                      Navigator.push(context, CupertinoPageRoute(builder: (context) => CategoryDetailsScreen(category: category,),));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryDetailsScreen(category: category,),));
                     }
                   },
                 );

@@ -39,6 +39,12 @@ class ResIcon {
   static const String icRecord = '${basePath}ic_record.svg';
   static const String icRecording = '${basePath}ic_recording.svg';
   static const String icLock = '${basePath}ic_lock.svg';
+  static const String icStarColor = '${basePath}ic_star_color.svg';
+  static const String icTermOfService = '${basePath}ic_term_of_service.svg';
+  static const String icShare = '${basePath}ic_share.svg';
+  static const String icShieldSecurity = '${basePath}ic_shield_security.svg';
+  static const String icLanguage = '${basePath}ic_language.svg';
+  static const String icArrowRight = '${basePath}ic_arrow_right.svg';
 
   // theme
   static const String icGridPad = '${basePath}ic_grid_pad.svg';

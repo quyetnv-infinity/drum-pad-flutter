@@ -1,32 +1,21 @@
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
-import 'package:and_drum_pad_flutter/core/utils/image_preloader.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
-import 'package:and_drum_pad_flutter/view/screen/beat_learn/beat_learn_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/learn_drum_pad/learn_drum_pad_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
-import 'package:and_drum_pad_flutter/view/widget/image/cached_image_widget.dart';
 import 'package:and_drum_pad_flutter/view/widget/loading_dialog/loading_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view/widget/star/star_result.dart';
 import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 // Constants class để chia sẻ giữa các widgets
 class _CampaignConstants {
   static const double contentWidth = 250;
-  static const radioLine = 274 / 244; // Tỷ lệ chiều rộng so với chiều cao
-  static const List<String> images = [
-    ResImage.img1,
-    ResImage.img2,
-    ResImage.img3,
-    ResImage.img4,
-    ResImage.img5,
-  ];
+  static const radioLine = 274 / 244;
 }
 
 class CampaignDetailScreen extends StatefulWidget {
@@ -39,7 +28,6 @@ class CampaignDetailScreen extends StatefulWidget {
 }
 
 class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
-  bool _dataLoaded = false;
   List<SongCollection> _currentSongs = [];
 
   @override
@@ -64,16 +52,10 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
       if (mounted) {
         setState(() {
           _currentSongs = songs;
-          _dataLoaded = true;
         });
       }
     } catch (e) {
       debugPrint('Error loading campaign data: $e');
-      if (mounted) {
-        setState(() {
-          _dataLoaded = true;
-        });
-      }
     }
   }
 

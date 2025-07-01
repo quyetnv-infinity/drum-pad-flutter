@@ -2,6 +2,7 @@ import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/data/model/theme_model.dart';
+import 'package:and_drum_pad_flutter/view/screen/setting/setting_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/theme/widget/theme_widget.dart';
 import 'package:and_drum_pad_flutter/view/screen/theme_detail/theme_detail_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
@@ -29,6 +30,7 @@ class ThemeScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
             child: IconButtonCustom(iconAsset: ResIcon.icSetting, onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SettingScreen()));
             },),
           )
         ],
