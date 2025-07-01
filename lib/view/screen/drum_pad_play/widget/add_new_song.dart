@@ -138,8 +138,8 @@ class _AddNewSongState extends State<AddNewSong> with SingleTickerProviderStateM
                                     ),
                                     if(widget.songCollection != null)
                                       Positioned(
-                                        right: size *0.1,
-                                        top: size *0.1,
+                                        right: size *0.05,
+                                        top: size *0.05,
                                         child: Transform.scale(
                                           scale: 0.8,
                                           child: IconButtonCustom(iconAsset: ResIcon.icClose, onTap: widget.onTapClearSong
@@ -200,7 +200,7 @@ class _AddNewSongState extends State<AddNewSong> with SingleTickerProviderStateM
             widget.songCollection!.name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: FontResponsive.responsiveFontSize(size *2.7, 20)),
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: FontResponsive.responsiveFontSize(size *2.7, 16)),
           ),
           Text(
             widget.songCollection!.author,
@@ -208,7 +208,7 @@ class _AddNewSongState extends State<AddNewSong> with SingleTickerProviderStateM
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontWeight: FontWeight.w400,
-              fontSize: FontResponsive.responsiveFontSize(size *2.7, 14),
+              fontSize: FontResponsive.responsiveFontSize(size *2.7, 12),
               color: Colors.white.withValues(alpha: 0.6),
             ),
           ),
