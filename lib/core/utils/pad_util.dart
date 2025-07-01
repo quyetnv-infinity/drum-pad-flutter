@@ -9,8 +9,11 @@ class PadUtil {
         return soundEnable[key]!;
       }
     }
+    if(freeStyleSound.contains(sound)) return true;
     return false;
   }
+
+  static List<String> freeStyleSound = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
 
   static SoundType getSoundType(String sound) {
     for (var key in soundTypes.keys) {
@@ -21,7 +24,8 @@ class PadUtil {
     return SoundType.drum;
   }
 
-  static List<Color> getPadGradientColor(bool isActive, String sound, ThemeModel theme){
+  static List<Color> getPadGradientColor(bool isActive, String sound, ThemeModel theme, {bool isFreeStyle = false}){
+    if(isFreeStyle) return theme.gradient.colors;
     if(isActive){
       for (var key in soundGradientActiveColors.keys) {
         if (sound.contains(key)) {
