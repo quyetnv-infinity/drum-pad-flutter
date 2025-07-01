@@ -10,7 +10,6 @@
         android:label="Drum Pad &amp; DJ Beat Maker Pro"
         android:name="${applicationName}"
         android:enableOnBackInvokedCallback="true"
-        android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher">
         <service
             android:name=".AudioCaptureService"

@@ -12,6 +12,7 @@ import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/drum_pad/drum_pad_widget.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
+import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/recording_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/tutorial_provider.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class _FreeStylePlayScreenState extends State<FreeStylePlayScreen> with SingleTi
   SongCollection? _songCollection;
   late Size _padSize;
   late Size _topViewSize;
-  bool isRecord = false;
+  bool _isRecord = false;
   late TutorialCoachMark tutorialCoachMark;
 
   @override
@@ -199,22 +200,27 @@ class _FreeStylePlayScreenState extends State<FreeStylePlayScreen> with SingleTi
           if(_songCollection != null)
           Padding(
             padding: const EdgeInsets.only(right: 16),
-            child: IconButtonCustom(
-              iconAsset: isRecord ? ResIcon.icRecording: ResIcon.icRecord,
-              onTap:() async {
-                setState(() {
-                  isRecord = !isRecord;
-                });
-                if (isRecord) {
-                  // Stop và lưu file
-                  await MediaRecorderService.startInternalRecording();
-                  // print('File saved: $filePath');
-                } else {
-                  // Start recording
-                  await MediaRecorderService.stopInternalRecording();
-                  // print('Recording started: $success');
+            child: Consumer<DrumLearnProvider>(
+                builder: (context, dProvider ,_) {
+                  return IconButtonCustom(
+                    iconAsset: _isRecord ? ResIcon.icRecording: ResIcon.icRecord,
+                    onTap:() async {
+                      setState(() {
+                        _isRecord = !_isRecord;
+                      });
+                      dProvider.toggleRecording();
+                      if (_isRecord) {
+                        // Stop và lưu file
+                        await MediaRecorderService.startInternalRecording();
+                        // print('File saved: $filePath');
+                      } else {
+                        // Start recording
+                        await MediaRecorderService.stopInternalRecording();
+                        // print('Recording started: $success');
+                      }
+                    },
+                  );
                 }
-              },
             ),
           ),
           Padding(
@@ -276,9 +282,9 @@ class _FreeStylePlayScreenState extends State<FreeStylePlayScreen> with SingleTi
             isFromLearnScreen: true,
             isFromCampaign: false,
             onResetRecordingToggle: () {
-              // setState(() {
-              //   _isRecordingSelected = false;
-              // });
+              setState(() {
+                _isRecord = false;
+              });
             },
             onChangePlayState: (isPlaying) {
               // setState(() {
