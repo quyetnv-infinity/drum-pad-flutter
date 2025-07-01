@@ -12,13 +12,27 @@ import 'package:and_drum_pad_flutter/view/widget/item/mode_play_item.dart';
 import 'package:and_drum_pad_flutter/view/widget/list_view/mood_and_genres.dart';
 import 'package:and_drum_pad_flutter/view/widget/loading_dialog/loading_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
+import 'package:and_drum_pad_flutter/view_model/ads_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class BeatRunnerScreen extends StatelessWidget {
+class BeatRunnerScreen extends StatefulWidget {
   const BeatRunnerScreen({super.key});
+
+  @override
+  State<BeatRunnerScreen> createState() => _BeatRunnerScreenState();
+}
+
+class _BeatRunnerScreenState extends State<BeatRunnerScreen> {
+  late AdsProvider adsProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    adsProvider = Provider.of<AdsProvider>(context, listen: false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,19 +61,24 @@ class BeatRunnerScreen extends StatelessWidget {
               children: [
                 Consumer<DrumLearnProvider>(
                   builder: (context, drumLearnProvider, _) {
-                    return drumLearnProvider.listRecommend.isEmpty ? Container() : RecommendListSong(
+                    return drumLearnProvider.listRecommend.isEmpty ? SizedBox.shrink() : RecommendListSong(
                       title: context.locale.recommend_list_songs,
                       listSongs: drumLearnProvider.listRecommend,
                       onTapItem: (song) {
                         showDialog(context: context, builder: (context) => LoadingDataScreen(
-                            callbackLoadingCompleted: (song) {
-                              Navigator.pop(context);
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => DrumPadPlayScreen(songCollection: song)));
-                            },
-                            callbackLoadingFailed: () {
-                              Navigator.pop(context);
-                            },
-                            song: song
+                          callbackLoadingCompleted: (song) {
+                            adsProvider.showInterAd(
+                              name: "inter_home",
+                              callback: () {
+                                Navigator.pop(context);
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => DrumPadPlayScreen(songCollection: song)));
+                              }
+                            );
+                          },
+                          callbackLoadingFailed: () {
+                            Navigator.pop(context);
+                          },
+                          song: song
                         )
                         );
                       },
@@ -71,12 +90,26 @@ class BeatRunnerScreen extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 16),
                   child: ModePlayItem(asset: ResImage.imgBgPadDrum, title: context.locale.freestyle_pad_drum, description: context.locale.pad_drum_des,
                     onTap: () {
-                      Navigator.push(context, CupertinoPageRoute(builder: (context) => FreeStylePlayScreen()));
+                      adsProvider.showInterAd(
+                        name: "inter_home",
+                        callback: () {
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => FreeStylePlayScreen()));
+                        }
+                      );
                     },
                   ),
                 ),
                 SizedBox(height: 16),
-                MoodAndGenres()
+                MoodAndGenres(
+                  onTapCategory: (category) {
+                    adsProvider.showInterAd(
+                      name: "inter_home",
+                      callback: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryDetailsScreen(category: category,),));
+                      }
+                    );
+                  },
+                )
               ],
             ),
           ),
