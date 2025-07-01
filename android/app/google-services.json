@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "295780118483",
+    "project_id": "gam---1---drum-pad",
+    "storage_bucket": "gam---1---drum-pad.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:295780118483:android:53f2154b6f1883a35fc926",
+        "android_client_info": {
+          "package_name": "com.beat.maker.drum.beatapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMzQ40JLsAbXeeB5DajT588Qb1xl7i_JY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

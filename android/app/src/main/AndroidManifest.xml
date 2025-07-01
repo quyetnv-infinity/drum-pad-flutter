@@ -4,6 +4,9 @@
         android:name="${applicationName}"
         android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7208941695689653~8724939267"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

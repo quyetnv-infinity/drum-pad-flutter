@@ -1,4 +1,8 @@
 import 'dart:async';
+import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
+import 'package:ads_tracking_plugin/att_permission.dart';
+import 'package:ads_tracking_plugin/tracking/analytics_tracker.dart';
+import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/data/service/api_service/song_service.dart';
 import 'package:and_drum_pad_flutter/hive/hive_registrar.g.dart';
@@ -31,12 +35,12 @@ import 'data/model/lesson_model.dart';
 void main() {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    // await initTrackingPermission();
-    // await Firebase.initializeApp();
+    await initTrackingPermission();
+    await Firebase.initializeApp();
     await Future.wait([
-      // AnalyticsTracker.setupCrashlytics(),
-      // RemoteConfig.initializeRemoteConfig(adConfigs: getAdConfigurations(false), devMode: AdUnitId.devMode),
-      // AnalyticsTracker.trackAppOpens(),
+      AnalyticsTracker.setupCrashlytics(),
+      RemoteConfig.initializeRemoteConfig(adConfigs: getAdConfigurations(false), devMode: AdUnitId.devMode),
+      AnalyticsTracker.trackAppOpens(),
       _initHive(),
       ServiceLocator.instance.initialise(),
     ].toList());
