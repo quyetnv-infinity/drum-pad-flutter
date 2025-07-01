@@ -4,6 +4,7 @@ import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/utils/font_responsive.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
+import 'package:and_drum_pad_flutter/data/service/media_recorder_service.dart';
 import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/pick_song_bottom_sheet.dart';
 import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/song_score_widget.dart';
 import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
@@ -34,7 +35,6 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
   final GlobalKey _widgetPadKey = GlobalKey();
   int _currentScore = 0;
   double _percentStar = 0;
-  bool _isRecordingSelected = false;
   bool _isPlaying = false;
   int _perfectPoint = 0;
   final GlobalKey _topViewLearn = GlobalKey();
@@ -44,6 +44,7 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
   late Size _topViewSize;
   late Function() _pauseHandler;
   late SongCollection _currentSong;
+  bool _isRecording = false;
 
   late TutorialCoachMark tutorialCoachMark;
 
@@ -309,11 +310,27 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
           action: [
             Padding(
               padding: const EdgeInsets.only(right: 16),
-              child: IconButtonCustom(
-                iconAsset: ResIcon.icRecord,
-                onTap:() {
-
-                },
+              child: Consumer<DrumLearnProvider>(
+                builder: (context, dProvider ,_) {
+                  return IconButtonCustom(
+                    iconAsset: _isRecording ? ResIcon.icRecording: ResIcon.icRecord,
+                    onTap:() async {
+                      setState(() {
+                        _isRecording = !_isRecording;
+                      });
+                      dProvider.toggleRecording();
+                      if (_isRecording) {
+                        // Stop và lưu file
+                        await MediaRecorderService.startInternalRecording();
+                        // print('File saved: $filePath');
+                      } else {
+                        // Start recording
+                        await MediaRecorderService.stopInternalRecording();
+                        // print('Recording started: $success');
+                      }
+                    },
+                  );
+                }
               ),
             ),
             Padding(
@@ -386,7 +403,7 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
                 isFromCampaign: widget.isFromCampaign,
                 onResetRecordingToggle: () {
                   setState(() {
-                    _isRecordingSelected = false;
+                    _isRecording = false;
                   });
                 },
                 onChangePlayState: (isPlaying) {

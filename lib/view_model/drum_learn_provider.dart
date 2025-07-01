@@ -65,47 +65,14 @@ class DrumLearnProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void increasePerfectPoint() {
-    _perfectPoint ++;
-    if (_perfectPoint >= 3) {
-      _increaseScoreByCombo = 50 * _perfectPoint;
-      _isCombo = true;
-      _totalPoint = _increaseScoreByCombo;
-      notifyListeners();
-      print(_totalPoint);
-
-      Future.delayed(const Duration(milliseconds: 500), () {
-        _increaseScoreByCombo = 0;
-        notifyListeners();
-      });
-      Future.delayed(const Duration(milliseconds: 2000), () {
-        _isCombo = false;
-        notifyListeners();
-      });
-    }
-    notifyListeners();
-    print('_perfectPoint $_perfectPoint');
-  }
-
-  void resetPerfectPoint() {
-    print('resetALLllll');
-    _perfectPoint = 0;
-    _increaseScoreByCombo = 0;
-    _totalPoint = 0;
-    notifyListeners();
-  }
-  void resetIsCombo(){
-    _isCombo = false;
-    notifyListeners();
-  }
-  void updateRecording(){
-    _isRecording = !_isRecording;
-    notifyListeners();
-  }
-
   /// Function for drum learn song
   Future<SongCollection?> getSong(String id) async {
     return await SongCollectionService.getSongById(id);
+  }
+
+  void toggleRecording(){
+    _isRecording = !_isRecording;
+    notifyListeners();
   }
 
   Future<void> getRecommend() async {
