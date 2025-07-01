@@ -232,7 +232,7 @@ class AudioCaptureService : Service() {
             val contentValues = android.content.ContentValues().apply {
                 put(android.provider.MediaStore.Audio.Media.DISPLAY_NAME, file.name)
                 put(android.provider.MediaStore.Audio.Media.MIME_TYPE, "audio/wav")
-                put(android.provider.MediaStore.Audio.Media.RELATIVE_PATH, "Music/DrumPad")
+                put(android.provider.MediaStore.Audio.Media.RELATIVE_PATH, "Music/Drum Pad & DJ Beat Maker Pro")
                 put(android.provider.MediaStore.Audio.Media.IS_MUSIC, 1)
             }
             val audioCollection = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
