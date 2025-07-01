@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="facebook_app_id">1201591847491939</string>
+    <string name="facebook_client_token">3cec778afc9a4fe1f5e8a7f1f5ce7188</string>
+    <string name="fb_login_protocol_scheme">fb1201591847491939</string>
+    <string name="app_name">Drum Pad &amp; DJ Beat Maker Pro</string>
+</resources>

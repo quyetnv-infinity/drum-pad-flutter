@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
+import 'package:ads_tracking_plugin/ads_tracking_plugin_platform_interface.dart';
 import 'package:ads_tracking_plugin/att_permission.dart';
 import 'package:ads_tracking_plugin/tracking/analytics_tracker.dart';
 import 'package:and_drum_pad_flutter/config/ads_config.dart';
@@ -18,6 +19,7 @@ import 'package:and_drum_pad_flutter/view_model/locale_view_model.dart';
 import 'package:and_drum_pad_flutter/view_model/network_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/purchase_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/rate_app_provider.dart';
+import 'package:and_drum_pad_flutter/view_model/recording_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/result_information_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/theme_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/tutorial_provider.dart';
@@ -36,7 +38,9 @@ void main() {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await initTrackingPermission();
+    print("Ads Tracking Plugin Version: ${AdsTrackingPluginPlatform.instance.getPlatformVersion()}");
     await Firebase.initializeApp();
+    print("Firebase Initialized");
     await Future.wait([
       AnalyticsTracker.setupCrashlytics(),
       RemoteConfig.initializeRemoteConfig(adConfigs: getAdConfigurations(false), devMode: AdUnitId.devMode),
@@ -44,6 +48,7 @@ void main() {
       _initHive(),
       ServiceLocator.instance.initialise(),
     ].toList());
+    print("Service Locator Initialized");
     final purchaseProvider = PurchaseProvider();
     final AppSettingsProvider appSettingsProvider = AppSettingsProvider();
     final adsProvider = AdsProvider(appSettingsProvider: appSettingsProvider,);
@@ -57,6 +62,7 @@ void main() {
           ChangeNotifierProvider(create: (_) => appSettingsProvider),
           ChangeNotifierProvider(create: (_) => RateAppProvider()),
           ChangeNotifierProvider(create: (_) => NetworkProvider()),
+          ChangeNotifierProvider(create: (_) => RecordingProvider()),
           ChangeNotifierProvider(create: (_) => ThemeProvider(), lazy: false,),
           ChangeNotifierProvider(create: (_) => categoryProvider, lazy: false,),
           ChangeNotifierProvider(create: (_) => TutorialProvider(), lazy: false,),

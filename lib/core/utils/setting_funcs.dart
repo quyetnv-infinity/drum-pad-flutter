@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:and_drum_pad_flutter/constant/app_info.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -6,7 +8,7 @@ class SettingFuncs {
   static void share(){
     SharePlus.instance.share(
         ShareParams(
-          text: 'Check out this amazing app! ${AppInfo.appLink}',
+          text: 'Check out this amazing app! ${Platform.isIOS ? AppInfo.appLinkIOS : AppInfo.appLinkAndroid}',
           subject: 'Drum Pad & DJ Beat Maker Pro',
         )
     );

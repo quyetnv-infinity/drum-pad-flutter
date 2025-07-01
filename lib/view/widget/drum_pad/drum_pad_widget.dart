@@ -6,6 +6,7 @@ import 'package:and_drum_pad_flutter/core/utils/note.util.dart';
 import 'package:and_drum_pad_flutter/core/utils/pad_util.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/data/model/theme_model.dart';
+import 'package:and_drum_pad_flutter/data/service/media_recorder_service.dart';
 import 'package:and_drum_pad_flutter/data/service/screen_record_service.dart';
 import 'package:and_drum_pad_flutter/view/screen/result/result_screen.dart';
 import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
@@ -297,7 +298,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         _resetSequence();
         _startSequence();
         widget.onChangeStarLearn?.call(0);
-        context.read<DrumLearnProvider>().resetPerfectPoint();
         widget.onChangePerfectPoint?.call(0);
       });
     }else if(oldWidget.practiceMode != widget.practiceMode && widget.practiceMode != "practice"){
@@ -311,7 +311,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         _resetSequence();
         _startSequence();
         widget.onChangeStarLearn?.call(0);
-        context.read<DrumLearnProvider>().resetPerfectPoint();
         widget.onChangePerfectPoint?.call(0);
       });
     }
@@ -348,12 +347,10 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     /// check is last for a song or for a campaign
     final checkLastCampaign = (campaignProvider.currentSongCampaign >= campaignProvider.currentCampaign.length - 1 && widget.isFromCampaign) || (currentLesson >= lessons.length - 1 && widget.isFromLearnScreen);
     _pauseTimer?.cancel();
-    provider.resetPerfectPoint();
     widget.onChangePerfectPoint!(0);
     /// 👀 check stop record
     if (provider.isRecording) {
-      await ScreenRecorderService().stopRecording(context);
-      provider.updateRecording();
+      await MediaRecorderService.stopInternalRecording();
     }
     widget.onChangeCampaignStar?.call(getStar());
     widget.onResetRecordingToggle?.call();
@@ -490,7 +487,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     switch (state) {
       case PadStateEnum.perfect:
         perfectPoint++;
-        provider.increasePerfectPoint();
         /// PERFECT POINT
         widget.onChangePerfectPoint?.call(1);
         break;
@@ -502,7 +498,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         if (state == PadStateEnum.late) latePoint++;
         if (state == PadStateEnum.early) earlyPoint++;
 
-        provider.resetPerfectPoint();
         widget.onChangePerfectPoint?.call(0);
         print('reset perfect');
         break;
@@ -845,7 +840,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
       } else {
         highlightedSounds.clear();
         padProgress.clear();
-        context.read<DrumLearnProvider>().resetPerfectPoint();
         widget.onChangePerfectPoint?.call(0);
         _pauseTimer?.cancel();
         await Future.delayed(Duration(seconds: 1));
