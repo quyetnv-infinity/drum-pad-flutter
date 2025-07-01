@@ -205,18 +205,22 @@ class _FreeStylePlayScreenState extends State<FreeStylePlayScreen> with SingleTi
                   return IconButtonCustom(
                     iconAsset: _isRecord ? ResIcon.icRecording: ResIcon.icRecord,
                     onTap:() async {
-                      setState(() {
-                        _isRecord = !_isRecord;
-                      });
-                      dProvider.toggleRecording();
-                      if (_isRecord) {
-                        // Stop và lưu file
-                        await MediaRecorderService.startInternalRecording();
-                        // print('File saved: $filePath');
+                      if (!_isRecord) {
+                        final granted = await MediaRecorderService.startInternalRecording();
+                        if (granted == true) {
+                          setState(() {
+                            _isRecord = !_isRecord;
+                          });
+                          dProvider.toggleRecording();
+                        } else {
+                          return;
+                        }
                       } else {
-                        // Start recording
                         await MediaRecorderService.stopInternalRecording();
-                        // print('Recording started: $success');
+                        setState(() {
+                          _isRecord = !_isRecord;
+                        });
+                        dProvider.toggleRecording();
                       }
                     },
                   );
