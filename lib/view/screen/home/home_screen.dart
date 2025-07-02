@@ -1,3 +1,4 @@
+import 'package:ads_tracking_plugin/collapsible_banner_ad/collapsible_banner_ad_widget.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/core/utils/network_checking.dart';
@@ -9,6 +10,7 @@ import 'package:and_drum_pad_flutter/view/widget/bottom_navigation/bottom_naviga
 import 'package:and_drum_pad_flutter/view/widget/loading_dialog/no_internet_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view_model/network_provider.dart';
+import 'package:and_drum_pad_flutter/view_model/purchase_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -71,15 +73,25 @@ class _HomeScreenState extends State<HomeScreen>
       resizeToAvoidBottomInset: false,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: null,
-      bottomNavigationBar: BottomNavigation(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            // Khởi tạo nếu chưa được tạo
-            _screens[index] ??= _screenBuilders[index]();
-            _currentIndex = index;
-          });
-        },
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          BottomNavigation(
+            currentIndex: _currentIndex,
+            onTap: (index) {
+              setState(() {
+                // Khởi tạo nếu chưa được tạo
+                _screens[index] ??= _screenBuilders[index]();
+                _currentIndex = index;
+              });
+            },
+          ),
+          Consumer<PurchaseProvider>(
+            builder: (context, purchaseProvider, _) {
+              return !purchaseProvider.isSubscribed ? const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_home")) : const SizedBox.shrink();
+            }
+          )
+        ],
       ),
       body: Selector<NetworkProvider, bool>(
         selector: (p0, p1) => p1.isConnected,
