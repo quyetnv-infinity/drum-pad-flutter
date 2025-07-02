@@ -6,6 +6,11 @@ allprojects {
         maven { url = uri("https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea") }
         maven { url 'https://jitpack.io' }
     }
+
+    tasks.withType(JavaCompile).configureEach {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
 }
 
 rootProject.buildDir = "../build"
