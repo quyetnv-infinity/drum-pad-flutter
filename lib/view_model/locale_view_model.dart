@@ -19,6 +19,10 @@ class LocateViewModel extends ChangeNotifier {
   // Getter mới để kiểm tra xem có nên hiển thị nút check hay không
   bool get showCheckButton => _selectedLanguage != null;
 
+  LocateViewModel(){
+    initLocale();
+  }
+
   Future<void> initLocale() async {
     final savedLocale = _prefs.getString(SharePreferencesKey.currentLanguage);
     if (savedLocale != null) {
