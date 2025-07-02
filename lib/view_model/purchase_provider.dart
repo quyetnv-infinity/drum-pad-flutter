@@ -1,3 +1,4 @@
+import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
 

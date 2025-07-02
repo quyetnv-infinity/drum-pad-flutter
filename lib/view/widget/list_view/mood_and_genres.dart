@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MoodAndGenres extends StatelessWidget {
-  final Function(Category category)? onTapCategory;
-  const MoodAndGenres({super.key, this.onTapCategory});
+  final Function(Category category) onTapCategory;
+  const MoodAndGenres({super.key, required this.onTapCategory});
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +36,7 @@ class MoodAndGenres extends StatelessWidget {
                 return MoodAndGenresItem(
                   category: category,
                   onTap: () {
-                    if(onTapCategory != null) {
-                      onTapCategory?.call(category);
-                    } else {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryDetailsScreen(category: category,),));
-                    }
+                    onTapCategory.call(category);
                   },
                 );
               }

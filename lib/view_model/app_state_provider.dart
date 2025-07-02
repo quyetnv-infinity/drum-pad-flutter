@@ -1,4 +1,5 @@
 import 'package:ads_tracking_plugin/ads_controller.dart';
+import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
 import 'package:ads_tracking_plugin/tracking/analytics_tracker.dart';
 import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/view_model/ads_provider.dart';
@@ -10,7 +11,6 @@ class AppStateProvider with ChangeNotifier {
   AdsProvider adsProvider;
   PurchaseProvider purchaseProvider;
   bool _isFirstOpenApp = false;
-
 
   bool get isFirstOpenApp => _isFirstOpenApp;
   bool get shouldShowAds => adsProvider.adsEnabled && !purchaseProvider.isSubscribed;
@@ -56,16 +56,11 @@ class AppStateProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void togglePurchase() {
-    // purchaseProvider.togglePurchase();
-    notifyListeners();
-  }
-
   void initializeAds() {
     AdController.shared.initialize(
       isAdDisabled: !shouldShowAds,
       configurations: getAdConfigurations(_isFirstOpenApp),
-      // adjustConfig: AdjustConfig("s7auhvppayv4", AdjustEnvironment.production),
+      adjustConfig: AdjustConfig("s7auhvppayv4", AdjustEnvironment.production),
     );
   }
 
