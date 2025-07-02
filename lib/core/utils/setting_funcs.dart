@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:and_drum_pad_flutter/constant/app_info.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -88,7 +89,7 @@ class SettingFuncs {
   //   }
   // }
   static void launchURL(String url) async {
-    // AdController.shared.setResumeAdState(true);
+    AdController.shared.setResumeAdState(true);
     final Uri uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
