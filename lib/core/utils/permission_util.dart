@@ -1,3 +1,4 @@
+import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:base_ui_flutter_v1/base_ui_flutter_v1.dart';
 import 'package:flutter/material.dart';
@@ -10,11 +11,11 @@ class PermissionUtil {
       content: context.locale.photo_permission_description,
       acceptText: context.locale.grant_permission,
       onAcceptPressed: () async {
-        // AdController.shared.setResumeAdState(true);
+        AdController.shared.setResumeAdState(true);
         await openAppSettings();
       },
       onCompleted: (){
-        // AdController.shared.setResumeAdState(false);
+        AdController.shared.setResumeAdState(false);
       }
     ).show(context);
   }

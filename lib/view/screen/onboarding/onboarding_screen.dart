@@ -1,3 +1,4 @@
+import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:ads_tracking_plugin/native_ad/native_ad_widget.dart';
 import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
@@ -34,10 +35,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
     super.didChangeAppLifecycleState(state);
 
     if (state == AppLifecycleState.paused) {
-      // AdController.shared.setResumeAdState(true);
+      AdController.shared.setResumeAdState(true);
     }
     if (state == AppLifecycleState.resumed) {
-      // AdController.shared.setResumeAdState(false);
+      AdController.shared.setResumeAdState(false);
     }
   }
 

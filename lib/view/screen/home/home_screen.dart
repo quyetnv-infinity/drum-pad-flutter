@@ -1,3 +1,4 @@
+import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:ads_tracking_plugin/collapsible_banner_ad/collapsible_banner_ad_widget.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
@@ -46,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen>
     _screens[_currentIndex] = _screenBuilders[_currentIndex]();
     noInternetDialog = NoInternetDialog(
       onTapGoSettings: () {
-        // AdController.shared.setResumeAdState(true);
+        AdController.shared.setResumeAdState(true);
         Navigator.pop(context);
         NetworkChecking.navigateToWiFiSettings(context);
       },

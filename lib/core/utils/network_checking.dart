@@ -1,3 +1,4 @@
+import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:and_drum_pad_flutter/view/widget/loading_dialog/no_internet_dialog.dart';
 import 'package:and_drum_pad_flutter/view_model/network_provider.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class NetworkChecking {
   static void showLostInternetConnectionDialog(BuildContext context, {Function()? handleActionWhenComplete}) {
     NoInternetDialog(
       onTapGoSettings: () {
-        // AdController.shared.setResumeAdState(true);
+        AdController.shared.setResumeAdState(true);
         Navigator.pop(context);
         navigateToWiFiSettings(context);
       },
