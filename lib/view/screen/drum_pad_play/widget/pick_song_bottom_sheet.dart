@@ -1,3 +1,5 @@
+import 'package:ads_tracking_plugin/native_ad/native_ad_widget.dart';
+import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
@@ -6,6 +8,7 @@ import 'package:and_drum_pad_flutter/view/widget/app_bar/search_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/item/song_category_item.dart';
 import 'package:and_drum_pad_flutter/view/widget/loading_dialog/loading_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
+import 'package:and_drum_pad_flutter/view_model/app_state_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/category_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -115,6 +118,7 @@ class _PickSongScreenState extends State<PickSongScreen> {
             SearchBarCustom(onSearch: _onSearch, textEditingController: _textEditingController,),
             Expanded(
               child: _filteredSongs.isNotEmpty ? ListView.builder(
+                padding: EdgeInsets.only(bottom: 16),
                 itemCount: _filteredSongs.length,
                 itemBuilder: (context, index) {
                   final song = _filteredSongs[index];
@@ -159,9 +163,24 @@ class _PickSongScreenState extends State<PickSongScreen> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
+        bottomNavigationBar: Consumer<AppStateProvider>(builder: (context, value, child) {
+          return NativeAdWidget(
+            adName: AdName.nativeSearch,
+            disabled: !value.shouldShowAds,
+            onAdLoaded: (value) {
+              print("Native ad loaded: $value");
+            },
+            padding: EdgeInsets.only(bottom: 16),
+            decoration: BoxDecoration(
+                color: Colors.grey.withValues(alpha: 0.2),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(7)),
+                border: Border.all(width: 1, color: Color(0xFFD3D3D3))
+            ),
+          );
+        },),
       ),
     );
   }
