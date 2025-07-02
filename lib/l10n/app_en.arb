@@ -102,5 +102,7 @@
   "grant_permission": "Grant Permission",
   "photo_permission": "Photo Permission",
   "applying_selected_language": "Applying selected language...",
-  "photo_permission_description": "To provide you with the full experience of our features, we require your permission to access the Photo permission on your device."
+  "photo_permission_description": "To provide you with the full experience of our features, we require your permission to access the Photo permission on your device.",
+  "recording_started" : "Recording started...",
+  "recording_stopped" : "Recording stopped..."
 }

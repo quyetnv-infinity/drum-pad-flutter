@@ -135,7 +135,8 @@ class AudioCaptureService : Service() {
             // Lưu file WAV vào MediaStore
             saveWavToMediaStore(wavFilePath!!)
             // Xóa file PCM nếu muốn
-            // File(pcmFilePath!!).delete()
+             File(pcmFilePath!!).delete()
+             File(wavFilePath!!).delete()
         }
         super.onDestroy()
     }
