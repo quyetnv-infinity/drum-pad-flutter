@@ -13,7 +13,7 @@ import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/theme_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:provider/provider.dart';
 import 'drum_pad_item.dart';
 
@@ -45,7 +45,8 @@ class DrumPadScreen extends StatefulWidget {
 class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateMixin {
   List<String> availableSounds = [];
   List<String> lessonSounds = [];
-  Map<String, AudioPlayer> audioPlayers = {};
+  Map<String, AudioSource> audioSources = {};
+  Map<String, SoundHandle?> currentlyPlayingSounds = {};
   List<NoteEvent> events = [];
   int currentEventIndex = 0;
   Timer? sequenceTimer;
@@ -102,6 +103,10 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
 
   late ThemeModel currentTheme;
 
+  // SoLoud instance
+  late SoLoud _soloud;
+  bool _soloudInitialized = false;
+
   List<Map<String, dynamic>> getFutureNotes(LessonSequence data) {
     List<Map<String, dynamic>> futureNotes = [];
     List<NoteEvent> events = widget.currentSong?.lessons[currentLesson].events ?? [];
@@ -121,6 +126,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   @override
   void initState() {
     super.initState();
+    _initializeSoloud();
     currentTheme = Provider.of<ThemeProvider>(context, listen: false).currentTheme;
     _isFromBeatRunner = !widget.isFromCampaign && !widget.isFromLearnScreen;
     if(widget.currentSong != null && widget.currentSong!.lessons.isNotEmpty) {
@@ -128,7 +134,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         isLoading = true;
       });
       _loadSequenceDataFromFile(widget.lessonIndex).then((_) async{
-        await _initializeAudioPlayers();
+        await _initializeAudioSources();
         setState(() {
           isLoading = false;
         });
@@ -149,20 +155,32 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     widget.onRegisterStartHandler?.call(_startTimer);
   }
 
+  Future<void> _initializeSoloud() async {
+    try {
+      _soloud = SoLoud.instance;
+      await _soloud.init();
+      setState(() {
+        _soloudInitialized = true;
+      });
+    } catch (e) {
+      print('Error initializing SoLoud: $e');
+    }
+  }
+
   Future<void> _initFreeStyleSongDefault() async {
-    _disposeAudioPlayers();
+    if(!_soloudInitialized) await _initializeSoloud();
+
+    _disposeAudioSources();
     availableSounds = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
     lessonSounds = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+
     for (String sound in availableSounds) {
       if (sound.isEmpty) continue;
-      final player = AudioPlayer();
       try {
-        await player.setAsset('assets/audio/$sound.wav');
-        audioPlayers[sound] = player;
+        final source = await _soloud.loadAsset('assets/audio/$sound.wav');
+        audioSources[sound] = source;
       } catch (e) {
-        print('Error loading audio file for $sound: $e at assets/audio/$sound.mp3');
-        // Clean up failed player
-        await player.dispose();
+        print('Error loading audio file for $sound: $e at assets/audio/$sound.wav');
         continue;
       }
     }
@@ -178,7 +196,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         isLoading = true;
       });
       _loadSequenceDataFromFile(widget.lessonIndex).then((_) async{
-        await _initializeAudioPlayers();
+        await _initializeAudioSources();
         setState(() {
           isLoading = false;
         });
@@ -197,12 +215,15 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     for (var controller in _colorControllers.values) {
       controller.dispose();
     }
-    _disposeAudioPlayers();
-    audioPlayers.clear();
+    _disposeAudioSources();
+    audioSources.clear();
     sequenceTimer?.cancel();
     progressTimer?.cancel();
     _controller.dispose();
     _pauseTimer?.cancel();
+    if (_soloudInitialized) {
+      _soloud.deinit();
+    }
     super.dispose();
   }
 
@@ -273,10 +294,10 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
 
   int calculateScore() {
     return perfectPoint * 100 +
-      goodPoint * 90 +
-      earlyPoint * 60 +
-      latePoint * 40 +
-      missPoint * 0;
+        goodPoint * 90 +
+        earlyPoint * 60 +
+        latePoint * 40 +
+        missPoint * 0;
   }
 
   void _startTimer() {
@@ -446,7 +467,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         isLoading = true;
       });
       _loadSequenceDataFromFile(currentLesson).then((_) async {
-        await _initializeAudioPlayers();
+        await _initializeAudioSources();
         setState(() {
           isLoading = false;
         });
@@ -473,7 +494,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         isLoading = true;
       });
       _loadSequenceDataFromFile(currentLesson).then((_) async {
-        await _initializeAudioPlayers();
+        await _initializeAudioSources();
         setState(() {
           isLoading = false;
         });
@@ -584,19 +605,19 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     }
   }
 
-  Future<void> _initializeAudioPlayers() async {
-    _disposeAudioPlayers();
+  Future<void> _initializeAudioSources() async {
+    if(!_soloudInitialized) await _initializeSoloud();
+    if (!_soloudInitialized) return;
+
+    _disposeAudioSources();
     for (String sound in availableSounds) {
       if (sound.isEmpty) continue;
-      final player = AudioPlayer();
       final pathDir = context.read<DrumLearnProvider>().pathDir;
       try {
-        await player.setFilePath('$pathDir/${widget.currentSong?.id}/$sound.mp3');
-        audioPlayers[sound] = player;
+        final source = await _soloud.loadFile('$pathDir/${widget.currentSong?.id}/$sound.mp3');
+        audioSources[sound] = source;
       } catch (e) {
         print('Error loading audio file for $sound: $e at $pathDir/${widget.currentSong?.id}/$sound.mp3');
-        // Clean up failed player
-        await player.dispose();
 
         // Try to reload the song data
         if (widget.onTapChooseSong != null && widget.currentSong != null) {
@@ -624,37 +645,55 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     });
   }
 
-  void _disposeAudioPlayers() {
-    if (!mounted) return;
-    for (var player in audioPlayers.values) {
-      player.pause();
-      player.dispose();
+  void _disposeAudioSources() {
+    if (!mounted || !_soloudInitialized) return;
+
+    // Stop all playing sounds
+    for (var handle in currentlyPlayingSounds.values) {
+      if (handle != null) {
+        _soloud.stop(handle);
+      }
     }
-    audioPlayers.clear();
+    currentlyPlayingSounds.clear();
+
+    // Dispose audio sources
+    for (var source in audioSources.values) {
+      _soloud.disposeSource(source);
+    }
+    audioSources.clear();
   }
 
   Future<void> _playSound(String sound) async {
-    final bool shouldLeadPause = !(audioPlayers[_currentLeadSound] != null && (audioPlayers[_currentLeadSound]!.duration?.inMilliseconds ?? 0) - audioPlayers[_currentLeadSound]!.position.inMilliseconds < 500);
-    final bool shouldBassPause = !(audioPlayers[_currentBassSound] != null && (audioPlayers[_currentBassSound]!.duration?.inMilliseconds ?? 0) - audioPlayers[_currentBassSound]!.position.inMilliseconds < 500);
-    if (audioPlayers.containsKey(sound)) {
-      if(_isFromBeatRunner){
-        if(_currentLeadSound != null && shouldLeadPause) audioPlayers[_currentLeadSound]?.pause();
-        setState(() {
-          _currentLeadSound = sound;
-        });
-      } else if(PadUtil.getSoundType(sound) == SoundType.lead){
-        if(_currentLeadSound != null && shouldLeadPause) audioPlayers[_currentLeadSound]?.pause();
-        setState(() {
-          _currentLeadSound = sound;
-        });
-      }else if (PadUtil.getSoundType(sound) == SoundType.bass){
-        if(_currentBassSound != null && shouldBassPause) audioPlayers[_currentBassSound]?.pause();
-        setState(() {
-          _currentBassSound = sound;
-        });
+    if (!_soloudInitialized) return;
+
+    // Stop previous sounds based on type
+    if(_isFromBeatRunner){
+      if(currentlyPlayingSounds[_currentLeadSound ?? ''] != null) {
+        _soloud.stop(currentlyPlayingSounds[_currentLeadSound ?? '']!);
       }
-      audioPlayers[sound]?.seek(Duration.zero);
-      audioPlayers[sound]?.play();
+      setState(() {
+        _currentLeadSound = sound;
+      });
+    } else if(PadUtil.getSoundType(sound) == SoundType.lead){
+      if(currentlyPlayingSounds[_currentLeadSound ?? ''] != null) {
+        _soloud.stop(currentlyPlayingSounds[_currentLeadSound ?? '']!);
+      }
+      setState(() {
+        _currentLeadSound = sound;
+      });
+    }else if (PadUtil.getSoundType(sound) == SoundType.bass){
+      if(currentlyPlayingSounds[_currentBassSound ?? ''] != null) {
+        _soloud.stop(currentlyPlayingSounds[_currentBassSound ?? '']!);
+      }
+      setState(() {
+        _currentBassSound = sound;
+      });
+    }
+
+    // Play new sound
+    if (audioSources.containsKey(sound)) {
+      final handle = await _soloud.play(audioSources[sound]!);
+      currentlyPlayingSounds[sound] = handle;
     }
   }
 
@@ -671,8 +710,14 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
 
   void _resetSequence({bool isPlayingDrum = false}) {
     _futureNotes = getFutureNotes(lessons[currentLesson]);
-    for (var player in audioPlayers.values) {
-      if(!isPlayingDrum) player.pause();
+    if (!isPlayingDrum && _soloudInitialized) {
+      // Stop all playing sounds
+      for (var handle in currentlyPlayingSounds.values) {
+        if (handle != null) {
+          _soloud.stop(handle);
+        }
+      }
+      currentlyPlayingSounds.clear();
     }
     setState(() {
       isPlaying = false;
@@ -953,7 +998,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   //     // print(lessons[index]['events'][0]["notes"][0].contains("_face_b_") ? _faceB : _faceA);
   //   });
   //   // print(availableSounds);
-  //   await _initializeAudioPlayers();
+  //   await _initializeAudioSources();
   //   _resetSequence();
   //   setState(() {
   //     isLoading = false;

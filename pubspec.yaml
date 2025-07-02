@@ -12,11 +12,11 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-  just_audio: ^0.9.46
+#  just_audio: ^0.9.46
   lottie: ^3.3.1
   flutter_svg: ^2.0.17
   base_ui_flutter_v1:
-    path: ../base_ui_flutter_v1 
+    path: ../base_ui_flutter_v1
   intl: any
   flutter_localization: ^0.3.1
   shared_preferences: ^2.3.4
@@ -45,7 +45,7 @@ dependencies:
   share_plus: ^11.0.0
   ads_tracking_plugin:
     path: ../base-flutter-refactor
-  change_app_package_name: ^1.5.0
+  flutter_soloud: ^3.2.1
 
 dev_dependencies:
   flutter_test:
