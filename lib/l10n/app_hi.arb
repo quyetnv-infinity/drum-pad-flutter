@@ -102,5 +102,7 @@
   "grant_permission": "अनुमति दें",
   "photo_permission": "फोटो अनुमति",
   "applying_selected_language": "चयनित भाषा लागू की जा रही है...",
+  "recording_started": "रिकॉर्डिंग शुरू हुई...",
+  "recording_stopped": "रिकॉर्डिंग रुकी...",
   "photo_permission_description": "हमारी सुविधाओं का पूर्ण अनुभव प्रदान करने के लिए, हमें आपके डिवाइस पर फोटो अनुमति तक पहुंचने की आपकी अनुमति की आवश्यकता है।"
 }

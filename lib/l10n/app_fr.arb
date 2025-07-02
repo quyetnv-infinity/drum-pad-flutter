@@ -102,5 +102,7 @@
   "grant_permission": "Accorder la permission",
   "photo_permission": "Permission de photos",
   "applying_selected_language": "Application de la langue sélectionnée...",
+  "recording_started": "Enregistrement démarré...",
+  "recording_stopped": "Enregistrement arrêté...",
   "photo_permission_description": "Pour vous offrir l'expérience complète de nos fonctionnalités, nous avons besoin de votre permission pour accéder aux permissions de photos sur votre appareil."
 }

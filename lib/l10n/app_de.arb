@@ -102,5 +102,7 @@
   "grant_permission": "Berechtigung erteilen",
   "photo_permission": "Fotoberechtigung",
   "applying_selected_language": "Ausgewählte Sprache wird angewendet...",
+  "recording_started": "Aufnahme gestartet...",
+  "recording_stopped": "Aufnahme gestoppt...",
   "photo_permission_description": "Um Ihnen das volle Erlebnis unserer Funktionen zu bieten, benötigen wir Ihre Erlaubnis, auf die Fotoberechtigung auf Ihrem Gerät zuzugreifen."
 }
