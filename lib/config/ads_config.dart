@@ -58,7 +58,7 @@ class AdName {
   static String nativeOnboardingPage32 = "native_onboarding_page3_2";
 
   static String nativePermission = "native_permission";
-  static String nativeResearch = "native_research";
+  static String nativeSearch = "native_search";
   static String nativePopupPlayDone = "native_popup_playdone";
   static String nativePopupPause = "native_popup_pause";
 
@@ -182,7 +182,7 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
     ),
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.nativeResearch),
-      name: AdName.nativeResearch,
+      name: AdName.nativeSearch,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdTextFirst,
       nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#FFA6D2", ctaGradientEndColor: "#EB3F95", ctaCornerRadius: ctaCornerRadius),

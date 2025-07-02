@@ -1,3 +1,5 @@
+import 'package:ads_tracking_plugin/native_ad/native_ad_widget.dart';
+import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
@@ -8,6 +10,7 @@ import 'package:and_drum_pad_flutter/view/screen/result/widget/congratulations_w
 import 'package:and_drum_pad_flutter/view/widget/loading_dialog/loading_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/star/star_result.dart';
 import 'package:and_drum_pad_flutter/view/widget/text/judgement_text.dart';
+import 'package:and_drum_pad_flutter/view_model/app_state_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/result_information_provider.dart';
 import 'package:flutter/material.dart';
@@ -257,8 +260,24 @@ class _ResultScreenState extends State<ResultScreen>
                         }
                       ),
                     ],
-                  )
+                  ),
+                  SizedBox(height: 20),
+                  Consumer<AppStateProvider>(builder: (context, value, child) {
+                    return NativeAdWidget(
+                      adName:!checkNotLastCampaign() ? AdName.nativePopupPlayDone : AdName.nativePopupPause,
+                      disabled: !value.shouldShowAds,
+                      onAdLoaded: (value) {
+                        print("Native ad loaded: $value");
+                      },
+                      decoration: BoxDecoration(
+                          color: Colors.grey.withValues(alpha: 0.2),
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                          border: Border.all(width: 1, color: Color(0xFFD3D3D3))
+                      ),
+                    );
+                  },),
                 ],
+
               );
             }
           )),

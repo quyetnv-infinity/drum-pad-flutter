@@ -41,6 +41,11 @@ class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObse
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_){
       context.read<LocateViewModel>().initSelectedLanguage();
+      Future.delayed(Duration(milliseconds: 500), () {
+        setState(() {
+          
+        });
+      },);
     });
   }
 
@@ -129,18 +134,14 @@ class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObse
               if (!widget.fromSetting)
                 Consumer<AppStateProvider>(
                   builder: (context, appStateProvider, _) {
+                    print("Current ad state: $_currentAdState");
+                    print("Ad name: ${_getAdName(appStateProvider.isFirstOpenApp)}");
                     return NativeAdWidget(
                       key: ValueKey(_currentAdState),
                       adName: _getAdName(appStateProvider.isFirstOpenApp),
                       disabled: !appStateProvider.shouldShowAds,
                       onAdLoaded: (value) {
                         print("Native ad loaded: $value");
-                        // WidgetsBinding.instance.addPostFrameCallback((_) {
-                        //   print("Native ad loaded callback");
-                        //   setState(() {
-                        //
-                        //   });
-                        // });
                       },
                       padding: EdgeInsets.only(bottom: 16),
                       decoration: BoxDecoration(

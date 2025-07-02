@@ -1,3 +1,5 @@
+import 'package:ads_tracking_plugin/native_ad/native_ad_widget.dart';
+import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/view/screen/home/home_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/onboarding/widgets/onboarding_widget.dart';
@@ -127,17 +129,35 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
                 children: [
                   Offstage(
                     offstage: currentPage != 0 || !appStateProvider.shouldShowAds,
-                    child: Container(
-                      height: 270,
-                      color: Colors.red,
-                    )
+                    child: NativeAdWidget(
+                      adName: appStateProvider.isFirstOpenApp ? AdName.nativeOnboarding : AdName.nativeOnboarding2,
+                      disabled: !appStateProvider.shouldShowAds,
+                      onAdLoaded: (value) {
+                        print("Native ad loaded: $value");
+                      },
+                      padding: EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                          color: Colors.grey.withValues(alpha: 0.2),
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(7)),
+                          border: Border.all(width: 1, color: Color(0xFFD3D3D3))
+                      ),
+                    ),
                   ),
                   Offstage(
                     offstage: currentPage != 3 || !appStateProvider.shouldShowAds,
-                    child: Container(
-                      height: 270,
-                      color: Colors.red,
-                    )
+                    child: NativeAdWidget(
+                      adName: appStateProvider.isFirstOpenApp ? AdName.nativeOnboardingPage3 : AdName.nativeOnboardingPage32,
+                      disabled: !appStateProvider.shouldShowAds,
+                      onAdLoaded: (value) {
+                        print("Native ad loaded: $value");
+                      },
+                      padding: EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                          color: Colors.grey.withValues(alpha: 0.2),
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(7)),
+                          border: Border.all(width: 1, color: Color(0xFFD3D3D3))
+                      ),
+                    ),
                   )
                 ],
               );
