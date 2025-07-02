@@ -54,8 +54,22 @@ class _DrumPadItemState extends State<DrumPadItem> {
             padding: EdgeInsets.all(widget.isActive ? 8 : 0),
             child: Container(
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.0),
-                  gradient: RadialGradient(colors: widget.colors)
+                borderRadius: BorderRadius.circular(12.0),
+                gradient: RadialGradient(colors: widget.colors),
+                boxShadow: widget.isActive ? [
+                  BoxShadow(
+                    color: widget.theme.blurColor,
+                    blurRadius: 8.28,
+                    offset: Offset(0, 0),
+                    spreadRadius: 0
+                  ),
+                  BoxShadow(
+                    color: widget.theme.blurColor,
+                    blurRadius: 16.56,
+                    offset: Offset(0, 0),
+                    spreadRadius: 0
+                  )
+                ] : null
               ),
             ),
           ),
@@ -116,6 +130,19 @@ class _DrumPadItemState extends State<DrumPadItem> {
                 color: widget.colorAnimation.value,
               ),
             ),
+          Positioned.fill(
+            child: Transform.scale(
+              scale: widget.isActive ? 0.9 : 1.1,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.bounceOut,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: widget.isActive ? Border.all(color: Colors.white, width: 1) : null,
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );
