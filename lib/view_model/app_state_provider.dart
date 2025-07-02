@@ -1,3 +1,6 @@
+import 'package:ads_tracking_plugin/ads_controller.dart';
+import 'package:ads_tracking_plugin/tracking/analytics_tracker.dart';
+import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/view_model/ads_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/purchase_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,13 +19,13 @@ class AppStateProvider with ChangeNotifier {
     getFirstOpenApp().then((value) {
       _isFirstOpenApp = value;
       notifyListeners();
-      // purchaseProvider.loadSubscription().then((_) {
-      //   initializeAds();
-      // });
-      //
-      // if (_isFirstOpenApp) {
-      //   AnalyticsTracker.trackInstallEvent();
-      // }
+      purchaseProvider.loadSubscription().then((_) {
+        initializeAds();
+      });
+
+      if (_isFirstOpenApp) {
+        AnalyticsTracker.trackInstallEvent();
+      }
     });
   }
 
@@ -59,11 +62,11 @@ class AppStateProvider with ChangeNotifier {
   }
 
   void initializeAds() {
-    // AdController.shared.initialize(
-    //   isAdDisabled: !shouldShowAds,
-    //   configurations: getAdConfigurations(_isFirstOpenApp),
-    //   adjustConfig: AdjustConfig("s7auhvppayv4", AdjustEnvironment.production),
-    // );
+    AdController.shared.initialize(
+      isAdDisabled: !shouldShowAds,
+      configurations: getAdConfigurations(_isFirstOpenApp),
+      // adjustConfig: AdjustConfig("s7auhvppayv4", AdjustEnvironment.production),
+    );
   }
 
   Future<bool> getFirstOpenApp() async {

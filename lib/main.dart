@@ -38,9 +38,7 @@ void main() {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await initTrackingPermission();
-    print("Ads Tracking Plugin Version: ${AdsTrackingPluginPlatform.instance.getPlatformVersion()}");
     await Firebase.initializeApp();
-    print("Firebase Initialized");
     await Future.wait([
       AnalyticsTracker.setupCrashlytics(),
       RemoteConfig.initializeRemoteConfig(adConfigs: getAdConfigurations(false), devMode: AdUnitId.devMode),
@@ -48,7 +46,6 @@ void main() {
       _initHive(),
       ServiceLocator.instance.initialise(),
     ].toList());
-    print("Service Locator Initialized");
     final purchaseProvider = PurchaseProvider();
     final AppSettingsProvider appSettingsProvider = AppSettingsProvider();
     final adsProvider = AdsProvider(appSettingsProvider: appSettingsProvider,);
