@@ -96,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
                         widthFactor: 0.8,
                         child: TweenAnimationBuilder<double>(
                           tween: Tween<double>(begin: 0.0, end: 1.0),
-                          duration: const Duration(seconds: 2), // Thời gian hoàn thành
+                          duration: const Duration(seconds: 5), // Thời gian hoàn thành
                           builder: (context, value, child) {
                             return LinearProgressIndicator(
                                 value: value,

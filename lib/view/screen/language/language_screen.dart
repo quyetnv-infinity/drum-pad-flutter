@@ -1,3 +1,5 @@
+import 'package:ads_tracking_plugin/native_ad/native_ad_widget.dart';
+import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/core/enum/language_enum.dart';
 import 'package:and_drum_pad_flutter/core/extension/language_extension.dart';
 import 'package:and_drum_pad_flutter/core/res/dimen/spacing.dart';
@@ -21,7 +23,17 @@ class LanguageScreen extends StatefulWidget {
   State<LanguageScreen> createState() => _LanguageScreenState();
 }
 
+enum AdState {
+  initial,      // nativeLanguage || nativeLanguage2
+  englishClick, // nativeLanguageCountry || nativeLanguageCountry2
+  otherClick    // nativeLanguageClick || nativeLanguageClick2
+}
+
 class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObserver {
+
+  AdState _currentAdState = AdState.initial;
+  bool _isContryAdsLoaded = false;
+  bool _isClickAdsLoaded = false;
 
   @override
   void initState() {
@@ -30,7 +42,6 @@ class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObse
     WidgetsBinding.instance.addPostFrameCallback((_){
       context.read<LocateViewModel>().initSelectedLanguage();
     });
-    print(LanguageEnum.values.first.getPrioritizedLanguages);
   }
 
   @override
@@ -42,6 +53,17 @@ class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObse
     }
     if (state == AppLifecycleState.resumed) {
       // AdController.shared.setResumeAdState(false);
+    }
+  }
+
+  String _getAdName(bool isFirstOpenApp) {
+    switch (_currentAdState) {
+      case AdState.initial:
+        return isFirstOpenApp ? AdName.nativeLanguage : AdName.nativeLanguage2;
+      case AdState.englishClick:
+        return isFirstOpenApp ? AdName.nativeLanguageCountry : AdName.nativeLanguageCountry_2;
+      case AdState.otherClick:
+        return isFirstOpenApp ? AdName.nativeLanguageClick : AdName.nativeLanguageClick2;
     }
   }
 
@@ -75,6 +97,13 @@ class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObse
                         return EnglishContainer(
                           selectedLanguage: locateViewModel.selectedLanguage,
                           onLanguageChanged: (value) {
+                            print("is country ads loaded: $_isContryAdsLoaded");
+                            if(!_isContryAdsLoaded){
+                              setState(() {
+                                _currentAdState = AdState.englishClick;
+                                _isContryAdsLoaded = true;
+                              });
+                            }
                             locateViewModel.selectLanguage(value);
                           },
                         );
@@ -83,6 +112,13 @@ class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObse
                         value: itemLanguage,
                         languageSelected: locateViewModel.selectedLanguage,
                         onLanguageChanged: (language) {
+                          print("is click ads loaded: $_isClickAdsLoaded");
+                          if(!_isClickAdsLoaded){
+                            setState(() {
+                              _currentAdState = AdState.otherClick;
+                              _isClickAdsLoaded = true;
+                            });
+                          }
                           locateViewModel.selectLanguage(language);
                         },
                       );
@@ -93,23 +129,26 @@ class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObse
               if (!widget.fromSetting)
                 Consumer<AppStateProvider>(
                   builder: (context, appStateProvider, _) {
-                    return Container(
-                      width: double.infinity,
-                      height: 280,
+                    return NativeAdWidget(
+                      key: ValueKey(_currentAdState),
+                      adName: _getAdName(appStateProvider.isFirstOpenApp),
+                      disabled: !appStateProvider.shouldShowAds,
+                      onAdLoaded: (value) {
+                        print("Native ad loaded: $value");
+                        // WidgetsBinding.instance.addPostFrameCallback((_) {
+                        //   print("Native ad loaded callback");
+                        //   setState(() {
+                        //
+                        //   });
+                        // });
+                      },
+                      padding: EdgeInsets.only(bottom: 16),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+                        color: Colors.grey.withValues(alpha: 0.2),
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(7)),
+                        border: Border.all(width: 1, color: Color(0xFFD3D3D3))
                       ),
                     );
-                    // return NativeAdWidget(
-                    //   adName: "native_language",
-                    //   disabled: !appStateProvider.shouldShowAds,
-                    //   padding: EdgeInsets.only(bottom: 16),
-                    //   decoration: BoxDecoration(
-                    //     color: Colors.grey.withValues(alpha: 0.1),
-                    //     borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-                    //   ),
-                    // );
                   }
                 )
             ],

@@ -68,7 +68,9 @@ class AdName {
 }
 
 List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
+  double ctaCornerRadius = 50;
   bool preload = isFirstOpenApp;
+  print("Preload ads: $preload");
   return [
     /// Interstitial Ads
     AdConfiguration(
@@ -91,7 +93,7 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       name: AdName.nativeLanguage,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdTextFirst,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#6141BE", ctaGradientEndColor: "#421AB5"),
+      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#FFA6D2", ctaGradientEndColor: "#EB3F95", ctaCornerRadius: ctaCornerRadius),
       preload: preload,
     ),
     AdConfiguration(
@@ -99,7 +101,7 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       name: AdName.nativeLanguage2,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdTextFirst,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#6141BE", ctaGradientEndColor: "#421AB5"),
+      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#FFA6D2", ctaGradientEndColor: "#EB3F95", ctaCornerRadius: ctaCornerRadius),
       preload: preload,
     ),
     AdConfiguration(
@@ -107,7 +109,7 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       name: AdName.nativeLanguageClick,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdTextFirst,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#6141BE", ctaGradientEndColor: "#421AB5"),
+      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#FFA6D2", ctaGradientEndColor: "#EB3F95", ctaCornerRadius: ctaCornerRadius),
       preload: preload,
     ),
     AdConfiguration(
@@ -115,7 +117,7 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       name: AdName.nativeLanguageClick2,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdTextFirst,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#6141BE", ctaGradientEndColor: "#421AB5"),
+      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#FFA6D2", ctaGradientEndColor: "#EB3F95", ctaCornerRadius: ctaCornerRadius),
       preload: preload,
     ),
     AdConfiguration(
@@ -123,7 +125,7 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       name: AdName.nativeLanguageCountry,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdTextFirst,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#6141BE", ctaGradientEndColor: "#421AB5"),
+      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#FFA6D2", ctaGradientEndColor: "#EB3F95", ctaCornerRadius: ctaCornerRadius),
       preload: preload,
     ),
     AdConfiguration(
@@ -131,7 +133,7 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       name: AdName.nativeLanguageCountry_2,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdTextFirst,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#6141BE", ctaGradientEndColor: "#421AB5"),
+      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#FFA6D2", ctaGradientEndColor: "#EB3F95", ctaCornerRadius: ctaCornerRadius),
       preload: preload,
     ),
     
@@ -141,7 +143,7 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       name: AdName.nativeOnboarding,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdTextFirst,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#6141BE", ctaGradientEndColor: "#421AB5"),
+      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#FFA6D2", ctaGradientEndColor: "#EB3F95", ctaCornerRadius: ctaCornerRadius),
       preload: preload,
     ),
     AdConfiguration(
@@ -149,7 +151,7 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       name: AdName.nativeOnboarding2,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdTextFirst,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#6141BE", ctaGradientEndColor: "#421AB5"),
+      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#FFA6D2", ctaGradientEndColor: "#EB3F95", ctaCornerRadius: ctaCornerRadius),
       preload: preload,
     ),
     AdConfiguration(
@@ -157,7 +159,7 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       name: AdName.nativeOnboardingPage3,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdTextFirst,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#6141BE", ctaGradientEndColor: "#421AB5"),
+      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#FFA6D2", ctaGradientEndColor: "#EB3F95", ctaCornerRadius: ctaCornerRadius),
       preload: preload,
     ),
     AdConfiguration(
@@ -165,7 +167,7 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       name: AdName.nativeOnboardingPage32,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdTextFirst,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#6141BE", ctaGradientEndColor: "#421AB5"),
+      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#FFA6D2", ctaGradientEndColor: "#EB3F95", ctaCornerRadius: ctaCornerRadius),
       preload: preload,
     ),
     
@@ -175,7 +177,7 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       name: AdName.nativePermission,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdTextFirst,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#6141BE", ctaGradientEndColor: "#421AB5"),
+      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#FFA6D2", ctaGradientEndColor: "#EB3F95", ctaCornerRadius: ctaCornerRadius),
       preload: preload,
     ),
     AdConfiguration(
@@ -183,7 +185,7 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       name: AdName.nativeResearch,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdTextFirst,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#6141BE", ctaGradientEndColor: "#421AB5"),
+      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#FFA6D2", ctaGradientEndColor: "#EB3F95", ctaCornerRadius: ctaCornerRadius),
       preload: preload,
     ),
     AdConfiguration(
@@ -191,7 +193,7 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       name: AdName.nativePopupPlayDone,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdSmall,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#6141BE", ctaGradientEndColor: "#421AB5"),
+      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#FFA6D2", ctaGradientEndColor: "#EB3F95", ctaCornerRadius: ctaCornerRadius),
       preload: preload,
     ),
     AdConfiguration(
@@ -199,7 +201,7 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       name: AdName.nativePopupPause,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdSmall,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#6141BE", ctaGradientEndColor: "#421AB5"),
+      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaGradientStartColor: "#FFA6D2", ctaGradientEndColor: "#EB3F95", ctaCornerRadius: ctaCornerRadius),
       preload: preload,
     ),
     
