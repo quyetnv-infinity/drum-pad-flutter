@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
+import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/constant/app_info.dart';
 import 'package:and_drum_pad_flutter/view/screen/home/home_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/language/language_screen.dart';
@@ -47,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     EUConsent().requestConsent(() {
       final adsProvider = Provider.of<AdsProvider>(context, listen: false);
       adsProvider.showInterAd(
-        name: "inter_splash",
+        name: AdName.interSplash,
         callback: () {
           _navigateToHome();
         }

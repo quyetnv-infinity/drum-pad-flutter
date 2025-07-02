@@ -1,3 +1,4 @@
+import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:ads_tracking_plugin/native_ad/native_ad_widget.dart';
 import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/core/enum/language_enum.dart';
@@ -54,10 +55,10 @@ class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObse
     super.didChangeAppLifecycleState(state);
     if(widget.fromSetting) return;
     if (state == AppLifecycleState.paused) {
-      // AdController.shared.setResumeAdState(true);
+      AdController.shared.setResumeAdState(true);
     }
     if (state == AppLifecycleState.resumed) {
-      // AdController.shared.setResumeAdState(false);
+      AdController.shared.setResumeAdState(false);
     }
   }
 
