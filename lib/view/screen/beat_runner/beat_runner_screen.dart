@@ -57,6 +57,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16).copyWith(right: 0),
           child: SingleChildScrollView(
+            padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight),
             child: Column(
               children: [
                 Consumer<DrumLearnProvider>(
