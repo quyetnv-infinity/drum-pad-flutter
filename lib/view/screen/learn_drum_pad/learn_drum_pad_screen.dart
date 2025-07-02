@@ -11,6 +11,7 @@ import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/drum_pad/drum_pad_widget.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
+import 'package:and_drum_pad_flutter/view/widget/scaffold/snack__notifi.dart';
 import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/tutorial_provider.dart';
@@ -315,18 +316,24 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
                   return IconButtonCustom(
                     iconAsset: _isRecording ? ResIcon.icRecording: ResIcon.icRecord,
                     onTap:() async {
-                      setState(() {
-                        _isRecording = !_isRecording;
-                      });
-                      dProvider.toggleRecording();
-                      if (_isRecording) {
-                        // Stop và lưu file
-                        await MediaRecorderService.startInternalRecording();
-                        // print('File saved: $filePath');
+                      if (!_isRecording) {
+                        final granted = await MediaRecorderService.startInternalRecording();
+                        if (granted == true) {
+                          setState(() {
+                            _isRecording = !_isRecording;
+                          });
+                          SnackBarNotification.show(context, RecordStatus.start);
+                          dProvider.toggleRecording();
+                        } else {
+                          return;
+                        }
                       } else {
-                        // Start recording
                         await MediaRecorderService.stopInternalRecording();
-                        // print('Recording started: $success');
+                        setState(() {
+                          _isRecording = !_isRecording;
+                        });
+                        SnackBarNotification.show(context, RecordStatus.stop);
+                        dProvider.toggleRecording();
                       }
                     },
                   );

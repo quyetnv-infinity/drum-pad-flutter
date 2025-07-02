@@ -12,6 +12,7 @@ import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/drum_pad/drum_pad_widget.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
+import 'package:and_drum_pad_flutter/view/widget/scaffold/snack__notifi.dart';
 import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/recording_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/tutorial_provider.dart';
@@ -211,6 +212,7 @@ class _FreeStylePlayScreenState extends State<FreeStylePlayScreen> with SingleTi
                           setState(() {
                             _isRecord = !_isRecord;
                           });
+                          SnackBarNotification.show(context, RecordStatus.start);
                           dProvider.toggleRecording();
                         } else {
                           return;
@@ -220,6 +222,7 @@ class _FreeStylePlayScreenState extends State<FreeStylePlayScreen> with SingleTi
                         setState(() {
                           _isRecord = !_isRecord;
                         });
+                        SnackBarNotification.show(context, RecordStatus.stop);
                         dProvider.toggleRecording();
                       }
                     },
