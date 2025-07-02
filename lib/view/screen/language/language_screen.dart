@@ -5,6 +5,7 @@ import 'package:and_drum_pad_flutter/core/enum/language_enum.dart';
 import 'package:and_drum_pad_flutter/core/extension/language_extension.dart';
 import 'package:and_drum_pad_flutter/core/res/dimen/spacing.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
+import 'package:and_drum_pad_flutter/view/screen/language/apply_language_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/language/widget/english_container.dart';
 import 'package:and_drum_pad_flutter/view/screen/language/widget/other_language_container.dart';
 import 'package:and_drum_pad_flutter/view/screen/onboarding/onboarding_screen.dart';
@@ -176,13 +177,15 @@ class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObse
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onTap: () {
-                if(!locateViewModel.showCheckButton) return;
-                locateViewModel.saveLanguage();
-                if (widget.fromSetting) {
-                  Navigator.pop(context);
-                } else {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OnboardingScreen(),));
-                }
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ApplyLanguageScreen(onCompleted: () {
+                  if(!locateViewModel.showCheckButton) return;
+                  locateViewModel.saveLanguage();
+                  if (widget.fromSetting) {
+                    Navigator.pop(context);
+                  } else {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OnboardingScreen(),));
+                  }
+                },),));
               },
               child: SvgPicture.asset('assets/icons/ic_check.svg')
             )
