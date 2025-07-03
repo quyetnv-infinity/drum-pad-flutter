@@ -133,6 +133,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
       setState(() {
         isLoading = true;
       });
+      // load time and events from file
       _loadSequenceDataFromFile(widget.lessonIndex).then((_) async{
         await _initializeAudioSources();
         setState(() {
@@ -156,6 +157,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   }
 
   Future<void> _initializeSoloud() async {
+    print('Initializing SoLoud...');
     try {
       _soloud = SoLoud.instance;
       await _soloud.init();
@@ -610,11 +612,12 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     if (!_soloudInitialized) return;
 
     _disposeAudioSources();
+    final pathDir = context.read<DrumLearnProvider>().pathDir;
     for (String sound in availableSounds) {
       if (sound.isEmpty) continue;
-      final pathDir = context.read<DrumLearnProvider>().pathDir;
       try {
         final source = await _soloud.loadFile('$pathDir/${widget.currentSong?.id}/$sound.mp3');
+        print('Loaded sound: $sound from $pathDir/${widget.currentSong?.id}/$sound.mp3');
         audioSources[sound] = source;
       } catch (e) {
         print('Error loading audio file for $sound: $e at $pathDir/${widget.currentSong?.id}/$sound.mp3');
@@ -1129,20 +1132,22 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
               },
             )
           ),
-          // if(isLoading && widget.currentSong != null)
-          //   Positioned.fill(child: Container(
-          //     decoration: BoxDecoration(
-          //       borderRadius: BorderRadius.circular(20),
-          //       color: Colors.black.withValues(alpha: 0.5),
-          //     ),
-          //     child: Center(
-          //       child: SizedBox(
-          //         width: 100, height: 100,
-          //         child: CircularProgressIndicator(color: Colors.white, strokeWidth: 10,)
-          //       )
-          //     )
-          //   )
-          // ),
+          
+          // Positioned(child: Text("isLoading: $isLoading, current song: ${widget.currentSong?.name}")),
+          if(isLoading && widget.currentSong != null && widget.isFreeStyle)
+            Positioned.fill(child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.black.withValues(alpha: 0.5),
+              ),
+              child: Center(
+                child: SizedBox(
+                  width: 100, height: 100,
+                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 10,)
+                )
+              )
+            )
+          ),
         ],
       ),
     );
