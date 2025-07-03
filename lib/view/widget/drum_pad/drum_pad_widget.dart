@@ -422,7 +422,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         barrierDismissible: false,
         barrierColor: Colors.black.withValues(alpha: 0.9),
         builder: (context) => Dialog(
-
+          insetPadding: EdgeInsets.all(16),
         backgroundColor: Colors.transparent,
         child: ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() >= 2, isCompleteCampaign: checkLastCampaign,)));
 

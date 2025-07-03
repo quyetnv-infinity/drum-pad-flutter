@@ -47,6 +47,7 @@ dependencies:
     path: ../base-flutter-refactor
   flutter_soloud: ^3.2.1
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

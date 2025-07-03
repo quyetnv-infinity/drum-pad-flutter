@@ -15,6 +15,7 @@ import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view_model/tutorial_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
@@ -283,7 +284,7 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
     return AppScaffold(
       appBar: CustomAppBar(iconLeading: ResIcon.icBack, onTapLeading: () {
        _pauseHandler();
-        showDialog(context: context, barrierDismissible: false, barrierColor: Colors.black.withValues(alpha: 0.9),
+        showDialog(context: context, barrierDismissible: true, barrierColor: Colors.black.withValues(alpha: 0.9),
           builder: (context) => Dialog(
             backgroundColor: Colors.transparent,
             child: ExitDialog(
@@ -398,7 +399,28 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SvgPicture.asset(ResIcon.icWaveForm),
-          Flexible(child: Text("${widget.songCollection.name} - ${widget.songCollection.author}", style: TextStyle(fontSize: 16),))
+          Flexible(
+            child: SizedBox(
+              height: 22,
+              child: Marquee(
+                text: "${widget.songCollection.name} - ${widget.songCollection.author}",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+                scrollAxis: Axis.horizontal,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                blankSpace: 50.0,
+                velocity: 30.0,
+                startPadding: 10.0,
+                accelerationDuration: Duration(seconds: 1),
+                accelerationCurve: Curves.linear,
+                decelerationDuration: Duration(milliseconds: 500),
+                decelerationCurve: Curves.easeOut,
+              ),
+            ),
+          ),
+          // Flexible(child: Text("${widget.songCollection.name} - ${widget.songCollection.author}", style: TextStyle(fontSize: 16),))
         ],
       ),
     );
