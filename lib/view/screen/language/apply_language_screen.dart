@@ -58,7 +58,7 @@ class _ApplyLanguageScreenState extends State<ApplyLanguageScreen> {
               spacing: 24,
               children: [
                 CircularProgressIndicator(color: Colors.blueAccent,),
-                Text(context.locale.applying_selected_language, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16),)
+                Text('Applying selected language...', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16),)
               ],
             ),
             Spacer()

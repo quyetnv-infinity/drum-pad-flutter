@@ -29,9 +29,9 @@ class MoodAndGenres extends StatelessWidget {
                 crossAxisCount: 2,
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
-                childAspectRatio: 1.8
-              ),
-              itemBuilder: (context, index) {
+                childAspectRatio: 1.55
+            ),
+            itemBuilder: (context, index) {
                 final category = provider.categories[index];
                 return MoodAndGenresItem(
                   category: category,

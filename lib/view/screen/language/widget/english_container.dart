@@ -85,7 +85,7 @@ class _EnglishContainerState extends State<EnglishContainer> {
                   Row(
                     spacing: 12,
                     children: [
-                      Image.asset('assets/images/english_flags.png', height: 24,),
+                      SvgPicture.asset('assets/icons/english_flags.svg', height: 24,),
                       AnimatedRotation(
                         turns: _isOpen ? 0 : -0.25,
                         duration: Durations.medium2,
@@ -106,7 +106,7 @@ class _EnglishContainerState extends State<EnglishContainer> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
+                      padding: const EdgeInsets.only(top: 0.0),
                       child: Image.asset('assets/images/vertical_frame.png', height: 186, width: 14, fit: BoxFit.fill,),
                     ),
                     Expanded(
