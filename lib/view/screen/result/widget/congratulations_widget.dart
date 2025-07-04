@@ -13,7 +13,7 @@ class CongratulationsWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTapExit,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: height),
+        padding: EdgeInsets.symmetric(vertical: height, horizontal: 20),
         width: MediaQuery.sizeOf(context).width,
         height: MediaQuery.sizeOf(context).height,
         color: Color(0xFF000000).withValues(alpha: 0.85),
@@ -24,7 +24,7 @@ class CongratulationsWidget extends StatelessWidget {
             GradientText(context.locale.congratulation, style: TextStyle(
               fontSize: 32, fontWeight: FontWeight.w700
             )),
-            Text(context.locale.congratulation_title, style: TextStyle(
+            Text(context.locale.congratulation_title, textAlign: TextAlign.center, style: TextStyle(
               fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white
             ),),
             Spacer(),

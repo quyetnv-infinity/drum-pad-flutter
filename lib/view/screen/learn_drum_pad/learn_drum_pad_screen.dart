@@ -10,6 +10,7 @@ import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/song_score
 import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/drum_pad/drum_pad_widget.dart';
+import 'package:and_drum_pad_flutter/view/widget/loading_dialog/exit_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/snack__notifi.dart';
 import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
@@ -44,6 +45,7 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
   late Size _padSize;
   late Size _topViewSize;
   late Function() _pauseHandler;
+  late Function() _startHandler;
   late SongCollection _currentSong;
   bool _isRecording = false;
 
@@ -290,7 +292,25 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
         appBar: CustomAppBar(
           iconLeading: ResIcon.icBack,
           onTapLeading: () {
-            Navigator.pop(context);
+            _pauseHandler();
+            print('object');
+
+            showDialog(context: context, barrierDismissible: true, barrierColor: Colors.black.withValues(alpha: 0.9),
+              builder: (context) => Dialog(
+                backgroundColor: Colors.transparent,
+                child: ExitDialog(
+                  onTapCancel: () {
+                    Navigator.pop(context);
+                    _startHandler();
+                  },
+                  onTapContinue: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                )
+              )
+            );
+            // Navigator.pop(context);
           },
           titleWidget: InkWell(
               onTap: () async {
@@ -370,6 +390,9 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
                 currentSong: _currentSong,
                 onRegisterPauseHandler: (pauseHandler) {
                   _pauseHandler = pauseHandler;
+                },
+                onRegisterStartHandler: (startHandler) {
+                  _startHandler = startHandler;
                 },
                 onChangeScore: (int score, ) {
                   setState(() {
