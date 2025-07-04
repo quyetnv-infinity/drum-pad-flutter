@@ -94,7 +94,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
   List<Widget> pages(BuildContext context) => [
         page1(context, controller: pageController, currentPage: currentPage, onTapNext: () => nexPage(),),
         page2(context, controller: pageController, currentPage: currentPage, onTapNext: () => nexPage()),
-        page4(context, controller: pageController, currentPage: currentPage, onTapNext: () => nexPage()),
         page3(context, controller: pageController, currentPage: currentPage, onTapNext: () => nexPage()),
+        page4(context, controller: pageController, currentPage: currentPage, onTapNext: () => nexPage()),
       ];
 }

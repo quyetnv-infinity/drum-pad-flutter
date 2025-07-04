@@ -3,6 +3,7 @@ import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/view/screen/beat_runner/widget/recommend_list_song.dart';
 import 'package:and_drum_pad_flutter/view/screen/completed_songs/completed_songs_screen.dart';
+import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/runner_play/drum_pad_play_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/lessons/lessons_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/profile/widget/completed_songs.dart';
 import 'package:and_drum_pad_flutter/view/screen/setting/setting_screen.dart';
@@ -72,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: context.locale.recommend_list_songs,
                 listSongs: drumLearnProvider.listRecommend,
                 onTapItem: (song) {
-
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => DrumPadPlayScreen(songCollection: song)));
                 },
               ),
             ),

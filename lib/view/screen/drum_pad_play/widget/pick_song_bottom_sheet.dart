@@ -29,12 +29,16 @@ class _PickSongScreenState extends State<PickSongScreen> {
   final TextEditingController _textEditingController = TextEditingController();
   List<SongCollection> _allSongs = [];
   List<SongCollection> _filteredSongs = [];
+  bool _isLoadingCompleted = false;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _loadSongs();
       Future.delayed(Duration(milliseconds: 300), () {
-        _loadSongs();
+        setState(() {
+          _isLoadingCompleted = true;
+        });
       },);
     },);
   }
@@ -132,52 +136,54 @@ class _PickSongScreenState extends State<PickSongScreen> {
             SizedBox(height: 16),
             SearchBarCustom(onSearch: _onSearch, textEditingController: _textEditingController,),
             Expanded(
-              child: _filteredSongs.isNotEmpty ? ListView.builder(
-                padding: EdgeInsets.only(bottom: 16),
-                itemCount: _filteredSongs.length,
-                itemBuilder: (context, index) {
-                  final song = _filteredSongs[index];
-                  return SongCategoryItem(key: ValueKey(song.id), songCollection: song, onTap: () {
-                    showDialog(context: context, builder: (context) => LoadingDataScreen(
-                      callbackLoadingCompleted: (song) {
-                        Navigator.pop(context);
-                        Navigator.pop(context, song);
-                      },
-                      callbackLoadingFailed: () {
-                        Navigator.pop(context);
-                      },
-                      song: song,
-                    ),);
-                    // Navigator.pop(context, song);
-                  },);
-                },
-              ) : Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 100),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(ResImage.iconEmpty),
-                      Text(
-                        context.locale.no_song_found,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      Text(
-                        textAlign: TextAlign.center,
-                        context.locale.no_song_found_des,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                          color: Colors.white.withValues(alpha: 0.6),
+              child: _filteredSongs.isNotEmpty ?
+              _isLoadingCompleted ?
+                ListView.builder(
+                  padding: EdgeInsets.only(bottom: 16),
+                  itemCount: _filteredSongs.length,
+                  itemBuilder: (context, index) {
+                    final song = _filteredSongs[index];
+                    return SongCategoryItem(key: ValueKey(song.id), songCollection: song, onTap: () {
+                      showDialog(context: context, builder: (context) => LoadingDataScreen(
+                        callbackLoadingCompleted: (song) {
+                          Navigator.pop(context);
+                          Navigator.pop(context, song);
+                        },
+                        callbackLoadingFailed: () {
+                          Navigator.pop(context);
+                        },
+                        song: song,
+                      ),);
+                      // Navigator.pop(context, song);
+                    },);
+                  },
+                ) : SizedBox() : Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 100),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(ResImage.iconEmpty),
+                        Text(
+                          context.locale.no_song_found,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontWeight: FontWeight.w500),
                         ),
-                      ),
-                    ],
+                        Text(
+                          textAlign: TextAlign.center,
+                          context.locale.no_song_found_des,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                            color: Colors.white.withValues(alpha: 0.6),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
             ),
           ],
         ),
