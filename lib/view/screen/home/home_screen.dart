@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:ads_tracking_plugin/collapsible_banner_ad/collapsible_banner_ad_widget.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
@@ -67,80 +69,93 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     super.build(context);
 
-    return Stack(
-      children: [
-        Scaffold(
-          backgroundColor: Colors.transparent,
-          extendBody: true,
-          extendBodyBehindAppBar: true,
-          resizeToAvoidBottomInset: false,
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: null,
-          bottomNavigationBar: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              BottomNavigation(
-                currentIndex: _currentIndex,
-                onTap: (index) {
-                  setState(() {
-                    // Khởi tạo nếu chưa được tạo
-                    _screens[index] ??= _screenBuilders[index]();
-                    _currentIndex = index;
-                  });
-                },
-              ),
-              Consumer<PurchaseProvider>(
-                builder: (context, purchaseProvider, _) {
-                  return !purchaseProvider.isSubscribed ? const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_home")) : const SizedBox.shrink();
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+
+        if(_currentIndex != 0){
+          setState(() {
+            _currentIndex = 0;
+          });
+          return;
+        }
+        exit(0);
+      },
+      child: Stack(
+        children: [
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            extendBody: true,
+            extendBodyBehindAppBar: true,
+            resizeToAvoidBottomInset: false,
+            floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: null,
+            bottomNavigationBar: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                BottomNavigation(
+                  currentIndex: _currentIndex,
+                  onTap: (index) {
+                    setState(() {
+                      // Khởi tạo nếu chưa được tạo
+                      _screens[index] ??= _screenBuilders[index]();
+                      _currentIndex = index;
+                    });
+                  },
+                ),
+                Consumer<PurchaseProvider>(
+                  builder: (context, purchaseProvider, _) {
+                    return !purchaseProvider.isSubscribed ? const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_home")) : const SizedBox.shrink();
+                  }
+                )
+              ],
+            ),
+            body: Selector<NetworkProvider, bool>(
+              selector: (p0, p1) => p1.isConnected,
+              builder: (context, isConnected, _) {
+                if (_wasConnected != isConnected) {
+                  if (!isConnected) {
+                    print('show==========');
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      noInternetDialog.show(context);
+                    });
+                  } else {
+                    print('hide==========');
+                    noInternetDialog.dismiss();
+                  }
+                  _wasConnected = isConnected;
                 }
-              )
-            ],
-          ),
-          body: Selector<NetworkProvider, bool>(
-            selector: (p0, p1) => p1.isConnected,
-            builder: (context, isConnected, _) {
-              if (_wasConnected != isConnected) {
-                if (!isConnected) {
-                  print('show==========');
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    noInternetDialog.show(context);
-                  });
-                } else {
-                  print('hide==========');
-                  noInternetDialog.dismiss();
-                }
-                _wasConnected = isConnected;
+                return IndexedStack(
+                  index: _currentIndex,
+                  children: List.generate(_screenBuilders.length, (index) {
+                    return _screens[index] ?? const Center(child: CircularProgressIndicator());
+                  }),
+                );
               }
-              return IndexedStack(
-                index: _currentIndex,
-                children: List.generate(_screenBuilders.length, (index) {
-                  return _screens[index] ?? const Center(child: CircularProgressIndicator());
-                }),
-              );
-            }
+            ),
           ),
-        ),
-        ValueListenableBuilder<bool>(
-          valueListenable: AdController.shared.isAppOpenAdLoadingNotifier,
-          builder: (context, isLoading, child) {
-            return isLoading
-                ? Container(
-              color: Colors.black.withValues(alpha: 0.5),
-              child: Center(
-                  child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.white,
-                      ),
-                      child: const CircularProgressIndicator(color: Colors.blue)
-                  )
-              ),
-            )
-                : const SizedBox.shrink();
-          },
-        ),
-      ],
+          ValueListenableBuilder<bool>(
+            valueListenable: AdController.shared.isAppOpenAdLoadingNotifier,
+            builder: (context, isLoading, child) {
+              return isLoading
+                  ? Container(
+                color: Colors.black.withValues(alpha: 0.5),
+                child: Center(
+                    child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.white,
+                        ),
+                        child: const CircularProgressIndicator(color: Colors.blue)
+                    )
+                ),
+              )
+                  : const SizedBox.shrink();
+            },
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:and_drum_pad_flutter/view/screen/home/home_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/onboarding/widgets/onboarding_widget.dart';
@@ -5,6 +7,7 @@ import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view_model/app_setting_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/app_state_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -66,18 +69,24 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      body: PageView.builder(
-        controller: pageController,
-        onPageChanged: (index) {
-          setState(() {
-            currentPage = index;
-          });
-        },
-        itemCount: pages(context).length,
-        itemBuilder: (context, index) {
-          return pages(context)[index];
-        },
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        exit(0);
+      },
+      child: AppScaffold(
+        body: PageView.builder(
+          controller: pageController,
+          onPageChanged: (index) {
+            setState(() {
+              currentPage = index;
+            });
+          },
+          itemCount: pages(context).length,
+          itemBuilder: (context, index) {
+            return pages(context)[index];
+          },
+        ),
       ),
     );
   }

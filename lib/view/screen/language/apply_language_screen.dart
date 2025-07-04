@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:and_drum_pad_flutter/core/enum/language_enum.dart';
 import 'package:and_drum_pad_flutter/core/res/dimen/spacing.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
@@ -32,6 +34,9 @@ class _ApplyLanguageScreenState extends State<ApplyLanguageScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        exit(0);
+      },
       child: AppScaffold(
         appBar: AppBar(
           leading: Row(
