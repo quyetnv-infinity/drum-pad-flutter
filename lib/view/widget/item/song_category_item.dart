@@ -57,7 +57,7 @@ class _SongCategoryItemState extends State<SongCategoryItem> {
           duration: const Duration(milliseconds: 150),
           curve: Curves.easeOut,
           child: Padding(
-            padding: const EdgeInsets.all(8.0).copyWith(bottom: 0),
+            padding: const EdgeInsets.symmetric(horizontal: 16).copyWith(bottom: 8),
             child: Container(
               color: Colors.transparent,
               child: Row(

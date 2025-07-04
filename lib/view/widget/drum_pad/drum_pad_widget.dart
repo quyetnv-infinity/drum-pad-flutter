@@ -422,7 +422,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         barrierDismissible: false,
         barrierColor: Colors.black.withValues(alpha: 0.9),
         builder: (context) => Dialog(
-
+          insetPadding: EdgeInsets.all(16),
         backgroundColor: Colors.transparent,
         child: ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() >= 2, isCompleteCampaign: checkLastCampaign,)));
 
@@ -572,6 +572,23 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
       lessons = (!widget.isFromCampaign && !widget.isFromLearnScreen) ? (widget.currentSong?.beatRunnerLessons ?? []) : (widget.currentSong?.lessons ?? []);
       currentLesson = widget.isFromCampaign ? lessons.length - 1 : lesson;
       events = lessons[currentLesson].events;
+      
+      // Chỉ áp dụng logic trừ công sai cho Beat Runner mode
+      // if (!widget.isFromLearnScreen && !widget.isFromCampaign) {
+      //   // Trừ time theo cấp số cộng với công sai 0.2s
+      //   for (int i = 0; i < events.length; i++) {
+      //     double subtractValue = 0.1 * (i + 1); // 0.2, 0.4, 0.6, 0.8, ...
+      //     double newTime = (events[i].time - subtractValue).clamp(0.0, double.infinity);
+      //     events[i] = NoteEvent(
+      //       notes: events[i].notes,
+      //       time: newTime,
+      //     );
+      //     print(events[i].notes);
+      //     print(events[i].time);
+      //   }
+      // }
+
+      
       Set<String> uniqueSounds = {};
       for (var lesson in lessons) {
         for (var event in lesson.events) {
