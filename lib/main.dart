@@ -25,6 +25,7 @@ import 'package:and_drum_pad_flutter/view_model/theme_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/tutorial_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/unlock_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:path_provider/path_provider.dart';
@@ -37,6 +38,7 @@ import 'data/model/lesson_model.dart';
 void main() {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
     await initTrackingPermission();
     await Firebase.initializeApp();
     await Future.wait([

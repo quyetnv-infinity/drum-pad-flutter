@@ -71,52 +71,58 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      body: Stack(
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            decoration: const BoxDecoration(
-                image: DecorationImage(image: AssetImage('assets/images/splash_screen.png'), fit: BoxFit.cover)
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        exit(0);
+      },
+      child: AppScaffold(
+        body: Stack(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
+                  image: DecorationImage(image: AssetImage('assets/images/splash_screen.png'), fit: BoxFit.cover)
+              ),
             ),
-          ),
-          Align(
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClipRRect(borderRadius: BorderRadius.circular(24), child: Image.asset(AppInfo.appIcon, width: MediaQuery.of(context).size.width * 0.43, height: MediaQuery.of(context).size.width * 0.43, fit: BoxFit.cover,)),
-                  const SizedBox(height: 48,),
-                  Image.asset('assets/images/drum_pad_text_splash.png', width: MediaQuery.of(context).size.width * 0.54, fit: BoxFit.fitWidth,),
-                  const SizedBox(height: 48,),
-                  Opacity(
-                    opacity: 0,
-                    child: FractionallySizedBox(
-                        widthFactor: 0.8,
-                        child: TweenAnimationBuilder<double>(
-                          tween: Tween<double>(begin: 0.0, end: 1.0),
-                          duration: const Duration(seconds: 5), // Thời gian hoàn thành
-                          builder: (context, value, child) {
-                            return LinearProgressIndicator(
-                                value: value,
-                                backgroundColor: Colors.white.withValues(alpha: 0.1),
-                                valueColor: const AlwaysStoppedAnimation<Color>(
-                                  Colors.white,
-                                ),
-                                borderRadius: BorderRadius.circular(10),
-                                minHeight: 8
-                            );
-                          },
-                          onEnd: _onLoadingEnd,
-                        )
+            Align(
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ClipRRect(borderRadius: BorderRadius.circular(24), child: Image.asset(AppInfo.appIcon, width: MediaQuery.of(context).size.width * 0.43, height: MediaQuery.of(context).size.width * 0.43, fit: BoxFit.cover,)),
+                    const SizedBox(height: 48,),
+                    Image.asset('assets/images/drum_pad_text_splash.png', width: MediaQuery.of(context).size.width * 0.54, fit: BoxFit.fitWidth,),
+                    const SizedBox(height: 48,),
+                    Opacity(
+                      opacity: 0,
+                      child: FractionallySizedBox(
+                          widthFactor: 0.8,
+                          child: TweenAnimationBuilder<double>(
+                            tween: Tween<double>(begin: 0.0, end: 1.0),
+                            duration: const Duration(seconds: 5), // Thời gian hoàn thành
+                            builder: (context, value, child) {
+                              return LinearProgressIndicator(
+                                  value: value,
+                                  backgroundColor: Colors.white.withValues(alpha: 0.1),
+                                  valueColor: const AlwaysStoppedAnimation<Color>(
+                                    Colors.white,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                  minHeight: 8
+                              );
+                            },
+                            onEnd: _onLoadingEnd,
+                          )
+                      ),
                     ),
-                  ),
-                ],
-              )
-          ),
-        ],
+                  ],
+                )
+            ),
+          ],
+        ),
       ),
     );
   }
