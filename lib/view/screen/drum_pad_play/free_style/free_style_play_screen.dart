@@ -175,7 +175,7 @@ class _FreeStylePlayScreenState extends State<FreeStylePlayScreen> with SingleTi
                         ),
                       ),
                       _buildTutorialStep(
-                          title: context.locale.drum_pad_area, fontSize: FontResponsive.responsiveFontSize(_topViewSize.width, 20))
+                          title: context.locale.star_score_display, fontSize: FontResponsive.responsiveFontSize(_topViewSize.width, 20))
                     ],
                   ),
                 ),

@@ -106,6 +106,8 @@ class _LoadingDataScreenState extends State<LoadingDataScreen> {
     if (!await packDir.exists()) {
       await packDir.create(recursive: true);
     }
+    print(packDir);
+    print('--------------------');
 
     return packDir;
   }
@@ -117,7 +119,8 @@ class _LoadingDataScreenState extends State<LoadingDataScreen> {
     try {
       final tempDir = await getTemporaryDirectory();
       final zipFilePath = '${tempDir.path}/$packName.zip';
-
+      print(zipFilePath);
+      print('====================');
       var response = await http.Client().get(Uri.parse(url));
 
       // Lưu response data vào file
@@ -283,7 +286,7 @@ class _LoadingDataScreenState extends State<LoadingDataScreen> {
           }
         }
       }
-
+      print(beatRunnerData);
       setState(() {
         _sequenceData = sequenceData;
         _beatRunnerData = beatRunnerData;

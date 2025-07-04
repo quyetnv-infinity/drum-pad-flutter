@@ -587,8 +587,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
       //     print(events[i].time);
       //   }
       // }
-
-      
       Set<String> uniqueSounds = {};
       for (var lesson in lessons) {
         for (var event in lesson.events) {

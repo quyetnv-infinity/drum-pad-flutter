@@ -220,7 +220,7 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
                         ),
                       ),
                       _buildTutorialStep(
-                        title: context.locale.drum_pad_area, fontSize: FontResponsive.responsiveFontSize(_topViewSize.width, 20))
+                        title: context.locale.star_score_display, fontSize: FontResponsive.responsiveFontSize(_topViewSize.width, 20))
                     ],
                   ),
                 ),
@@ -403,7 +403,7 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
             child: SizedBox(
               height: 22,
               child: Marquee(
-                text: "${widget.songCollection.name} - ${widget.songCollection.author}",
+                text: "${_currentSong.name} - ${_currentSong.author}",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
