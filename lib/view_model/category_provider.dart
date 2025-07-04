@@ -55,6 +55,19 @@ class CategoryProvider with ChangeNotifier {
     }
   }
 
+  List<SongCollection>? getSongsInSameCategory(SongCollection song) {
+    for (final category in _categories) {
+      final items = category.items ?? [];
+      if (items.any((item) => item.id == song.id)) {
+        return items;
+      }
+    }
+    return null; // không tìm thấy
+  }
+
+
+
+
   List<SongCollection> getAllSong() {
     List<SongCollection> result = [];
     if(_categories.isEmpty) return result;
@@ -72,8 +85,6 @@ class CategoryProvider with ChangeNotifier {
         .cast<SongCollection>()
         .toList();
   }
-
-
 
   List<SongCollection> _sortByDifficulty(List<SongCollection> songs){
     if(songs.isEmpty) return songs;

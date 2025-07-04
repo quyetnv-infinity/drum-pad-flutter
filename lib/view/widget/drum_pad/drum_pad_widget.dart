@@ -625,28 +625,38 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   }
 
   Future<void> _initializeAudioSources() async {
-    if(!_soloudInitialized) await _initializeSoloud();
+    if (!_soloudInitialized) await _initializeSoloud();
     if (!_soloudInitialized) return;
 
     _disposeAudioSources();
+
     final pathDir = context.read<DrumLearnProvider>().pathDir;
-    for (String sound in availableSounds) {
+
+    final futures = <Future<void>>[];
+
+    for (final sound in availableSounds) {
       if (sound.isEmpty) continue;
-      try {
-        final source = await _soloud.loadFile('$pathDir/${widget.currentSong?.id}/$sound.mp3');
-        print('Loaded sound: $sound from $pathDir/${widget.currentSong?.id}/$sound.mp3');
+
+      final path = '$pathDir/${widget.currentSong?.id}/$sound.mp3';
+
+      final future = _soloud.loadFile(path).then((source) {
+        print('Loaded sound: $sound from $path');
         audioSources[sound] = source;
-      } catch (e) {
-        print('Error loading audio file for $sound: $e at $pathDir/${widget.currentSong?.id}/$sound.mp3');
+      }).catchError((e) {
+        print('Error loading audio file for $sound: $e at $path');
 
         // Try to reload the song data
         if (widget.onTapChooseSong != null && widget.currentSong != null) {
           widget.onTapChooseSong?.call(widget.currentSong!);
         }
-        continue;
-      }
+      });
+
+      futures.add(future);
     }
+
+    await Future.wait(futures);
   }
+
 
   void _splitSoundsByFace() {
     List<String> faceA = [];

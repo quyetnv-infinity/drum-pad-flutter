@@ -298,7 +298,7 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
                   isScrollControlled: true,
                   barrierColor: Colors.black.withValues(alpha: 0.8),
                   context: context,
-                  builder: (context) => PickSongScreen(songCollection: _currentSong,),
+                  builder: (context) => PickSongScreen(songCollection: _currentSong, isFromCampaign: widget.isFromCampaign, isWithCategory: !widget.isFromCampaign,),
                 );
                 if (result != null) {
                   setState(() {

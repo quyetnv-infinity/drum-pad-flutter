@@ -2,6 +2,7 @@ import 'package:ads_tracking_plugin/native_ad/native_ad_widget.dart';
 import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
+import 'package:and_drum_pad_flutter/data/model/category_model.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/free_style/free_style_play_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/app_bar/search_bar.dart';
@@ -16,7 +17,9 @@ import 'package:provider/provider.dart';
 
 class PickSongScreen extends StatefulWidget {
   final SongCollection? songCollection;
-  const PickSongScreen({super.key, this.songCollection});
+  final bool? isWithCategory;
+  final bool? isFromCampaign;
+  const PickSongScreen({super.key, this.songCollection, this.isWithCategory, this.isFromCampaign});
 
   @override
   State<PickSongScreen> createState() => _PickSongScreenState();
@@ -37,9 +40,21 @@ class _PickSongScreenState extends State<PickSongScreen> {
   }
 
   Future<void> _loadSongs() async {
+    print('=========== ${widget.isFromCampaign}');
     final categoryProvider = Provider.of<CategoryProvider>(context, listen: false);
     // Lấy tất cả các bài hát từ tất cả category
-    _allSongs = widget.songCollection != null ? categoryProvider.getAllSongsByDifficulty(widget.songCollection?.difficulty ?? '') : categoryProvider.getAllSong();
+    // _allSongs = widget.songCollection != null ? categoryProvider.getAllSongsByDifficulty(widget.songCollection?.difficulty ?? '') : categoryProvider.getAllSong();
+    if (widget.isWithCategory == true && widget.songCollection != null) {
+      print('getSameCategory');
+      _allSongs = categoryProvider.getSongsInSameCategory(widget.songCollection! ) ?? [];
+    } else if (widget.songCollection != null && widget.isFromCampaign == true) {
+      print('getDifff');
+      _allSongs = categoryProvider.getAllSongsByDifficulty(widget.songCollection?.difficulty ?? '');
+    } else {
+      print('getAll');
+      _allSongs = categoryProvider.getAllSong();
+    }
+
 
     _filteredSongs = List.from(_allSongs);
 

@@ -309,7 +309,7 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
               isScrollControlled: true,
               barrierColor: Colors.black.withValues(alpha: 0.8),
               context: context,
-              builder: (context) => PickSongScreen(),
+              builder: (context) => PickSongScreen(isWithCategory: true, songCollection: _currentSong,),
             );
             if (result != null) {
               setState(() {
