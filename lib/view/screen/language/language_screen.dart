@@ -92,11 +92,9 @@ class _LanguageScreenState extends State<LanguageScreen>
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
+      canPop: widget.fromSetting ? true : false,
       onPopInvokedWithResult: (didPop, result) {
-        if(!widget.fromSetting) {
-          Navigator.pop(context);
-        }else {
+        if (!widget.fromSetting) {
           exit(0);
         }
       },
