@@ -8,6 +8,7 @@ import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/data/model/theme_model.dart';
 import 'package:and_drum_pad_flutter/data/service/media_recorder_service.dart';
 import 'package:and_drum_pad_flutter/data/service/screen_record_service.dart';
+import 'package:and_drum_pad_flutter/data/service/soloud_service.dart';
 import 'package:and_drum_pad_flutter/view/screen/result/result_screen.dart';
 import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
@@ -103,9 +104,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
 
   late ThemeModel currentTheme;
 
-  // SoLoud instance
-  late SoLoud _soloud;
-  bool _soloudInitialized = false;
+  // SoLoud service instance
+  late SoLoudService _soloudService;
 
   List<Map<String, dynamic>> getFutureNotes(LessonSequence data) {
     List<Map<String, dynamic>> futureNotes = [];
@@ -126,6 +126,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   @override
   void initState() {
     super.initState();
+    _soloudService = SoLoudService.instance;
     _initializeSoloud();
     currentTheme = Provider.of<ThemeProvider>(context, listen: false).currentTheme;
     _isFromBeatRunner = !widget.isFromCampaign && !widget.isFromLearnScreen;
@@ -157,20 +158,18 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   }
 
   Future<void> _initializeSoloud() async {
-    print('Initializing SoLoud...');
     try {
-      _soloud = SoLoud.instance;
-      await _soloud.init();
-      setState(() {
-        _soloudInitialized = true;
-      });
+      await _soloudService.initialize();
     } catch (e) {
       print('Error initializing SoLoud: $e');
     }
   }
 
   Future<void> _initFreeStyleSongDefault() async {
-    if(!_soloudInitialized) await _initializeSoloud();
+    setState(() {
+      isLoading = true;
+    });
+    if(!_soloudService.isInitialized) await _initializeSoloud();
 
     _disposeAudioSources();
     availableSounds = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
@@ -179,13 +178,16 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     for (String sound in availableSounds) {
       if (sound.isEmpty) continue;
       try {
-        final source = await _soloud.loadAsset('assets/audio/$sound.wav');
+        final source = await _soloudService.loadAsset('assets/audio/$sound.wav');
         audioSources[sound] = source;
       } catch (e) {
         print('Error loading audio file for $sound: $e at assets/audio/$sound.wav');
         continue;
       }
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -223,9 +225,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     progressTimer?.cancel();
     _controller.dispose();
     _pauseTimer?.cancel();
-    if (_soloudInitialized) {
-      _soloud.deinit();
-    }
     super.dispose();
   }
 
@@ -368,6 +367,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     if(song != null) {
       List<LessonSequence> _lessons = song.lessons;
       LessonSequence _lesson = _lessons[currentLesson];
+      if((_lesson.totalScore ?? 0) >= totalPoint*1.0) return;
       final newLesson = _lesson.copyWith(totalScore: totalPoint*1.0);
       print('totalScore: $totalPoint');
       _lessons[currentLesson] = newLesson;
@@ -379,6 +379,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   Future<void> _updateScoreForCampaign(CampaignProvider campaignProvider) async {
     final song = await campaignProvider.getSong(widget.currentSong!.id);
     if(song != null) {
+      if(song.campaignScore >= totalPoint*1.0) return;
       final updatedSong = song.copyWith(campaignScore: totalPoint*1.0, campaignStar: getStar());
       await campaignProvider.updateSong(widget.currentSong!.id, updatedSong);
     }
@@ -417,6 +418,9 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     /// push navigation and check cases
     checkPointsExceed();
     /// show result dialog
+    final _song = await provider.getSong(widget.currentSong!.id) ?? widget.currentSong!;
+    await Future.delayed(Duration(milliseconds: widget.isFromCampaign ? 2000 : 1000));
+    bool _isCompleted = (getStar() >= 2) || (widget.isFromCampaign && _song.campaignStar >= 2) || (widget.isFromLearnScreen && _song.lessons[currentLesson].star >= 2);
     final result = await
       showDialog(context: context,
         barrierDismissible: false,
@@ -424,7 +428,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         builder: (context) => Dialog(
           insetPadding: EdgeInsets.all(16),
         backgroundColor: Colors.transparent,
-        child: ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() >= 2, isCompleteCampaign: checkLastCampaign,)));
+        child: ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: _isCompleted, isCompleteCampaign: checkLastCampaign,)));
 
     setState(() {
       isNavigatedToResult = false;
@@ -623,8 +627,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   }
 
   Future<void> _initializeAudioSources() async {
-    if (!_soloudInitialized) await _initializeSoloud();
-    if (!_soloudInitialized) return;
+    if (!_soloudService.isInitialized) await _initializeSoloud();
+    if (!_soloudService.isInitialized) return;
 
     _disposeAudioSources();
 
@@ -637,7 +641,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
 
       final path = '$pathDir/${widget.currentSong?.id}/$sound.mp3';
 
-      final future = _soloud.loadFile(path).then((source) {
+      final future = _soloudService.loadFile(path).then((source) {
         print('Loaded sound: $sound from $path');
         audioSources[sound] = source;
       }).catchError((e) {
@@ -674,44 +678,44 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   }
 
   void _disposeAudioSources() {
-    if (!mounted || !_soloudInitialized) return;
+    if (!mounted || !_soloudService.isInitialized) return;
 
     // Stop all playing sounds
     for (var handle in currentlyPlayingSounds.values) {
       if (handle != null) {
-        _soloud.stop(handle);
+        _soloudService.stop(handle);
       }
     }
     currentlyPlayingSounds.clear();
 
     // Dispose audio sources
     for (var source in audioSources.values) {
-      _soloud.disposeSource(source);
+      _soloudService.disposeSource(source);
     }
     audioSources.clear();
   }
 
   Future<void> _playSound(String sound) async {
-    if (!_soloudInitialized) return;
+    if (!_soloudService.isInitialized) return;
 
     // Stop previous sounds based on type
     if(_isFromBeatRunner){
       if(currentlyPlayingSounds[_currentLeadSound ?? ''] != null) {
-        _soloud.stop(currentlyPlayingSounds[_currentLeadSound ?? '']!);
+        _soloudService.stop(currentlyPlayingSounds[_currentLeadSound ?? '']!);
       }
       setState(() {
         _currentLeadSound = sound;
       });
     } else if(PadUtil.getSoundType(sound) == SoundType.lead){
       if(currentlyPlayingSounds[_currentLeadSound ?? ''] != null) {
-        _soloud.stop(currentlyPlayingSounds[_currentLeadSound ?? '']!);
+        _soloudService.stop(currentlyPlayingSounds[_currentLeadSound ?? '']!);
       }
       setState(() {
         _currentLeadSound = sound;
       });
     }else if (PadUtil.getSoundType(sound) == SoundType.bass){
       if(currentlyPlayingSounds[_currentBassSound ?? ''] != null) {
-        _soloud.stop(currentlyPlayingSounds[_currentBassSound ?? '']!);
+        _soloudService.stop(currentlyPlayingSounds[_currentBassSound ?? '']!);
       }
       setState(() {
         _currentBassSound = sound;
@@ -720,7 +724,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
 
     // Play new sound
     if (audioSources.containsKey(sound)) {
-      final handle = await _soloud.play(audioSources[sound]!);
+      final handle = await _soloudService.play(audioSources[sound]!);
       currentlyPlayingSounds[sound] = handle;
     }
   }
@@ -738,11 +742,11 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
 
   void _resetSequence({bool isPlayingDrum = false}) {
     _futureNotes = getFutureNotes(lessons[currentLesson]);
-    if (!isPlayingDrum && _soloudInitialized) {
+    if (!isPlayingDrum && _soloudService.isInitialized) {
       // Stop all playing sounds
       for (var handle in currentlyPlayingSounds.values) {
         if (handle != null) {
-          _soloud.stop(handle);
+          _soloudService.stop(handle);
         }
       }
       currentlyPlayingSounds.clear();
@@ -1036,7 +1040,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return IgnorePointer(
-      ignoring: currentEventIndex >= events.length && !widget.isFreeStyle,
+      ignoring: (currentEventIndex >= events.length && !widget.isFreeStyle) || isNavigatedToResult,
       child: Stack(
         children: [
           Listener(
@@ -1159,7 +1163,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
           ),
           
           // Positioned(child: Text("isLoading: $isLoading, current song: ${widget.currentSong?.name}")),
-          if(isLoading && widget.currentSong != null && widget.isFreeStyle)
+          if(isLoading && (widget.currentSong != null || (widget.isFreeStyle && widget.currentSong == null)))
             Positioned.fill(child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),

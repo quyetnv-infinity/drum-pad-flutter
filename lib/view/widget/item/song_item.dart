@@ -94,13 +94,13 @@ class _SongItemState extends State<SongItem> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.songCollection.author,
+                        widget.songCollection.name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(fontWeight: FontWeight.w500),
                       ),
                       Text(
-                        widget.songCollection.name,
+                        widget.songCollection.author,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(

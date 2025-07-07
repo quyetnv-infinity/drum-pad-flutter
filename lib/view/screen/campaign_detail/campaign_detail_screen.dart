@@ -77,7 +77,9 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
   }
 
   Future<void> updateStar(CampaignProvider provider, SongCollection song, double star) async {
-    SongCollection updatedSong = (await provider.getSong(song.id) ?? song).copyWith(campaignStar: star);
+    final currentSong = await provider.getSong(song.id) ?? song;
+    if(currentSong.campaignStar >= star) return;
+    SongCollection updatedSong = currentSong.copyWith(campaignStar: star);
     print('updated ${updatedSong.name} with ${updatedSong.campaignStar}');
     await provider.updateSong(song.id, updatedSong);
   }

@@ -54,6 +54,7 @@ class CampaignScreen extends StatelessWidget {
                     );
                   },
                   child: CampaignItem(
+                    levelIndex: index,
                     name: _buildCampaignName(context, campaign),
                     score: CalculateFunc.sumScore(
                       campaign.data.map((e) => e.campaignScore).toList()

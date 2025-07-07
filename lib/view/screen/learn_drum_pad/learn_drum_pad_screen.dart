@@ -277,7 +277,9 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
   Future<void> updateLessonStar(double star) async {
     final provider = Provider.of<DrumLearnProvider>(context, listen: false);
     final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
-    List<LessonSequence> updatedLessons = (await provider.getSong(_currentSong.id))!.lessons;
+    final currentSong = await provider.getSong(_currentSong.id);
+    List<LessonSequence> updatedLessons = currentSong!.lessons;
+    if(updatedLessons[campaignProvider.currentLessonCampaign].star >= star) return;
     updatedLessons[campaignProvider.currentLessonCampaign].star = star;
     print('update star $star at ${campaignProvider.currentLessonCampaign}');
     final newSong = _currentSong.copyWith(lessons: updatedLessons);
