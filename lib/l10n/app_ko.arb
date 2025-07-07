@@ -104,5 +104,6 @@
   "applying_selected_language": "선택한 언어를 적용 중...",
   "recording_started": "녹음 시작됨...",
   "recording_stopped": "녹음 중지됨...",
-  "photo_permission_description": "저희 기능의 완전한 경험을 제공하기 위해 기기에서 사진 권한에 접근할 수 있는 권한이 필요합니다."
+  "photo_permission_description": "저희 기능의 완전한 경험을 제공하기 위해 기기에서 사진 권한에 접근할 수 있는 권한이 필요합니다.",
+  "done": "완료"
 }

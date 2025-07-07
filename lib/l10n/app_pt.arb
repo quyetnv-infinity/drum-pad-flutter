@@ -104,5 +104,6 @@
   "applying_selected_language": "Aplicando a língua selecionada...",
   "recording_started": "Gravação iniciada...",
   "recording_stopped": "Gravação parada...",
-  "photo_permission_description": "Para fornecer a experiência completa de nossos recursos, precisamos da sua permissão para acessar as permissões de fotos no seu dispositivo."
+  "photo_permission_description": "Para fornecer a experiência completa de nossos recursos, precisamos da sua permissão para acessar as permissões de fotos no seu dispositivo.",
+  "done": "Concluído"
 }

@@ -105,5 +105,6 @@
   "applying_selected_language": "Applying selected language...",
   "recording_started": "Recording started...",
   "recording_stopped": "Recording stopped...",
-  "photo_permission_description": "To provide you with the full experience of our features, we require your permission to access photo permissions on your device."
+  "photo_permission_description": "To provide you with the full experience of our features, we require your permission to access the Photo permission on your device.",
+  "done": "Done"
 }
