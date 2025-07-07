@@ -10,14 +10,14 @@ extension LanguageExtension on LanguageEnum {
     switch (this) {
       case LanguageEnum.en:
         return 'English';
-      case LanguageEnum.enGB:
-        return 'English (UK)';
-      case LanguageEnum.enUS:
-        return 'English (US)';
-      case LanguageEnum.enCA:
-        return 'English (Canada)';
-      case LanguageEnum.enZA:
-        return 'English (South African)';
+      // case LanguageEnum.enGB:
+      //   return 'English (UK)';
+      // case LanguageEnum.enUS:
+      //   return 'English (US)';
+      // case LanguageEnum.enCA:
+      //   return 'English (Canada)';
+      // case LanguageEnum.enZA:
+      //   return 'English (South African)';
       case LanguageEnum.de:
         return 'German';
       case LanguageEnum.es:
@@ -39,14 +39,14 @@ extension LanguageExtension on LanguageEnum {
     switch (this) {
       case LanguageEnum.en:
         return context.locale.english;
-      case LanguageEnum.enGB:
-        return context.locale.english;
-      case LanguageEnum.enUS:
-        return context.locale.english;
-      case LanguageEnum.enCA:
-        return context.locale.english;
-      case LanguageEnum.enZA:
-        return context.locale.english;
+      // case LanguageEnum.enGB:
+      //   return context.locale.english;
+      // case LanguageEnum.enUS:
+      //   return context.locale.english;
+      // case LanguageEnum.enCA:
+      //   return context.locale.english;
+      // case LanguageEnum.enZA:
+      //   return context.locale.english;
       case LanguageEnum.de:
         return context.locale.german;
       case LanguageEnum.es:
@@ -68,14 +68,14 @@ extension LanguageExtension on LanguageEnum {
     switch (this) {
       case LanguageEnum.en:
         return ResIcon.unitedKingdom;
-      case LanguageEnum.enGB:
-        return ResIcon.unitedKingdom;
-      case LanguageEnum.enUS:
-        return ResIcon.unitedStates;
-      case LanguageEnum.enCA:
-        return ResIcon.canada;
-      case LanguageEnum.enZA:
-        return ResIcon.southAfrican;
+      // case LanguageEnum.enGB:
+      //   return ResIcon.unitedKingdom;
+      // case LanguageEnum.enUS:
+      //   return ResIcon.unitedStates;
+      // case LanguageEnum.enCA:
+      //   return ResIcon.canada;
+      // case LanguageEnum.enZA:
+      //   return ResIcon.southAfrican;
       case LanguageEnum.de:
         return ResIcon.german;
       case LanguageEnum.es:
@@ -101,14 +101,14 @@ extension LanguageExtension on LanguageEnum {
 
   Locale toLocale() {
     switch (this) {
-      case LanguageEnum.enUS:
-        return const Locale('en', 'US');
-      case LanguageEnum.enGB:
-        return const Locale('en', 'GB');
-      case LanguageEnum.enCA:
-        return const Locale('en', 'CA');
-      case LanguageEnum.enZA:
-        return const Locale('en', 'ZA');
+      // case LanguageEnum.enUS:
+      //   return const Locale('en', 'US');
+      // case LanguageEnum.enGB:
+      //   return const Locale('en', 'GB');
+      // case LanguageEnum.enCA:
+      //   return const Locale('en', 'CA');
+      // case LanguageEnum.enZA:
+      //   return const Locale('en', 'ZA');
       case LanguageEnum.es:
         return const Locale('es');
       case LanguageEnum.fr:
@@ -140,18 +140,18 @@ extension LanguageExtension on LanguageEnum {
 
     LanguageEnum? deviceLangEnum;
     switch (deviceLocaleCode) {
-      case 'en-US':
-        deviceLangEnum = LanguageEnum.enUS;
-        break;
-      case 'en-GB':
-        deviceLangEnum = LanguageEnum.enGB;
-        break;
-      case 'en-CA':
-        deviceLangEnum = LanguageEnum.enCA;
-        break;
-      case 'en-ZA':
-        deviceLangEnum = LanguageEnum.enZA;
-        break;
+      // case 'en-US':
+      //   deviceLangEnum = LanguageEnum.enUS;
+      //   break;
+      // case 'en-GB':
+      //   deviceLangEnum = LanguageEnum.enGB;
+      //   break;
+      // case 'en-CA':
+      //   deviceLangEnum = LanguageEnum.enCA;
+      //   break;
+      // case 'en-ZA':
+      //   deviceLangEnum = LanguageEnum.enZA;
+      //   break;
       default:
         try {
           deviceLangEnum = LanguageEnum.values.firstWhere(
@@ -173,10 +173,10 @@ extension LanguageExtension on LanguageEnum {
 
     const englishOrder = [
       LanguageEnum.en,
-      LanguageEnum.enGB,
-      LanguageEnum.enUS,
-      LanguageEnum.enCA,
-      LanguageEnum.enZA,
+      // LanguageEnum.enGB,
+      // LanguageEnum.enUS,
+      // LanguageEnum.enCA,
+      // LanguageEnum.enZA,
     ];
 
     prioritizedList.addAll(

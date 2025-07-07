@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LocateViewModel extends ChangeNotifier {
-  LanguageEnum _currentLanguage = LanguageEnum.enUS;
+  LanguageEnum _currentLanguage = LanguageEnum.en;
   LanguageEnum? _selectedLanguage; // Có thể null khi chưa chọn
   final _prefs = ServiceLocator.instance.get<SharedPreferences>();
 

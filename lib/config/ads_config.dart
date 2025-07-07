@@ -68,7 +68,7 @@ class AdName {
 }
 
 List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
-  double ctaCornerRadius = 15;
+  double ctaCornerRadius = 16;
   bool preload = isFirstOpenApp;
   print("Preload ads: $preload");
   return [

@@ -45,6 +45,7 @@ class ResIcon {
   static const String icShieldSecurity = '${basePath}ic_shield_security.svg';
   static const String icLanguage = '${basePath}ic_language.svg';
   static const String icArrowRight = '${basePath}ic_arrow_right.svg';
+  static const String icCheck2 = '${basePath}ic_check_2.svg';
 
   // theme
   static const String icGridPad = '${basePath}ic_grid_pad.svg';

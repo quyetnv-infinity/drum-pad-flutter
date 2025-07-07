@@ -110,7 +110,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> {
                       }
                     );
                   },
-                )
+                ),
               ],
             ),
           ),

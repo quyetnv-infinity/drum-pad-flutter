@@ -269,6 +269,7 @@ class _ResultScreenState extends State<ResultScreen>
                       onAdLoaded: (value) {
                         print("Native ad loaded: $value");
                       },
+                      padding: EdgeInsets.zero,
                       decoration: BoxDecoration(
                           color: Colors.grey.withValues(alpha: 0.2),
                           borderRadius: const BorderRadius.all(Radius.circular(10)),
