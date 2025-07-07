@@ -94,7 +94,11 @@ class _LanguageScreenState extends State<LanguageScreen>
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
-        exit(0);
+        if(!widget.fromSetting) {
+          Navigator.pop(context);
+        }else {
+          exit(0);
+        }
       },
       child: Scaffold(
         backgroundColor: Color(0xFF161616),
