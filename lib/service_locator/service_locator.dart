@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../data/service/soloud_service.dart';
 import '../view_model/locale_view_model.dart';
 
 class ServiceLocator {
@@ -12,6 +13,7 @@ class ServiceLocator {
     final sharedPrefs = await SharedPreferences.getInstance();
     registerSingletonIfNeeded(sharedPrefs);
     registerSingletonIfNeeded(LocateViewModel());
+    registerSingletonIfNeeded(SoLoudService.instance);
   }
 
   void registerSingletonIfNeeded<T extends Object>(T instance) {
