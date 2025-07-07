@@ -96,7 +96,8 @@ class _LanguageScreenState extends State<LanguageScreen>
       onPopInvokedWithResult: (didPop, result) {
         exit(0);
       },
-      child: AppScaffold(
+      child: Scaffold(
+        backgroundColor: Color(0xFF161616),
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text(

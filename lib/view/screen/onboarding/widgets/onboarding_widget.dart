@@ -2,10 +2,7 @@ import 'package:ads_tracking_plugin/native_ad/native_ad_widget.dart';
 import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/core/res/dimen/spacing.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
-import 'package:and_drum_pad_flutter/view/screen/home/home_screen.dart';
-import 'package:and_drum_pad_flutter/view_model/app_setting_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/app_state_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -27,7 +24,9 @@ Widget customPage(
           child: Padding(
             padding: imagePadding ?? EdgeInsets.zero,
             child: Image.asset(
+              width: MediaQuery.of(context).size.width,
               backgroundAsset,
+              fit: BoxFit.cover,
             ),
           ),
         ),
@@ -106,7 +105,6 @@ Widget page1(BuildContext context,
         backgroundAsset: 'assets/images/onboarding_1.png',
         title: context.locale.title_onboarding_1,
         subtitle: context.locale.subtitle_onboarding_1,
-        imagePadding: EdgeInsets.only(top: 56),
         controller: controller,
         currentPage: currentPage,
         dataLength: dataLength,
@@ -191,7 +189,6 @@ Widget page4(BuildContext context,
         backgroundAsset: 'assets/images/onboarding_4.png',
         title: context.locale.title_onboarding_4,
         subtitle: context.locale.subtitle_onboarding_4,
-        imagePadding: EdgeInsets.only(top: 56),
         controller: controller,
         currentPage: currentPage,
         dataLength: dataLength,
