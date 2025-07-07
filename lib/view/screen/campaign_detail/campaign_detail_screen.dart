@@ -234,7 +234,7 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
             width: 80,
             height: 60,
             decoration: BoxDecoration(
-              image: DecorationImage(image: AssetImage(ResImage.imgLockLevel),),
+              image: DecorationImage(image: AssetImage(_getUnLockedIndex(campaignProvider) + 1 > level ? ResImage.imgUnlockLevel : ResImage.imgLockLevel),),
             ),
             alignment: Alignment.center,
             child: Text("$level", style: TextStyle(
