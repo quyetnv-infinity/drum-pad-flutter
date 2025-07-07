@@ -213,6 +213,7 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
         identify: "song_name_learn",
         keyTarget: _songNameLearn,
         shape: ShapeLightFocus.RRect,
+        enableOverlayTab: true,
         radius: 20,
         contents: [
           TargetContent(
@@ -224,7 +225,7 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButtonCustom(iconAsset: ResIcon.icClose, onTap: () {
-
+                      tutorialCoachMark.finish();
                     },),
 
                     _buildTutorialStep(title: '3/3')
@@ -475,6 +476,9 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
   }
   Widget _buildTutorialStep({required String title, double? fontSize} ){
     return Container(
+      constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.7
+      ),
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.1),
