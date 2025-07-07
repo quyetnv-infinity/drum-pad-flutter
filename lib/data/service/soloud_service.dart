@@ -89,6 +89,59 @@ class SoLoudService {
     _soloud!.stop(handle);
   }
 
+  /// Fade out sound handle
+  Future<void> fadeOut(SoundHandle handle, {Duration duration = const Duration(milliseconds: 200)}) async {
+    if (!_isInitialized) return;
+    
+    try {
+      // Get current volume
+      final currentVolume = _soloud!.getVolume(handle);
+      final steps = (duration.inMilliseconds / 10).round(); // 10ms per step
+      final volumeStep = currentVolume / steps;
+      
+      // Gradually reduce volume
+      for (int i = 0; i < steps; i++) {
+        final newVolume = currentVolume - (volumeStep * i);
+        _soloud!.setVolume(handle, newVolume);
+        await Future.delayed(Duration(milliseconds: 10));
+      }
+      
+      // Stop the sound
+      _soloud!.stop(handle);
+    } catch (e) {
+      print('Error during fade out: $e');
+      // Fallback to immediate stop
+      _soloud!.stop(handle);
+    }
+  }
+
+  /// Play audio source with fade in
+  Future<SoundHandle> playWithFadeIn(AudioSource source, {Duration duration = const Duration(milliseconds: 200)}) async {
+    if (!_isInitialized) {
+      await initialize();
+    }
+    
+    final handle = await _soloud!.play(source);
+    
+    // Start with volume 0
+    _soloud!.setVolume(handle, 0.0);
+    
+    // Fade in
+    final steps = (duration.inMilliseconds / 10).round(); // 10ms per step
+    final volumeStep = 1.0 / steps;
+    
+    for (int i = 0; i < steps; i++) {
+      final newVolume = volumeStep * (i + 1);
+      _soloud!.setVolume(handle, newVolume);
+      await Future.delayed(Duration(milliseconds: 10));
+    }
+    
+    // Ensure final volume is 1.0
+    _soloud!.setVolume(handle, 1.0);
+    
+    return handle;
+  }
+
   /// Dispose audio source
   void disposeSource(AudioSource source) {
     if (!_isInitialized) return;

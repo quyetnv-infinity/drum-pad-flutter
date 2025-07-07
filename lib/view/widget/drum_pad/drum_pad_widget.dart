@@ -142,7 +142,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         });
         // Start sequence if song exists
         if (widget.currentSong != null) {
-          _startSequence();
+          await _startSequence();
         }
       });
     } else if(widget.currentSong == null) {
@@ -171,7 +171,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     });
     if(!_soloudService.isInitialized) await _initializeSoloud();
 
-    _disposeAudioSources();
+    await _disposeAudioSources();
     availableSounds = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
     lessonSounds = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
 
@@ -206,7 +206,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         });
         // Start sequence if song exists
         _resetSequence();
-        _startSequence();
+        await _startSequence();
       });
     }else if(widget.currentSong == null) {
       _initFreeStyleSongDefault();
@@ -219,7 +219,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     for (var controller in _colorControllers.values) {
       controller.dispose();
     }
-    _disposeAudioSources();
+    // Use unawaited to avoid blocking dispose
+    _disposeAudioSources().catchError((e) => print('Error disposing audio sources: $e'));
     audioSources.clear();
     sequenceTimer?.cancel();
     progressTimer?.cancel();
@@ -437,7 +438,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
       final tempTotalNote = _totalNotes;
       widget.onChangeStarLearn?.call(0);
       _resetSequence(isPlayingDrum: true);
-      _startSequence();
+      await _startSequence();
       setState(() {
         _previousTotalPoint = 0;
         totalPoint = 0;
@@ -449,7 +450,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
       widget.onTapChooseSong?.call(result);
       widget.onChangeStarLearn?.call(0);
       _resetSequence(isPlayingDrum: true);
-      _startSequence();
+      await _startSequence();
       setState(() {
         _previousTotalPoint = 0;
         totalPoint = 0;
@@ -479,7 +480,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         });
         // Start sequence if song exists
         if (widget.currentSong != null) {
-          _startSequence();
+          await _startSequence();
         }
       });
     } /// next campaign
@@ -506,7 +507,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         });
         // Start sequence if song exists
         if (widget.currentSong != null) {
-          _startSequence();
+          await _startSequence();
         }
       });
     }
@@ -630,7 +631,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     if (!_soloudService.isInitialized) await _initializeSoloud();
     if (!_soloudService.isInitialized) return;
 
-    _disposeAudioSources();
+    await _disposeAudioSources();
 
     final pathDir = context.read<DrumLearnProvider>().pathDir;
 
@@ -677,15 +678,19 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     });
   }
 
-  void _disposeAudioSources() {
+  Future<void> _disposeAudioSources() async {
     if (!mounted || !_soloudService.isInitialized) return;
 
-    // Stop all playing sounds
+    // Fade out all playing sounds
+    final futures = <Future<void>>[];
     for (var handle in currentlyPlayingSounds.values) {
       if (handle != null) {
-        _soloudService.stop(handle);
+        futures.add(_soloudService.fadeOut(handle, duration: Duration(milliseconds: 100)));
       }
     }
+    
+    // Wait for all fade outs to complete
+    await Future.wait(futures);
     currentlyPlayingSounds.clear();
 
     // Dispose audio sources
@@ -698,41 +703,46 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   Future<void> _playSound(String sound) async {
     if (!_soloudService.isInitialized) return;
 
-    // Stop previous sounds based on type
+    // Play new sound with fade in
+    if (audioSources.containsKey(sound)) {
+      final handle = await _soloudService.play(audioSources[sound]!);
+      currentlyPlayingSounds[sound] = handle;
+    }
+
+    // Fade out previous sounds based on type
     if(_isFromBeatRunner){
       if(currentlyPlayingSounds[_currentLeadSound ?? ''] != null) {
-        _soloudService.stop(currentlyPlayingSounds[_currentLeadSound ?? '']!);
+        await _soloudService.fadeOut(currentlyPlayingSounds[_currentLeadSound ?? '']!);
+        currentlyPlayingSounds.remove(_currentLeadSound);
       }
       setState(() {
         _currentLeadSound = sound;
       });
     } else if(PadUtil.getSoundType(sound) == SoundType.lead){
       if(currentlyPlayingSounds[_currentLeadSound ?? ''] != null) {
-        _soloudService.stop(currentlyPlayingSounds[_currentLeadSound ?? '']!);
+        await _soloudService.fadeOut(currentlyPlayingSounds[_currentLeadSound ?? '']!);
+        currentlyPlayingSounds.remove(_currentLeadSound);
       }
       setState(() {
         _currentLeadSound = sound;
       });
     }else if (PadUtil.getSoundType(sound) == SoundType.bass){
       if(currentlyPlayingSounds[_currentBassSound ?? ''] != null) {
-        _soloudService.stop(currentlyPlayingSounds[_currentBassSound ?? '']!);
+        await _soloudService.fadeOut(currentlyPlayingSounds[_currentBassSound ?? '']!);
+        currentlyPlayingSounds.remove(_currentBassSound);
       }
       setState(() {
         _currentBassSound = sound;
       });
     }
 
-    // Play new sound
-    if (audioSources.containsKey(sound)) {
-      final handle = await _soloudService.play(audioSources[sound]!);
-      currentlyPlayingSounds[sound] = handle;
-    }
+
   }
 
-  void _startSequence() {
+  Future<void> _startSequence() async {
     resetPoint();
     if (isPlaying || events.isEmpty) return;
-    _resetSequence();
+    await _resetSequence();
     setState(() {
       isPlaying = true;
     });
@@ -740,15 +750,17 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     widget.onChangePlayState?.call(false);
   }
 
-  void _resetSequence({bool isPlayingDrum = false}) {
+  Future<void> _resetSequence({bool isPlayingDrum = false}) async {
     _futureNotes = getFutureNotes(lessons[currentLesson]);
     if (!isPlayingDrum && _soloudService.isInitialized) {
-      // Stop all playing sounds
+      // Fade out all playing sounds
+      final futures = <Future<void>>[];
       for (var handle in currentlyPlayingSounds.values) {
         if (handle != null) {
-          _soloudService.stop(handle);
+          futures.add(_soloudService.fadeOut(handle, duration: Duration(milliseconds: 100)));
         }
       }
+      await Future.wait(futures);
       currentlyPlayingSounds.clear();
     }
     setState(() {
