@@ -337,7 +337,7 @@ class _ResultScreenState extends State<ResultScreen>
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 4).copyWith(left: 40),
+            padding: EdgeInsets.symmetric(horizontal: 18, vertical: 4).copyWith(left: 32),
             decoration: BoxDecoration(
                 color: Color(0xFF38154D),
                 borderRadius: BorderRadius.circular(12)
