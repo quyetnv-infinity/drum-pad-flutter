@@ -2,33 +2,56 @@ import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/view/widget/star/star_result.dart';
 import 'package:and_drum_pad_flutter/view/widget/image/cached_image_widget.dart';
-import 'package:and_drum_pad_flutter/core/mixins/optimized_widget_mixin.dart';
+import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class CampaignItem extends StatelessWidget with OptimizedWidgetMixin {
+class CampaignItem extends StatefulWidget {
   final Widget trailingWidget;
   final Widget name;
   final double score;
   final double star;
+  final int? levelIndex;
   
   const CampaignItem({
     super.key, 
     required this.trailingWidget, 
     required this.name, 
     this.score = 0, 
-    this.star = 0
+    this.star = 0, this.levelIndex
   });
 
+  @override
+  State<CampaignItem> createState() => _CampaignItemState();
+}
 
+class _CampaignItemState extends State<CampaignItem> {
+
+  @override
+  void initState() {
+    super.initState();
+    loadCampaign();
+  }
+
+  Future<void> loadCampaign() async {
+    if(widget.levelIndex == null) return;
+    final provider = Provider.of<CampaignProvider>(context, listen: false);
+    provider.fetchCampaignSong(
+      isEasy: widget.levelIndex == 0,
+      isMedium: widget.levelIndex == 1,
+      isHard: widget.levelIndex == 2,
+      isDemonic: widget.levelIndex == 3,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
       child: Container(
-        padding: getCachedEdgeInsets(all: 16),
+        padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white10,
-          borderRadius: getCachedBorderRadius(12),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: IntrinsicHeight(
           child: Row(
@@ -50,11 +73,11 @@ class CampaignItem extends StatelessWidget with OptimizedWidgetMixin {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        name,
+                        widget.name,
                         const SizedBox(height: 4),
                         Text(
-                          context.locale.score(score.toStringAsFixed(0)),
-                          style: getCachedTextStyle(
+                          context.locale.score(widget.score.toStringAsFixed(0)),
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                             color: const Color.fromRGBO(255, 255, 255, 0.6),
@@ -67,14 +90,14 @@ class CampaignItem extends StatelessWidget with OptimizedWidgetMixin {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         RatingStars.custom(
-                          value: star,
+                          value: widget.star,
                           smallStarWidth: 20,
                           smallStarHeight: 20,
                           bigStarWidth: 20,
                           bigStarHeight: 20,
                           isFlatStar: true,
                         ),
-                        trailingWidget,
+                        widget.trailingWidget,
                       ],
                     )
                   ],

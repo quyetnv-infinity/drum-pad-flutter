@@ -123,15 +123,43 @@ class _ResultScreenState extends State<ResultScreen>
     ));
 
     // Animation cho phần trăm các thành phần
-    final perfectPercent = (widget.perfectScore / widget.totalNotes * 100).floor();
-    final goodPercent = (widget.goodScore / widget.totalNotes * 100).floor();
-    final latePercent = (widget.lateScore / widget.totalNotes * 100).floor();
-    final earlyPercent = (widget.earlyScore / widget.totalNotes * 100).floor();
+    int perfectPercent = (widget.perfectScore / widget.totalNotes * 100).floor();
+    int goodPercent = (widget.goodScore / widget.totalNotes * 100).floor();
+    int latePercent = (widget.lateScore / widget.totalNotes * 100).floor();
+    int earlyPercent = (widget.earlyScore / widget.totalNotes * 100).floor();
+    int missPercent = 100 - perfectPercent - goodPercent - latePercent - earlyPercent;
+    if (missPercent == 1) {
+      missPercent = 0;
+
+      Map<String, int> scores = {
+        'perfect': perfectPercent,
+        'good': goodPercent,
+        'late': latePercent,
+        'early': earlyPercent,
+      };
+
+      String maxKey = scores.entries.reduce((a, b) => a.value >= b.value ? a : b).key;
+
+      switch (maxKey) {
+        case 'perfect':
+          perfectPercent += 1;
+          break;
+        case 'good':
+          goodPercent += 1;
+          break;
+        case 'late':
+          latePercent += 1;
+          break;
+        case 'early':
+          earlyPercent += 1;
+          break;
+      }
+    }
     _perfectPercentAnimation = _createPercentAnimation(perfectPercent);
     _goodPercentAnimation = _createPercentAnimation(goodPercent);
     _earlyPercentAnimation = _createPercentAnimation(earlyPercent);
     _latePercentAnimation = _createPercentAnimation(latePercent);
-    _missPercentAnimation = _createPercentAnimation(100 - perfectPercent - goodPercent - latePercent - earlyPercent);
+    _missPercentAnimation = _createPercentAnimation(missPercent);
   }
 
   Animation<double> _createPercentAnimation(int value) {
@@ -310,7 +338,7 @@ class _ResultScreenState extends State<ResultScreen>
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 4).copyWith(left: 40),
+            padding: EdgeInsets.symmetric(horizontal: 18, vertical: 4).copyWith(left: 32),
             decoration: BoxDecoration(
                 color: Color(0xFF38154D),
                 borderRadius: BorderRadius.circular(12)

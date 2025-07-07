@@ -81,9 +81,6 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
       imageFilter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
       opacityShadow: 0.8,
       hideSkip: true,
-      onClickOverlay: (p0) {
-        tutorialCoachMark.next();
-      },
       onFinish: () {
         // _startHandler();
       },
@@ -231,6 +228,8 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
       TargetFocus(
         identify: "song_Name",
         keyTarget: _songName,
+        // paddingFocus: -10,
+        enableOverlayTab: true,
         shape: ShapeLightFocus.RRect,
         radius: 20,
         contents: [
@@ -243,7 +242,8 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButtonCustom(iconAsset: ResIcon.icClose, onTap: () {
-
+                    print("======= finísh");
+                    tutorialCoachMark.finish();
                   },),
 
                   _buildTutorialStep(title: '3/3')
@@ -427,12 +427,15 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
   }
   Widget _buildTutorialStep({required String title, double? fontSize} ){
     return Container(
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width * 0.7
+      ),
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8)
       ),
-      child: Text(title, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: fontSize ?? 14),),
+      child: Text(title, textAlign: TextAlign.center, maxLines: 3, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: fontSize ?? 14),),
     );
   }
 }

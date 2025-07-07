@@ -6,6 +6,7 @@ import 'package:ads_tracking_plugin/tracking/analytics_tracker.dart';
 import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/data/service/api_service/song_service.dart';
+import 'package:and_drum_pad_flutter/data/service/soloud_service.dart';
 import 'package:and_drum_pad_flutter/hive/hive_registrar.g.dart';
 import 'package:and_drum_pad_flutter/service_locator/service_locator.dart';
 import 'package:and_drum_pad_flutter/view/screen/splash/splash_screen.dart';
@@ -47,6 +48,7 @@ void main() {
       AnalyticsTracker.trackAppOpens(),
       _initHive(),
       ServiceLocator.instance.initialise(),
+      SoLoudService.instance.initialize(),
     ].toList());
     final purchaseProvider = PurchaseProvider();
     final AppSettingsProvider appSettingsProvider = AppSettingsProvider();

@@ -70,6 +70,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> {
                           callbackLoadingCompleted: (song) {
                             adsProvider.showInterAd(
                               name: "inter_home",
+                              indicator: true,
                               callback: () {
                                 Navigator.pop(context);
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => DrumPadPlayScreen(songCollection: song)));
@@ -93,6 +94,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> {
                     onTap: () {
                       adsProvider.showInterAd(
                         name: "inter_home",
+                        indicator: true,
                         callback: () {
                           Navigator.push(context, CupertinoPageRoute(builder: (context) => FreeStylePlayScreen()));
                         }
@@ -105,6 +107,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> {
                   onTapCategory: (category) {
                     adsProvider.showInterAd(
                       name: "inter_home",
+                      indicator: true,
                       callback: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryDetailsScreen(category: category,),));
                       }

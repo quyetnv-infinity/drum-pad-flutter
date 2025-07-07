@@ -307,6 +307,9 @@ class _FreeStylePlayScreenState extends State<FreeStylePlayScreen> with SingleTi
   }
   Widget _buildTutorialStep({required String title, double? fontSize} ){
     return Container(
+      constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.7
+      ),
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.1),

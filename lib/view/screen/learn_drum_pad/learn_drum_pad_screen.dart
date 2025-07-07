@@ -213,6 +213,7 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
         identify: "song_name_learn",
         keyTarget: _songNameLearn,
         shape: ShapeLightFocus.RRect,
+        enableOverlayTab: true,
         radius: 20,
         contents: [
           TargetContent(
@@ -224,7 +225,7 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButtonCustom(iconAsset: ResIcon.icClose, onTap: () {
-
+                      tutorialCoachMark.finish();
                     },),
 
                     _buildTutorialStep(title: '3/3')
@@ -277,7 +278,9 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
   Future<void> updateLessonStar(double star) async {
     final provider = Provider.of<DrumLearnProvider>(context, listen: false);
     final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
-    List<LessonSequence> updatedLessons = (await provider.getSong(_currentSong.id))!.lessons;
+    final currentSong = await provider.getSong(_currentSong.id);
+    List<LessonSequence> updatedLessons = currentSong!.lessons;
+    if(updatedLessons[campaignProvider.currentLessonCampaign].star >= star) return;
     updatedLessons[campaignProvider.currentLessonCampaign].star = star;
     print('update star $star at ${campaignProvider.currentLessonCampaign}');
     final newSong = _currentSong.copyWith(lessons: updatedLessons);
@@ -475,6 +478,9 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
   }
   Widget _buildTutorialStep({required String title, double? fontSize} ){
     return Container(
+      constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.7
+      ),
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.1),

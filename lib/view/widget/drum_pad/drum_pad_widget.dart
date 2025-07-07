@@ -8,6 +8,7 @@ import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/data/model/theme_model.dart';
 import 'package:and_drum_pad_flutter/data/service/media_recorder_service.dart';
 import 'package:and_drum_pad_flutter/data/service/screen_record_service.dart';
+import 'package:and_drum_pad_flutter/data/service/soloud_service.dart';
 import 'package:and_drum_pad_flutter/view/screen/result/result_screen.dart';
 import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
@@ -103,9 +104,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
 
   late ThemeModel currentTheme;
 
-  // SoLoud instance
-  late SoLoud _soloud;
-  bool _soloudInitialized = false;
+  // SoLoud service instance
+  late SoLoudService _soloudService;
 
   List<Map<String, dynamic>> getFutureNotes(LessonSequence data) {
     List<Map<String, dynamic>> futureNotes = [];
@@ -126,6 +126,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   @override
   void initState() {
     super.initState();
+    _soloudService = SoLoudService.instance;
     _initializeSoloud();
     currentTheme = Provider.of<ThemeProvider>(context, listen: false).currentTheme;
     _isFromBeatRunner = !widget.isFromCampaign && !widget.isFromLearnScreen;
@@ -141,7 +142,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         });
         // Start sequence if song exists
         if (widget.currentSong != null) {
-          _startSequence();
+          await _startSequence();
         }
       });
     } else if(widget.currentSong == null) {
@@ -157,35 +158,36 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   }
 
   Future<void> _initializeSoloud() async {
-    print('Initializing SoLoud...');
     try {
-      _soloud = SoLoud.instance;
-      await _soloud.init();
-      setState(() {
-        _soloudInitialized = true;
-      });
+      await _soloudService.initialize();
     } catch (e) {
       print('Error initializing SoLoud: $e');
     }
   }
 
   Future<void> _initFreeStyleSongDefault() async {
-    if(!_soloudInitialized) await _initializeSoloud();
+    setState(() {
+      isLoading = true;
+    });
+    if(!_soloudService.isInitialized) await _initializeSoloud();
 
-    _disposeAudioSources();
+    await _disposeAudioSources();
     availableSounds = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
     lessonSounds = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
 
     for (String sound in availableSounds) {
       if (sound.isEmpty) continue;
       try {
-        final source = await _soloud.loadAsset('assets/audio/$sound.wav');
+        final source = await _soloudService.loadAsset('assets/audio/$sound.wav');
         audioSources[sound] = source;
       } catch (e) {
         print('Error loading audio file for $sound: $e at assets/audio/$sound.wav');
         continue;
       }
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -204,7 +206,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         });
         // Start sequence if song exists
         _resetSequence();
-        _startSequence();
+        await _startSequence();
       });
     }else if(widget.currentSong == null) {
       _initFreeStyleSongDefault();
@@ -217,15 +219,13 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     for (var controller in _colorControllers.values) {
       controller.dispose();
     }
-    _disposeAudioSources();
+    // Use unawaited to avoid blocking dispose
+    _disposeAudioSources().catchError((e) => print('Error disposing audio sources: $e'));
     audioSources.clear();
     sequenceTimer?.cancel();
     progressTimer?.cancel();
     _controller.dispose();
     _pauseTimer?.cancel();
-    if (_soloudInitialized) {
-      _soloud.deinit();
-    }
     super.dispose();
   }
 
@@ -368,6 +368,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     if(song != null) {
       List<LessonSequence> _lessons = song.lessons;
       LessonSequence _lesson = _lessons[currentLesson];
+      if((_lesson.totalScore ?? 0) >= totalPoint*1.0) return;
       final newLesson = _lesson.copyWith(totalScore: totalPoint*1.0);
       print('totalScore: $totalPoint');
       _lessons[currentLesson] = newLesson;
@@ -379,6 +380,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   Future<void> _updateScoreForCampaign(CampaignProvider campaignProvider) async {
     final song = await campaignProvider.getSong(widget.currentSong!.id);
     if(song != null) {
+      if(song.campaignScore >= totalPoint*1.0) return;
       final updatedSong = song.copyWith(campaignScore: totalPoint*1.0, campaignStar: getStar());
       await campaignProvider.updateSong(widget.currentSong!.id, updatedSong);
     }
@@ -417,6 +419,9 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     /// push navigation and check cases
     checkPointsExceed();
     /// show result dialog
+    final _song = await provider.getSong(widget.currentSong!.id) ?? widget.currentSong!;
+    await Future.delayed(Duration(milliseconds: widget.isFromCampaign ? 2000 : 1000));
+    bool _isCompleted = (getStar() >= 2) || (widget.isFromCampaign && _song.campaignStar >= 2) || (widget.isFromLearnScreen && _song.lessons[currentLesson].star >= 2);
     final result = await
       showDialog(context: context,
         barrierDismissible: false,
@@ -424,7 +429,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         builder: (context) => Dialog(
           insetPadding: EdgeInsets.all(16),
         backgroundColor: Colors.transparent,
-        child: ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: getStar() >= 2, isCompleteCampaign: checkLastCampaign,)));
+        child: ResultScreen(perfectScore: perfectPoint, goodScore: goodPoint, earlyScore: earlyPoint, lateScore: latePoint, missScore: missPoint, totalScore: totalPoint, totalNotes: _totalNotes, isFromLearn: widget.isFromLearnScreen, isFromCampaign: widget.isFromCampaign, currentLesson: currentLesson, maxLesson: lessons.length, isCompleted: _isCompleted, isCompleteCampaign: checkLastCampaign,)));
 
     setState(() {
       isNavigatedToResult = false;
@@ -433,7 +438,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
       final tempTotalNote = _totalNotes;
       widget.onChangeStarLearn?.call(0);
       _resetSequence(isPlayingDrum: true);
-      _startSequence();
+      await _startSequence();
       setState(() {
         _previousTotalPoint = 0;
         totalPoint = 0;
@@ -445,7 +450,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
       widget.onTapChooseSong?.call(result);
       widget.onChangeStarLearn?.call(0);
       _resetSequence(isPlayingDrum: true);
-      _startSequence();
+      await _startSequence();
       setState(() {
         _previousTotalPoint = 0;
         totalPoint = 0;
@@ -475,7 +480,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         });
         // Start sequence if song exists
         if (widget.currentSong != null) {
-          _startSequence();
+          await _startSequence();
         }
       });
     } /// next campaign
@@ -502,7 +507,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         });
         // Start sequence if song exists
         if (widget.currentSong != null) {
-          _startSequence();
+          await _startSequence();
         }
       });
     }
@@ -623,10 +628,10 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   }
 
   Future<void> _initializeAudioSources() async {
-    if (!_soloudInitialized) await _initializeSoloud();
-    if (!_soloudInitialized) return;
+    if (!_soloudService.isInitialized) await _initializeSoloud();
+    if (!_soloudService.isInitialized) return;
 
-    _disposeAudioSources();
+    await _disposeAudioSources();
 
     final pathDir = context.read<DrumLearnProvider>().pathDir;
 
@@ -637,7 +642,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
 
       final path = '$pathDir/${widget.currentSong?.id}/$sound.mp3';
 
-      final future = _soloud.loadFile(path).then((source) {
+      final future = _soloudService.loadFile(path).then((source) {
         print('Loaded sound: $sound from $path');
         audioSources[sound] = source;
       }).catchError((e) {
@@ -673,62 +678,71 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     });
   }
 
-  void _disposeAudioSources() {
-    if (!mounted || !_soloudInitialized) return;
+  Future<void> _disposeAudioSources() async {
+    if (!mounted || !_soloudService.isInitialized) return;
 
-    // Stop all playing sounds
+    // Fade out all playing sounds
+    final futures = <Future<void>>[];
     for (var handle in currentlyPlayingSounds.values) {
       if (handle != null) {
-        _soloud.stop(handle);
+        futures.add(_soloudService.fadeOut(handle, duration: Duration(milliseconds: 100)));
       }
     }
+    
+    // Wait for all fade outs to complete
+    await Future.wait(futures);
     currentlyPlayingSounds.clear();
 
     // Dispose audio sources
     for (var source in audioSources.values) {
-      _soloud.disposeSource(source);
+      _soloudService.disposeSource(source);
     }
     audioSources.clear();
   }
 
   Future<void> _playSound(String sound) async {
-    if (!_soloudInitialized) return;
+    if (!_soloudService.isInitialized) return;
 
-    // Stop previous sounds based on type
+    // Play new sound with fade in
+    if (audioSources.containsKey(sound)) {
+      final handle = await _soloudService.play(audioSources[sound]!);
+      currentlyPlayingSounds[sound] = handle;
+    }
+
+    // Fade out previous sounds based on type
     if(_isFromBeatRunner){
       if(currentlyPlayingSounds[_currentLeadSound ?? ''] != null) {
-        _soloud.stop(currentlyPlayingSounds[_currentLeadSound ?? '']!);
+        await _soloudService.fadeOut(currentlyPlayingSounds[_currentLeadSound ?? '']!);
+        currentlyPlayingSounds.remove(_currentLeadSound);
       }
       setState(() {
         _currentLeadSound = sound;
       });
     } else if(PadUtil.getSoundType(sound) == SoundType.lead){
       if(currentlyPlayingSounds[_currentLeadSound ?? ''] != null) {
-        _soloud.stop(currentlyPlayingSounds[_currentLeadSound ?? '']!);
+        await _soloudService.fadeOut(currentlyPlayingSounds[_currentLeadSound ?? '']!);
+        currentlyPlayingSounds.remove(_currentLeadSound);
       }
       setState(() {
         _currentLeadSound = sound;
       });
     }else if (PadUtil.getSoundType(sound) == SoundType.bass){
       if(currentlyPlayingSounds[_currentBassSound ?? ''] != null) {
-        _soloud.stop(currentlyPlayingSounds[_currentBassSound ?? '']!);
+        await _soloudService.fadeOut(currentlyPlayingSounds[_currentBassSound ?? '']!);
+        currentlyPlayingSounds.remove(_currentBassSound);
       }
       setState(() {
         _currentBassSound = sound;
       });
     }
 
-    // Play new sound
-    if (audioSources.containsKey(sound)) {
-      final handle = await _soloud.play(audioSources[sound]!);
-      currentlyPlayingSounds[sound] = handle;
-    }
+
   }
 
-  void _startSequence() {
+  Future<void> _startSequence() async {
     resetPoint();
     if (isPlaying || events.isEmpty) return;
-    _resetSequence();
+    await _resetSequence();
     setState(() {
       isPlaying = true;
     });
@@ -736,15 +750,17 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     widget.onChangePlayState?.call(false);
   }
 
-  void _resetSequence({bool isPlayingDrum = false}) {
+  Future<void> _resetSequence({bool isPlayingDrum = false}) async {
     _futureNotes = getFutureNotes(lessons[currentLesson]);
-    if (!isPlayingDrum && _soloudInitialized) {
-      // Stop all playing sounds
+    if (!isPlayingDrum && _soloudService.isInitialized) {
+      // Fade out all playing sounds
+      final futures = <Future<void>>[];
       for (var handle in currentlyPlayingSounds.values) {
         if (handle != null) {
-          _soloud.stop(handle);
+          futures.add(_soloudService.fadeOut(handle, duration: Duration(milliseconds: 100)));
         }
       }
+      await Future.wait(futures);
       currentlyPlayingSounds.clear();
     }
     setState(() {
@@ -1036,7 +1052,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return IgnorePointer(
-      ignoring: currentEventIndex >= events.length && !widget.isFreeStyle,
+      ignoring: (currentEventIndex >= events.length && !widget.isFreeStyle) || isNavigatedToResult,
       child: Stack(
         children: [
           Listener(
@@ -1159,7 +1175,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
           ),
           
           // Positioned(child: Text("isLoading: $isLoading, current song: ${widget.currentSong?.name}")),
-          if(isLoading && widget.currentSong != null && widget.isFreeStyle)
+          if(isLoading && (widget.currentSong != null || (widget.isFreeStyle && widget.currentSong == null)))
             Positioned.fill(child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
