@@ -237,6 +237,7 @@ class _ResultScreenState extends State<ResultScreen>
                           } else {
                             if(widget.isFromLearn) {
                               Navigator.pop(context, widget.currentLesson + 1);
+                              Navigator.pop(context, widget.currentLesson + 1);
                             }
                             if(widget.isFromCampaign) {
                               final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
@@ -244,20 +245,22 @@ class _ResultScreenState extends State<ResultScreen>
                               campaignProvider.setCurrentSongCampaign(nextCampaignIndex);
                               final song = campaignProvider.currentCampaign[nextCampaignIndex];
                               print('song ${song.name} with index $nextCampaignIndex');
-                              showDialog(
-                                context: context,
-                                builder: (context) => LoadingDataScreen(
-                                  callbackLoadingCompleted: (songResult) {
-                                    Navigator.pop(context, songResult);
-                                    Navigator.pop(context, songResult);
-                                  },
-                                  callbackLoadingFailed: () {
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                  },
-                                  song: song
-                                ),
-                              );
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              // showDialog(
+                              //   context: context,
+                              //   builder: (context) => LoadingDataScreen(
+                              //     callbackLoadingCompleted: (songResult) {
+                              //       Navigator.pop(context, songResult);
+                              //       Navigator.pop(context, songResult);
+                              //     },
+                              //     callbackLoadingFailed: () {
+                              //       Navigator.pop(context);
+                              //       Navigator.pop(context);
+                              //     },
+                              //     song: song
+                              //   ),
+                              // );
                             }
                           }
                         },
