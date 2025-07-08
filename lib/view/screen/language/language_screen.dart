@@ -112,7 +112,6 @@ class _LanguageScreenState extends State<LanguageScreen>
           ),
           centerTitle: false,
           actions: [
-            if (context.watch<LocateViewModel>().selectedLanguage != null)
               InkWell(
                 borderRadius: BorderRadius.circular(20),
                 onTap: () {
@@ -148,7 +147,7 @@ class _LanguageScreenState extends State<LanguageScreen>
                 padding: const EdgeInsets.symmetric(horizontal: 11.0),
                 child: LanguageWidget<LanguageEnum>(
                   languages: LanguageEnum.values,
-                  selectedLanguage: provider.selectedLanguage ?? LanguageEnum.en,
+                  selectedLanguage: provider.selectedLanguage,
                   onLanguageChanged: (value) {
                     if(!_isClickAdsLoaded){
                       setState(() {
