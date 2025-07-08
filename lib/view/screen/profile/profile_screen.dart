@@ -73,7 +73,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: context.locale.recommend_list_songs,
                 listSongs: drumLearnProvider.listRecommend,
                 onTapItem: (song) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => DrumPadPlayScreen(songCollection: song)));
+                  showDialog(context: context, builder: (context) => LoadingDataScreen(
+                    callbackLoadingCompleted: (songResult) {
+                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => DrumPadPlayScreen(songCollection: songResult)));
+                    },
+                    callbackLoadingFailed: () {
+                      Navigator.pop(context);
+                    },
+                    song: song
+                  ));
                 },
               ),
             ),
