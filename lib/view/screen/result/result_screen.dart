@@ -185,132 +185,129 @@ class _ResultScreenState extends State<ResultScreen>
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      child: SafeArea(
-        child: Container(
-          padding: EdgeInsets.all(12).copyWith(top: 20),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(32),
-            gradient: RadialGradient(colors: [Color(0xff33114d), Color(0xff7727b3)], center: Alignment.bottomCenter)
-          ),
-          child: AnimatedBuilder(
-            animation: _animationController,
-            builder: (context, snapshot) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  RatingStars.custom(value: _starAnimation.value, paddingMiddle: 20, smallStarWidth: 60, smallStarHeight: 60, bigStarWidth: 84, bigStarHeight: 84, isFlatStar: true, isPaddingBottom: true,),
-                  Text(!checkNotLastCampaign() ? context.locale.final_score : context.locale.score_string, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
-                  Text(
-                    "${_scoreAnimation.value.toInt()}",
-                      style: TextStyle(fontSize: 40, fontWeight: FontWeight.w700)
-                  ),
-                  SizedBox(height: 20),
-                  accuracyAllSongs(),
-                  SizedBox(height: 36),
-                  Row(
-                    spacing: 8,
-                    children: [
-                      Opacity(
-                        opacity: widget.isFromCampaign ? 0 : 1,
-                        child: _buildIconButton(asset: ResIcon.icMusic,
-                          onTap: () async {
-                            if(widget.isFromCampaign) return;
-                            final result = await showModalBottomSheet<SongCollection>(
-                              isScrollControlled: true,
-                              barrierColor: Colors.black.withValues(alpha: 0.8),
-                              context: context,
-                              builder: (context) => PickSongScreen(),
-                            );
-                            if(!widget.isFromCampaign && !widget.isFromLearn) {
-                              Navigator.pop(context, result);
-                            } else if(widget.isFromLearn) {
-                              Navigator.pop(context, result);
-                              Navigator.pop(context, result);
+    return SafeArea(
+      child: Container(
+        padding: EdgeInsets.all(12).copyWith(top: 20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(32),
+          gradient: RadialGradient(colors: [Color(0xff33114d), Color(0xff7727b3)], center: Alignment.bottomCenter)
+        ),
+        child: AnimatedBuilder(
+          animation: _animationController,
+          builder: (context, snapshot) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                RatingStars.custom(value: _starAnimation.value, paddingMiddle: 20, smallStarWidth: 60, smallStarHeight: 60, bigStarWidth: 84, bigStarHeight: 84, isFlatStar: true, isPaddingBottom: true,),
+                Text(!checkNotLastCampaign() ? context.locale.final_score : context.locale.score_string, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
+                Text(
+                  "${_scoreAnimation.value.toInt()}",
+                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.w700)
+                ),
+                SizedBox(height: 20),
+                accuracyAllSongs(),
+                SizedBox(height: 36),
+                Row(
+                  spacing: 8,
+                  children: [
+                    Opacity(
+                      opacity: widget.isFromCampaign ? 0 : 1,
+                      child: _buildIconButton(asset: ResIcon.icMusic,
+                        onTap: () async {
+                          if(widget.isFromCampaign) return;
+                          final result = await showModalBottomSheet<SongCollection>(
+                            isScrollControlled: true,
+                            barrierColor: Colors.black.withValues(alpha: 0.8),
+                            context: context,
+                            builder: (context) => PickSongScreen(),
+                          );
+                          if(!widget.isFromCampaign && !widget.isFromLearn) {
+                            Navigator.pop(context, result);
+                          } else if(widget.isFromLearn) {
+                            Navigator.pop(context, result);
+                            Navigator.pop(context, result);
+                          }
+                        }),
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          if(!checkNotLastCampaign()) {
+                            Navigator.pop(context, 'play_again');
+                          } else {
+                            if(widget.isFromLearn) {
+                              Navigator.pop(context, widget.currentLesson + 1);
                             }
-                          }),
-                      ),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            if(!checkNotLastCampaign()) {
-                              Navigator.pop(context, 'play_again');
-                            } else {
-                              if(widget.isFromLearn) {
-                                Navigator.pop(context, widget.currentLesson + 1);
-                              }
-                              if(widget.isFromCampaign) {
-                                final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
-                                final nextCampaignIndex = campaignProvider.currentSongCampaign + 1;
-                                campaignProvider.setCurrentSongCampaign(nextCampaignIndex);
-                                final song = campaignProvider.currentCampaign[nextCampaignIndex];
-                                print('song ${song.name} with index $nextCampaignIndex');
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => LoadingDataScreen(
-                                    callbackLoadingCompleted: (songResult) {
-                                      Navigator.pop(context, songResult);
-                                      Navigator.pop(context, songResult);
-                                    },
-                                    callbackLoadingFailed: () {
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                    song: song
-                                  ),
-                                );
-                              }
+                            if(widget.isFromCampaign) {
+                              final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
+                              final nextCampaignIndex = campaignProvider.currentSongCampaign + 1;
+                              campaignProvider.setCurrentSongCampaign(nextCampaignIndex);
+                              final song = campaignProvider.currentCampaign[nextCampaignIndex];
+                              print('song ${song.name} with index $nextCampaignIndex');
+                              showDialog(
+                                context: context,
+                                builder: (context) => LoadingDataScreen(
+                                  callbackLoadingCompleted: (songResult) {
+                                    Navigator.pop(context, songResult);
+                                    Navigator.pop(context, songResult);
+                                  },
+                                  callbackLoadingFailed: () {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                  song: song
+                                ),
+                              );
                             }
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 18, horizontal: 8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              gradient: LinearGradient(colors: [Color(0xffa005ff), Color(0xffd796ff)])
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              spacing: 8,
-                              children: [
-                                if(!checkNotLastCampaign())
-                                SvgPicture.asset(ResIcon.icRefresh),
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 18, horizontal: 8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            gradient: LinearGradient(colors: [Color(0xffa005ff), Color(0xffd796ff)])
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            spacing: 8,
+                            children: [
+                              if(!checkNotLastCampaign())
+                              SvgPicture.asset(ResIcon.icRefresh),
 
-                                Text(!checkNotLastCampaign() ? context.locale.play_again : context.locale.continue_text, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16), textAlign: TextAlign.center,),
-                              ],
-                            ),
+                              Text(!checkNotLastCampaign() ? context.locale.play_again : context.locale.continue_text, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16), textAlign: TextAlign.center,),
+                            ],
                           ),
                         ),
                       ),
-                      _buildIconButton(asset: ResIcon.icHome,
-                        onTap: () {
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
-                        }
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Consumer<AppStateProvider>(builder: (context, value, child) {
-                    return NativeAdWidget(
-                      adName:!checkNotLastCampaign() ? AdName.nativePopupPlayDone : AdName.nativePopupPause,
-                      disabled: !value.shouldShowAds,
-                      onAdLoaded: (value) {
-                        print("Native ad loaded: $value");
-                      },
-                      padding: EdgeInsets.zero,
-                      decoration: BoxDecoration(
-                          color: Colors.grey.withValues(alpha: 0.2),
-                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          border: Border.all(width: 1, color: Color(0xFFD3D3D3))
-                      ),
-                    );
-                  },),
-                ],
+                    ),
+                    _buildIconButton(asset: ResIcon.icHome,
+                      onTap: () {
+                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
+                      }
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Consumer<AppStateProvider>(builder: (context, value, child) {
+                  return NativeAdWidget(
+                    adName:!checkNotLastCampaign() ? AdName.nativePopupPlayDone : AdName.nativePopupPause,
+                    disabled: !value.shouldShowAds,
+                    onAdLoaded: (value) {
+                      print("Native ad loaded: $value");
+                    },
+                    padding: EdgeInsets.zero,
+                    decoration: BoxDecoration(
+                        color: Colors.grey.withValues(alpha: 0.2),
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        border: Border.all(width: 1, color: Color(0xFFD3D3D3))
+                    ),
+                  );
+                },),
+              ],
 
-              );
-            }
-          )),
-      ),
+            );
+          }
+        )),
     );
   }
   Widget _buildIconButton({required String asset, required Function() onTap}){

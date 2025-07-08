@@ -434,7 +434,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     setState(() {
       isNavigatedToResult = false;
     });
-    if(result != null && result == 'play_again'){
+    if((result != null && result == 'play_again') || result == null){
       final tempTotalNote = _totalNotes;
       widget.onChangeStarLearn?.call(0);
       _resetSequence(isPlayingDrum: true);
