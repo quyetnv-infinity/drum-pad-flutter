@@ -68,6 +68,7 @@ Widget customPage(
               ),
               const Spacer(),
               InkWell(
+                borderRadius: BorderRadius.circular(20),
                onTap: onTapNext,
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 25, vertical: 8),

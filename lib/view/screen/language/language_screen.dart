@@ -114,6 +114,7 @@ class _LanguageScreenState extends State<LanguageScreen>
           actions: [
             if (context.watch<LocateViewModel>().selectedLanguage != null)
               InkWell(
+                borderRadius: BorderRadius.circular(20),
                 onTap: () {
                   context.read<LocateViewModel>().saveLanguage();
                   if (widget.fromSetting) {
