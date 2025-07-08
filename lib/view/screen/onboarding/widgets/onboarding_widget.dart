@@ -76,7 +76,7 @@ Widget customPage(
                     borderRadius: BorderRadius.circular(44.0),
                   ),
                   child: Text(
-                    currentPage == 2 ? context.locale.start : context.locale.next,
+                    currentPage == 3 ? context.locale.start : context.locale.next,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 12,
