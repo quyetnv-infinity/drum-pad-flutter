@@ -119,7 +119,7 @@ Widget page1(BuildContext context,
               adName: appStateProvider.isFirstOpenApp ? AdName.nativeOnboarding : AdName.nativeOnboarding2,
               disabled: !appStateProvider.shouldShowAds,
               onAdLoaded: (value) {
-                print("Native ad loaded: $value");
+                print("Native onboarding 1 loaded: $value");
               },
               decoration: BoxDecoration(
                   color: Colors.grey.withValues(alpha: 0.2),
