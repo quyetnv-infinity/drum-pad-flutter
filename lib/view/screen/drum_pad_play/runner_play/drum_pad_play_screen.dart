@@ -316,7 +316,7 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
               setState(() {
                 _currentSong = result;
               });
-              print('Selected song: ${result.lessons.length}');
+              print('Selected song: ${result.name}');
             }
           },
           child: _buildTitle()),

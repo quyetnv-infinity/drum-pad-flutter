@@ -702,7 +702,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   }
 
   Future<void> _playSound(String sound) async {
-    if (!_soloudService.isInitialized) return;
 
     ///VIBRATE VÂN RUNG
     final can = await Haptics.canVibrate();
@@ -713,6 +712,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
 
     // Play new sound with fade in
     if (audioSources.containsKey(sound)) {
+      print('play $sound');
       final handle = await _soloudService.play(audioSources[sound]!);
       currentlyPlayingSounds[sound] = handle;
     }
@@ -750,7 +750,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   Future<void> _startSequence() async {
     resetPoint();
     if (isPlaying || events.isEmpty) return;
-    await _resetSequence();
+    _resetSequence();
     setState(() {
       isPlaying = true;
     });
@@ -758,17 +758,15 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     widget.onChangePlayState?.call(false);
   }
 
-  Future<void> _resetSequence({bool isPlayingDrum = false}) async {
+  void _resetSequence({bool isPlayingDrum = false}) {
     _futureNotes = getFutureNotes(lessons[currentLesson]);
     if (!isPlayingDrum && _soloudService.isInitialized) {
       // Fade out all playing sounds
-      final futures = <Future<void>>[];
       for (var handle in currentlyPlayingSounds.values) {
         if (handle != null) {
-          futures.add(_soloudService.fadeOut(handle, duration: Duration(milliseconds: 100)));
+          _soloudService.stop(handle);
         }
       }
-      await Future.wait(futures);
       currentlyPlayingSounds.clear();
     }
     setState(() {
