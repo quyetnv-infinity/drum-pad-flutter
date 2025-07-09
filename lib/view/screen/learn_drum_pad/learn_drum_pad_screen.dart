@@ -317,6 +317,7 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
           },
           titleWidget: InkWell(
               onTap: () async {
+                _pauseHandler();
                 final result = await showModalBottomSheet<SongCollection>(
                   isScrollControlled: true,
                   barrierColor: Colors.black.withValues(alpha: 0.8),

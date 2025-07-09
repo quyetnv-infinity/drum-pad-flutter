@@ -305,6 +305,7 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
         titleWidget: InkWell(
           borderRadius: BorderRadius.circular(20),
           onTap: () async {
+            _pauseHandler();
             final result = await showModalBottomSheet<SongCollection>(
               isScrollControlled: true,
               barrierColor: Colors.black.withValues(alpha: 0.8),
