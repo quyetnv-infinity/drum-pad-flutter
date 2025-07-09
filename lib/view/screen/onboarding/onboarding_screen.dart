@@ -27,6 +27,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    Future.delayed(Duration(milliseconds: 500), () {
+      setState(() {
+
+      });
+    });
   }
 
   @override
