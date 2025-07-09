@@ -187,7 +187,8 @@ class _ResultScreenState extends State<ResultScreen>
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        padding: EdgeInsets.all(12).copyWith(top: 20, bottom: 0),
+        clipBehavior: Clip.antiAlias,
+        padding: EdgeInsets.all(12).copyWith(top: 20, bottom: 5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(32),
           gradient: RadialGradient(colors: [Color(0xff33114d), Color(0xff7727b3)], center: Alignment.bottomCenter)

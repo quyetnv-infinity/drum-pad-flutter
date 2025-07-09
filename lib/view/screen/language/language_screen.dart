@@ -175,7 +175,7 @@ class _LanguageScreenState extends State<LanguageScreen>
                     return Radio<LanguageEnum>(
                       activeColor: Colors.white,
                       value: item,
-                      groupValue: provider.selectedLanguage ?? LanguageEnum.en,
+                      groupValue: widget.fromSetting ? provider.selectedLanguage ?? LanguageEnum.en : provider.selectedLanguage,
                       onChanged: (value) {
                         if (value == null) return;
                         if(!_isClickAdsLoaded){
