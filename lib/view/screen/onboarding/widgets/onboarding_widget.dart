@@ -21,13 +21,21 @@ Widget customPage(
     child: Column(
       children: [
         Expanded(
-          child: Padding(
-            padding: imagePadding ?? EdgeInsets.zero,
-            child: Image.asset(
-              width: MediaQuery.of(context).size.width,
-              backgroundAsset,
-              fit: BoxFit.cover,
-            ),
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 32.0),
+                child: Image.asset('assets/images/bg_onboarding.png', width: MediaQuery.of(context).size.width, fit: BoxFit.fill,),
+              ),
+              Padding(
+                padding: imagePadding ?? EdgeInsets.zero,
+                child: Image.asset(
+                  width: MediaQuery.of(context).size.width,
+                  backgroundAsset,
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ],
           ),
         ),
         ResSpacing.h24,
@@ -119,7 +127,7 @@ Widget page1(BuildContext context,
               adName: appStateProvider.isFirstOpenApp ? AdName.nativeOnboarding : AdName.nativeOnboarding2,
               disabled: !appStateProvider.shouldShowAds,
               onAdLoaded: (value) {
-                print("Native ad loaded: $value");
+                print("Native onboarding 1 loaded: $value");
               },
               decoration: BoxDecoration(
                   color: Colors.grey.withValues(alpha: 0.2),

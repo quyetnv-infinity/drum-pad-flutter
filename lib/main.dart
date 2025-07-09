@@ -39,7 +39,7 @@ import 'data/model/lesson_model.dart';
 void main() {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     await initTrackingPermission();
     await Firebase.initializeApp();
     await Future.wait([

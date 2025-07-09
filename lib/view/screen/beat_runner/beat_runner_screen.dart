@@ -68,12 +68,13 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> {
                       onTapItem: (song) {
                         showDialog(context: context, builder: (context) => LoadingDataScreen(
                           callbackLoadingCompleted: (song) {
+                            Navigator.pop(context);
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => DrumPadPlayScreen(songCollection: song)));
                             adsProvider.showInterAd(
                               name: "inter_home",
                               indicator: true,
                               callback: () {
-                                Navigator.pop(context);
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => DrumPadPlayScreen(songCollection: song)));
+
                               }
                             );
                           },
@@ -92,11 +93,11 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> {
                   padding: const EdgeInsets.only(right: 16),
                   child: ModePlayItem(asset: ResImage.imgBgPadDrum, title: context.locale.freestyle_pad_drum, description: context.locale.pad_drum_des,
                     onTap: () {
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => FreeStylePlayScreen()));
                       adsProvider.showInterAd(
                         name: "inter_home",
                         indicator: true,
                         callback: () {
-                          Navigator.push(context, CupertinoPageRoute(builder: (context) => FreeStylePlayScreen()));
                         }
                       );
                     },
@@ -105,11 +106,11 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> {
                 SizedBox(height: 16),
                 MoodAndGenres(
                   onTapCategory: (category) {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryDetailsScreen(category: category,),));
                     adsProvider.showInterAd(
                       name: "inter_home",
                       indicator: true,
                       callback: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryDetailsScreen(category: category,),));
                       }
                     );
                   },

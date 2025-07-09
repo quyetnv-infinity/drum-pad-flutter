@@ -8,11 +8,7 @@ import 'package:and_drum_pad_flutter/core/extension/language_extension.dart';
 import 'package:and_drum_pad_flutter/core/res/dimen/spacing.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
-import 'package:and_drum_pad_flutter/view/screen/language/apply_language_screen.dart';
-import 'package:and_drum_pad_flutter/view/screen/language/widget/english_container.dart';
-import 'package:and_drum_pad_flutter/view/screen/language/widget/other_language_container.dart';
 import 'package:and_drum_pad_flutter/view/screen/onboarding/onboarding_screen.dart';
-import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view_model/app_state_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/locale_view_model.dart';
 import 'package:base_ui_flutter_v1/base_ui_flutter_v1.dart';
@@ -112,7 +108,6 @@ class _LanguageScreenState extends State<LanguageScreen>
           ),
           centerTitle: false,
           actions: [
-            if (context.watch<LocateViewModel>().selectedLanguage != null)
               InkWell(
                 borderRadius: BorderRadius.circular(20),
                 onTap: () {
@@ -148,7 +143,7 @@ class _LanguageScreenState extends State<LanguageScreen>
                 padding: const EdgeInsets.symmetric(horizontal: 11.0),
                 child: LanguageWidget<LanguageEnum>(
                   languages: LanguageEnum.values,
-                  selectedLanguage: provider.selectedLanguage ?? LanguageEnum.en,
+                  selectedLanguage:widget.fromSetting ? provider.selectedLanguage ?? LanguageEnum.en  : provider.selectedLanguage,
                   onLanguageChanged: (value) {
                     if(!_isClickAdsLoaded){
                       setState(() {
@@ -176,10 +171,11 @@ class _LanguageScreenState extends State<LanguageScreen>
                     );
                   },
                   leadingBuilder: (context, item) {
+                    print("Selected language: ${item.displayName}");
                     return Radio<LanguageEnum>(
                       activeColor: Colors.white,
                       value: item,
-                      groupValue: provider.selectedLanguage,
+                      groupValue: widget.fromSetting ? provider.selectedLanguage ?? LanguageEnum.en : provider.selectedLanguage,
                       onChanged: (value) {
                         if (value == null) return;
                         if(!_isClickAdsLoaded){
@@ -198,7 +194,7 @@ class _LanguageScreenState extends State<LanguageScreen>
             },
           ),
         ),
-        bottomNavigationBar: Consumer<AppStateProvider>(builder: (context, value, child) {
+        bottomNavigationBar: widget.fromSetting ? SizedBox.shrink() : Consumer<AppStateProvider>(builder: (context, value, child) {
           return NativeAdWidget(
             key: ValueKey(_currentAdState),
             adName: _getAdName(value.isFirstOpenApp),
