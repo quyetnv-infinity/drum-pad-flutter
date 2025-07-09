@@ -15,6 +15,7 @@ import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
+import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:provider/provider.dart';
 import 'drum_pad_item.dart';
 
@@ -702,6 +703,13 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
 
   Future<void> _playSound(String sound) async {
     if (!_soloudService.isInitialized) return;
+
+    ///VIBRATE VÂN RUNG
+    final can = await Haptics.canVibrate();
+    if(!widget.isFromCampaign && !widget.isFromLearnScreen && can){
+      print("0000000");
+      await Haptics.vibrate(HapticsType.warning);
+    }
 
     // Play new sound with fade in
     if (audioSources.containsKey(sound)) {
