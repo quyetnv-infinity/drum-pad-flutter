@@ -58,6 +58,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
       final appStateProvider =
           Provider.of<AppStateProvider>(context, listen: false);
       appStateProvider.setFirstOpenApp();
+      AdController.shared.setResumeAdState(false);
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HomeScreen()));
       Provider.of<AppSettingsProvider>(context, listen: false)

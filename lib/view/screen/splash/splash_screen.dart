@@ -25,6 +25,8 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    AdController.shared.setResumeAdState(true);
   }
 
   @override
@@ -38,9 +40,6 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     super.didChangeAppLifecycleState(state);
     if(state == AppLifecycleState.paused) {
       AdController.shared.setResumeAdState(true);
-    }
-    if(state == AppLifecycleState.resumed) {
-      AdController.shared.setResumeAdState(false);
     }
   }
 
@@ -63,6 +62,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     if (isFirstOpenApp || Platform.isAndroid) {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LanguageScreen(fromSetting: false,)));
     } else {
+      AdController.shared.setResumeAdState(false);
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
       Provider.of<AppSettingsProvider>(context, listen: false).increaseTimeOpenApp();
       print('time open appppp${Provider.of<AppSettingsProvider>(context, listen: false).timeOpenApp}');
