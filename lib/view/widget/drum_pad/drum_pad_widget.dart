@@ -457,61 +457,61 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
         totalPoint = 0;
       });
     }
-    /// next Lesson
-    else if(result != null && result is int){
-      final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
-      setState(() {
-        if(widget.isFromLearnScreen) {
-          currentLesson = result;
-        }
-        // print(' result pop $result');
-      });
-      if(widget.isFromLearnScreen) campaignProvider.setCurrentLessonCampaign(currentLesson);
-      widget.onChangeStarLearn?.call(0);
-      _resetSequence(isPlayingDrum: true);
-      setState(() {
-        _previousTotalPoint = 0;
-        totalPoint = 0;
-        isLoading = true;
-      });
-      _loadSequenceDataFromFile(currentLesson).then((_) async {
-        await _initializeAudioSources();
-        setState(() {
-          isLoading = false;
-        });
-        // Start sequence if song exists
-        if (widget.currentSong != null) {
-          await _startSequence();
-        }
-      });
-    } /// next campaign
-    else if(result != null && result is SongCollection){
-      setState(() {
-        if(widget.isFromCampaign) {
-          currentLesson = 0;
-        }
-      });
-      print('========resutl next campaign ${result.name}');
-      widget.onTapChooseSong?.call(result);
-      print('========${result.name}');
-      widget.onChangeStarLearn?.call(0);
-      _resetSequence(isPlayingDrum: true);
-      setState(() {
-        _previousTotalPoint = 0;
-        totalPoint = 0;
-        isLoading = true;
-      });
-      _loadSequenceDataFromFile(currentLesson).then((_) async {
-        await _initializeAudioSources();
-        setState(() {
-          isLoading = false;
-        });
-        // Start sequence if song exists
-        if (widget.currentSong != null) {
-          await _startSequence();
-        }
-      });
-    }
+    // /// next Lesson
+    // else if(result != null && result is int){
+    //   final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
+    //   setState(() {
+    //     if(widget.isFromLearnScreen) {
+    //       currentLesson = result;
+    //     }
+    //     // print(' result pop $result');
+    //   });
+    //   if(widget.isFromLearnScreen) campaignProvider.setCurrentLessonCampaign(currentLesson);
+    //   widget.onChangeStarLearn?.call(0);
+    //   _resetSequence(isPlayingDrum: true);
+    //   setState(() {
+    //     _previousTotalPoint = 0;
+    //     totalPoint = 0;
+    //     isLoading = true;
+    //   });
+    //   _loadSequenceDataFromFile(currentLesson).then((_) async {
+    //     await _initializeAudioSources();
+    //     setState(() {
+    //       isLoading = false;
+    //     });
+    //     // Start sequence if song exists
+    //     if (widget.currentSong != null) {
+    //       await _startSequence();
+    //     }
+    //   });
+    // } /// next campaign
+    // else if(result != null && result is SongCollection){
+    //   setState(() {
+    //     if(widget.isFromCampaign) {
+    //       currentLesson = 0;
+    //     }
+    //   });
+    //   print('========resutl next campaign ${result.name}');
+    //   widget.onTapChooseSong?.call(result);
+    //   print('========${result.name}');
+    //   widget.onChangeStarLearn?.call(0);
+    //   _resetSequence(isPlayingDrum: true);
+    //   setState(() {
+    //     _previousTotalPoint = 0;
+    //     totalPoint = 0;
+    //     isLoading = true;
+    //   });
+    //   _loadSequenceDataFromFile(currentLesson).then((_) async {
+    //     await _initializeAudioSources();
+    //     setState(() {
+    //       isLoading = false;
+    //     });
+    //     // Start sequence if song exists
+    //     if (widget.currentSong != null) {
+    //       await _startSequence();
+    //     }
+    //   });
+    // }
   }
 
   double getStar(){
