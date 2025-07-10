@@ -34,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         leadingWidth: MediaQuery.sizeOf(context).width * 0.5,
         leading: Padding(
           padding: const EdgeInsets.only(left: 16, top: 10),
-          child: Text(context.locale.profile, maxLines: 1, overflow: TextOverflow.ellipsis,
+          child: Text('Profile', maxLines: 1, overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize:20, fontFamily: AppFonts.commando, color: Colors.white)),
         ),
         actions: [

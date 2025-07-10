@@ -65,7 +65,7 @@ class BottomNavigation extends StatelessWidget {
                             padding: const EdgeInsets.only(bottom: 4, top: 8),
                             child: SvgPicture.asset(ResIcon.icBeatRunner, width: 24, height: 24, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
                           ),
-                          label: context.locale.runner
+                          label: 'Runner'
                       ),
                       BottomNavigationBarItem(
                           icon: Padding(
@@ -76,7 +76,7 @@ class BottomNavigation extends StatelessWidget {
                             padding: const EdgeInsets.only(bottom: 4, top: 8,),
                             child: SvgPicture.asset(ResIcon.icBeatLearn, width: 24, height: 24, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
                           ),
-                          label: context.locale.learn
+                          label: 'Learn'
                       ),
                       BottomNavigationBarItem(
                           icon: Padding(
@@ -87,7 +87,7 @@ class BottomNavigation extends StatelessWidget {
                             padding: const EdgeInsets.only(bottom: 4, top: 8,),
                             child: SvgPicture.asset(ResIcon.icTheme, width: 24, height: 24, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
                           ),
-                          label: context.locale.themes
+                          label: 'Themes'
                       ),
                       BottomNavigationBarItem(
                           icon: Padding(
@@ -98,7 +98,7 @@ class BottomNavigation extends StatelessWidget {
                             padding: const EdgeInsets.only(bottom: 4, top: 8),
                             child: SvgPicture.asset(ResIcon.icProfile, width: 24, height: 24, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
                           ),
-                          label: context.locale.profile
+                          label: 'Profile'
                       ),
                     ],
                   ),

@@ -54,7 +54,7 @@ class _AppBarTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      context.locale.beat_learn,
+      'Beat Learn',
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: const TextStyle(fontSize: 20, fontFamily: AppFonts.commando),
@@ -148,7 +148,7 @@ class _ModePlayLabel extends StatelessWidget {
 Widget _LearnMaterialItem(BuildContext context) {
   return ModePlayItem(
     asset: ResImage.imgBgLearnMaterial,
-    title: context.locale.learn_material,
+    title: 'Learn Material',
     description: context.locale.learn_material_des,
     onTap: () {
       Navigator.push(
@@ -162,7 +162,7 @@ Widget _LearnMaterialItem(BuildContext context) {
 Widget _CampaignItem(BuildContext context) {
   return ModePlayItem(
     asset: ResImage.imgBgCampaign,
-    title: context.locale.campaign,
+    title: 'Campaign',
     description: context.locale.campaign_des,
     onTap: () {
       Navigator.push(

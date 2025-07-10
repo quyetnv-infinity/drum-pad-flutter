@@ -23,7 +23,7 @@ class ThemeScreen extends StatelessWidget {
         leadingWidth: MediaQuery.sizeOf(context).width * 0.5,
         leading: Padding(
           padding: const EdgeInsets.only(left: 16, top: 10),
-          child: Text(context.locale.drum_theme, maxLines: 1, overflow: TextOverflow.ellipsis,
+          child: Text('Drum Theme', maxLines: 1, overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize:20, fontFamily: AppFonts.commando, color: Colors.white)),
         ),
         actions: [

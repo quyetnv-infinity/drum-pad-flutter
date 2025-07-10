@@ -41,7 +41,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> {
         leadingWidth: MediaQuery.sizeOf(context).width * 0.5,
         leading: Padding(
           padding: const EdgeInsets.only(left: 16, top: 10),
-          child: Text(context.locale.beat_runner, maxLines: 1, overflow: TextOverflow.ellipsis,
+          child: Text('Beat Runner', maxLines: 1, overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize:20, fontFamily: AppFonts.commando, color: Colors.white)),
         ),
         actions: [
@@ -91,7 +91,7 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> {
                 SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.only(right: 16),
-                  child: ModePlayItem(asset: ResImage.imgBgPadDrum, title: context.locale.freestyle_pad_drum, description: context.locale.pad_drum_des,
+                  child: ModePlayItem(asset: ResImage.imgBgPadDrum, title: 'Freestyle Pad Drum', description: context.locale.pad_drum_des,
                     onTap: () {
                       Navigator.push(context, CupertinoPageRoute(builder: (context) => FreeStylePlayScreen()));
                       adsProvider.showInterAd(
