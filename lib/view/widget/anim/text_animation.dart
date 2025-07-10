@@ -56,7 +56,7 @@ class _ComboWidgetState extends State<ComboWidget> {
                         Align(
                           alignment: Alignment.center,
                           child: JudgementText.perfect(
-                            context.locale.perfect,
+                            'Perfect',
                             italic: true,
                             fontSize: 28,
                             underline: true,

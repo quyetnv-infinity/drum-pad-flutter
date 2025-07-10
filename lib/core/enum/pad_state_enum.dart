@@ -10,15 +10,15 @@ extension PadStateExtension on PadStateEnum {
   Widget getDisplayWidget(BuildContext context) {
     switch (this) {
       case PadStateEnum.perfect:
-        return JudgementText.perfect(context.locale.perfect, fontSize: 20,);
+        return JudgementText.perfect('Perfect', fontSize: 20,);
       case PadStateEnum.good:
-        return JudgementText.good(context.locale.good, fontSize: 20);
+        return JudgementText.good('Good', fontSize: 20);
       case PadStateEnum.early:
-        return JudgementText.early(context.locale.early, fontSize: 20);
+        return JudgementText.early('Early', fontSize: 20);
       case PadStateEnum.late:
-        return JudgementText.late(context.locale.late, fontSize: 20);
+        return JudgementText.late('Late', fontSize: 20);
       case PadStateEnum.miss:
-        return JudgementText.miss(context.locale.miss,fontSize: 20);
+        return JudgementText.miss('Miss',fontSize: 20);
       default:
         return const SizedBox.shrink(); // Trả về widget trống nếu không có trạng thái
     }

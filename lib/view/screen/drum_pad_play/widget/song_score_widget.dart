@@ -319,7 +319,7 @@ class _SongScoreWidgetState extends State<SongScoreWidget> with TickerProviderSt
                           child: Transform.rotate(
                             angle: -0.16,
                             child: JudgementText.perfect(
-                              context.locale.perfect,
+                              'Perfect',
                               italic: true,
                               fontSize: FontResponsive.responsiveFontSize(size * 3, 26),
                               underline: true,
