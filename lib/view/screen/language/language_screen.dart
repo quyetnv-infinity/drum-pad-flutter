@@ -142,7 +142,7 @@ class _LanguageScreenState extends State<LanguageScreen>
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 11.0),
                 child: LanguageWidget<LanguageEnum>(
-                  languages: LanguageEnum.values,
+                  languages: LanguageEnum.en.getPrioritizedLanguages,
                   selectedLanguage:widget.fromSetting ? provider.selectedLanguage ?? LanguageEnum.en  : provider.selectedLanguage,
                   onLanguageChanged: (value) {
                     if(!_isClickAdsLoaded){
