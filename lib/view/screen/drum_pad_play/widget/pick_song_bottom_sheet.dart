@@ -194,7 +194,7 @@ class _PickSongScreenState extends State<PickSongScreen> {
             onAdLoaded: (value) {
               print("Native ad loaded: $value");
             },
-            padding: EdgeInsets.only(bottom: 16),
+            padding: EdgeInsets.only(bottom: 5),
             decoration: BoxDecoration(
                 color: Colors.grey.withValues(alpha: 0.2),
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(7)),

@@ -139,16 +139,24 @@ class _HomeScreenState extends State<HomeScreen>
             builder: (context, isLoading, child) {
               return isLoading
                   ? Container(
-                color: Colors.black.withValues(alpha: 0.5),
-                child: Center(
-                    child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Colors.white,
-                        ),
-                        child: const CircularProgressIndicator(color: Colors.blue)
-                    )
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                color: Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(color: Colors.black),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Welcome back',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
               )
                   : const SizedBox.shrink();
