@@ -713,7 +713,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     // Play new sound with fade in
     if (audioSources.containsKey(sound)) {
       print('play $sound');
-      final handle = await _soloudService.play(audioSources[sound]!);
+      final handle = await _soloudService.playWithFadeIn(audioSources[sound]!, duration: Duration(milliseconds: 100));
       currentlyPlayingSounds[sound] = handle;
       if(_currentLeadSound == sound) _currentLeadSound = null;
       if(_currentBassSound == sound) _currentBassSound = null;
@@ -722,7 +722,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     // Fade out previous sounds based on type
     if(_isFromBeatRunner){
       if(currentlyPlayingSounds[_currentLeadSound ?? ''] != null) {
-        await _soloudService.fadeOut(currentlyPlayingSounds[_currentLeadSound ?? '']!);
+        await _soloudService.fadeOut(currentlyPlayingSounds[_currentLeadSound ?? '']!, duration: _isFromBeatRunner ? const Duration(milliseconds: 500) : const Duration(milliseconds: 200));
         currentlyPlayingSounds.remove(_currentLeadSound);
       }
       setState(() {
@@ -730,7 +730,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
       });
     } else if(PadUtil.getSoundType(sound) == SoundType.lead){
       if(currentlyPlayingSounds[_currentLeadSound ?? ''] != null) {
-        await _soloudService.fadeOut(currentlyPlayingSounds[_currentLeadSound ?? '']!);
+        await _soloudService.fadeOut(currentlyPlayingSounds[_currentLeadSound ?? '']!, duration: _isFromBeatRunner ? const Duration(milliseconds: 500) : const Duration(milliseconds: 200));
         currentlyPlayingSounds.remove(_currentLeadSound);
       }
       setState(() {
@@ -738,7 +738,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
       });
     }else if (PadUtil.getSoundType(sound) == SoundType.bass){
       if(currentlyPlayingSounds[_currentBassSound ?? ''] != null) {
-        await _soloudService.fadeOut(currentlyPlayingSounds[_currentBassSound ?? '']!);
+        await _soloudService.fadeOut(currentlyPlayingSounds[_currentBassSound ?? '']!, duration: _isFromBeatRunner ? const Duration(milliseconds: 500) : const Duration(milliseconds: 200));
         currentlyPlayingSounds.remove(_currentBassSound);
       }
       setState(() {
@@ -792,7 +792,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
       return;
     }
     final currentEvent = events[currentEventIndex];
-    final nextEventTime = (currentEventIndex != 0 && !widget.isFromLearnScreen && !widget.isFromCampaign) ? currentEvent.time - 200 : currentEvent.time;
+    final nextEventTime = (currentEventIndex != 0 && _isFromBeatRunner) ? currentEvent.time - 0.75 : currentEvent.time;
     if (currentEventIndex == 0) {
       startTimeOffset = events[0].time;
     } else {
@@ -815,9 +815,10 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     lastEventTime = DateTime.now();
     if (currentEventIndex > events.length - 1) return;
 
-    double currentTime = event.time;
+    double currentTime = (currentEventIndex != 0 && _isFromBeatRunner) ? event.time - 0.75 : event.time; // 0.75 -> delay time for fade in & fade out
     double prevTime = events[currentEventIndex == 0 ? 0 : currentEventIndex - 1].time;
     double delay = currentTime - prevTime;
+    print('delay: $delay || ${event.time - prevTime}');
 
     // Nếu nốt đầu tiên có thời gian là 0, thì bỏ qua progress cho nốt này
     // if (currentEventIndex == 0 && currentTime == 0) return;
