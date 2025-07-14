@@ -304,7 +304,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   }
 
   void _startTimer() {
-    return;
     _pauseTimer?.cancel();
     _pauseTimer = Timer(Duration(seconds: 5), () {
       if (mounted && widget.practiceMode != 'practice') {
@@ -530,7 +529,6 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   }
 
   void checkMiss(){
-    return;
     if (missPoint > 5) _navigateToNextScreen();
   }
 
