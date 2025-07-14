@@ -705,9 +705,9 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
 
     ///VIBRATE VÂN RUNG
     final can = await Haptics.canVibrate();
-    if(!widget.isFromCampaign && !widget.isFromLearnScreen && can){
+    if(PadUtil.getSoundType(sound) == SoundType.drum && !_isFromBeatRunner && can){
       print("0000000");
-      await Haptics.vibrate(HapticsType.warning);
+      await Haptics.vibrate(HapticsType.light);
     }
 
     // Play new sound with fade in
