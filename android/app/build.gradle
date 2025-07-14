@@ -1,3 +1,4 @@
+
 plugins {
     id "com.android.application"
     id "kotlin-android"
@@ -15,6 +16,20 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21  // Thay đổi thành VERSION_21
         targetCompatibility = JavaVersion.VERSION_21  // Thay đổi thành VERSION_21
     }
+
+    signingConfigs {
+
+        release {
+            storeFile file(RELEASE_STORE_FILE)
+            storePassword RELEASE_STORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
 
     kotlinOptions {
         jvmTarget = "21"  // Thay đổi thành "21"
@@ -36,6 +51,7 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.debug
+            signingConfig = signingConfigs.release
         }
     }
 }
