@@ -304,6 +304,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   }
 
   void _startTimer() {
+    return;
     _pauseTimer?.cancel();
     _pauseTimer = Timer(Duration(seconds: 5), () {
       if (mounted && widget.practiceMode != 'practice') {
@@ -529,6 +530,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
   }
 
   void checkMiss(){
+    return;
     if (missPoint > 5) _navigateToNextScreen();
   }
 
@@ -792,7 +794,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
       return;
     }
     final currentEvent = events[currentEventIndex];
-    final nextEventTime = currentEvent.time;
+    final nextEventTime = (currentEventIndex != 0 && !widget.isFromLearnScreen && !widget.isFromCampaign) ? currentEvent.time - 200 : currentEvent.time;
     if (currentEventIndex == 0) {
       startTimeOffset = events[0].time;
     } else {
