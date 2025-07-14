@@ -715,6 +715,8 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
       print('play $sound');
       final handle = await _soloudService.play(audioSources[sound]!);
       currentlyPlayingSounds[sound] = handle;
+      if(_currentLeadSound == sound) _currentLeadSound = null;
+      if(_currentBassSound == sound) _currentBassSound = null;
     }
 
     // Fade out previous sounds based on type
@@ -942,6 +944,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
             setState(() {
               padStates[e] = PadStateEnum.miss;
             });
+            _playSound(e);
             increasePoint(PadStateEnum.miss);
             Future.delayed(const Duration(seconds: 1), () {
               setState(() {
