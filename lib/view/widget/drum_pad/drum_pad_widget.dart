@@ -868,7 +868,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     lastEventTime ??= DateTime.now();
 
     double currentTime = (DateTime.now().difference(lastEventTime!).inMilliseconds) / 1000.0;
-    double requiredTime = events[currentEventIndex].time - (currentEventIndex > 0 ? events[currentEventIndex - 1].time : 0);
+    double requiredTime = events[currentEventIndex].time - (_isFromBeatRunner ? 0.75 : 0) - (currentEventIndex > 0 ? events[currentEventIndex - 1].time : 0);
 
     PadStateEnum state = PadStateEnum.none;
     if(currentEventIndex != 0){
