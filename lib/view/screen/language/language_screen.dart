@@ -36,6 +36,7 @@ class _LanguageScreenState extends State<LanguageScreen>
   AdState _currentAdState = AdState.initial;
   bool _isContryAdsLoaded = false;
   bool _isClickAdsLoaded = false;
+  bool _showDoneButton = false; // Biến để control hiển thị nút Done
 
   @override
   void initState() {
@@ -45,7 +46,7 @@ class _LanguageScreenState extends State<LanguageScreen>
       context.read<LocateViewModel>().initSelectedLanguage();
       Future.delayed(
         Duration(milliseconds: 500),
-        () {
+            () {
           setState(() {});
         },
       );
@@ -79,6 +80,29 @@ class _LanguageScreenState extends State<LanguageScreen>
     }
   }
 
+  // Hàm xử lý khi user chọn ngôn ngữ
+  void _onLanguageSelected(LanguageEnum value, LocateViewModel provider) {
+    // Xử lý ads logic
+    if(!_isClickAdsLoaded){
+      setState(() {
+        _currentAdState = AdState.otherClick;
+        _isClickAdsLoaded = true;
+      });
+    }
+
+    // Chọn ngôn ngữ
+    provider.selectLanguage(value);
+
+    // Hiển thị nút Done sau 1 giây delay
+    Future.delayed(Duration(seconds: 1), () {
+      if (mounted) {
+        setState(() {
+          _showDoneButton = true;
+        });
+      }
+    });
+  }
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
@@ -108,6 +132,8 @@ class _LanguageScreenState extends State<LanguageScreen>
           ),
           centerTitle: false,
           actions: [
+            // Chỉ hiển thị nút Done khi _showDoneButton = true hoặc khi fromSetting = true
+            if (_showDoneButton || widget.fromSetting)
               InkWell(
                 borderRadius: BorderRadius.circular(20),
                 onTap: () {
@@ -120,15 +146,7 @@ class _LanguageScreenState extends State<LanguageScreen>
                 },
                 child: Row(
                   children: [
-                    SvgPicture.asset(ResIcon.icCheck2),
-                    ResSpacing.w8,
-                    Text(
-                      context.locale.done.toUpperCase(),
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 13,
-                          color: Colors.white),
-                    ),
+                    SvgPicture.asset(ResIcon.icCheck2,width: 18, height: 18),
                   ],
                 ),
               ),
@@ -145,13 +163,7 @@ class _LanguageScreenState extends State<LanguageScreen>
                   languages: LanguageEnum.en.getPrioritizedLanguages,
                   selectedLanguage:widget.fromSetting ? provider.selectedLanguage ?? LanguageEnum.en  : provider.selectedLanguage,
                   onLanguageChanged: (value) {
-                    if(!_isClickAdsLoaded){
-                      setState(() {
-                        _currentAdState = AdState.otherClick;
-                        _isClickAdsLoaded = true;
-                      });
-                    }
-                    provider.selectLanguage(value);
+                    _onLanguageSelected(value, provider);
                   },
                   itemTextStyleBuilder: (item, isSelected) => TextStyle(
                     color: Colors.white,
@@ -178,17 +190,10 @@ class _LanguageScreenState extends State<LanguageScreen>
                       groupValue: widget.fromSetting ? provider.selectedLanguage ?? LanguageEnum.en : provider.selectedLanguage,
                       onChanged: (value) {
                         if (value == null) return;
-                        if(!_isClickAdsLoaded){
-                          setState(() {
-                            _currentAdState = AdState.otherClick;
-                            _isClickAdsLoaded = true;
-                          });
-                        }
-                        provider.selectLanguage(value);
+                        _onLanguageSelected(value, provider);
                       },
                     );
                   },
-
                 ),
               );
             },

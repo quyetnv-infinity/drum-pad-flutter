@@ -60,7 +60,11 @@ class AppStateProvider with ChangeNotifier {
     AdController.shared.initialize(
       isAdDisabled: !shouldShowAds,
       configurations: getAdConfigurations(_isFirstOpenApp),
-      adjustConfig: AdjustConfig("s7auhvppayv4", AdjustEnvironment.production),
+      adjustConfig: AdjustConfig("pdckf8inq96o", AdjustEnvironment.production),
+      trackingAdjustConfig: TrackingAdjustConfig(
+        appToken: "nvelbs",
+        eventNameRevenue: "AD Revenue",
+      )
     );
   }
 

@@ -12,7 +12,7 @@ String openAdUnitId = Platform.isAndroid ? "/21775744923/example/app-open" : "ca
 String collapsibleBannerAdUnitId =Platform.isAndroid ? 'ca-app-pub-3940256099942544/2014213617' : 'ca-app-pub-3940256099942544/8388050270';
 
 class AdUnitId {
-  static bool devMode = false;
+  static bool devMode = true;
 
   static String interSplash = devMode ? interstitialAdUnitId: "ca-app-pub-7208941695689653/4809744986";
   static String openResume = devMode ? openAdUnitId: "ca-app-pub-7208941695689653/7270039754";
@@ -38,7 +38,7 @@ class AdUnitId {
 
   static String bannerCollapsibleHome = devMode ? collapsibleBannerAdUnitId:"ca-app-pub-7208941695689653/5739683277";
 
-  static String bannerCampaign = devMode ? bannerAdUnitId:"ca-app-pub-7208941695689653/9028191591";
+  static String bannerCampaign = devMode ? bannerAdUnitId:"ca-app-pub-7208941695689653/3461185471";
 }
 
 class AdName {

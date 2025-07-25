@@ -13,6 +13,7 @@ import 'package:and_drum_pad_flutter/view_model/purchase_provider.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:and_drum_pad_flutter/config/ads_config.dart';
 
 // Constants class để chia sẻ giữa các widgets
 class _CampaignConstants {
@@ -127,7 +128,7 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
       ),
       bottomNavigationBar: Consumer<PurchaseProvider>(
         builder: (context, purchaseProvider, _) {
-          return !purchaseProvider.isSubscribed ? const SafeArea(child: CollapsibleBannerAdWidget(adName: "banner_campaign")) : const SizedBox.shrink();
+          return !purchaseProvider.isSubscribed ? SafeArea(child: CollapsibleBannerAdWidget(adName: AdName.bannerCampaign)) : const SizedBox.shrink();
         }
       ),
       body: Center(child: _buildCampaignContent(),),
