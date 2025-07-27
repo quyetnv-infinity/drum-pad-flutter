@@ -7,9 +7,16 @@ import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:base_ui_flutter_v1/base_ui_flutter_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
+
+
+  Future<String> getVersion() async{
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    return packageInfo.version;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +79,25 @@ class SettingScreen extends StatelessWidget {
             leading: SvgPicture.asset(ResIcon.icShieldSecurity),
             trailing: SvgPicture.asset(ResIcon.icArrowRight),
           ),
+          // SettingItem(
+          //   title: "version",
+          //   onPress: () {
+          //     SettingFuncs.privacyPolicy();
+          //   },
+          //   leading: SvgPicture.asset(ResIcon.icShieldSecurity),
+          //   trailing: FutureBuilder<String>(
+          //     future: getVersion(),
+          //     builder: (context, snapshot) {
+          //       if (snapshot.connectionState == ConnectionState.waiting) {
+          //         return CircularProgressIndicator();
+          //       } else if (snapshot.hasError) {
+          //         return Text("Error");
+          //       } else {
+          //         return Text(snapshot.data ?? "Unknown");
+          //       }
+          //     },
+          //   ),
+          // ),
         ],
       ),
     );

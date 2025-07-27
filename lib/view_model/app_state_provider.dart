@@ -62,7 +62,7 @@ class AppStateProvider with ChangeNotifier {
       configurations: getAdConfigurations(_isFirstOpenApp),
       adjustConfig: AdjustConfig("pdckf8inq96o", AdjustEnvironment.production),
       trackingAdjustConfig: TrackingAdjustConfig(
-        appToken: "nvelbs",
+        appToken: "9032yk",
         eventNameRevenue: "AD Revenue",
       )
     );

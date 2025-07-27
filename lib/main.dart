@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
-import 'package:ads_tracking_plugin/ads_tracking_plugin_platform_interface.dart';
 import 'package:ads_tracking_plugin/att_permission.dart';
 import 'package:ads_tracking_plugin/tracking/analytics_tracker.dart';
 import 'package:and_drum_pad_flutter/config/ads_config.dart';

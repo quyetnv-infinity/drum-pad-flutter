@@ -2,7 +2,7 @@ name: and_drum_pad_flutter
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+1
+version: 1.0.3+4
 
 environment:
   sdk: ^3.6.2
@@ -47,6 +47,7 @@ dependencies:
     path: ../base-flutter-refactor
   flutter_soloud: ^3.2.1
   haptic_feedback: ^0.5.1+1
+  package_info_plus: ^8.3.0
 
 
 dev_dependencies:
