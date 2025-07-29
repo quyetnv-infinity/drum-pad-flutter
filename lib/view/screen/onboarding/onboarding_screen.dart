@@ -59,12 +59,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
           Provider.of<AppStateProvider>(context, listen: false);
       appStateProvider.setFirstOpenApp();
       AdController.shared.setResumeAdState(false);
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomeScreen()));
-      Provider.of<AppSettingsProvider>(context, listen: false)
-          .increaseTimeOpenApp();
-      print(
-          'time open appppp${Provider.of<AppSettingsProvider>(context, listen: false).timeOpenApp}');
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      Provider.of<AppSettingsProvider>(context, listen: false).increaseTimeOpenApp();
     } else {
       pageController.nextPage(
         duration: const Duration(milliseconds: 300),

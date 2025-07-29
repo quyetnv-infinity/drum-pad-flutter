@@ -183,7 +183,6 @@ class _LanguageScreenState extends State<LanguageScreen>
                     );
                   },
                   leadingBuilder: (context, item) {
-                    print("Selected language: ${item.displayName}");
                     return Radio<LanguageEnum>(
                       activeColor: Colors.white,
                       value: item,
@@ -204,13 +203,12 @@ class _LanguageScreenState extends State<LanguageScreen>
             key: ValueKey(_currentAdState),
             adName: _getAdName(value.isFirstOpenApp),
             disabled: !value.shouldShowAds,
-            onAdLoaded: (value) {
-              print("Native ad loaded: $value");
-            },
+            onAdLoaded: (value) {},
+            padding: EdgeInsets.only(bottom: 10),
             decoration: BoxDecoration(
                 color: Colors.grey.withValues(alpha: 0.2),
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(7)),
-                border: Border.all(width: 1, color: Color(0xFFD3D3D3))
+                border: Border.all(width: 1, color: Color(0x80D3D3D3))
             ),
           );
         },),

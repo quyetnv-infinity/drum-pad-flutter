@@ -126,9 +126,8 @@ Widget page1(BuildContext context,
               margin: EdgeInsets.only(top: 10),
               adName: appStateProvider.isFirstOpenApp ? AdName.nativeOnboarding : AdName.nativeOnboarding2,
               disabled: !appStateProvider.shouldShowAds,
-              onAdLoaded: (value) {
-                print("Native onboarding 1 loaded: $value");
-              },
+              onAdLoaded: (value) {},
+              height: 50,
               decoration: BoxDecoration(
                   color: Colors.grey.withValues(alpha: 0.2),
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(7)),
@@ -210,9 +209,8 @@ Widget page4(BuildContext context,
               key: ValueKey(appStateProvider.isFirstOpenApp ? AdName.nativeOnboardingPage3 : AdName.nativeOnboardingPage32),
               adName: appStateProvider.isFirstOpenApp ? AdName.nativeOnboardingPage3 : AdName.nativeOnboardingPage32,
               disabled: !appStateProvider.shouldShowAds,
-              onAdLoaded: (value) {
-                print("Native ad loaded: $value");
-              },
+              onAdLoaded: (value) {},
+              height: 50,
               decoration: BoxDecoration(
                   color: Colors.grey.withValues(alpha: 0.2),
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(7)),

@@ -1,6 +1,6 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/Users/nguyenvietanh/fvm/versions/3.27.4"
+export "FLUTTER_ROOT=/Users/nguyenvietanh/fvm/versions/3.32.4"
 export "FLUTTER_APPLICATION_PATH=/Users/nguyenvietanh/Documents/drum-pad-flutter"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_BUILD_DIR=build"
