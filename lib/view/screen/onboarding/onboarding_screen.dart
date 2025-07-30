@@ -330,6 +330,11 @@ class _PersistentAdWidgetState extends State<_PersistentAdWidget> {
       disabled: !currentShouldShowAds,
       onAdLoaded: (value) {
         debugPrint('[PersistentAd] Ad loaded: $currentAdName, success: $value');
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            setState(() {}); // Trigger rebuild to show ad
+          }
+        });
       },
       height: 50,
       decoration: BoxDecoration(

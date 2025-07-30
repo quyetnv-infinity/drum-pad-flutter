@@ -43,7 +43,7 @@ class _LanguageScreenState extends State<LanguageScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<LocateViewModel>().initSelectedLanguage();;
+      context.read<LocateViewModel>().initSelectedLanguage();
     });
   }
 
@@ -53,9 +53,6 @@ class _LanguageScreenState extends State<LanguageScreen>
     if (widget.fromSetting) return;
     if (state == AppLifecycleState.paused) {
       AdController.shared.setResumeAdState(true);
-    }
-    if (state == AppLifecycleState.resumed) {
-      AdController.shared.setResumeAdState(false);
     }
   }
 
@@ -197,7 +194,13 @@ class _LanguageScreenState extends State<LanguageScreen>
             key: ValueKey(_currentAdState),
             adName: _getAdName(value.isFirstOpenApp),
             disabled: !value.shouldShowAds,
-            onAdLoaded: (value) {},
+            onAdLoaded: (value) {
+              Future.delayed(const Duration(seconds: 1), () {
+                if (mounted) {
+                  setState(() {}); // Trigger rebuild to show ad
+                }
+              });
+            },
             padding: EdgeInsets.only(bottom: 10),
             decoration: BoxDecoration(
                 color: Colors.grey.withValues(alpha: 0.2),

@@ -36,17 +36,6 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     super.dispose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.paused) {
-      AdController.shared.setResumeAdState(true);
-    }
-    if (state == AppLifecycleState.resumed) {
-      AdController.shared.setResumeAdState(false);
-    }
-  }
-
   void _onLoadingEnd() {
     EUConsent().requestConsent(() {
       final adsProvider = Provider.of<AdsProvider>(context, listen: false);
