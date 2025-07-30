@@ -792,7 +792,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
       return;
     }
     final currentEvent = events[currentEventIndex];
-    final nextEventTime = (currentEventIndex != 0 && _isFromBeatRunner) ? currentEvent.time - 0.75 : currentEvent.time;
+    final nextEventTime = (currentEventIndex != 0 && _isFromBeatRunner) ? currentEvent.time - 0.12 : currentEvent.time;
     if (currentEventIndex == 0) {
       startTimeOffset = events[0].time;
     } else {
@@ -815,7 +815,7 @@ class _DrumPadScreenState extends State<DrumPadScreen> with TickerProviderStateM
     lastEventTime = DateTime.now();
     if (currentEventIndex > events.length - 1) return;
 
-    double currentTime = (currentEventIndex != 0 && _isFromBeatRunner) ? event.time - 0.75 : event.time; // 0.75 -> delay time for fade in & fade out
+    double currentTime = (currentEventIndex != 0 && _isFromBeatRunner) ? event.time - 0.12 : event.time; // 0.75 -> delay time for fade in & fade out
     double prevTime = events[currentEventIndex == 0 ? 0 : currentEventIndex - 1].time;
     double delay = currentTime - prevTime;
     print('delay: $delay || ${event.time - prevTime}');
