@@ -4,7 +4,6 @@ import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
 import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/constant/app_info.dart';
-import 'package:and_drum_pad_flutter/core/res/dimen/spacing.dart';
 import 'package:and_drum_pad_flutter/view/screen/home/home_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/language/language_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
@@ -13,7 +12,6 @@ import 'package:and_drum_pad_flutter/view_model/app_setting_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/app_state_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -41,8 +39,11 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if(state == AppLifecycleState.paused) {
+    if (state == AppLifecycleState.paused) {
       AdController.shared.setResumeAdState(true);
+    }
+    if (state == AppLifecycleState.resumed) {
+      AdController.shared.setResumeAdState(false);
     }
   }
 

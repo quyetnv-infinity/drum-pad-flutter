@@ -7,7 +7,6 @@ import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/pick_song_bottom_sheet.dart';
 import 'package:and_drum_pad_flutter/view/screen/home/home_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/result/widget/congratulations_widget.dart';
-import 'package:and_drum_pad_flutter/view/widget/loading_dialog/loading_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/star/star_result.dart';
 import 'package:and_drum_pad_flutter/view/widget/text/judgement_text.dart';
 import 'package:and_drum_pad_flutter/view_model/app_state_provider.dart';
@@ -62,13 +61,13 @@ class _ResultScreenState extends State<ResultScreen>
 
   @override
   void initState() {
-    print('15teiugdsfkjvc ${widget.totalNotes}');
-    print('15teiugdsfkjvc ${widget.perfectScore}');
-    print('15teiugdsfkjvc ${widget.goodScore}');
-    print('15teiugdsfkjvc ${widget.lateScore}');
-    print('15teiugdsfkjvc ${widget.earlyScore}');
-    print('15teiugdsfkjvc ${widget.missScore}');
-    print('scoreeeeee ${widget.totalScore}');
+    // print('15teiugdsfkjvc ${widget.totalNotes}');
+    // print('15teiugdsfkjvc ${widget.perfectScore}');
+    // print('15teiugdsfkjvc ${widget.goodScore}');
+    // print('15teiugdsfkjvc ${widget.lateScore}');
+    // print('15teiugdsfkjvc ${widget.earlyScore}');
+    // print('15teiugdsfkjvc ${widget.missScore}');
+    // print('scoreeeeee ${widget.totalScore}');
     super.initState();
     isShowCongratulations = widget.isCompleteCampaign && widget.isCompleted;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -185,6 +184,7 @@ class _ResultScreenState extends State<ResultScreen>
 
   @override
   Widget build(BuildContext context) {
+    print('ResultScreen build');
     return SafeArea(
       child: Container(
         clipBehavior: Clip.antiAlias,

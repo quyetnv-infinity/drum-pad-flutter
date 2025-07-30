@@ -43,13 +43,7 @@ class _LanguageScreenState extends State<LanguageScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<LocateViewModel>().initSelectedLanguage();
-      Future.delayed(
-        Duration(milliseconds: 500),
-            () {
-          setState(() {});
-        },
-      );
+      context.read<LocateViewModel>().initSelectedLanguage();;
     });
   }
 
