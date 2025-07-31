@@ -53,6 +53,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     final isFirstOpenApp = Provider.of<AppStateProvider>(context, listen: false).isFirstOpenApp;
 
     if (isFirstOpenApp || Platform.isAndroid) {
+      AdController.shared.setResumeAdState(true);
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LanguageScreen(fromSetting: false,)));
     } else {
       AdController.shared.setResumeAdState(false);

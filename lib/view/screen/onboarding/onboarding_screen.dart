@@ -71,9 +71,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
     if (state == AppLifecycleState.paused) {
       AdController.shared.setResumeAdState(true);
     }
-    if (state == AppLifecycleState.resumed) {
-      AdController.shared.setResumeAdState(false);
-    }
   }
 
   @override

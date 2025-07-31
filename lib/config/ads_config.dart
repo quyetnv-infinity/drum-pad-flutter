@@ -229,6 +229,7 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       adUnit: AdUnit(defaultId: AdUnitId.openResume),
       name: AdName.openResume,
       format: AdFormat.appOpen,
+
     ),
   ];
 }

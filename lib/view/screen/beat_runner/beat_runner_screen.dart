@@ -1,3 +1,4 @@
+import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
@@ -25,13 +26,21 @@ class BeatRunnerScreen extends StatefulWidget {
   State<BeatRunnerScreen> createState() => _BeatRunnerScreenState();
 }
 
-class _BeatRunnerScreenState extends State<BeatRunnerScreen> {
+class _BeatRunnerScreenState extends State<BeatRunnerScreen> with WidgetsBindingObserver {
   late AdsProvider adsProvider;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     adsProvider = Provider.of<AdsProvider>(context, listen: false);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    // ✅ Don't dispose ads here - let _PersistentAdWidget handle it
+    super.dispose();
   }
 
   @override

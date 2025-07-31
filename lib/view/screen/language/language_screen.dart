@@ -47,14 +47,14 @@ class _LanguageScreenState extends State<LanguageScreen>
     });
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (widget.fromSetting) return;
-    if (state == AppLifecycleState.paused) {
-      AdController.shared.setResumeAdState(true);
-    }
-  }
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   super.didChangeAppLifecycleState(state);
+  //   if (!widget.fromSetting) return;
+  //   if (state == AppLifecycleState.paused) {
+  //     AdController.shared.setResumeAdState(true);
+  //   }
+  // }
 
   String _getAdName(bool isFirstOpenApp) {
     switch (_currentAdState) {
