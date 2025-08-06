@@ -2,11 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:drumpad_flutter/config/ads_config.dart';
 import 'package:drumpad_flutter/core/utils/locator_support.dart';
 import 'package:drumpad_flutter/src/mvvm/models/lesson_model.dart';
+import 'package:drumpad_flutter/src/mvvm/view_model/ads_provider.dart';
 import 'package:drumpad_flutter/src/service/api_service/api_service.dart';
 import 'package:drumpad_flutter/src/widgets/overlay_loading/overlay_loading.dart';
 import 'package:drumpad_flutter/src/widgets/unlock_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 void showDialogUnlockSongItem({required BuildContext context, required SongCollection item, required void Function() onTapGetPremium, required void Function() onTapWatchAds}){
   showDialog(context: context, builder: (context) => DialogUnlockSong(
@@ -84,6 +86,7 @@ class DialogUnlockSong extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(height: 8,),
+                if(context.read<AdsProvider>().adsEnabled)
                 _buildButton(icon: 'assets/icons/ic_watch_ads.svg', title: context.locale.get_this_song_for_free, content: context.locale.watch_ad, onTap: onTapWatchAds),
                 _buildButton(icon: 'assets/icons/ic_iap.svg', title: context.locale.unlock_all_song, content: context.locale.get_premium, onTap: onTapGetPremium),
                 SizedBox(height: 8,)

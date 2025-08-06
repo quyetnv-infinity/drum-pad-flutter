@@ -47,7 +47,7 @@ import google_mobile_ads
                     }
                 }
         // Initialize Google Mobile Ads SDK
-        GADMobileAds.sharedInstance().start(completionHandler: nil)
+//        GADMobileAds.sharedInstance().start(completionHandler: nil)
         // Register NativeAdFactoryExample
 
         let layoutTopCTA = LayoutTopCTA()

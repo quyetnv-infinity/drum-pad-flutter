@@ -21,10 +21,10 @@ packages:
     dependency: transitive
     description:
       name: adjust_sdk
-      sha256: "1f6ecfbc1cddd5ad41199c466c61db6bbaad250fbfe6ebdecb06a24a1cce1e15"
+      sha256: "1e1da3bd53afe1b5cde876f2aab2d572acd552d749f0309acc14a8b1e08fe8c6"
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.1"
+    version: "5.4.1"
   ads_tracking_plugin:
     dependency: "direct main"
     description:
@@ -323,10 +323,10 @@ packages:
     dependency: transitive
     description:
       name: facebook_app_events
-      sha256: bd69a7fb9ed5ce265221a3d3023e021120ae94bdc21c6d668237ab4bf37c51ea
+      sha256: febb0c73714ed48c546b4fa214ac08cf3b4db0a4acebaaefc61e3b653bf1f342
       url: "https://pub.dev"
     source: hosted
-    version: "0.19.3"
+    version: "0.20.1"
   fading_edge_scrollview:
     dependency: transitive
     description:
@@ -647,10 +647,10 @@ packages:
     dependency: transitive
     description:
       name: google_mobile_ads
-      sha256: "0d4a3744b5e8ed1b8be6a1b452d309f811688855a497c6113fc4400f922db603"
+      sha256: a4f59019f2c32769fb6c60ed8aa321e9c21a36297e2c4f23452b3e779a3e7a26
       url: "https://pub.dev"
     source: hosted
-    version: "5.3.1"
+    version: "6.0.0"
   graphs:
     dependency: transitive
     description:
@@ -1108,21 +1108,21 @@ packages:
     source: hosted
     version: "0.28.0"
   share_plus:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: share_plus
-      sha256: fce43200aa03ea87b91ce4c3ac79f0cecd52e2a7a56c7a4185023c271fbfa6da
+      sha256: b2961506569e28948d75ec346c28775bb111986bb69dc6a20754a457e3d97fa0
       url: "https://pub.dev"
     source: hosted
-    version: "10.1.4"
+    version: "11.0.0"
   share_plus_platform_interface:
     dependency: transitive
     description:
       name: share_plus_platform_interface
-      sha256: cc012a23fc2d479854e6c80150696c4a5f5bb62cb89af4de1c505cf78d0a5d0b
+      sha256: "1032d392bc5d2095a77447a805aa3f804d2ae6a4d5eef5e6ebb3bd94c1bc19ef"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.2"
+    version: "6.0.0"
   shared_preferences:
     dependency: "direct main"
     description:

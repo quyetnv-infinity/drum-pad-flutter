@@ -13,15 +13,15 @@ class BackgroundAudioProvider extends ChangeNotifier with WidgetsBindingObserver
   ];
   List<String> _remainingTracks = [];
 
-  bool _isPlaying = true;
+  bool _isPlaying = false;
   bool _homePlaying = true;
 
   bool get isPlaying => _isPlaying;
   bool get homePlaying => _homePlaying;
 
-  BackgroundAudioProvider() {
-    _init();
-  }
+  // BackgroundAudioProvider() {
+    // _init();
+  // }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -33,7 +33,7 @@ class BackgroundAudioProvider extends ChangeNotifier with WidgetsBindingObserver
     // }
   }
 
-  Future<void> _init() async {
+  Future<void> init() async {
     WidgetsBinding.instance.addObserver(this);
     _audioPlayer!.setLoopMode(LoopMode.off);
 
@@ -42,7 +42,8 @@ class BackgroundAudioProvider extends ChangeNotifier with WidgetsBindingObserver
         _playNextRandom();
       }
     });
-
+    print("=======");
+    print("play random");
     await _playNextRandom();
   }
 
@@ -57,7 +58,8 @@ class BackgroundAudioProvider extends ChangeNotifier with WidgetsBindingObserver
       final nextTrack = _remainingTracks.removeAt(index);
 
       await _audioPlayer!.setAsset(nextTrack);
-      // await _audioPlayer!.play();
+      _audioPlayer!.play();
+      // await play();
 
       _isPlaying = true;
       notifyListeners();
@@ -66,11 +68,16 @@ class BackgroundAudioProvider extends ChangeNotifier with WidgetsBindingObserver
     }
   }
   Future<void> play() async {
+
     if (!_isPlaying) {
+      print("playyyy");
       _isPlaying = true;
       notifyListeners();
       await _audioPlayer!.play();
     }
+  }
+  Future<void> homePlay() async {
+    await _audioPlayer!.play();
   }
 
   Future<void> pause() async {

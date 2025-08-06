@@ -12,9 +12,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 class SettingFuncs {
   static void share(){
-    Share.share(
-        'Check out this amazing app! ${AppInfo.appLink}',
-        subject: 'Beat Maker Pro: Drum Pad'
+    SharePlus.instance.share(
+      ShareParams(
+        text: 'Check out this amazing app! ${AppInfo.appLink}',
+        title: 'Beat Maker Pro: Drum Pad'
+      )
     );
   }
   static void showDialogReviewThanksForRate(BuildContext context){

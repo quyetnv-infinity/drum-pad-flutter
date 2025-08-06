@@ -10,7 +10,7 @@ class AdsProvider with ChangeNotifier {
   final BackgroundAudioProvider backgroundAudioProvider;
   AdsProvider({required this.appSettingsProvider, required this.backgroundAudioProvider});
 
-  bool _adsEnabled = true;
+  bool _adsEnabled = false;
   DateTime? _lastAdTime;
   bool _isLoading = false;
 

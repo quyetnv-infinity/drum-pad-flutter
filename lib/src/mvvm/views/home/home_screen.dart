@@ -57,7 +57,8 @@ class _HomeScreenState extends State<HomeScreen> {
     backgroundAudioProvider = Provider.of<BackgroundAudioProvider>(context, listen: false);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      backgroundAudioProvider.play();
+      backgroundAudioProvider.init();
+      // backgroundAudioProvider.homePlay();
     });
     networkProvider.addListener(checkNetwork);
     _initializeData();
