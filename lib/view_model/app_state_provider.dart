@@ -1,3 +1,4 @@
+import 'package:ads_tracking_plugin/ad_config.dart';
 import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
 import 'package:ads_tracking_plugin/tracking/analytics_tracker.dart';

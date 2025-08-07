@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:ads_tracking_plugin/ad_config.dart';
 import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:ads_tracking_plugin/native_ad/native_ad_widget.dart';
+import 'package:ads_tracking_plugin/remote_config.dart';
 import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/core/enum/language_enum.dart';
 import 'package:and_drum_pad_flutter/core/extension/language_extension.dart';
@@ -27,43 +29,48 @@ class LanguageScreen extends StatefulWidget {
 
 enum AdState {
   initial, // nativeLanguage || nativeLanguage2
-  englishClick, // nativeLanguageCountry || nativeLanguageCountry2
   otherClick // nativeLanguageClick || nativeLanguageClick2
 }
 
 class _LanguageScreenState extends State<LanguageScreen>
     with WidgetsBindingObserver {
   AdState _currentAdState = AdState.initial;
-  bool _isContryAdsLoaded = false;
   bool _isClickAdsLoaded = false;
-  bool _showDoneButton = false; // Biến để control hiển thị nút Done
+  bool _showDoneButton = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    if(!widget.fromSetting) {
+      AdController.shared.setResumeAdState(true);
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<LocateViewModel>().initSelectedLanguage();
+
+      final isFirstOpenApp = Provider.of<AppStateProvider>(context, listen: false).isFirstOpenApp;
+
+      Future.wait([
+        AdController.shared.preload(name: isFirstOpenApp ? AdName.nativeOnboarding : AdName.nativeOnboarding2),
+        AdController.shared.preload(name: isFirstOpenApp ? AdName.nativeOnboardingPage3 : AdName.nativeOnboardingPage32),
+      ]);
+
     });
   }
 
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   super.didChangeAppLifecycleState(state);
-  //   if (!widget.fromSetting) return;
-  //   if (state == AppLifecycleState.paused) {
-  //     AdController.shared.setResumeAdState(true);
-  //   }
-  // }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (!widget.fromSetting) return;
+    if (state == AppLifecycleState.paused) {
+      AdController.shared.setResumeAdState(true);
+    }
+  }
 
   String _getAdName(bool isFirstOpenApp) {
     switch (_currentAdState) {
       case AdState.initial:
         return isFirstOpenApp ? AdName.nativeLanguage : AdName.nativeLanguage2;
-      case AdState.englishClick:
-        return isFirstOpenApp
-            ? AdName.nativeLanguageCountry
-            : AdName.nativeLanguageCountry_2;
       case AdState.otherClick:
         return isFirstOpenApp
             ? AdName.nativeLanguageClick
@@ -71,9 +78,7 @@ class _LanguageScreenState extends State<LanguageScreen>
     }
   }
 
-  // Hàm xử lý khi user chọn ngôn ngữ
   void _onLanguageSelected(LanguageEnum value, LocateViewModel provider) {
-    // Xử lý ads logic
     if(!_isClickAdsLoaded){
       setState(() {
         _currentAdState = AdState.otherClick;
@@ -81,10 +86,8 @@ class _LanguageScreenState extends State<LanguageScreen>
       });
     }
 
-    // Chọn ngôn ngữ
     provider.selectLanguage(value);
 
-    // Hiển thị nút Done sau 1 giây delay
     Future.delayed(Duration(seconds: 1), () {
       if (mounted) {
         setState(() {
@@ -123,7 +126,6 @@ class _LanguageScreenState extends State<LanguageScreen>
           ),
           centerTitle: false,
           actions: [
-            // Chỉ hiển thị nút Done khi _showDoneButton = true hoặc khi fromSetting = true
             if (_showDoneButton || widget.fromSetting)
               InkWell(
                 borderRadius: BorderRadius.circular(20),
@@ -195,7 +197,7 @@ class _LanguageScreenState extends State<LanguageScreen>
             adName: _getAdName(value.isFirstOpenApp),
             disabled: !value.shouldShowAds,
             onAdLoaded: (value) {
-              Future.delayed(const Duration(seconds: 1), () {
+              Future.delayed(const Duration(microseconds: 300), () {
                 if (mounted) {
                   setState(() {}); // Trigger rebuild to show ad
                 }

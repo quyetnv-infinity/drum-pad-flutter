@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:ads_tracking_plugin/ad_config.dart';
 import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
 import 'package:and_drum_pad_flutter/config/ads_config.dart';
@@ -37,30 +38,41 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   }
 
   void _onLoadingEnd() {
-    EUConsent().requestConsent(() {
+    EUConsent().requestConsent(() async {
       final adsProvider = Provider.of<AdsProvider>(context, listen: false);
+
+      final isFirstOpenApp = Provider.of<AppStateProvider>(context, listen: false).isFirstOpenApp;
+
+      try{
+        Future.wait([
+          AdController.shared.preload(name: isFirstOpenApp ? AdName.nativeLanguage :  AdName.nativeLanguage2),
+          AdController.shared.preload(name: isFirstOpenApp ? AdName.nativeLanguageClick : AdName.nativeLanguageClick2),
+        ]);
+      }catch(e) {
+        debugPrint("preload native language 2 error: $e");
+      }
       adsProvider.showInterAd(
         name: AdName.interSplash,
         callback: () {
-          _navigateToHome();
+          _navigateToHome(isFirstOpenApp);
         }
       );
     });
   }
 
-  Future<void> _navigateToHome() async {
+  Future<void> _navigateToHome(bool isFirstOpenApp) async {
     AdController.shared.setResumeAdState(false);
-    final isFirstOpenApp = Provider.of<AppStateProvider>(context, listen: false).isFirstOpenApp;
 
-    if (isFirstOpenApp || Platform.isAndroid) {
-      AdController.shared.setResumeAdState(true);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LanguageScreen(fromSetting: false,)));
-    } else {
-      AdController.shared.setResumeAdState(false);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
-      Provider.of<AppSettingsProvider>(context, listen: false).increaseTimeOpenApp();
-      print('time open appppp${Provider.of<AppSettingsProvider>(context, listen: false).timeOpenApp}');
-    }
+
+    // if (isFirstOpenApp || Platform.isAndroid) {
+    AdController.shared.setResumeAdState(true);
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LanguageScreen(fromSetting: false,)));
+  //   } else {
+  //     AdController.shared.setResumeAdState(false);
+  //     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+  //     Provider.of<AppSettingsProvider>(context, listen: false).increaseTimeOpenApp();
+  //     print('time open appppp${Provider.of<AppSettingsProvider>(context, listen: false).timeOpenApp}');
+  //   }
   }
 
   @override
