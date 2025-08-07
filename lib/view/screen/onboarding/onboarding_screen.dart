@@ -115,18 +115,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
   }
 
   Widget _buildPageView() {
-    return PageView(
+    final pages = [
+      _buildPage1(),
+      _buildPage2(),
+      _buildPage3(),
+      _buildPage4(),
+    ];
+    return PageView.builder(
       controller: pageController,
+      itemCount: pages.length,
       onPageChanged: (index) {
         // ✅ Update currentPage without setState to avoid rebuilds
         currentPage = index;
       },
-      children: [
-        _buildPage1(),
-        _buildPage2(),
-        _buildPage3(),
-        _buildPage4(),
-      ],
+      itemBuilder: (BuildContext context, int index) {
+        return pages[index];
+      },
     );
   }
 
