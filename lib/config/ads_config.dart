@@ -4,13 +4,13 @@ import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
 
 String bannerAdUnitId = Platform.isAndroid ? "ca-app-pub-3940256099942544/6300978111" : "ca-app-pub-3940256099942544/2934735716";
 String interstitialAdUnitId = Platform.isAndroid ? "ca-app-pub-3940256099942544/1033173712" : "ca-app-pub-3940256099942544/4411468910";
-String nativeAdUnitId = Platform.isAndroid ? "ca-app-pub-3940256099942544/224769611" : "ca-app-pub-3940256099942544/3986624511";
+String nativeAdUnitId = Platform.isAndroid ? "ca-app-pub-3940256099942544/2247696110" : "ca-app-pub-3940256099942544/3986624511";
 String rewardedAdUnitId = Platform.isAndroid ? "ca-app-pub-3940256099942544/5224354917" : "ca-app-pub-3940256099942544/1712485313";
 String openAdUnitId = Platform.isAndroid ? "/21775744923/example/app-open" : "ca-app-pub-3940256099942544/5575463023";
 String collapsibleBannerAdUnitId =Platform.isAndroid ? 'ca-app-pub-3940256099942544/2014213617' : 'ca-app-pub-3940256099942544/8388050270';
 
 class AdUnitId {
-  static bool devMode = true; // false is production, true is development
+  static bool devMode = false; // false is production, true is development
 
   static String interSplash = devMode ? interstitialAdUnitId: "ca-app-pub-7208941695689653/4809744986";
   static String openResume = devMode ? openAdUnitId: "ca-app-pub-7208941695689653/7270039754";
@@ -80,7 +80,7 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       loadType: LoadType.highestFloorAsync,
       name: AdName.interSplash,
       format: AdFormat.interstitial,
-      loadTimeOut: 30,
+      loadTimeOut: 35,
       preload: preload,
     ),
     AdConfiguration(
@@ -229,7 +229,6 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       adUnit: AdUnit(defaultId: AdUnitId.openResume),
       name: AdName.openResume,
       format: AdFormat.appOpen,
-
     ),
   ];
 }

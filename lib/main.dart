@@ -39,16 +39,48 @@ void main() {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    await initTrackingPermission();
-    await Firebase.initializeApp();
+
+    try {
+      await Firebase.initializeApp();
+    } catch (error, stackTrace) {
+      print("Failed to init Firebase: $error");
+      AnalyticsTracker.logError(error, stackTrace);
+    }
+
+    try {
+      await initTrackingPermission();
+    } catch (error, stackTrace) {
+      print("Failed to init tracking permission: $error");
+      AnalyticsTracker.logError(error, stackTrace);
+    }
+
     await Future.wait([
-      AnalyticsTracker.setupCrashlytics(),
-      RemoteConfig.initializeRemoteConfig(adConfigs: getAdConfigurations(false), devMode: AdUnitId.devMode),
-      AnalyticsTracker.trackAppOpens(),
-      _initHive(),
-      ServiceLocator.instance.initialise(),
-      SoLoudService.instance.initialize(),
+      AnalyticsTracker.setupCrashlytics().catchError((error, stackTrace) {
+        print("Failed to setup Crashlytics: $error");
+        AnalyticsTracker.logError(error, stackTrace);
+      }),
+      RemoteConfig.initializeRemoteConfig(adConfigs: getAdConfigurations(false), devMode: AdUnitId.devMode).catchError((error, stackTrace) {
+        print("Failed to init RemoteConfig: $error");
+        AnalyticsTracker.logError(error, stackTrace);
+      }),
+      AnalyticsTracker.trackAppOpens().catchError((error, stackTrace) {
+        print("Failed to track app opens: $error");
+        AnalyticsTracker.logError(error, stackTrace);
+      }),
+      _initHive().catchError((error, stackTrace) {
+        print("Failed to init Hive: $error");
+        AnalyticsTracker.logError(error, stackTrace);
+      }),
+      ServiceLocator.instance.initialise().catchError((error, stackTrace) {
+        print("Failed to init ServiceLocator: $error");
+        AnalyticsTracker.logError(error, stackTrace);
+      }),
+      SoLoudService.instance.initialize().catchError((error, stackTrace) {
+        print("Failed to init SoLoud: $error");
+        AnalyticsTracker.logError(error, stackTrace);
+      }),
     ].toList());
+
     final purchaseProvider = PurchaseProvider();
     final AppSettingsProvider appSettingsProvider = AppSettingsProvider();
     final adsProvider = AdsProvider(appSettingsProvider: appSettingsProvider,);
@@ -93,7 +125,8 @@ void main() {
     );
     configLoading();
   }, (error, stackTrace) {
-    // AnalyticsTracker.logError(error, stackTrace);
+    print("Error in main: $error - stackTrace: $stackTrace");
+    AnalyticsTracker.logError(error, stackTrace);
   });
 }
 
@@ -123,7 +156,6 @@ Future<void> _initHive() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Selector<LocateViewModel, Locale>(

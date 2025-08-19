@@ -1,9 +1,7 @@
 import 'dart:io';
 
-import 'package:ads_tracking_plugin/ad_config.dart';
 import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:ads_tracking_plugin/native_ad/native_ad_widget.dart';
-import 'package:ads_tracking_plugin/remote_config.dart';
 import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/core/enum/language_enum.dart';
 import 'package:and_drum_pad_flutter/core/extension/language_extension.dart';
@@ -44,18 +42,22 @@ class _LanguageScreenState extends State<LanguageScreen>
     WidgetsBinding.instance.addObserver(this);
     if(!widget.fromSetting) {
       AdController.shared.setResumeAdState(true);
+      preloadAdsOnboarding();
+    }else{
+      AdController.shared.setResumeAdState(false);
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<LocateViewModel>().initSelectedLanguage();
-
-      final isFirstOpenApp = Provider.of<AppStateProvider>(context, listen: false).isFirstOpenApp;
-
-      Future.wait([
-        AdController.shared.preload(name: isFirstOpenApp ? AdName.nativeOnboarding : AdName.nativeOnboarding2),
-        AdController.shared.preload(name: isFirstOpenApp ? AdName.nativeOnboardingPage3 : AdName.nativeOnboardingPage32),
-      ]);
-
     });
+  }
+
+  void preloadAdsOnboarding () {
+    final isFirstOpenApp = Provider.of<AppStateProvider>(context, listen: false).isFirstOpenApp;
+
+    Future.wait([
+      AdController.shared.preload(name: isFirstOpenApp ? AdName.nativeOnboarding : AdName.nativeOnboarding2),
+      AdController.shared.preload(name: isFirstOpenApp ? AdName.nativeOnboardingPage3 : AdName.nativeOnboardingPage32),
+    ]);
   }
 
   @override
@@ -191,17 +193,20 @@ class _LanguageScreenState extends State<LanguageScreen>
             },
           ),
         ),
-        bottomNavigationBar: widget.fromSetting ? SizedBox.shrink() : Consumer<AppStateProvider>(builder: (context, value, child) {
+        bottomNavigationBar: widget.fromSetting ? SizedBox.shrink() : Consumer<AppStateProvider>(builder: (context, provider, child) {
           return NativeAdWidget(
             key: ValueKey(_currentAdState),
-            adName: _getAdName(value.isFirstOpenApp),
-            disabled: !value.shouldShowAds,
+            adName: _getAdName(provider.isFirstOpenApp),
+            disabled: !provider.shouldShowAds,
             onAdLoaded: (value) {
-              Future.delayed(const Duration(microseconds: 300), () {
-                if (mounted) {
-                  setState(() {}); // Trigger rebuild to show ad
-                }
-              });
+              print("AdLoader - load native ads ${_getAdName(provider.isFirstOpenApp)}: $value");
+              if(value) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  print("reload");
+                    setState(() {
+                    });
+                });
+              }
             },
             padding: EdgeInsets.only(bottom: 10),
             decoration: BoxDecoration(
