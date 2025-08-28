@@ -1,4 +1,6 @@
 import 'package:ads_tracking_plugin/ads_controller.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_time_tracker.dart';
 import 'package:and_drum_pad_flutter/view/screen/home/home_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/onboarding/widgets/onboarding_widget.dart';
 import 'package:and_drum_pad_flutter/view_model/app_setting_provider.dart';
@@ -12,7 +14,7 @@ class OnboardingScreen extends StatefulWidget {
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardingScreenState extends State<OnboardingScreen> with ScreenLogger<OnboardingScreen>, ScreenTimeLogger<OnboardingScreen> {
   late ScrollController _scrollController;
   int _currentPage = 0;
   final int _totalPages = 4;

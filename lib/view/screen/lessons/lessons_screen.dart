@@ -1,3 +1,5 @@
+import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_time_tracker.dart';
 import 'package:and_drum_pad_flutter/core/res/dimen/spacing.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
@@ -20,7 +22,7 @@ class LessonsScreen extends StatefulWidget {
   State<LessonsScreen> createState() => _LessonsScreenState();
 }
 
-class _LessonsScreenState extends State<LessonsScreen> {
+class _LessonsScreenState extends State<LessonsScreen> with ScreenLogger<LessonsScreen>, ScreenTimeLogger<LessonsScreen> {
   List<LessonSequence> _lessons = [];
   late SongCollection _song;
 

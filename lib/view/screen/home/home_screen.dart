@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:ads_tracking_plugin/collapsible_banner_ad/collapsible_banner_ad_widget.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_time_tracker.dart';
 import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/core/utils/network_checking.dart';
 import 'package:and_drum_pad_flutter/view/screen/beat_learn/beat_learn_screen.dart';
@@ -24,7 +26,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen>
-    with WidgetsBindingObserver, AutomaticKeepAliveClientMixin<HomeScreen> {
+    with WidgetsBindingObserver, AutomaticKeepAliveClientMixin<HomeScreen>, ScreenLogger<HomeScreen>, ScreenTimeLogger<HomeScreen> {
   int _currentIndex = 0;
   late NoInternetDialog noInternetDialog;
   bool _wasConnected = true;

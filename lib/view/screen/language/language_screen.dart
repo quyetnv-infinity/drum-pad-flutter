@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:ads_tracking_plugin/native_ad/native_ad_widget.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_time_tracker.dart';
 import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/core/enum/language_enum.dart';
 import 'package:and_drum_pad_flutter/core/extension/language_extension.dart';
@@ -31,7 +33,7 @@ enum AdState {
 }
 
 class _LanguageScreenState extends State<LanguageScreen>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, ScreenLogger<LanguageScreen>, ScreenTimeLogger<LanguageScreen> {
   AdState _currentAdState = AdState.initial;
   bool _isClickAdsLoaded = false;
   bool _showDoneButton = false;

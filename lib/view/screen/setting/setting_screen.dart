@@ -1,3 +1,5 @@
+import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_time_tracker.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/core/utils/setting_funcs.dart';
@@ -9,10 +11,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-class SettingScreen extends StatelessWidget {
+class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
 
+  @override
+  State<SettingScreen> createState() => _SettingScreenState();
+}
 
+class _SettingScreenState extends State<SettingScreen> with ScreenLogger<SettingScreen>, ScreenTimeLogger<SettingScreen> {
   Future<String> getVersion() async{
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     return packageInfo.version;

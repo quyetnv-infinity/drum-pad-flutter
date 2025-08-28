@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:ads_tracking_plugin/ad_config.dart';
 import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
+import 'package:ads_tracking_plugin/tracking/services/firebase_anlaytics_service.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_time_tracker.dart';
 import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/constant/app_info.dart';
 import 'package:and_drum_pad_flutter/view/screen/home/home_screen.dart';
@@ -22,7 +25,7 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver {
+class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver, ScreenLogger<SplashScreen>, ScreenTimeLogger<SplashScreen> {
 
   @override
   void initState() {
@@ -62,7 +65,6 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
   Future<void> _navigateToHome(bool isFirstOpenApp) async {
     AdController.shared.setResumeAdState(false);
-
 
     // if (isFirstOpenApp || Platform.isAndroid) {
     AdController.shared.setResumeAdState(true);

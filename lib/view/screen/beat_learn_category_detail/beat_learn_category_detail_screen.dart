@@ -1,3 +1,5 @@
+import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_time_tracker.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
 import 'package:and_drum_pad_flutter/data/model/category_model.dart';
@@ -20,7 +22,7 @@ class BeatLearnCategoryDetailScreen extends StatefulWidget {
   State<BeatLearnCategoryDetailScreen> createState() => _BeatLearnCategoryDetailScreenState();
 }
 
-class _BeatLearnCategoryDetailScreenState extends State<BeatLearnCategoryDetailScreen> {
+class _BeatLearnCategoryDetailScreenState extends State<BeatLearnCategoryDetailScreen> with ScreenLogger<BeatLearnCategoryDetailScreen>, ScreenTimeLogger<BeatLearnCategoryDetailScreen> {
 
   @override
   void initState() {

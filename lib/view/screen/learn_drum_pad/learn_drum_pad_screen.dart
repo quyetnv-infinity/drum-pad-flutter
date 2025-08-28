@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_time_tracker.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/utils/font_responsive.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
@@ -33,7 +35,7 @@ class LearnDrumPadScreen extends StatefulWidget {
   State<LearnDrumPadScreen> createState() => _LearnDrumPadScreenState();
 }
 
-class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> {
+class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> with ScreenLogger<LearnDrumPadScreen>, ScreenTimeLogger<LearnDrumPadScreen> {
   final GlobalKey _widgetPadKey = GlobalKey();
   int _currentScore = 0;
   double _percentStar = 0;

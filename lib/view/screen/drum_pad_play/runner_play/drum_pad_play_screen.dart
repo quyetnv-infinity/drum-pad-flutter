@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_time_tracker.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/utils/font_responsive.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
@@ -27,7 +29,7 @@ class DrumPadPlayScreen extends StatefulWidget {
   State<DrumPadPlayScreen> createState() => _DrumPadPlayScreenState();
 }
 
-class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> {
+class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> with ScreenLogger<DrumPadPlayScreen>, ScreenTimeLogger<DrumPadPlayScreen> {
   double _starPercent = 0;
   int _score = 0;
   int _perfectPoint = 0;

@@ -1,4 +1,6 @@
 import 'package:ads_tracking_plugin/collapsible_banner_ad/collapsible_banner_ad_widget.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_time_tracker.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/view/screen/campaign_detail/body/body.dart';
 import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
@@ -8,11 +10,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:and_drum_pad_flutter/config/ads_config.dart';
 
-class CampaignDetailScreen extends StatelessWidget {
+class CampaignDetailScreen extends StatefulWidget {
   final String difficulty;
 
   const CampaignDetailScreen({super.key, required this.difficulty});
 
+  @override
+  State<CampaignDetailScreen> createState() => _CampaignDetailScreenState();
+}
+
+class _CampaignDetailScreenState extends State<CampaignDetailScreen> with ScreenLogger<CampaignDetailScreen>, ScreenTimeLogger<CampaignDetailScreen> {
   @override
   Widget build(BuildContext context) {
 
@@ -33,7 +40,7 @@ class CampaignDetailScreen extends StatelessWidget {
               : const SizedBox.shrink();
         },
       ),
-      body: BodyCampaignDetail(difficulty: difficulty),
+      body: BodyCampaignDetail(difficulty: widget.difficulty),
     );
   }
 }

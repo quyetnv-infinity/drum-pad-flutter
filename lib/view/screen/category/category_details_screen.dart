@@ -1,3 +1,5 @@
+import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_time_tracker.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/data/model/category_model.dart';
 import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/runner_play/drum_pad_play_screen.dart';
@@ -18,7 +20,7 @@ class CategoryDetailsScreen extends StatefulWidget {
   State<CategoryDetailsScreen> createState() => _CategoryDetailsScreenState();
 }
 
-class _CategoryDetailsScreenState extends State<CategoryDetailsScreen> {
+class _CategoryDetailsScreenState extends State<CategoryDetailsScreen> with ScreenLogger<CategoryDetailsScreen>, ScreenTimeLogger<CategoryDetailsScreen> {
   @override
   void initState() {
     super.initState();

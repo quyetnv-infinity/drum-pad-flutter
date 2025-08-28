@@ -1,4 +1,6 @@
 import 'package:ads_tracking_plugin/native_ad/native_ad_widget.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_time_tracker.dart';
 import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
@@ -45,7 +47,7 @@ class ResultScreen extends StatefulWidget {
 }
 
 class _ResultScreenState extends State<ResultScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, ScreenLogger<ResultScreen>, ScreenTimeLogger<ResultScreen> {
   double _percentStar = 0;
   late bool isShowCongratulations;
 

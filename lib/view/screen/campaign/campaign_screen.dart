@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_time_tracker.dart';
 import 'package:and_drum_pad_flutter/core/res/dimen/spacing.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
@@ -15,9 +17,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-class CampaignScreen extends StatelessWidget {
+class CampaignScreen extends StatefulWidget {
   const CampaignScreen({super.key});
 
+  @override
+  State<CampaignScreen> createState() => _CampaignScreenState();
+}
+
+class _CampaignScreenState extends State<CampaignScreen> with ScreenLogger<CampaignScreen>, ScreenTimeLogger<CampaignScreen> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -45,7 +52,7 @@ class CampaignScreen extends StatelessWidget {
                   onTap: () {
                     value.setCurrentCampaign(isEasy: index == 0, isMedium: index == 1, isHard: index == 2, isDemonic: index == 3);
                     Navigator.push(
-                      context, 
+                      context,
                       MaterialPageRoute(
                         builder: (context) => CampaignDetailScreen(
                           difficulty: campaign.difficulty,

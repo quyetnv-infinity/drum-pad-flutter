@@ -1,3 +1,5 @@
+import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_time_tracker.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
@@ -18,7 +20,7 @@ class CompletedSongsScreen extends StatefulWidget {
   State<CompletedSongsScreen> createState() => _CompletedSongsScreenState();
 }
 
-class _CompletedSongsScreenState extends State<CompletedSongsScreen> {
+class _CompletedSongsScreenState extends State<CompletedSongsScreen> with ScreenLogger<CompletedSongsScreen>, ScreenTimeLogger<CompletedSongsScreen> {
   final TextEditingController _textEditingController = TextEditingController();
   List<SongCollection> _allSongs = [];
   List<SongCollection> _filteredSongs = [];

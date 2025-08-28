@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_time_tracker.dart';
 import 'package:and_drum_pad_flutter/core/res/dimen/spacing.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/utils/font_responsive.dart';
@@ -28,7 +30,7 @@ class FreeStylePlayScreen extends StatefulWidget {
   State<FreeStylePlayScreen> createState() => _FreeStylePlayScreenState();
 }
 
-class _FreeStylePlayScreenState extends State<FreeStylePlayScreen> with SingleTickerProviderStateMixin {
+class _FreeStylePlayScreenState extends State<FreeStylePlayScreen> with SingleTickerProviderStateMixin, ScreenLogger<FreeStylePlayScreen>, ScreenTimeLogger<FreeStylePlayScreen> {
   final GlobalKey _widgetFreePadKey = GlobalKey();
   final GlobalKey _topViewFreePad = GlobalKey();
   SongCollection? _songCollection;

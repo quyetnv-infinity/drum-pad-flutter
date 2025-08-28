@@ -1,3 +1,5 @@
+import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
+import 'package:ads_tracking_plugin/tracking/services/screen_time_tracker.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
@@ -16,14 +18,19 @@ import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class BeatLearnScreen extends StatelessWidget {
+class BeatLearnScreen extends StatefulWidget {
   const BeatLearnScreen({super.key});
 
+  @override
+  State<BeatLearnScreen> createState() => _BeatLearnScreenState();
+}
+
+class _BeatLearnScreenState extends State<BeatLearnScreen> with ScreenLogger<BeatLearnScreen>, ScreenTimeLogger<BeatLearnScreen> {
   @override
   Widget build(BuildContext context) {
     // Cache MediaQuery để tránh rebuild không cần thiết
     final screenWidth = MediaQuery.sizeOf(context).width;
-    
+
     return AppScaffold(
       appBar: AppBar(
         leadingWidth: screenWidth * 0.5,
