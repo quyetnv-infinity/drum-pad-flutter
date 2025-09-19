@@ -81,11 +81,21 @@ void main() {
       }),
     ].toList());
 
+    // Initialize providers
     final purchaseProvider = PurchaseProvider();
     final AppSettingsProvider appSettingsProvider = AppSettingsProvider();
-    final adsProvider = AdsProvider(appSettingsProvider: appSettingsProvider,);
+    final adsProvider = AdsProvider(appSettingsProvider: appSettingsProvider);
     final songService = SongService();
     final categoryProvider = CategoryProvider(songService);
+    final appStateProvider = AppStateProvider(adsProvider, purchaseProvider);
+
+    // Đợi AppStateProvider initialize xong (bao gồm ads)
+    try {
+      await appStateProvider.initialize();
+    } catch (error, stackTrace) {
+      print("Failed to initialize AppStateProvider: $error");
+      AnalyticsTracker.logError(error, stackTrace);
+    }
 
     runApp(
       MultiProvider(
@@ -111,13 +121,8 @@ void main() {
             },
             lazy: false,
           ),
-          ChangeNotifierProxyProvider2<AdsProvider, PurchaseProvider, AppStateProvider>(
-            create: (_) => AppStateProvider(adsProvider, purchaseProvider),
-            update: (_, ads, purchase, appState) {
-              appState?.updateDependencies(ads, purchase);
-              return appState ?? AppStateProvider(ads, purchase);
-            },
-            lazy: false,
+          ChangeNotifierProvider.value(
+            value: appStateProvider, // Dùng .value vì đã khởi tạo sẵn
           ),
         ],
         child: const MyApp(),

@@ -1,18 +1,14 @@
 import 'dart:io';
 
-import 'package:ads_tracking_plugin/ad_config.dart';
 import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:ads_tracking_plugin/ads_tracking_plugin.dart';
-import 'package:ads_tracking_plugin/tracking/services/firebase_anlaytics_service.dart';
 import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
 import 'package:ads_tracking_plugin/tracking/services/screen_time_tracker.dart';
 import 'package:and_drum_pad_flutter/config/ads_config.dart';
 import 'package:and_drum_pad_flutter/constant/app_info.dart';
-import 'package:and_drum_pad_flutter/view/screen/home/home_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/language/language_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view_model/ads_provider.dart';
-import 'package:and_drum_pad_flutter/view_model/app_setting_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/app_state_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -46,10 +42,13 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
       final isFirstOpenApp = Provider.of<AppStateProvider>(context, listen: false).isFirstOpenApp;
 
+      String nativeLanguage = isFirstOpenApp ? AdName.nativeLanguage : AdName.nativeLanguage2;
+      String nativeLanguageClick = isFirstOpenApp ? AdName.nativeLanguageClick : AdName.nativeLanguageClick2;
+
       try{
         Future.wait([
-          AdController.shared.preload(name: isFirstOpenApp ? AdName.nativeLanguage :  AdName.nativeLanguage2),
-          AdController.shared.preload(name: isFirstOpenApp ? AdName.nativeLanguageClick : AdName.nativeLanguageClick2),
+          AdController.shared.preload(name: nativeLanguage),
+          AdController.shared.preload(name: nativeLanguageClick),
         ]);
       }catch(e) {
         debugPrint("preload native language 2 error: $e");

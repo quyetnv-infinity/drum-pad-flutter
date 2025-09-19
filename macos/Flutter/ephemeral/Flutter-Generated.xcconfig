@@ -1,10 +1,10 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=/Users/hoang/Development/flutter
-FLUTTER_APPLICATION_PATH=/Users/hoang/Documents/android_drum_pad_flutter
+FLUTTER_ROOT=/Users/vanh/fvm/versions/3.32.7
+FLUTTER_APPLICATION_PATH=/Users/vanh/Company/drum-pad-flutter
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_BUILD_DIR=build
-FLUTTER_BUILD_NAME=1.0.5
-FLUTTER_BUILD_NUMBER=6
+FLUTTER_BUILD_NAME=1.0.7
+FLUTTER_BUILD_NUMBER=8
 DART_OBFUSCATION=false
 TRACK_WIDGET_CREATION=true
 TREE_SHAKE_ICONS=false

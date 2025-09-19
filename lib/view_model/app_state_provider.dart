@@ -12,23 +12,13 @@ class AppStateProvider with ChangeNotifier {
   AdsProvider adsProvider;
   PurchaseProvider purchaseProvider;
   bool _isFirstOpenApp = false;
+  bool _isInitialized = false;
 
   bool get isFirstOpenApp => _isFirstOpenApp;
   bool get shouldShowAds => adsProvider.adsEnabled && !purchaseProvider.isSubscribed;
+  bool get isInitialized => _isInitialized;
 
-  AppStateProvider(this.adsProvider, this.purchaseProvider) {
-    getFirstOpenApp().then((value) {
-      _isFirstOpenApp = value;
-      notifyListeners();
-      purchaseProvider.loadSubscription().then((_) {
-        initializeAds();
-      });
-
-      if (_isFirstOpenApp) {
-        AnalyticsTracker.trackInstallEvent();
-      }
-    });
-  }
+  AppStateProvider(this.adsProvider, this.purchaseProvider);
 
   DateTime? _lastAdTime;
   bool _isLoading = false;
@@ -47,8 +37,8 @@ class AppStateProvider with ChangeNotifier {
   }
 
   void updateDependencies(AdsProvider adsProvider, PurchaseProvider purchaseProvider) {
-    adsProvider = adsProvider;
-    purchaseProvider = purchaseProvider;
+    this.adsProvider = adsProvider;
+    this.purchaseProvider = purchaseProvider;
     notifyListeners();
   }
 
@@ -57,15 +47,36 @@ class AppStateProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void initializeAds() {
-    AdController.shared.initialize(
-      isAdDisabled: !shouldShowAds,
-      configurations: getAdConfigurations(_isFirstOpenApp),
-      adjustConfig: AdjustConfig("pdckf8inq96o", AdjustEnvironment.production),
-      trackingAdjustConfig: TrackingAdjustConfig(
-        appToken: "9032yk",
-        eventNameRevenue: "AD Revenue",
-      )
+  Future<void> initialize() async {
+    try {
+      _isFirstOpenApp = await getFirstOpenApp();
+      notifyListeners();
+
+      await purchaseProvider.loadSubscription();
+      await initializeAds();
+
+      if (_isFirstOpenApp) {
+        AnalyticsTracker.trackInstallEvent();
+      }
+
+      _isInitialized = true;
+      notifyListeners();
+    } catch (error, stackTrace) {
+      print("Failed to initialize AppStateProvider: $error");
+      AnalyticsTracker.logError(error, stackTrace);
+      rethrow;
+    }
+  }
+
+  Future initializeAds() async {
+    await AdController.shared.initialize(
+        isAdDisabled: !shouldShowAds,
+        configurations: getAdConfigurations(_isFirstOpenApp),
+        adjustConfig: AdjustConfig("pdckf8inq96o", AdjustEnvironment.production),
+        trackingAdjustConfig: TrackingAdjustConfig(
+          appToken: "9032yk",
+          eventNameRevenue: "AD Revenue",
+        )
     );
   }
 

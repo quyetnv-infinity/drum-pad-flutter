@@ -9,6 +9,7 @@ import com.infinity.ads_tracking_plugin.NavtiveAdLayouts.LayoutMediumCtaFullBott
 
 class MainActivity: FlutterActivity(){
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        flutterEngine.getPlugins().add(GoogleMobileAdsPlugin())
         super.configureFlutterEngine(flutterEngine)
 
         GoogleMobileAdsPlugin.registerNativeAdFactory(

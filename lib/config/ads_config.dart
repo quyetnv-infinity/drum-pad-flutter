@@ -10,7 +10,7 @@ String openAdUnitId = Platform.isAndroid ? "/21775744923/example/app-open" : "ca
 String collapsibleBannerAdUnitId =Platform.isAndroid ? 'ca-app-pub-3940256099942544/2014213617' : 'ca-app-pub-3940256099942544/8388050270';
 
 class AdUnitId {
-  static bool devMode = false; // false is production, true is development
+  static bool devMode = true; // false is production, true is development
 
   static String interSplash = devMode ? interstitialAdUnitId: "ca-app-pub-7208941695689653/4809744986";
   static String openResume = devMode ? openAdUnitId: "ca-app-pub-7208941695689653/7270039754";
@@ -70,9 +70,7 @@ class AdName {
 List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
   double ctaCornerRadius = 16;
   String ctaColor = "#FF9800";
-  bool preload = false;
   double ctaHeight = RemoteConfig.getCtaNativeHeight();
-  // print("Preload ads: $preload");
   return [
     /// Interstitial Ads
     AdConfiguration(
@@ -81,138 +79,192 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       name: AdName.interSplash,
       format: AdFormat.interstitial,
       loadTimeOut: 35,
-      preload: preload,
     ),
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.interHome),
       name: AdName.interHome,
       format: AdFormat.interstitial,
     ),
-    
+
     /// Native Ads - Language
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.nativeLanguage),
       name: AdName.nativeLanguage,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdSmall,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaColor: ctaColor, ctaCornerRadius: ctaCornerRadius, ctaHeight: ctaHeight),
-      preload: preload,
+      nativeCustomOptions: NativeCustomOptions(
+        textColor: "#FFFFFF",
+        ctaColor: ctaColor,
+        ctaCornerRadius: ctaCornerRadius,
+        ctaHeight: ctaHeight,
+      ),
     ),
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.nativeLanguage2),
       name: AdName.nativeLanguage2,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdSmall,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF",ctaColor: ctaColor, ctaCornerRadius: ctaCornerRadius, ctaHeight: ctaHeight),
-      // preload: preload,
+      nativeCustomOptions: NativeCustomOptions(
+        textColor: "#FFFFFF",
+        ctaColor: ctaColor,
+        ctaCornerRadius: ctaCornerRadius,
+        ctaHeight: ctaHeight,
+      ),
     ),
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.nativeLanguageClick),
       name: AdName.nativeLanguageClick,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdSmall,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaColor: ctaColor, ctaCornerRadius: ctaCornerRadius, ctaHeight: ctaHeight),
-      preload: preload,
+      nativeCustomOptions: NativeCustomOptions(
+        textColor: "#FFFFFF",
+        ctaColor: ctaColor,
+        ctaCornerRadius: ctaCornerRadius,
+        ctaHeight: ctaHeight,
+      ),
     ),
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.nativeLanguageClick2),
       name: AdName.nativeLanguageClick2,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdSmall,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaColor: ctaColor, ctaCornerRadius: ctaCornerRadius, ctaHeight: ctaHeight),
-      // preload: preload,
+      nativeCustomOptions: NativeCustomOptions(
+        textColor: "#FFFFFF",
+        ctaColor: ctaColor,
+        ctaCornerRadius: ctaCornerRadius,
+        ctaHeight: ctaHeight,
+      ),
     ),
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.nativeLanguageCountry),
       name: AdName.nativeLanguageCountry,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdSmall,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaColor: ctaColor, ctaCornerRadius: ctaCornerRadius, ctaHeight: ctaHeight),
-      preload: false,
+      nativeCustomOptions: NativeCustomOptions(
+        textColor: "#FFFFFF",
+        ctaColor: ctaColor,
+        ctaCornerRadius: ctaCornerRadius,
+        ctaHeight: ctaHeight,
+      ),
     ),
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.nativeLanguageCountry_2),
       name: AdName.nativeLanguageCountry_2,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdSmall,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF",ctaColor: ctaColor, ctaCornerRadius: ctaCornerRadius, ctaHeight: ctaHeight),
-      preload: false,
+      nativeCustomOptions: NativeCustomOptions(
+        textColor: "#FFFFFF",
+        ctaColor: ctaColor,
+        ctaCornerRadius: ctaCornerRadius,
+        ctaHeight: ctaHeight,
+      ),
     ),
-    
+
     /// Native Ads - Onboarding
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.nativeOnboarding),
       name: AdName.nativeOnboarding,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdSmall,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaColor: ctaColor, ctaCornerRadius: ctaCornerRadius, ctaHeight: ctaHeight),
-      preload: preload,
+      nativeCustomOptions: NativeCustomOptions(
+        textColor: "#FFFFFF",
+        ctaColor: ctaColor,
+        ctaCornerRadius: ctaCornerRadius,
+        ctaHeight: ctaHeight,
+      ),
     ),
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.nativeOnboarding2),
       name: AdName.nativeOnboarding2,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdSmall,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaColor: ctaColor, ctaCornerRadius: ctaCornerRadius, ctaHeight: ctaHeight),
-      // preload: preload,
+      nativeCustomOptions: NativeCustomOptions(
+        textColor: "#FFFFFF",
+        ctaColor: ctaColor,
+        ctaCornerRadius: ctaCornerRadius,
+        ctaHeight: ctaHeight,
+      ),
     ),
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.nativeOnboardingPage3),
       name: AdName.nativeOnboardingPage3,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdSmall,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaColor: ctaColor, ctaCornerRadius: ctaCornerRadius, ctaHeight: ctaHeight),
-      preload: preload,
+      nativeCustomOptions: NativeCustomOptions(
+        textColor: "#FFFFFF",
+        ctaColor: ctaColor,
+        ctaCornerRadius: ctaCornerRadius,
+        ctaHeight: ctaHeight,
+      ),
     ),
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.nativeOnboardingPage32),
       name: AdName.nativeOnboardingPage32,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdSmall,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaColor: ctaColor, ctaCornerRadius: ctaCornerRadius, ctaHeight: ctaHeight),
-      // preload: true,
+      nativeCustomOptions: NativeCustomOptions(
+        textColor: "#FFFFFF",
+        ctaColor: ctaColor,
+        ctaCornerRadius: ctaCornerRadius,
+        ctaHeight: ctaHeight,
+      ),
     ),
-    
+
     /// Native Ads - Others
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.nativePermission),
       name: AdName.nativePermission,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdTextFirst,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaColor: ctaColor, ctaCornerRadius: ctaCornerRadius, ctaHeight: ctaHeight),
-      // preload: preload,
+      nativeCustomOptions: NativeCustomOptions(
+        textColor: "#FFFFFF",
+        ctaColor: ctaColor,
+        ctaCornerRadius: ctaCornerRadius,
+        ctaHeight: ctaHeight,
+      ),
     ),
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.nativeResearch),
       name: AdName.nativeSearch,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutMediumCtaFullBottom,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaColor: ctaColor, ctaCornerRadius: ctaCornerRadius, ctaHeight: ctaHeight),
-      // preload: preload,
+      nativeCustomOptions: NativeCustomOptions(
+        textColor: "#FFFFFF",
+        ctaColor: ctaColor,
+        ctaCornerRadius: ctaCornerRadius,
+        ctaHeight: ctaHeight,
+      ),
     ),
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.nativePopupPlayDone),
       name: AdName.nativePopupPlayDone,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdSmall,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaColor: ctaColor, ctaCornerRadius: ctaCornerRadius, ctaHeight: ctaHeight),
-      // preload: preload,
+      nativeCustomOptions: NativeCustomOptions(
+        textColor: "#FFFFFF",
+        ctaColor: ctaColor,
+        ctaCornerRadius: ctaCornerRadius,
+        ctaHeight: ctaHeight,
+      ),
     ),
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.nativePopupPause),
       name: AdName.nativePopupPause,
       format: AdFormat.native,
       nativeFactoryId: NativeFactoryId.layoutAdSmall,
-      nativeCustomOptions: NativeCustomOptions(textColor: "#FFFFFF", ctaColor: ctaColor, ctaCornerRadius: ctaCornerRadius, ctaHeight: ctaHeight),
-      // preload: preload,
+      nativeCustomOptions: NativeCustomOptions(
+        textColor: "#FFFFFF",
+        ctaColor: ctaColor,
+        ctaCornerRadius: ctaCornerRadius,
+        ctaHeight: ctaHeight,
+      ),
     ),
-    
+
     /// Banner Ads
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.bannerCollapsibleHome),
       name: AdName.bannerCollapsibleHome,
       format: AdFormat.collapsibleBanner,
-      preload: false,
       adRequest: const AdRequest(extras: {
         "collapsible": "bottom",
       }),
@@ -221,9 +273,8 @@ List<AdConfiguration> getAdConfigurations(bool isFirstOpenApp) {
       adUnit: AdUnit(defaultId: AdUnitId.bannerCampaign),
       name: AdName.bannerCampaign,
       format: AdFormat.collapsibleBanner,
-      preload: false,
     ),
-    
+
     /// App Open Ad
     AdConfiguration(
       adUnit: AdUnit(defaultId: AdUnitId.openResume),

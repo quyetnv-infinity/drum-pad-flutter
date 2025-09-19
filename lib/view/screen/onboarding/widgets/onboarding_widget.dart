@@ -88,8 +88,7 @@ class CustomPage extends StatelessWidget {
                 // Custom Page Indicator thay cho SmoothPageIndicator
                 Row(
                   children: List.generate(
-                    dataLength,
-                        (index) => AnimatedContainer(
+                    dataLength, (index) => AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
                       margin: const EdgeInsets.symmetric(horizontal: 4.0),
                       height: 8.0,
@@ -154,13 +153,12 @@ Widget page1(BuildContext context,
         key: ValueKey(appStateProvider.isFirstOpenApp
             ? AdName.nativeOnboarding
             : AdName.nativeOnboarding2),
-        margin: const EdgeInsets.only(top: 10),
+        // margin: const EdgeInsets.only(top: 10),
         adName: appStateProvider.isFirstOpenApp
             ? AdName.nativeOnboarding
             : AdName.nativeOnboarding2,
         disabled: !appStateProvider.shouldShowAds,
         onAdLoaded: (value) {},
-        height: 50,
         decoration: BoxDecoration(
             color: Colors.grey.withValues(alpha: 0.2),
             borderRadius:
@@ -213,7 +211,6 @@ Widget page4(BuildContext context,
     color: Colors.black,
     adWidget: Consumer<AppStateProvider>(builder: (context, appStateProvider, _) {
       return NativeAdWidget(
-        margin: const EdgeInsets.only(top: 10),
         key: ValueKey(appStateProvider.isFirstOpenApp
             ? AdName.nativeOnboardingPage3
             : AdName.nativeOnboardingPage32),
@@ -222,7 +219,7 @@ Widget page4(BuildContext context,
             : AdName.nativeOnboardingPage32,
         disabled: !appStateProvider.shouldShowAds,
         onAdLoaded: (value) {},
-        height: 50,
+        padding: EdgeInsets.zero,
         decoration: BoxDecoration(
             color: Colors.grey.withValues(alpha: 0.2),
             borderRadius:

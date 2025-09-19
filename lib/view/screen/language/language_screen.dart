@@ -15,7 +15,7 @@ import 'package:and_drum_pad_flutter/view_model/app_state_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/locale_view_model.dart';
 import 'package:base_ui_flutter_v1/base_ui_flutter_v1.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class LanguageScreen extends StatefulWidget {
@@ -27,25 +27,18 @@ class LanguageScreen extends StatefulWidget {
   State<LanguageScreen> createState() => _LanguageScreenState();
 }
 
-enum AdState {
-  initial, // nativeLanguage || nativeLanguage2
-  otherClick // nativeLanguageClick || nativeLanguageClick2
-}
-
-class _LanguageScreenState extends State<LanguageScreen>
-    with WidgetsBindingObserver, ScreenLogger<LanguageScreen>, ScreenTimeLogger<LanguageScreen> {
-  AdState _currentAdState = AdState.initial;
-  bool _isClickAdsLoaded = false;
+class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObserver, ScreenLogger<LanguageScreen>, ScreenTimeLogger<LanguageScreen>, AutomaticKeepAliveClientMixin<LanguageScreen> {
   bool _showDoneButton = false;
+  bool _isSelected = false;
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    if(!widget.fromSetting) {
+    if (!widget.fromSetting) {
       AdController.shared.setResumeAdState(true);
       preloadAdsOnboarding();
-    }else{
+    } else {
       AdController.shared.setResumeAdState(false);
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -53,44 +46,36 @@ class _LanguageScreenState extends State<LanguageScreen>
     });
   }
 
-  void preloadAdsOnboarding () {
+  void preloadAdsOnboarding() {
     final isFirstOpenApp = Provider.of<AppStateProvider>(context, listen: false).isFirstOpenApp;
 
+    String onboardingAd1 = isFirstOpenApp ? AdName.nativeOnboarding : AdName.nativeOnboarding2;
+    String onboardingAd2 = isFirstOpenApp ? AdName.nativeOnboardingPage3 : AdName.nativeOnboardingPage32;
+
     Future.wait([
-      AdController.shared.preload(name: isFirstOpenApp ? AdName.nativeOnboarding : AdName.nativeOnboarding2),
-      AdController.shared.preload(name: isFirstOpenApp ? AdName.nativeOnboardingPage3 : AdName.nativeOnboardingPage32),
+      AdController.shared.preload(name: onboardingAd1),
+      AdController.shared.preload(name: onboardingAd2),
     ]);
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (!widget.fromSetting) return;
-    if (state == AppLifecycleState.paused) {
-      AdController.shared.setResumeAdState(true);
-    }
-  }
+  String getAdName() {
+    final isFirstOpenApp = Provider.of<AppStateProvider>(context, listen: false).isFirstOpenApp;
 
-  String _getAdName(bool isFirstOpenApp) {
-    switch (_currentAdState) {
-      case AdState.initial:
-        return isFirstOpenApp ? AdName.nativeLanguage : AdName.nativeLanguage2;
-      case AdState.otherClick:
-        return isFirstOpenApp
-            ? AdName.nativeLanguageClick
-            : AdName.nativeLanguageClick2;
+    if(_isSelected) {
+      return isFirstOpenApp ? AdName.nativeLanguageClick : AdName.nativeLanguageClick2;
     }
+
+    return isFirstOpenApp ? AdName.nativeLanguage : AdName.nativeLanguage2;
   }
 
   void _onLanguageSelected(LanguageEnum value, LocateViewModel provider) {
-    if(!_isClickAdsLoaded){
+    provider.selectLanguage(value);
+
+    if(!_isSelected) {
       setState(() {
-        _currentAdState = AdState.otherClick;
-        _isClickAdsLoaded = true;
+        _isSelected = true;
       });
     }
-
-    provider.selectLanguage(value);
 
     Future.delayed(Duration(seconds: 1), () {
       if (mounted) {
@@ -102,13 +87,8 @@ class _LanguageScreenState extends State<LanguageScreen>
   }
 
   @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return PopScope(
       canPop: widget.fromSetting ? true : false,
       onPopInvokedWithResult: (didPop, result) {
@@ -117,7 +97,6 @@ class _LanguageScreenState extends State<LanguageScreen>
         }
       },
       child: Scaffold(
-        backgroundColor: Color(0xFF161616),
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text(
@@ -138,79 +117,67 @@ class _LanguageScreenState extends State<LanguageScreen>
                   if (widget.fromSetting) {
                     Navigator.pop(context);
                   } else {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OnboardingScreen(),));
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OnboardingScreen(),),);
                   }
                 },
                 child: Row(
                   children: [
-                    SvgPicture.asset(ResIcon.icCheck2,width: 18, height: 18),
+                    SvgPicture.asset(ResIcon.icCheck2, width: 18, height: 18),
                   ],
                 ),
               ),
             ResSpacing.w16,
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.only(bottom: 15.0),
-          child: Consumer<LocateViewModel>(
-            builder: (context, provider, child) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 11.0),
-                child: LanguageWidget<LanguageEnum>(
-                  languages: LanguageEnum.en.getPrioritizedLanguages,
-                  selectedLanguage:widget.fromSetting ? provider.selectedLanguage ?? LanguageEnum.en  : provider.selectedLanguage,
-                  onLanguageChanged: (value) {
-                    _onLanguageSelected(value, provider);
-                  },
-                  itemTextStyleBuilder: (item, isSelected) => TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                  ),
-                  spacingItem: 10,
-                  displayLanguageNameBuilder: (item) => item.displayName,
-                  itemDecorationBuilder: (item, isSelected) {
-                    return BoxDecoration(
-                      color: Color(0xFF343437),
-                      borderRadius: BorderRadius.circular(100),
-                      border:  Border.all(
-                        color: isSelected ? Colors.white : Colors.transparent,
-                        width: isSelected ? 0.6: 0,
-                      ),
-                    );
-                  },
-                  leadingBuilder: (context, item) {
-                    return Radio<LanguageEnum>(
-                      activeColor: Colors.white,
-                      value: item,
-                      groupValue: widget.fromSetting ? provider.selectedLanguage ?? LanguageEnum.en : provider.selectedLanguage,
-                      onChanged: (value) {
-                        if (value == null) return;
-                        _onLanguageSelected(value, provider);
-                      },
-                    );
-                  },
+        body: Consumer<LocateViewModel>(builder: (context, provider, child) {
+          return LanguageWidget<LanguageEnum>(
+            languages: LanguageEnum.en.getPrioritizedLanguages,
+            selectedLanguage: widget.fromSetting ? provider.selectedLanguage ?? LanguageEnum.en  : provider.selectedLanguage,
+            onLanguageChanged: (value) => _onLanguageSelected(value, provider),
+            itemTextStyleBuilder: (item, isSelected) => TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+              fontSize: 16,
+            ),
+            spacingItem: 10,
+            displayLanguageNameBuilder: (item) => item.displayName,
+            itemDecorationBuilder: (item, isSelected) {
+              return BoxDecoration(
+                color: Color(0xFF343437),
+                borderRadius: BorderRadius.circular(100),
+                border:  Border.all(
+                  color: isSelected ? Colors.white : Colors.transparent,
+                  width: isSelected ? 0.6: 0,
                 ),
               );
             },
-          ),
-        ),
+            leadingBuilder: (context, item) {
+              return Radio<LanguageEnum>(
+                activeColor: Colors.white,
+                value: item,
+                groupValue: widget.fromSetting ? provider.selectedLanguage ?? LanguageEnum.en : provider.selectedLanguage,
+                onChanged: (value) => _onLanguageSelected(value!, provider),
+              );
+            },
+          );
+        },),
         bottomNavigationBar: widget.fromSetting ? SizedBox.shrink() : Consumer<AppStateProvider>(builder: (context, provider, child) {
           return NativeAdWidget(
-            key: ValueKey(_currentAdState),
-            adName: _getAdName(provider.isFirstOpenApp),
+            key: ValueKey(getAdName()),
+            adName: getAdName(),
             disabled: !provider.shouldShowAds,
             onAdLoaded: (value) {
-              print("AdLoader - load native ads ${_getAdName(provider.isFirstOpenApp)}: $value");
-              if(value) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  print("reload");
+              // print("AdLoader - load native ads ${getAdName()}: $value");
+              if(value && (getAdName() == AdName.nativeLanguage || getAdName() == AdName.nativeLanguage2)) {
+                Future.delayed(Duration(milliseconds: 1000), () {
+                  if (mounted) {
                     setState(() {
+
                     });
+                  }
                 });
               }
             },
-            padding: EdgeInsets.only(bottom: 10),
             decoration: BoxDecoration(
                 color: Colors.grey.withValues(alpha: 0.2),
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(7)),
@@ -221,4 +188,8 @@ class _LanguageScreenState extends State<LanguageScreen>
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
+

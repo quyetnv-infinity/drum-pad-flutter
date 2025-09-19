@@ -190,7 +190,7 @@ class _ResultScreenState extends State<ResultScreen>
     return SafeArea(
       child: Container(
         clipBehavior: Clip.antiAlias,
-        padding: EdgeInsets.all(12).copyWith(top: 20, bottom: 5),
+        padding: EdgeInsets.only(top: 20, bottom: 5,),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(32),
           gradient: RadialGradient(colors: [Color(0xff33114d), Color(0xff7727b3)], center: Alignment.bottomCenter)
@@ -301,7 +301,6 @@ class _ResultScreenState extends State<ResultScreen>
                     onAdLoaded: (value) {
                       print("Native ad loaded: $value");
                     },
-                    padding: EdgeInsets.zero,
                     decoration: BoxDecoration(
                         color: Colors.grey.withValues(alpha: 0.2),
                         borderRadius: const BorderRadius.all(Radius.circular(10)),
