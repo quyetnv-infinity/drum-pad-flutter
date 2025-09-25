@@ -63,12 +63,14 @@ class _SettingScreenState extends State<SettingScreen> with ScreenLogger<Setting
             leading: SvgPicture.asset(ResIcon.icTermOfService),
             trailing: SvgPicture.asset(ResIcon.icArrowRight),
           ),
-          // SettingItem(
-          //   title: context.locale.rate,
-          //   onPress: () {},
-          //   leading: SvgPicture.asset(ResIcon.icStarColor),
-          //   trailing: SvgPicture.asset(ResIcon.icArrowRight),
-          // ),
+          SettingItem(
+            title: context.locale.rate,
+            onPress: () {
+              SettingFuncs.rateUs(context);
+            },
+            leading: SvgPicture.asset(ResIcon.icStarColor),
+            trailing: SvgPicture.asset(ResIcon.icArrowRight),
+          ),
           SettingItem(
             title: context.locale.share,
             onPress: () {

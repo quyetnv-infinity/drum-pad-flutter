@@ -120,5 +120,16 @@
   "recording_started" : "Recording started...",
   "recording_stopped" : "Recording stopped...",
   "photo_permission_description": "To provide you with the full experience of our features, we require your permission to access the Photo permission on your device.",
-  "done": "Done"
+  "done": "Done",
+  "thanks_for_your_feedback": "Thank you for your feedback!",
+  "thanks_for_your_feedback_description": "Your feedback is highly appreciated and will help us to improve our ability.",
+  "thank_you_for_rate_description": "Your Feedback could help us improve. If you have any  trouble while using our app, please let us know",
+  "too_much_ads": "Too much ads",
+  "app_not_work": "App not work",
+  "others": "Others",
+  "thank_you": "Thank You!",
+  "ok": "OK",
+  "enjoy_ai_fusion": "Enjoy AI Fusion?",
+  "tap_a_star_to_rate_on_app_store": "Tap a star to rate it on the App Store.",
+  "submit": "Submit"
 }

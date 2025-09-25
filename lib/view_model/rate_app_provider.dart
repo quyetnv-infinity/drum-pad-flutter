@@ -36,7 +36,7 @@ class RateAppProvider with ChangeNotifier {
         await _inAppReview.requestReview();
       } else {
         print('openStoreListing');
-        await _inAppReview.openStoreListing(appStoreId: AppInfo.appId);
+        await _inAppReview.openStoreListing();
       }
       print('rate true');
       return true;

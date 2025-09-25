@@ -13,11 +13,14 @@ import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/pick_song_
 import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/drum_pad/drum_pad_widget.dart';
+import 'package:and_drum_pad_flutter/view/widget/loading_dialog/rate_app_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/snack__notifi.dart';
+import 'package:and_drum_pad_flutter/view_model/app_setting_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/recording_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/tutorial_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -198,6 +201,15 @@ class _FreeStylePlayScreenState extends State<FreeStylePlayScreen> with SingleTi
     return AppScaffold(
       appBar: CustomAppBar(iconLeading: ResIcon.icBack, onTapLeading: () {
         Navigator.pop(context);
+        if(context.read<AppSettingsProvider>().showRate){
+          showCupertinoDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (context) {
+              return const RateAppDialog();
+            }
+          );
+        }
       },
         action: [
           if(_songCollection != null)

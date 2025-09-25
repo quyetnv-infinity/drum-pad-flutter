@@ -13,11 +13,14 @@ import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/drum_pad/drum_pad_widget.dart';
 import 'package:and_drum_pad_flutter/view/widget/loading_dialog/exit_dialog.dart';
+import 'package:and_drum_pad_flutter/view/widget/loading_dialog/rate_app_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/snack__notifi.dart';
+import 'package:and_drum_pad_flutter/view_model/app_setting_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/tutorial_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -299,7 +302,6 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> with ScreenLogg
           onTapLeading: () {
             _pauseHandler();
             print('object');
-
             showDialog(context: context, barrierDismissible: true, barrierColor: Colors.black.withValues(alpha: 0.9),
               builder: (context) => Dialog(
                 backgroundColor: Colors.transparent,
@@ -311,6 +313,15 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> with ScreenLogg
                   onTapContinue: () {
                     Navigator.pop(context);
                     Navigator.pop(context);
+                    if(context.read<AppSettingsProvider>().showRate){
+                      showCupertinoDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (context) {
+                          return const RateAppDialog();
+                        }
+                      );
+                    }
                   },
                 )
               )

@@ -2,6 +2,12 @@ import 'dart:io';
 
 import 'package:ads_tracking_plugin/ads_controller.dart';
 import 'package:and_drum_pad_flutter/constant/app_info.dart';
+import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
+import 'package:and_drum_pad_flutter/view/widget/loading_dialog/rate_app_dialog.dart';
+import 'package:and_drum_pad_flutter/view_model/app_setting_provider.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -48,46 +54,47 @@ class SettingFuncs {
   //     },
   //   );
   // }
-  // static void showDialogThanksForFeedback(BuildContext context){
-  //   showCupertinoDialog(
-  //     context: context,
-  //     barrierDismissible: false,
-  //     builder: (context) {
-  //       return CupertinoTheme(
-  //         data: const CupertinoThemeData(
-  //           brightness: Brightness.light
-  //         ),
-  //         child: CupertinoAlertDialog(
-  //           content: Column(
-  //             children: [
-  //               Image.asset('assets/images/happy_star.png', width: 118, height: 144, fit: BoxFit.cover,),
-  //               const SizedBox(height: 24,),
-  //               Text(context.locale.thanks_for_your_feedback, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 18),),
-  //               const SizedBox(height: 8,),
-  //               Text(context.locale.thanks_for_your_feedback_description, style: const TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w400),),
-  //
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-  // static void rateUs(BuildContext context){
-  //   if(context.read<AppSettingsProvider>().showRate){
-  //     showCupertinoDialog(
-  //         context: context,
-  //         barrierDismissible: true,
-  //         builder: (context) {
-  //           return const RateAppDialog();
-  //         }
-  //     );} else{
-  //     showDialogThanksForFeedback(context);
-  //     Future.delayed(Duration(seconds: 2), () {
-  //       Navigator.pop(context);
-  //     });
-  //   }
-  // }
+  static void showDialogThanksForFeedback(BuildContext context){
+    showCupertinoDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return CupertinoTheme(
+          data: const CupertinoThemeData(
+            brightness: Brightness.light
+          ),
+          child: CupertinoAlertDialog(
+            content: Column(
+              children: [
+                Image.asset('assets/images/happy_star.png', width: 118, height: 144, fit: BoxFit.cover,),
+                const SizedBox(height: 24,),
+                Text(context.locale.thanks_for_your_feedback, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 18),),
+                const SizedBox(height: 8,),
+                Text(context.locale.thanks_for_your_feedback_description, style: const TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w400),),
+
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+  static void rateUs(BuildContext context){
+    if(context.read<AppSettingsProvider>().showRate){
+      showCupertinoDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (context) {
+            return const RateAppDialog();
+          }
+      );} else{
+      showDialogThanksForFeedback(context);
+      Future.delayed(Duration(seconds: 2), () {
+        print('pop');
+        Navigator.pop(context);
+      });
+    }
+  }
   static void launchURL(String url) async {
     AdController.shared.setResumeAdState(true);
     final Uri uri = Uri.parse(url);

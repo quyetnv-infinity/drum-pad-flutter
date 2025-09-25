@@ -5,6 +5,7 @@ import 'package:ads_tracking_plugin/tracking/services/screen_time_tracker.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/utils/font_responsive.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
+import 'package:and_drum_pad_flutter/core/utils/setting_funcs.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/add_new_song.dart';
 import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/pick_song_bottom_sheet.dart';
@@ -13,8 +14,11 @@ import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart';
 import 'package:and_drum_pad_flutter/view/widget/drum_pad/drum_pad_widget.dart';
 import 'package:and_drum_pad_flutter/view/widget/loading_dialog/exit_dialog.dart';
+import 'package:and_drum_pad_flutter/view/widget/loading_dialog/rate_app_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
+import 'package:and_drum_pad_flutter/view_model/app_setting_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/tutorial_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:marquee/marquee.dart';
@@ -292,12 +296,20 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> with ScreenLogger
             child: ExitDialog(
               onTapCancel: () {
                 Navigator.pop(context);
-
                 _startHandler();
               },
               onTapContinue: () {
                 Navigator.pop(context);
                 Navigator.pop(context);
+                if(context.read<AppSettingsProvider>().showRate){
+                  showCupertinoDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (context) {
+                      return const RateAppDialog();
+                    }
+                  );
+                }
               },
             )
           )
