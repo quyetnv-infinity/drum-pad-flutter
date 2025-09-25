@@ -208,90 +208,96 @@ class _ResultScreenState extends State<ResultScreen>
                     style: TextStyle(fontSize: 40, fontWeight: FontWeight.w700)
                 ),
                 SizedBox(height: 20),
-                accuracyAllSongs(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: accuracyAllSongs(),
+                ),
                 SizedBox(height: 36),
-                Row(
-                  spacing: 8,
-                  children: [
-                    Opacity(
-                      opacity: widget.isFromCampaign ? 0 : 1,
-                      child: _buildIconButton(asset: ResIcon.icMusic,
-                        onTap: () async {
-                          if(widget.isFromCampaign) return;
-                          final result = await showModalBottomSheet<SongCollection>(
-                            isScrollControlled: true,
-                            barrierColor: Colors.black.withValues(alpha: 0.8),
-                            context: context,
-                            builder: (context) => PickSongScreen(),
-                          );
-                          if(!widget.isFromCampaign && !widget.isFromLearn) {
-                            Navigator.pop(context, result);
-                          } else if(widget.isFromLearn) {
-                            Navigator.pop(context, result);
-                            Navigator.pop(context, result);
-                          }
-                        }),
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {
-                          if(!checkNotLastCampaign()) {
-                            Navigator.pop(context, 'play_again');
-                          } else {
-                            if(widget.isFromLearn) {
-                              Navigator.pop(context, widget.currentLesson + 1);
-                              Navigator.pop(context, widget.currentLesson + 1);
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: Row(
+                    spacing: 8,
+                    children: [
+                      Opacity(
+                        opacity: widget.isFromCampaign ? 0 : 1,
+                        child: _buildIconButton(asset: ResIcon.icMusic,
+                            onTap: () async {
+                              if(widget.isFromCampaign) return;
+                              final result = await showModalBottomSheet<SongCollection>(
+                                isScrollControlled: true,
+                                barrierColor: Colors.black.withValues(alpha: 0.8),
+                                context: context,
+                                builder: (context) => PickSongScreen(),
+                              );
+                              if(!widget.isFromCampaign && !widget.isFromLearn) {
+                                Navigator.pop(context, result);
+                              } else if(widget.isFromLearn) {
+                                Navigator.pop(context, result);
+                                Navigator.pop(context, result);
+                              }
+                            }),
+                      ),
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            if(!checkNotLastCampaign()) {
+                              Navigator.pop(context, 'play_again');
+                            } else {
+                              if(widget.isFromLearn) {
+                                Navigator.pop(context, widget.currentLesson + 1);
+                                Navigator.pop(context, widget.currentLesson + 1);
+                              }
+                              if(widget.isFromCampaign) {
+                                final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
+                                final nextCampaignIndex = campaignProvider.currentSongCampaign + 1;
+                                campaignProvider.setCurrentSongCampaign(nextCampaignIndex);
+                                final song = campaignProvider.currentCampaign[nextCampaignIndex];
+                                print('song ${song.name} with index $nextCampaignIndex');
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                // showDialog(
+                                //   context: context,
+                                //   builder: (context) => LoadingDataScreen(
+                                //     callbackLoadingCompleted: (songResult) {
+                                //       Navigator.pop(context, songResult);
+                                //       Navigator.pop(context, songResult);
+                                //     },
+                                //     callbackLoadingFailed: () {
+                                //       Navigator.pop(context);
+                                //       Navigator.pop(context);
+                                //     },
+                                //     song: song
+                                //   ),
+                                // );
+                              }
                             }
-                            if(widget.isFromCampaign) {
-                              final campaignProvider = Provider.of<CampaignProvider>(context, listen: false);
-                              final nextCampaignIndex = campaignProvider.currentSongCampaign + 1;
-                              campaignProvider.setCurrentSongCampaign(nextCampaignIndex);
-                              final song = campaignProvider.currentCampaign[nextCampaignIndex];
-                              print('song ${song.name} with index $nextCampaignIndex');
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                              // showDialog(
-                              //   context: context,
-                              //   builder: (context) => LoadingDataScreen(
-                              //     callbackLoadingCompleted: (songResult) {
-                              //       Navigator.pop(context, songResult);
-                              //       Navigator.pop(context, songResult);
-                              //     },
-                              //     callbackLoadingFailed: () {
-                              //       Navigator.pop(context);
-                              //       Navigator.pop(context);
-                              //     },
-                              //     song: song
-                              //   ),
-                              // );
-                            }
-                          }
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 18, horizontal: 8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            gradient: LinearGradient(colors: [Color(0xffa005ff), Color(0xffd796ff)])
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            spacing: 8,
-                            children: [
-                              if(!checkNotLastCampaign())
-                              SvgPicture.asset(ResIcon.icRefresh),
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 18, horizontal: 8),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                gradient: LinearGradient(colors: [Color(0xffa005ff), Color(0xffd796ff)])
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              spacing: 8,
+                              children: [
+                                if(!checkNotLastCampaign())
+                                  SvgPicture.asset(ResIcon.icRefresh),
 
-                              Text(!checkNotLastCampaign() ? context.locale.play_again : context.locale.continue_text, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16), textAlign: TextAlign.center,),
-                            ],
+                                Text(!checkNotLastCampaign() ? context.locale.play_again : context.locale.continue_text, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16), textAlign: TextAlign.center,),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    _buildIconButton(asset: ResIcon.icHome,
-                      onTap: () {
-                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
-                      }
-                    ),
-                  ],
+                      _buildIconButton(asset: ResIcon.icHome,
+                          onTap: () {
+                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
+                          }
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 20),
                 Consumer<AppStateProvider>(builder: (context, value, child) {
