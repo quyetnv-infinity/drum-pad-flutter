@@ -13,8 +13,8 @@ class AppSettingsProvider with ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  bool _isShowRate = true;
-  bool get isShowRate => _isShowRate;
+  bool _isShowRateInSession = true;
+  bool get isShowRateInSession => _isShowRateInSession;
 
   bool _showRate = true;
   bool get showRate => _showRate;
@@ -45,7 +45,6 @@ class AppSettingsProvider with ChangeNotifier {
   Future<void> _initSettings() async {
     _isFirstOpenApp = await getFirstOpenApp();
     _isInitialized = true;
-    _isShowRate = await getIsShowRate();
     _showRate = await getShowRate();
     _timeOpenApp = await getTimeOpenApp();
     _isFirstShowRate = await getFirstShowRate();
@@ -70,19 +69,24 @@ class AppSettingsProvider with ChangeNotifier {
     print('set first open app');
   }
 
-  Future<bool> getIsShowRate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? savedValue = prefs.getBool('isShowRate');
-    return savedValue ?? true;
+  void setFalseRateInSession(){
+    _isShowRateInSession = false;
+    notifyListeners();
   }
 
-  Future<void> setIsShowRate() async {
-    _isShowRate = false;
-    notifyListeners();
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isShowRate', false);
-    print('Show rate updated to false');
-  }
+  // Future<bool> getIsShowRate() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   bool? savedValue = prefs.getBool('isShowRate');
+  //   return savedValue ?? true;
+  // }
+
+  // Future<void> setIsShowRate() async {
+  //   _isShowRate = false;
+  //   notifyListeners();
+  //   final prefs = await SharedPreferences.getInstance();
+  //   await prefs.setBool('isShowRate', false);
+  //   print('Show rate updated to false');
+  // }
 
   Future<bool> getShowRate() async {
     final prefs = await SharedPreferences.getInstance();

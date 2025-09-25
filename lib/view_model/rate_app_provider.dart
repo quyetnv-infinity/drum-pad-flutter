@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 const KEY = 'FIRST_TIME_OPEN';
 
 class RateAppProvider with ChangeNotifier {
+  bool _shouldShowRate = false;
+  bool get shouldShowRate => _shouldShowRate;
   late SharedPreferences _prefs;
   final InAppReview _inAppReview = InAppReview.instance;
 
@@ -27,7 +29,10 @@ class RateAppProvider with ChangeNotifier {
       return false;
     }
   }
-
+  void updateShowRate(bool value){
+    _shouldShowRate = value;
+    notifyListeners();
+  }
   Future<bool> showRating() async {
     try {
       final available = await _inAppReview.isAvailable();

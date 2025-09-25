@@ -78,7 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> with ScreenLogger<Profile
                   showDialog(context: context, builder: (context) => LoadingDataScreen(
                     callbackLoadingCompleted: (songResult) {
                       Navigator.pop(context);
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => DrumPadPlayScreen(songCollection: songResult)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => DrumPadPlayScreen(songCollection: songResult, shouldShowRateApp: true,)));
                     },
                     callbackLoadingFailed: () {
                       Navigator.pop(context);

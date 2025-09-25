@@ -9,11 +9,14 @@ import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/pick_song_bottom_sheet.dart';
 import 'package:and_drum_pad_flutter/view/screen/home/home_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/result/widget/congratulations_widget.dart';
+import 'package:and_drum_pad_flutter/view/widget/loading_dialog/rate_app_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/star/star_result.dart';
 import 'package:and_drum_pad_flutter/view/widget/text/judgement_text.dart';
+import 'package:and_drum_pad_flutter/view_model/app_setting_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/app_state_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/result_information_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -294,6 +297,16 @@ class _ResultScreenState extends State<ResultScreen>
                       _buildIconButton(asset: ResIcon.icHome,
                           onTap: () {
                             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeScreen(),), (route) => false,);
+                            final appProvider = context.read<AppSettingsProvider>();
+                            if(appProvider.showRate && appProvider.isShowRateInSession){
+                              showCupertinoDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                builder: (context) {
+                                  return const RateAppDialog();
+                                }
+                              );
+                            }
                           }
                       ),
                     ],

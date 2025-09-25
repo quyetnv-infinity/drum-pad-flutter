@@ -95,6 +95,20 @@ class SettingFuncs {
       });
     }
   }
+
+  static void rateAppWithoutFeedback(BuildContext context){
+    final appProvider = context.read<AppSettingsProvider>();
+    if(appProvider.showRate && appProvider.isShowRateInSession){
+      showCupertinoDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) {
+          return const RateAppDialog();
+        }
+      );
+    }
+  }
+
   static void launchURL(String url) async {
     AdController.shared.setResumeAdState(true);
     final Uri uri = Uri.parse(url);

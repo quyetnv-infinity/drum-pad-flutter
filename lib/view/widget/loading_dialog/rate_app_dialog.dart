@@ -31,7 +31,9 @@ class _RateAppDialogState extends State<RateAppDialog> {
   @override
   void initState() {
     super.initState();
-
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<AppSettingsProvider>().setFalseRateInSession();
+    },);
     feedbackController.addListener(() {
       setState(() {
         currentLength = feedbackController.text.length;
@@ -68,6 +70,7 @@ class _RateAppDialogState extends State<RateAppDialog> {
     if(ratingStar <= 3){
       Navigator.pop(context);
       _showDialogThanksForFeedback();
+      context.read<AppSettingsProvider>().setShowRate();
       await Future.delayed(const Duration(seconds: 2));
       if (thanksDialogContext != null) Navigator.pop(thanksDialogContext!);
     } else {
@@ -144,7 +147,6 @@ class _RateAppDialogState extends State<RateAppDialog> {
               if(ratingStar != 0) CupertinoDialogAction(
                   onPressed: (){
                     handleRatingStar();
-                    context.read<AppSettingsProvider>().setIsShowRate();
                   },
                   child: Text(context.locale.submit, style: const TextStyle(color: Color(0xFF007AFF), fontSize: 16, fontWeight: FontWeight.w500),)
               ),

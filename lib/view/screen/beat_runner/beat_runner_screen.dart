@@ -5,6 +5,7 @@ import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
 import 'package:and_drum_pad_flutter/core/res/style/text_style.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
+import 'package:and_drum_pad_flutter/core/utils/setting_funcs.dart';
 import 'package:and_drum_pad_flutter/view/screen/beat_runner/widget/recommend_list_song.dart';
 import 'package:and_drum_pad_flutter/view/screen/category/category_details_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/free_style/free_style_play_screen.dart';
@@ -14,8 +15,10 @@ import 'package:and_drum_pad_flutter/view/widget/button/icon_button_custom.dart'
 import 'package:and_drum_pad_flutter/view/widget/item/mode_play_item.dart';
 import 'package:and_drum_pad_flutter/view/widget/list_view/mood_and_genres.dart';
 import 'package:and_drum_pad_flutter/view/widget/loading_dialog/loading_dialog.dart';
+import 'package:and_drum_pad_flutter/view/widget/loading_dialog/rate_app_dialog.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view_model/ads_provider.dart';
+import 'package:and_drum_pad_flutter/view_model/app_setting_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +83,10 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with WidgetsBinding
                         showDialog(context: context, builder: (context) => LoadingDataScreen(
                           callbackLoadingCompleted: (song) {
                             Navigator.pop(context);
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => DrumPadPlayScreen(songCollection: song)));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => DrumPadPlayScreen(
+                              songCollection: song,
+                              shouldShowRateApp: true,
+                            )));
                             adsProvider.showInterAd(
                               name: "inter_home",
                               indicator: true,
@@ -117,7 +123,14 @@ class _BeatRunnerScreenState extends State<BeatRunnerScreen> with WidgetsBinding
                 SizedBox(height: 16),
                 MoodAndGenres(
                   onTapCategory: (category) {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryDetailsScreen(category: category,),));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryDetailsScreen(
+                      category: category,
+                      rateApp: (showRateApp) {
+                        if(showRateApp){
+                          SettingFuncs.rateAppWithoutFeedback(context);
+                        }
+                      },
+                    )));
                     adsProvider.showInterAd(
                       name: "inter_home",
                       indicator: true,

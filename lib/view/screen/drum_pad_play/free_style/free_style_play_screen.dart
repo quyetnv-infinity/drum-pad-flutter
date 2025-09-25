@@ -6,6 +6,7 @@ import 'package:and_drum_pad_flutter/core/res/dimen/spacing.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/utils/font_responsive.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
+import 'package:and_drum_pad_flutter/core/utils/setting_funcs.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/data/service/media_recorder_service.dart';
 import 'package:and_drum_pad_flutter/view/screen/drum_pad_play/widget/add_new_song.dart';
@@ -201,15 +202,7 @@ class _FreeStylePlayScreenState extends State<FreeStylePlayScreen> with SingleTi
     return AppScaffold(
       appBar: CustomAppBar(iconLeading: ResIcon.icBack, onTapLeading: () {
         Navigator.pop(context);
-        if(context.read<AppSettingsProvider>().showRate){
-          showCupertinoDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (context) {
-              return const RateAppDialog();
-            }
-          );
-        }
+        SettingFuncs.rateAppWithoutFeedback(context);
       },
         action: [
           if(_songCollection != null)

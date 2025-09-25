@@ -14,13 +14,16 @@ import 'package:provider/provider.dart';
 
 class CategoryDetailsScreen extends StatefulWidget {
   final Category category;
-  const CategoryDetailsScreen({super.key, required this.category});
+  final Function(bool showRateApp)? rateApp;
+  const CategoryDetailsScreen({super.key, required this.category, this.rateApp});
 
   @override
   State<CategoryDetailsScreen> createState() => _CategoryDetailsScreenState();
 }
 
 class _CategoryDetailsScreenState extends State<CategoryDetailsScreen> with ScreenLogger<CategoryDetailsScreen>, ScreenTimeLogger<CategoryDetailsScreen> {
+  bool _showRateApp = false;
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +41,7 @@ class _CategoryDetailsScreenState extends State<CategoryDetailsScreen> with Scre
         iconLeading: ResIcon.icBack,
         onTapLeading: () {
           Navigator.pop(context);
+          if(_showRateApp) widget.rateApp?.call(true);
         },
       ),
       body: Consumer<CategoryProvider>(
@@ -46,9 +50,14 @@ class _CategoryDetailsScreenState extends State<CategoryDetailsScreen> with Scre
             category: provider.categories.firstWhere((element) => element.code == widget.category.code,),
             onTapItem: (song) {
                showDialog(context: context, builder: (context) => LoadingDataScreen(
-                  callbackLoadingCompleted: (song) {
+                  callbackLoadingCompleted: (song) async {
                     Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => DrumPadPlayScreen(songCollection: song)));
+                    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => DrumPadPlayScreen(songCollection: song)));
+                    if(result) {
+                      setState(() {
+                        _showRateApp = result;
+                      });
+                    }
                   },
                   callbackLoadingFailed: () {
                     Navigator.pop(context);

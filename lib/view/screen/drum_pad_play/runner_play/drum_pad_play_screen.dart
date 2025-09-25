@@ -27,7 +27,8 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class DrumPadPlayScreen extends StatefulWidget {
   final SongCollection songCollection;
-  const DrumPadPlayScreen({super.key, required this.songCollection});
+  final bool shouldShowRateApp;
+  const DrumPadPlayScreen({super.key, required this.songCollection, this.shouldShowRateApp = false,});
 
   @override
   State<DrumPadPlayScreen> createState() => _DrumPadPlayScreenState();
@@ -300,15 +301,9 @@ class _DrumPadPlayScreenState extends State<DrumPadPlayScreen> with ScreenLogger
               },
               onTapContinue: () {
                 Navigator.pop(context);
-                Navigator.pop(context);
-                if(context.read<AppSettingsProvider>().showRate){
-                  showCupertinoDialog(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (context) {
-                      return const RateAppDialog();
-                    }
-                  );
+                Navigator.pop(context, true);
+                if(widget.shouldShowRateApp){
+                  SettingFuncs.rateAppWithoutFeedback(context);
                 }
               },
             )

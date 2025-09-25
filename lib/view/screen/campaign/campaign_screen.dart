@@ -7,12 +7,14 @@ import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/image.dart';
 import 'package:and_drum_pad_flutter/core/utils/calculate_func.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
+import 'package:and_drum_pad_flutter/core/utils/setting_funcs.dart';
 import 'package:and_drum_pad_flutter/data/model/lesson_model.dart';
 import 'package:and_drum_pad_flutter/view/screen/campaign_detail/campaign_detail_screen.dart';
 import 'package:and_drum_pad_flutter/view/widget/app_bar/custom_app_bar.dart';
 import 'package:and_drum_pad_flutter/view/widget/list_item/campaign_item.dart';
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
+import 'package:and_drum_pad_flutter/view_model/rate_app_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -27,58 +29,73 @@ class CampaignScreen extends StatefulWidget {
 class _CampaignScreenState extends State<CampaignScreen> with ScreenLogger<CampaignScreen>, ScreenTimeLogger<CampaignScreen> {
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      appBar: CustomAppBar(
-        iconLeading: ResIcon.icBack,
-        onTapLeading: () {
-          Navigator.pop(context);
-        },
-        title: context.locale.campaign,
-      ),
-      body: SingleChildScrollView(
-        child: Consumer<CampaignProvider>(
-          builder: (context, value, child) {
-            return ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              shrinkWrap: true,
-              cacheExtent: 200.0,
-              separatorBuilder: (context, index) => ResSpacing.h8,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: value.campaigns.length,
-              itemBuilder: (context, index) {
-                final campaign = value.campaigns[index];
-                return InkWell(
-                  borderRadius: BorderRadius.circular(12),
-                  onTap: () {
-                    value.setCurrentCampaign(isEasy: index == 0, isMedium: index == 1, isHard: index == 2, isDemonic: index == 3);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CampaignDetailScreen(
-                          difficulty: campaign.difficulty,
-                        ),
-                      ),
-                    );
-                  },
-                  child: CampaignItem(
-                    levelIndex: index,
-                    name: _buildCampaignName(context, campaign),
-                    score: CalculateFunc.sumScore(
-                      campaign.data.map((e) => e.campaignScore).toList()
-                    ),
-                    star: CalculateFunc.avgStar(
-                      campaign.data.map((e) => e.campaignStar).toList()
-                    ),
-                    trailingWidget: SvgPicture.asset(
-                      ResIcon.icOvalArrowRight,
-                      width: 24,
-                      height: 24,
-                    ),
-                  ),
-                );
-              },
-            );
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if(didPop && context.mounted){
+          final rateProvider = context.read<RateAppProvider>();
+          if(rateProvider.shouldShowRate){
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (context.mounted) {
+                SettingFuncs.rateAppWithoutFeedback(context);
+                rateProvider.updateShowRate(false);
+              }
+            });
+          }
+        }
+      },
+      child: AppScaffold(
+        appBar: CustomAppBar(
+          iconLeading: ResIcon.icBack,
+          onTapLeading: () {
+            Navigator.pop(context);
           },
+          title: context.locale.campaign,
+        ),
+        body: SingleChildScrollView(
+          child: Consumer<CampaignProvider>(
+            builder: (context, value, child) {
+              return ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                shrinkWrap: true,
+                cacheExtent: 200.0,
+                separatorBuilder: (context, index) => ResSpacing.h8,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: value.campaigns.length,
+                itemBuilder: (context, index) {
+                  final campaign = value.campaigns[index];
+                  return InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () {
+                      value.setCurrentCampaign(isEasy: index == 0, isMedium: index == 1, isHard: index == 2, isDemonic: index == 3);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CampaignDetailScreen(
+                            difficulty: campaign.difficulty,
+                          ),
+                        ),
+                      );
+                    },
+                    child: CampaignItem(
+                      levelIndex: index,
+                      name: _buildCampaignName(context, campaign),
+                      score: CalculateFunc.sumScore(
+                        campaign.data.map((e) => e.campaignScore).toList()
+                      ),
+                      star: CalculateFunc.avgStar(
+                        campaign.data.map((e) => e.campaignStar).toList()
+                      ),
+                      trailingWidget: SvgPicture.asset(
+                        ResIcon.icOvalArrowRight,
+                        width: 24,
+                        height: 24,
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
     );

@@ -19,6 +19,7 @@ import 'package:and_drum_pad_flutter/view/widget/scaffold/snack__notifi.dart';
 import 'package:and_drum_pad_flutter/view_model/app_setting_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/campaign_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
+import 'package:and_drum_pad_flutter/view_model/rate_app_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/tutorial_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,8 @@ class LearnDrumPadScreen extends StatefulWidget {
   final bool isFromCampaign;
   final void Function()? onChangeUnlockedModeCampaign;
   final void Function(double star)? onChangeCampaignStar;
-  const LearnDrumPadScreen({super.key, required this.songCollection, required this.lessonIndex, this.isFromCampaign = false, this.onChangeUnlockedModeCampaign, this.onChangeCampaignStar});
+  final bool shouldShowRateApp;
+  const LearnDrumPadScreen({super.key, required this.songCollection, required this.lessonIndex, this.isFromCampaign = false, this.onChangeUnlockedModeCampaign, this.onChangeCampaignStar, this.shouldShowRateApp = false});
 
   @override
   State<LearnDrumPadScreen> createState() => _LearnDrumPadScreenState();
@@ -61,6 +63,7 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> with ScreenLogg
     super.initState();
     _currentSong = widget.songCollection;
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<RateAppProvider>().updateShowRate(true);
       _measureWidgets();
       _initTutorial();
       final tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
@@ -313,7 +316,8 @@ class _LearnDrumPadScreenState extends State<LearnDrumPadScreen> with ScreenLogg
                   onTapContinue: () {
                     Navigator.pop(context);
                     Navigator.pop(context);
-                    if(context.read<AppSettingsProvider>().showRate){
+                    final appProvider = context.read<AppSettingsProvider>();
+                    if(appProvider.showRate && appProvider.isShowRateInSession && widget.shouldShowRateApp){
                       showCupertinoDialog(
                         context: context,
                         barrierDismissible: true,

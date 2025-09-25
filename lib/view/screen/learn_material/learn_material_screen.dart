@@ -2,6 +2,7 @@ import 'package:ads_tracking_plugin/tracking/services/screen_logger.dart';
 import 'package:ads_tracking_plugin/tracking/services/screen_time_tracker.dart';
 import 'package:and_drum_pad_flutter/core/res/drawer/icon.dart';
 import 'package:and_drum_pad_flutter/core/utils/locator_support.dart';
+import 'package:and_drum_pad_flutter/core/utils/setting_funcs.dart';
 import 'package:and_drum_pad_flutter/view/screen/beat_learn_category_detail/beat_learn_category_detail_screen.dart';
 import 'package:and_drum_pad_flutter/view/screen/beat_runner/widget/recommend_list_song.dart';
 import 'package:and_drum_pad_flutter/view/screen/lessons/lessons_screen.dart';
@@ -11,6 +12,7 @@ import 'package:and_drum_pad_flutter/view/widget/loading_dialog/loading_dialog.d
 import 'package:and_drum_pad_flutter/view/widget/scaffold/custom_scaffold.dart';
 import 'package:and_drum_pad_flutter/view_model/category_provider.dart';
 import 'package:and_drum_pad_flutter/view_model/drum_learn_provider.dart';
+import 'package:and_drum_pad_flutter/view_model/rate_app_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -44,52 +46,67 @@ class _LearnMaterialScreenState extends State<LearnMaterialScreen> with ScreenLo
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      appBar: CustomAppBar(
-        iconLeading: ResIcon.icBack,
-        onTapLeading: () {
-          Navigator.pop(context);
-        },
-        title: context.locale.learn_material,
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(right: 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 16,
-            children: [
-              Consumer<DrumLearnProvider>(
-                builder: (context, drumLearnProvider, _) {
-                  return drumLearnProvider.listRecommend.isEmpty ? Container() : Flexible(
-                    child: RecommendListSong(
-                      title: context.locale.recommend_list_songs,
-                      listSongs: drumLearnProvider.listRecommend,
-                      onTapItem: (song) {
-                        showDialog(
-                          context: context,
-                          builder: (context) => LoadingDataScreen(
-                              callbackLoadingCompleted: (songResult) {
-                                Navigator.pop(context);
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => LessonsScreen(song: songResult),));
-                              },
-                              callbackLoadingFailed: () {
-                                Navigator.pop(context);
-                              },
-                              song: song
-                          ),
-                        );
-                      },
-                    )
-                  );
-                }
-              ),
-              MoodAndGenres(
-                onTapCategory: (category) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => BeatLearnCategoryDetailScreen(category: category,),));
-                },
-              )
-            ],
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if(didPop && context.mounted){
+          final rateProvider = context.read<RateAppProvider>();
+          if(rateProvider.shouldShowRate){
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (context.mounted) {
+                SettingFuncs.rateAppWithoutFeedback(context);
+                rateProvider.updateShowRate(false);
+              }
+            });
+          }
+        }
+      },
+      child: AppScaffold(
+        appBar: CustomAppBar(
+          iconLeading: ResIcon.icBack,
+          onTapLeading: () {
+            Navigator.pop(context);
+          },
+          title: context.locale.learn_material,
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(right: 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 16,
+              children: [
+                Consumer<DrumLearnProvider>(
+                  builder: (context, drumLearnProvider, _) {
+                    return drumLearnProvider.listRecommend.isEmpty ? Container() : Flexible(
+                      child: RecommendListSong(
+                        title: context.locale.recommend_list_songs,
+                        listSongs: drumLearnProvider.listRecommend,
+                        onTapItem: (song) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => LoadingDataScreen(
+                                callbackLoadingCompleted: (songResult) {
+                                  Navigator.pop(context);
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => LessonsScreen(song: songResult),));
+                                },
+                                callbackLoadingFailed: () {
+                                  Navigator.pop(context);
+                                },
+                                song: song
+                            ),
+                          );
+                        },
+                      )
+                    );
+                  }
+                ),
+                MoodAndGenres(
+                  onTapCategory: (category) {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => BeatLearnCategoryDetailScreen(category: category,),));
+                  },
+                )
+              ],
+            ),
           ),
         ),
       ),
