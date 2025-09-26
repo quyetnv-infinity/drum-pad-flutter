@@ -100,7 +100,7 @@ class _LanguageScreenState extends State<LanguageScreen> with WidgetsBindingObse
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text(
-            context.locale.language,
+            'Language',
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 17,

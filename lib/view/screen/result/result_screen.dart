@@ -193,7 +193,7 @@ class _ResultScreenState extends State<ResultScreen>
     return SafeArea(
       child: Container(
         clipBehavior: Clip.antiAlias,
-        padding: EdgeInsets.only(top: 20, bottom: 5,),
+        padding: EdgeInsets.only(top: 20,),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(32),
           gradient: RadialGradient(colors: [Color(0xff33114d), Color(0xff7727b3)], center: Alignment.bottomCenter)
