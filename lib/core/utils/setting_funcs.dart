@@ -55,23 +55,25 @@ class SettingFuncs {
   //   );
   // }
   static void showDialogThanksForFeedback(BuildContext context){
-    showCupertinoDialog(
+    showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return CupertinoTheme(
-          data: const CupertinoThemeData(
+        return Theme(
+          data: ThemeData(
             brightness: Brightness.light
           ),
-          child: CupertinoAlertDialog(
+          child: AlertDialog(
+            backgroundColor: Colors.white,
+            alignment: Alignment.center,
             content: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Image.asset('assets/images/happy_star.png', width: 118, height: 144, fit: BoxFit.cover,),
                 const SizedBox(height: 24,),
                 Text(context.locale.thanks_for_your_feedback, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 18),),
                 const SizedBox(height: 8,),
-                Text(context.locale.thanks_for_your_feedback_description, style: const TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w400),),
-
+                Text(context.locale.thanks_for_your_feedback_description, style: const TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w400), textAlign: TextAlign.center,),
               ],
             ),
           ),

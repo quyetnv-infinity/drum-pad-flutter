@@ -56,7 +56,7 @@ class _RateAppDialogState extends State<RateAppDialog> {
             },
             child: Image.asset(
               index < ratingStar ? 'assets/images/star_rating_full.png' : 'assets/images/star_rating_empty.png',
-              height: 30,
+              height: 40,
               fit: BoxFit.cover,
             ),
           );
@@ -82,23 +82,25 @@ class _RateAppDialogState extends State<RateAppDialog> {
   }
 
   void _showDialogThanksForFeedback(){
-    showCupertinoDialog(
+    showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
         thanksDialogContext = context;
-        return CupertinoTheme(
-          data: const CupertinoThemeData(
+        return Theme(
+          data: ThemeData(
             brightness: Brightness.light,
           ),
-          child: CupertinoAlertDialog(
+          child: AlertDialog(
+            backgroundColor: Colors.white,
             content: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Image.asset('assets/images/happy_star.png', width: 118, height: 144, fit: BoxFit.cover,),
                 const SizedBox(height: 24,),
                 Text(context.locale.thanks_for_your_feedback, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 18),),
                 const SizedBox(height: 8,),
-                Text(context.locale.thanks_for_your_feedback_description, style: const TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w400),),
+                Text(context.locale.thanks_for_your_feedback_description, style: const TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w400), textAlign: TextAlign.center,),
 
               ],
             ),
@@ -111,45 +113,76 @@ class _RateAppDialogState extends State<RateAppDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoTheme(
-      data: const CupertinoThemeData(
+    return Theme(
+      data: ThemeData(
         brightness: Brightness.light,
       ),
-      child: CupertinoAlertDialog(
+      child: AlertDialog(
+        backgroundColor: Colors.white,
+        actionsPadding: EdgeInsets.symmetric(horizontal: 12),
         content: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 72,
-              height: 72,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(17)
-              ),
-              child: ClipRRect(borderRadius: BorderRadius.circular(17),child: Image.asset(AppInfo.appIcon)),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Transform.translate(
+                  offset: Offset(-16, 0),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: SizedBox(
+                      width: 28,
+                      height: 28,
+                      child: Icon(Icons.close, size: 28, color: Color(0xFF999CA1),),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 198,
+                  height: 119,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(17),
+                    color: Colors.white
+                  ),
+                  child: ClipRRect(borderRadius: BorderRadius.circular(17),child: Image.asset('assets/images/img_rate_heart.png', fit: BoxFit.cover,)),
+                ),
+                SizedBox(width: 28,)
+              ],
             ),
-            const SizedBox(height: 16,),
-            Text(context.locale.enjoy_ai_fusion, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 18),),
+            const SizedBox(height: 8,),
+            Text(context.locale.your_feedback_matters, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 16),),
             const SizedBox(height: 4,),
-            Text(context.locale.tap_a_star_to_rate_on_app_store, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w400, fontSize: 18))
+            Text(context.locale.tap_on_the_stars_to_rate_and_help_us_grow_stronger, style: const TextStyle(color: Color(0xFF494949), fontWeight: FontWeight.w400, fontSize: 12), textAlign: TextAlign.center,)
           ],
         ),
         actions: [
           Column(
             children: [
-              CupertinoDialogAction(
-                  onPressed: (){
-                  },
-                  child: _buildRatingBar()
+              _buildRatingBar(),
+              if(ratingStar > 0) SizedBox(height: 12,),
+              if(ratingStar != 0) InkWell(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onTap: (){
+                  handleRatingStar();
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 14),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    gradient: LinearGradient(colors: [
+                      Color(0xFF2F6BFF), Color(0xFF3DAEFF)
+                    ])
+                  ),
+                  child: Text(context.locale.submit, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),)
+                )
               ),
-              if(ratingStar > 0) Container(
-                height: 1.0,
-                color: CupertinoColors.systemGrey,
-              ),
-              if(ratingStar != 0) CupertinoDialogAction(
-                  onPressed: (){
-                    handleRatingStar();
-                  },
-                  child: Text(context.locale.submit, style: const TextStyle(color: Color(0xFF007AFF), fontSize: 16, fontWeight: FontWeight.w500),)
-              ),
+              SizedBox(height: 12,),
             ],
           )
         ],
