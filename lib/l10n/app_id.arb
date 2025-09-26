@@ -120,5 +120,16 @@
   "recording_started" : "Perekaman dimulai...",
   "recording_stopped" : "Perekaman berhenti...",
   "photo_permission_description": "Untuk memberikan Anda pengalaman lengkap dari fitur kami, kami memerlukan izin Anda untuk mengakses izin Foto di perangkat Anda.",
-  "done": "Selesai"
+  "done": "Selesai",
+  "thanks_for_your_feedback": "Terima kasih atas masukan Anda!",
+  "thanks_for_your_feedback_description": "Masukan Anda sangat dihargai dan akan membantu kami meningkatkan kemampuan kami.",
+  "thank_you_for_rate_description": "Masukan Anda dapat membantu kami untuk meningkatkan. Jika Anda mengalami masalah saat menggunakan aplikasi kami, silakan beri tahu kami",
+  "too_much_ads": "Terlalu banyak iklan",
+  "app_not_work": "Aplikasi tidak berfungsi",
+  "others": "Lainnya",
+  "thank_you": "Terima kasih!",
+  "ok": "OK",
+  "enjoy_ai_fusion": "Apakah Anda menikmati Drum Pad & DJ Beat Maker Pro?",
+  "tap_a_star_to_rate_on_app_store": "Ketuk bintang untuk menilainya di Google Play Store.",
+  "submit": "Kirim"
 } 

@@ -120,5 +120,16 @@
   "recording_started" : "Ghi âm bắt đầu...",
   "recording_stopped" : "Ghi âm dừng...",
   "photo_permission_description": "Để cung cấp cho bạn trải nghiệm đầy đủ các tính năng của chúng tôi, chúng tôi cần quyền của bạn để truy cập quyền Ảnh trên thiết bị của bạn.",
-  "done": "Xong"
+  "done": "Xong",
+  "thanks_for_your_feedback": "Cảm ơn bạn đã phản hồi!",
+  "thanks_for_your_feedback_description": "Phản hồi của bạn rất được đánh giá cao và sẽ giúp chúng tôi cải thiện khả năng của mình.",
+  "thank_you_for_rate_description": "Phản hồi của bạn có thể giúp chúng tôi cải thiện. Nếu bạn gặp bất kỳ vấn đề nào khi sử dụng ứng dụng của chúng tôi, vui lòng cho chúng tôi biết",
+  "too_much_ads": "Quá nhiều quảng cáo",
+  "app_not_work": "Ứng dụng không hoạt động",
+  "others": "Khác",
+  "thank_you": "Cảm ơn bạn!",
+  "ok": "OK",
+  "enjoy_ai_fusion": "Bạn có thích Drum Pad & DJ Beat Maker Pro không?",
+  "tap_a_star_to_rate_on_app_store": "Nhấn vào ngôi sao để đánh giá trên Google Play Store.",
+  "submit": "Gửi"
 } 

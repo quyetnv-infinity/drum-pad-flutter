@@ -120,5 +120,16 @@
   "recording_started" : "録音開始...",
   "recording_stopped" : "録音停止...",
   "photo_permission_description": "機能の完全な体験を提供するために、デバイスの写真権限にアクセスする許可が必要です。",
-  "done": "完了"
+  "done": "完了",
+  "thanks_for_your_feedback": "フィードバックをありがとうございます！",
+  "thanks_for_your_feedback_description": "あなたのフィードバックは大変感謝しており、私たちの能力向上に役立ちます。",
+  "thank_you_for_rate_description": "あなたのフィードバックは私たちの改善に役立つかもしれません。アプリの使用中に問題がございましたら、お知らせください",
+  "too_much_ads": "広告が多すぎます",
+  "app_not_work": "アプリが動作しません",
+  "others": "その他",
+  "thank_you": "ありがとうございます！",
+  "ok": "OK",
+  "enjoy_ai_fusion": "Drum Pad & DJ Beat Maker Proをお楽しみですか？",
+  "tap_a_star_to_rate_on_app_store": "Google Playストアで評価するには星をタップしてください。",
+  "submit": "送信"
 } 

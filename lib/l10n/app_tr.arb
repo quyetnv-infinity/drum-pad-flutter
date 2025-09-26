@@ -120,5 +120,16 @@
   "recording_started" : "Kayıt başladı...",
   "recording_stopped" : "Kayıt durdu...",
   "photo_permission_description": "Size özelliklerimizin tam deneyimini sunmak için cihazınızdaki Fotoğraf iznine erişim için izninize ihtiyacımız var.",
-  "done": "Tamamlandı"
+  "done": "Tamamlandı",
+  "thanks_for_your_feedback": "Geri bildiriminiz için teşekkürler!",
+  "thanks_for_your_feedback_description": "Geri bildiriminiz çok takdir edilir ve yeteneklerimizi geliştirmemize yardımcı olacaktır.",
+  "thank_you_for_rate_description": "Geri bildiriminiz gelişmemize yardımcı olabilir. Uygulamamızı kullanırken herhangi bir sorun yaşarsanız, lütfen bize bildirin",
+  "too_much_ads": "Çok fazla reklam",
+  "app_not_work": "Uygulama çalışmıyor",
+  "others": "Diğerleri",
+  "thank_you": "Teşekkürler!",
+  "ok": "Tamam",
+  "enjoy_ai_fusion": "Drum Pad & DJ Beat Maker Pro'yu beğeniyor musunuz?",
+  "tap_a_star_to_rate_on_app_store": "Google Play Store'da değerlendirmek için bir yıldıza dokunun.",
+  "submit": "Gönder"
 } 

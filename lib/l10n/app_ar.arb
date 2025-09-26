@@ -120,5 +120,16 @@
   "recording_started" : "بدأ التسجيل...",
   "recording_stopped" : "توقف التسجيل...",
   "photo_permission_description": "لتقديم تجربة كاملة من ميزاتنا، نحتاج إلى إذنك للوصول إلى إذن الصورة في جهازك.",
-  "done": "تم"
+  "done": "تم",
+  "thanks_for_your_feedback": "شكراً لك على ملاحظاتك!",
+  "thanks_for_your_feedback_description": "نقدر ملاحظاتك كثيراً وستساعدنا على تحسين قدراتنا.",
+  "thank_you_for_rate_description": "ملاحظاتك يمكن أن تساعدنا على التحسن. إذا واجهت أي مشكلة أثناء استخدام تطبيقنا، يرجى إعلامنا",
+  "too_much_ads": "إعلانات كثيرة جداً",
+  "app_not_work": "التطبيق لا يعمل",
+  "others": "أخرى",
+  "thank_you": "شكراً لك!",
+  "ok": "حسناً",
+  "enjoy_ai_fusion": "هل تستمتع بـ Drum Pad & DJ Beat Maker Pro؟",
+  "tap_a_star_to_rate_on_app_store": "اضغط على نجمة لتقييمها في متجر Google Play.",
+  "submit": "إرسال"
 } 

@@ -120,5 +120,16 @@
   "recording_started" : "录音开始...",
   "recording_stopped" : "录音停止...",
   "photo_permission_description": "为了为您提供我们功能的完整体验，我们需要您的权限来访问设备上的照片权限。",
-  "done": "完成"
+  "done": "完成",
+  "thanks_for_your_feedback": "感谢您的反馈！",
+  "thanks_for_your_feedback_description": "您的反馈非常受重视，将帮助我们提高能力。",
+  "thank_you_for_rate_description": "您的反馈可能帮助我们改进。如果您在使用我们的应用程序时遇到任何问题，请告诉我们",
+  "too_much_ads": "广告太多",
+  "app_not_work": "应用程序无法正常工作",
+  "others": "其他",
+  "thank_you": "谢谢！",
+  "ok": "确定",
+  "enjoy_ai_fusion": "您喜欢Drum Pad & DJ Beat Maker Pro吗？",
+  "tap_a_star_to_rate_on_app_store": "点击星星在Google Play商店中评分。",
+  "submit": "提交"
 } 

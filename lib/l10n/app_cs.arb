@@ -120,5 +120,16 @@
   "recording_started" : "Nahrávání zahájeno...",
   "recording_stopped" : "Nahrávání zastaveno...",
   "photo_permission_description": "Abychom vám poskytli plný zážitek z našich funkcí, potřebujeme vaše oprávnění pro přístup k oprávněním pro fotografie na vašem zařízení.",
-  "done": "Hotovo"
+  "done": "Hotovo",
+  "thanks_for_your_feedback": "Děkujeme za vaši zpětnou vazbu!",
+  "thanks_for_your_feedback_description": "Vaše zpětná vazba je velmi oceňována a pomůže nám zlepšit naše schopnosti.",
+  "thank_you_for_rate_description": "Vaše zpětná vazba nám může pomoci zlepšit se. Pokud máte při používání naší aplikace jakékoli problémy, dejte nám prosím vědět",
+  "too_much_ads": "Příliš mnoho reklam",
+  "app_not_work": "Aplikace nefunguje",
+  "others": "Jiné",
+  "thank_you": "Děkujeme!",
+  "ok": "OK",
+  "enjoy_ai_fusion": "Užíváte si Drum Pad & DJ Beat Maker Pro?",
+  "tap_a_star_to_rate_on_app_store": "Klepněte na hvězdu a ohodnoťte ji v Google Play Store.",
+  "submit": "Odeslat"
 } 

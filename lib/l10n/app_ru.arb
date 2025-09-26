@@ -120,5 +120,16 @@
   "recording_started": "Запись начата...",
   "recording_stopped": "Запись остановлена...",
   "photo_permission_description": "Чтобы предоставить вам полный опыт наших функций, нам требуется ваше разрешение на доступ к разрешениям на фото на вашем устройстве.",
-  "done": "Готово"
+  "done": "Готово",
+  "thanks_for_your_feedback": "Спасибо за ваш отзыв!",
+  "thanks_for_your_feedback_description": "Ваш отзыв очень ценится и поможет нам улучшить наши возможности.",
+  "thank_you_for_rate_description": "Ваш отзыв может помочь нам улучшиться. Если у вас есть проблемы при использовании нашего приложения, пожалуйста, дайте нам знать",
+  "too_much_ads": "Слишком много рекламы",
+  "app_not_work": "Приложение не работает",
+  "others": "Другие",
+  "thank_you": "Спасибо!",
+  "ok": "ОК",
+  "enjoy_ai_fusion": "Вам нравится Drum Pad & DJ Beat Maker Pro?",
+  "tap_a_star_to_rate_on_app_store": "Нажмите на звезду, чтобы оценить в Google Play Store.",
+  "submit": "Отправить"
 }

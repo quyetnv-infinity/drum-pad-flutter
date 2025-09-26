@@ -120,5 +120,16 @@
   "recording_started" : "Nagsimula na ang recording...",
   "recording_stopped" : "Huminto na ang recording...",
   "photo_permission_description": "Para mabigyan ka ng buong experience ng aming mga feature, kailangan namin ang permission mo para ma-access ang Photo permission sa device mo.",
-  "done": "Tapos na"
+  "done": "Tapos na",
+  "thanks_for_your_feedback": "Salamat sa inyong feedback!",
+  "thanks_for_your_feedback_description": "Ang inyong feedback ay lubos na pinahahalagahan at tutulong sa amin na mapabuti ang aming mga kakayahan.",
+  "thank_you_for_rate_description": "Ang inyong feedback ay makakatulong sa amin na mapabuti. Kung may mga problema kayo habang ginagamit ang aming app, pakisabi sa amin",
+  "too_much_ads": "Masyadong maraming ads",
+  "app_not_work": "Hindi gumagana ang app",
+  "others": "Iba pa",
+  "thank_you": "Salamat!",
+  "ok": "OK",
+  "enjoy_ai_fusion": "Nag-enjoy ba kayo sa Drum Pad & DJ Beat Maker Pro?",
+  "tap_a_star_to_rate_on_app_store": "I-tap ang isang bituin para i-rate ito sa Google Play Store.",
+  "submit": "I-submit"
 } 

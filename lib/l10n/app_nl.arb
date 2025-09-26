@@ -120,5 +120,16 @@
   "recording_started" : "Opname gestart...",
   "recording_stopped" : "Opname gestopt...",
   "photo_permission_description": "Om je de volledige ervaring van onze functies te bieden, hebben we je toestemming nodig om toegang te krijgen tot de foto toestemming op je apparaat.",
-  "done": "Klaar"
+  "done": "Klaar",
+  "thanks_for_your_feedback": "Bedankt voor je feedback!",
+  "thanks_for_your_feedback_description": "Je feedback wordt zeer gewaardeerd en zal ons helpen onze capaciteiten te verbeteren.",
+  "thank_you_for_rate_description": "Je feedback kan ons helpen om te verbeteren. Als je problemen ondervindt bij het gebruik van onze app, laat het ons dan weten",
+  "too_much_ads": "Te veel advertenties",
+  "app_not_work": "App werkt niet",
+  "others": "Anderen",
+  "thank_you": "Dank je!",
+  "ok": "OK",
+  "enjoy_ai_fusion": "Geniet je van Drum Pad & DJ Beat Maker Pro?",
+  "tap_a_star_to_rate_on_app_store": "Tik op een ster om het te beoordelen in de Google Play Store.",
+  "submit": "Verzenden"
 } 

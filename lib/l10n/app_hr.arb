@@ -120,5 +120,16 @@
   "recording_started" : "Snimanje započeto...",
   "recording_stopped" : "Snimanje zaustavljeno...",
   "photo_permission_description": "Da bismo vam pružili potpuno iskustvo naših značajki, trebamo vašu dozvolu za pristup dozvoli za fotografije na vašem uređaju.",
-  "done": "Gotovo"
+  "done": "Gotovo",
+  "thanks_for_your_feedback": "Hvala vam na vašoj povratnoj informaciji!",
+  "thanks_for_your_feedback_description": "Vaša povratna informacija je vrlo cijenjena i pomoći će nam poboljšati naše sposobnosti.",
+  "thank_you_for_rate_description": "Vaša povratna informacija može nam pomoći da se poboljšamo. Ako imate bilo kakvih problema tijekom korištenja naše aplikacije, molimo vas da nas obavijestite",
+  "too_much_ads": "Previše oglasa",
+  "app_not_work": "Aplikacija ne radi",
+  "others": "Ostalo",
+  "thank_you": "Hvala vam!",
+  "ok": "OK",
+  "enjoy_ai_fusion": "Uživate li u Drum Pad & DJ Beat Maker Pro?",
+  "tap_a_star_to_rate_on_app_store": "Dodirnite zvijezdu da je ocijenite u Google Play Store.",
+  "submit": "Pošalji"
 } 
